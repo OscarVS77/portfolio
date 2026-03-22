@@ -1314,7 +1314,7 @@ function renderCard(a, totalCurrent, totalSinPP) {
       </div>
       <div style="margin-top:8px; font-size:10px; color:var(--muted2); letter-spacing:0.02em;">${a.note}</div>
       <div class="price-tag">
-        ${a.id === 'btc' && a.liveUnitPrice ? `<div class="price-dot"></div><span class="price-text">Precio en vivo</span><span class="live-unit-price" style="color:#F07820">BTC ${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
+        ${a.id === 'btc' && a.liveUnitPrice ? `<div class="price-dot"></div><span class="price-text">Precio en vivo</span><span class="live-unit-price" style="color:var(--text)">BTC ${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
       </div>
     </div>
   `;
