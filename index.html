@@ -22,9 +22,9 @@
     --text:     #E8ECF4;
     --muted:    #9BA8BF;
     --muted2:   #6B7A99;
-    --accent:   #4FFFB0;
+    --accent:   #00C896;
     --accent2:  #5B9EFF;
-    --red:      #FF5E6C;
+    --red:      #FF3B30;
     --gold:     #FFD700;
     --font-display: 'Figtree', system-ui, sans-serif;
     --font-sans:    'Figtree', system-ui, sans-serif;
@@ -287,8 +287,8 @@
     letter-spacing: 0.02em;
   }
 
-  .positive { background: rgba(79,255,176,0.12); color: #4FFFB0; }
-  .negative { background: rgba(255,94,108,0.12); color: #FF5E6C; }
+  .positive { background: transparent; color: #00C896; }
+  .negative { background: transparent; color: #FF3B30; }
   .neutral { background: rgba(100,100,100,0.1); color: var(--muted); }
 
   .card-bottom {
@@ -1225,7 +1225,8 @@ function fmtEur(n, d=2) {
 }
 
 function fmtPct(n) {
-  return (n >= 0 ? '+' : '') + fmt(n, 2) + '%';
+  const arrow = n >= 0 ? '▲ ' : '▼ ';
+  return arrow + fmt(Math.abs(n), 2) + '%';
 }
 
 function pnlClass(n) {
@@ -1250,8 +1251,8 @@ function updateHeader() {
   document.getElementById('totalCurrent').textContent = fmtEur(totalCurrent);
   const pnlAbs = totalCurrent - totalInvested;
   const pnlColor = pnl >= 0 ? '#4FFFB0' : '#FF5E6C';
-  const pnlBg = pnl >= 0 ? 'rgba(79,255,176,0.12)' : 'rgba(255,94,108,0.12)';
-  const badge = `<span style="font-size:15px;font-weight:600;padding:4px 10px;border-radius:7px;background:${pnlBg};color:${pnlColor}">${fmtPct(pnl)}</span>`;
+  const pnlBg = pnl >= 0 ? 'rgba(0,200,150,0.12)' : 'rgba(255,59,48,0.12)';
+  const badge = `<span style="font-size:15px;font-weight:600;color:${pnlColor}">${fmtPct(pnl)}</span>`;
   document.getElementById('totalInvested').innerHTML =
     `<span>Invertido: ${fmtEur(totalInvested)} · P&L: ${fmtEur(pnlAbs)}</span>${badge}`;
 }
@@ -1563,7 +1564,7 @@ function renderRebalanceo() {
   function actionPlan(rows) {
     const alerts = rows.filter(r => r.absDelta > REBAL_THRESHOLD);
     if (!alerts.length) return `
-      <div style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:rgba(79,255,176,0.06);border:1px solid rgba(79,255,176,0.15);border-radius:10px;margin-top:10px">
+      <div style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:rgba(0,200,150,0.06);border:1px solid rgba(0,200,150,0.15);border-radius:10px;margin-top:10px">
         <span style="font-size:16px">✓</span>
         <span style="font-size:12px;color:var(--accent);font-weight:500">Portfolio equilibrado. No es necesario actuar.</span>
       </div>`;
