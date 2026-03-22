@@ -97,7 +97,7 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
-    padding: 18px 20px 14px;
+    padding: 12px 20px 12px;
   }
 
   .header-top {
@@ -113,13 +113,13 @@
     font-weight: 600;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--text);
   }
 
   .header-date {
     font-family: var(--font-sans);
     font-size: 10px;
-    color: var(--muted);
+    color: var(--text);
     letter-spacing: 0.04em;
   }
 
@@ -142,7 +142,7 @@
   .total-value {
     font-family: var(--font-display);
     font-size: 36px;
-    font-weight: 700;
+    font-weight: 500;
     color: var(--text);
     letter-spacing: -0.02em;
     line-height: 1;
@@ -159,7 +159,7 @@
   .total-invested {
     font-family: var(--font-sans);
     font-size: 11px;
-    color: var(--muted);
+    color: var(--text);
     width: 100%;
     margin-top: 4px;
     font-weight: 400;
@@ -751,23 +751,22 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 16px;
+    padding: 10px 12px;
   }
 
   .summary-tile-label {
     font-family: var(--font-sans);
-    font-size: 10px;
+    font-size: 9px;
     color: var(--muted2);
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     font-weight: 400;
   }
 
   .summary-tile-value {
     font-family: var(--font-display);
-    
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 400;
   }
 
@@ -881,23 +880,34 @@
   <div class="header-top">
     <div style="display:flex;align-items:baseline;gap:10px">
       <div class="header-title">Portfolio</div>
-      <div style="font-family:var(--font-sans);font-size:10px;color:var(--muted2);letter-spacing:0.08em">6 activos</div>
+      <div style="font-family:var(--font-sans);font-size:10px;color:var(--text);letter-spacing:0.08em">6 activos</div>
       <div class="header-date" id="headerDate"></div>
     </div>
-    <button id="refreshBtn" onclick="fetchPrices()" style="width:42px;height:42px;border-radius:50%;background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0">
-      <span class="refresh-icon">↻</span>
-    </button>
   </div>
-  <div class="total-block">
-    <span class="total-value" id="totalCurrent">—</span>
+  <div id="headerTiles" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
+    <div class="summary-tile">
+      <div class="summary-tile-label">Total invertido</div>
+      <div class="summary-tile-value" id="hTotalInvested">—</div>
+    </div>
+    <div class="summary-tile">
+      <div class="summary-tile-label">Valor actual</div>
+      <div class="summary-tile-value" id="hTotalCurrent">—</div>
+    </div>
+    <div class="summary-tile">
+      <div class="summary-tile-label">P&L absoluto</div>
+      <div class="summary-tile-value" id="hPnlAbs">—</div>
+    </div>
+    <div class="summary-tile">
+      <div class="summary-tile-label">Rentabilidad</div>
+      <div class="summary-tile-value" id="hPnlPct">—</div>
+    </div>
   </div>
-  <div class="total-invested" id="totalInvested" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">Invertido: —</div>
 </div>
 
 <div class="tabs" id="tabBar">
-  <button class="tab active" onclick="switchTab('activos')">Activos</button>
-  <button class="tab" onclick="switchTab('resumen')">Resumen</button>
-  <button class="tab" onclick="switchTab('rebalanceo')">Rebalanceo</button>
+  <button class="tab active" onclick="switchTab('activos')" style="flex:0.8">Activos</button>
+  <button class="tab" onclick="switchTab('rebalanceo')" style="flex:0.8">Rebalanceo</button>
+  <button class="tab" id="refreshBtn" onclick="fetchPrices()" style="flex:1;display:flex;align-items:center;justify-content:center"><span class="refresh-icon" style="font-size:10px;color:var(--text);letter-spacing:0.1em;font-weight:600">ACTUALIZAR</span></button>
 </div>
 </div>
 
@@ -1260,20 +1270,25 @@ function render() {
   updateHeader();
   const content = document.getElementById('mainContent');
   if (activeTab === 'activos') content.innerHTML = renderActivos();
-  else if (activeTab === 'resumen') content.innerHTML = renderResumen();
   else content.innerHTML = renderRebalanceo();
   updateDateDisplay();
 }
 
 function updateHeader() {
   const {totalInvested, totalCurrent, pnl} = getTotals();
-  document.getElementById('totalCurrent').textContent = fmtEur(totalCurrent);
   const pnlAbs = totalCurrent - totalInvested;
-  const pnlColor = pnl >= 0 ? '#4FFFB0' : '#FF5E6C';
-  const pnlBg = pnl >= 0 ? 'rgba(0,200,150,0.12)' : 'rgba(255,59,48,0.12)';
-  const badge = `<span style="font-size:15px;font-weight:600;color:${pnlColor}">${fmtPct(pnl)}</span>`;
-  document.getElementById('totalInvested').innerHTML =
-    `<span>Invertido: ${fmtEur(totalInvested)} · P&L: ${fmtEur(pnlAbs)}</span>${badge}`;
+  const pnlColor = pnl >= 0 ? '#00C896' : '#FF3B30';
+
+  document.getElementById('hTotalInvested').textContent = fmtEur(totalInvested, 0);
+  document.getElementById('hTotalCurrent').textContent = fmtEur(totalCurrent, 0);
+
+  const pnlAbsEl = document.getElementById('hPnlAbs');
+  pnlAbsEl.textContent = fmtEur(pnlAbs);
+  pnlAbsEl.style.color = pnlColor;
+
+  const pnlPctEl = document.getElementById('hPnlPct');
+  pnlPctEl.textContent = fmtPct(pnl);
+  pnlPctEl.style.color = pnlColor;
 }
 
 function updateDateDisplay() {
@@ -1848,7 +1863,7 @@ function setBtcUnits() {
 function switchTab(tab) {
   activeTab = tab;
   document.querySelectorAll('.tab').forEach((t, i) => {
-    const tabs = ['activos', 'resumen', 'rebalanceo'];
+    const tabs = ['activos', 'rebalanceo'];
     t.classList.toggle('active', tabs[i] === tab);
   });
   render();
