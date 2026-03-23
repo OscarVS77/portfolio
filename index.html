@@ -1805,8 +1805,17 @@ async function init() {
       mergeState(remoteData);
       localStorage.setItem('portfolio_v3', JSON.stringify(remoteData));
       loadedFromSupabase = true;
+      // Debug: show what Supabase returned
+      const world = remoteData.find(x => x.id === 'world');
+      const dbInfo = world ? `SB OK: World inv=${world.invested} rent=${world.rentabilidad}` : 'SB OK pero sin world';
+      console.log('Supabase data:', JSON.stringify(remoteData));
+      setTimeout(() => showToast(dbInfo), 100);
+    } else {
+      setTimeout(() => showToast('Supabase: sin datos'), 100);
     }
-  } catch(e) {}
+  } catch(e) {
+    setTimeout(() => showToast('Supabase error: ' + e.message), 100);
+  }
 
   // If Supabase failed or returned nothing, fall back to localStorage
   if (!loadedFromSupabase) {
@@ -1814,13 +1823,11 @@ async function init() {
     loadState();
     if (!hasLocalData) {
       applyExcelDefaults();
-      saveState(); // Push defaults to Supabase on first ever use
+      saveState();
     }
   }
 
   render();
-
-  // Fetch live prices after render
   setTimeout(() => { fetchPrices(); }, 300);
 }
 
