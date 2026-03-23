@@ -1777,7 +1777,6 @@ const excel = {
 };
 
 function applyExcelDefaults() {
-  // Only apply if no localStorage data exists — first run only
   assets.forEach(a => {
     if (excel[a.id]) {
       if (!a.currentPrice) a.currentPrice = excel[a.id].currentPrice;
@@ -1786,24 +1785,36 @@ function applyExcelDefaults() {
   });
 }
 
-// Start: load localStorage immediately for instant render
-loadState();
-// Only apply excel defaults if localStorage was empty (first ever load)
-const hasLocalData = !!localStorage.getItem('portfolio_v3');
-if (!hasLocalData) applyExcelDefaults();
-render();
+async function init() {
+  // Step 1: Load localStorage for instant first render
+  const hasLocalData = !!localStorage.getItem('portfolio_v3');
+  loadState();
+  if (!hasLocalData) applyExcelDefaults();
+  render();
 
-// Then try Supabase — if newer data exists, update
-dbLoad().then(remoteData => {
-  if (remoteData && remoteData.length) {
-    mergeState(remoteData);
-    localStorage.setItem('portfolio_v3', JSON.stringify(remoteData));
-    render();
+  // Step 2: Always try Supabase — it has the real data
+  // If Supabase returns data, it ALWAYS wins over localStorage
+  try {
+    const remoteData = await dbLoad();
+    if (remoteData && remoteData.length) {
+      mergeState(remoteData);
+      // Update localStorage to match Supabase
+      localStorage.setItem('portfolio_v3', JSON.stringify(remoteData));
+      render();
+    } else if (!hasLocalData) {
+      // No Supabase data and no local data — first ever use
+      // Save excel defaults to Supabase so future loads work
+      saveState();
+    }
+  } catch(e) {
+    // Supabase unavailable — keep localStorage data
   }
-});
 
-// Auto-fetch live prices
-setTimeout(() => { fetchPrices(); }, 1500);
+  // Step 3: Fetch live prices after data is loaded
+  setTimeout(() => { fetchPrices(); }, 500);
+}
+
+init();
 
 </script>
 </body>
