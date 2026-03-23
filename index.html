@@ -1505,13 +1505,13 @@ function getTotals() {
 // ─── PRICE FETCHING ───────────────────────────────────────────────────────────
 
 async function fetchPrices() {
-  if (isDemo) return;
+  if (isDemo) return; // Demo uses static data only
   const btn = document.getElementById('refreshBtn');
   if (btn) btn.classList.add('spinning');
 
   const results = { btc: null, gold: null };
 
-  // BTC via CoinGecko
+  // BTC via CoinGecko — works from any origin
   try {
     const r = await fetch(
       'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=eur',
@@ -1523,10 +1523,13 @@ async function fetchPrices() {
     }
   } catch(e) {}
 
-  // BTC fallback via Coinbase
+  // BTC fallback via Coinbase public API
   if (!results.btc) {
     try {
-      const r = await fetch('https://api.coinbase.com/v2/prices/BTC-EUR/spot', { mode: 'cors' });
+      const r = await fetch(
+        'https://api.coinbase.com/v2/prices/BTC-EUR/spot',
+        { mode: 'cors' }
+      );
       if (r.ok) {
         const d = await r.json();
         if (d.data?.amount) results.btc = parseFloat(d.data.amount);
@@ -1534,25 +1537,8 @@ async function fetchPrices() {
     } catch(e) {}
   }
 
-  // Gold via metals.live (XAU/USD → EUR via ECB rate)
-  try {
-    const r = await fetch('https://metals.live/api/latest', { mode: 'cors' });
-    if (r.ok) {
-      const d = await r.json();
-      // metals.live returns array of objects with name/price in USD
-      const goldUsd = d.find ? d.find(x => x.gold)?.gold : null;
-      if (goldUsd) {
-        // Get USD/EUR rate from ECB
-        const fx = await fetch('https://api.frankfurter.app/latest?from=USD&to=EUR', { mode: 'cors' });
-        if (fx.ok) {
-          const fxd = await fx.json();
-          const usdToEur = fxd.rates?.EUR;
-          if (usdToEur) results.gold = goldUsd * usdToEur;
-        }
-      }
-    }
-  } catch(e) {}
-
+  // Gold ETC (PPFB = iShares Physical Gold ETC)
+  // Cada participación representa ~0.96g de oro (ratio fijo de iShares)
   // Apply BTC price
   if (results.btc) {
     const a = assets.find(x => x.id === 'btc');
@@ -1565,27 +1551,13 @@ async function fetchPrices() {
     }
   }
 
-  // Apply Gold price — XAU/EUR spot × oz/participación × participaciones
-  // iShares Physical Gold ETC: 0.009705 oz/participación · 5.41842 participaciones
-  if (results.gold) {
-    const a = assets.find(x => x.id === 'gold');
-    if (a) {
-      const OZ_PER_SHARE = 0.009705;
-      const SHARES       = 5.41842;
-      a.currentPrice = results.gold * OZ_PER_SHARE * SHARES;
-      a.rentabilidad = ((a.currentPrice - a.invested) / a.invested) * 100;
-      a.liveUnitPrice = results.gold;
-    }
-  }
-
   lastPriceUpdate = new Date();
   saveState();
   if (btn) btn.classList.remove('spinning');
   render();
 
   const msgs = [];
-  if (results.btc)  msgs.push(`BTC ${fmt(results.btc, 0)} €`);
-  if (results.gold) msgs.push(`XAU ${fmt(results.gold, 0)} €/oz`);
+  if (results.btc) msgs.push(`BTC ${fmt(results.btc, 0)} €`);
   showToast(msgs.length ? msgs.join(' · ') : 'Sin conexión con precios en vivo');
 }
 
@@ -1672,7 +1644,7 @@ function renderCard(a, totalCurrent, totalSinPP) {
         <div style="display:flex;align-items:center;gap:8px">
           <span style="width:8px;height:8px;border-radius:50%;background:${a.color};flex-shrink:0"></span>
           <span style="font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text)">${a.name}</span>
-          ${(a.id === 'btc' || a.id === 'gold') && a.liveUnitPrice ? `<span style="font-size:11px;color:${a.color}">${fmt(a.liveUnitPrice, 0)} €${a.id === 'gold' ? '/oz' : ''}</span>` : ''}
+          ${a.id === 'btc' && a.liveUnitPrice ? `<span style="font-size:11px;color:${a.color}">${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
         </div>
         <span style="font-family:var(--font-display);font-size:17px;font-weight:500;color:var(--text)">${fmtEur(current)}</span>
       </div>
@@ -1692,7 +1664,7 @@ function renderCard(a, totalCurrent, totalSinPP) {
         </div>
       </div>
       <div style="margin-top:8px;font-size:10px;color:var(--muted2)">${a.note}</div>
-      ${(a.id === 'btc' || a.id === 'gold') && a.liveUnitPrice ? `<div style="display:flex;align-items:center;gap:5px;margin-top:5px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span><span style="font-size:10px;color:var(--muted2)">Precio en vivo</span></div>` : ''}
+      ${a.id === 'btc' && a.liveUnitPrice ? `<div style="display:flex;align-items:center;gap:5px;margin-top:5px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span><span style="font-size:10px;color:var(--muted2)">Precio en vivo</span></div>` : ''}
     </div>
   `;
 }
