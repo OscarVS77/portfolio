@@ -1046,19 +1046,19 @@ if ('serviceWorker' in navigator) {
     <div class="pin-dot" id="d6"></div>
     <div class="pin-dot" id="d7"></div>
   </div>
-  <div class="pin-grid">
-    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('1')}" onclick="pinPress('1')">1</button>
-    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('2')}" onclick="pinPress('2')">2</button>
-    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('3')}" onclick="pinPress('3')">3</button>
-    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('4')}" onclick="pinPress('4')">4</button>
-    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('5')}" onclick="pinPress('5')">5</button>
-    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('6')}" onclick="pinPress('6')">6</button>
-    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('7')}" onclick="pinPress('7')">7</button>
-    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('8')}" onclick="pinPress('8')">8</button>
-    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('9')}" onclick="pinPress('9')">9</button>
+  <div class="pin-grid" id="pinGrid">
+    <button class="pin-key" data-pin="1">1</button>
+    <button class="pin-key" data-pin="2">2</button>
+    <button class="pin-key" data-pin="3">3</button>
+    <button class="pin-key" data-pin="4">4</button>
+    <button class="pin-key" data-pin="5">5</button>
+    <button class="pin-key" data-pin="6">6</button>
+    <button class="pin-key" data-pin="7">7</button>
+    <button class="pin-key" data-pin="8">8</button>
+    <button class="pin-key" data-pin="9">9</button>
     <button class="pin-key" style="visibility:hidden"></button>
-    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('0')}" onclick="pinPress('0')">0</button>
-    <button class="pin-key del" ontouchstart="e=>{e.preventDefault();pinDel()}" onclick="pinDel()">⌫</button>
+    <button class="pin-key" data-pin="0">0</button>
+    <button class="pin-key del" data-pin="del">⌫</button>
   </div>
   <div class="pin-error" id="pinError"></div>
 </div>
@@ -1270,6 +1270,27 @@ function updatePinDots() {
     document.getElementById('d' + i).classList.toggle('filled', i < pinBuffer.length);
   }
 }
+
+// PIN grid — touchstart for instant response on iOS PWA
+document.addEventListener('DOMContentLoaded', function() {
+  const grid = document.getElementById('pinGrid');
+  if (!grid) return;
+  grid.addEventListener('touchstart', function(e) {
+    const btn = e.target.closest('.pin-key');
+    if (!btn) return;
+    e.preventDefault();
+    const val = btn.getAttribute('data-pin');
+    if (val === 'del') pinDel();
+    else if (val) pinPress(val);
+  }, { passive: false });
+  grid.addEventListener('click', function(e) {
+    const btn = e.target.closest('.pin-key');
+    if (!btn) return;
+    const val = btn.getAttribute('data-pin');
+    if (val === 'del') pinDel();
+    else if (val) pinPress(val);
+  });
+});
 
 // Keyboard support for PIN on desktop
 document.addEventListener('keydown', function(e) {
