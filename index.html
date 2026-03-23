@@ -212,39 +212,23 @@
   .assets-grid {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 16px;
+    gap: 8px;
+    margin-top: 8px;
   }
 
   .asset-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 18px;
+    padding: 14px 18px;
     cursor: pointer;
     transition: all 0.2s;
     position: relative;
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
   }
 
-  .asset-card:hover {
-    border-color: var(--border2);
-    box-shadow: var(--shadow);
-    transform: translateY(-1px);
-  }
-
-  .asset-card::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 0;
-    background: transparent;
-  }
-
-  .asset-card:active { transform: scale(0.98); }
+  .asset-card:hover { border-color: var(--border2); }
+  .asset-card::before { display: none; }
+  .asset-card:active { transform: scale(0.99); }
 
   .card-top {
     display: flex;
@@ -299,11 +283,11 @@
   .asset-pnl-badge {
     display: inline-block;
     font-family: var(--font-sans);
-    font-size: 14px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 7px;
-    letter-spacing: 0.02em;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 0;
+    border-radius: 0;
+    letter-spacing: 0;
   }
 
   .positive { background: transparent; color: #00C896; }
@@ -757,7 +741,7 @@
   .summary-tile-label {
     font-family: var(--font-sans);
     font-size: 9px;
-    color: var(--muted2);
+    color: var(--text);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-bottom: 4px;
@@ -768,6 +752,22 @@
     font-family: var(--font-display);
     font-size: 18px;
     font-weight: 400;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .summary-tile {
+      background: transparent;
+      border: 1px solid var(--border);
+    }
+    .summary-tile-label {
+      color: #FFFFFF;
+    }
+    #refreshBtn {
+      border-color: #FFD700 !important;
+    }
+    #refreshBtn .refresh-icon {
+      color: #FFD700 !important;
+    }
   }
 
   .summary-tile.full-width {
@@ -905,9 +905,9 @@
 </div>
 
 <div class="tabs" id="tabBar">
-  <button class="tab active" onclick="switchTab('activos')" style="flex:0.8">Activos</button>
-  <button class="tab" onclick="switchTab('rebalanceo')" style="flex:0.8">Rebalanceo</button>
-  <button class="tab" id="refreshBtn" onclick="fetchPrices()" style="flex:1;display:flex;align-items:center;justify-content:center"><span class="refresh-icon" style="font-size:10px;color:var(--text);letter-spacing:0.1em;font-weight:600">ACTUALIZAR</span></button>
+  <button class="tab active" onclick="switchTab('activos')" style="flex:1">Activos</button>
+  <button class="tab" onclick="switchTab('rebalanceo')" style="flex:1">Rebalanceo</button>
+  <button class="tab" id="refreshBtn" onclick="fetchPrices()" style="flex:1;display:flex;align-items:center;justify-content:center"><span class="refresh-icon" style="font-size:10px;letter-spacing:0.1em;font-weight:600">ACTUALIZAR</span></button>
 </div>
 </div>
 
@@ -1322,35 +1322,34 @@ function renderCard(a, totalCurrent, totalSinPP) {
 
   return `
     <div class="asset-card" style="--accent-color: ${a.color}" onclick="openModal('${a.id}')">
-      <div class="card-top">
-        <div class="asset-info">
-          <div class="asset-name"><span class="asset-dot" style="background:${a.color}"></span>${a.name}${liveTag}</div>
-          <div class="asset-ticker">${a.ticker}${tickerSuffix}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50%;background:${a.color};flex-shrink:0"></span>
+          <span style="font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text)">${a.name}</span>
+          ${a.id === 'btc' && a.liveUnitPrice ? `<span style="font-size:11px;color:var(--muted2)">${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
         </div>
-        <div class="asset-right">
-          <div class="asset-current">${fmtEur(current)}</div>
-          <span class="asset-pnl-badge ${pnlClass(pnl)}">${fmtPct(pnl)}</span>
+        <span style="font-family:var(--font-display);font-size:17px;font-weight:500;color:var(--text)">${fmtEur(current)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+        <span style="font-size:11px;color:var(--muted2)">${a.ticker}${tickerSuffix}</span>
+        <span class="asset-pnl-badge ${pnlClass(pnl)}">${fmtPct(pnl)}</span>
+      </div>
+      <div style="height:0.5px;background:var(--border);margin:10px 0"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">Invertido</div>
+          <div style="font-size:14px;color:var(--text)">${fmtEur(a.invested)}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">P&L</div>
+          <div style="font-size:14px;color:${pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)'}">${fmtEur(pnlAbs)}</div>
         </div>
       </div>
-      <div class="card-bottom">
-        <div class="card-stat">
-          <div class="stat-label">Invertido</div>
-          <div class="stat-value">${fmtEur(a.invested)}</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">P&L</div>
-          <div class="stat-value" style="color: ${pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)'}">${fmtEur(pnlAbs)}</div>
-        </div>
+      <div style="margin-top:10px;height:2px;background:var(--border);border-radius:2px;overflow:hidden">
+        <div style="width:${Math.min(weight, 100)}%;height:100%;background:${a.color};border-radius:2px"></div>
       </div>
-      <div class="weight-bar-container">
-        <div class="weight-bar-track">
-          <div class="weight-bar-fill" style="width: ${Math.min(weight, 100)}%; background: ${a.color}"></div>
-        </div>
-      </div>
-      <div style="margin-top:8px; font-size:10px; color:var(--muted2); letter-spacing:0.02em;">${a.note}</div>
-      <div class="price-tag">
-        ${a.id === 'btc' && a.liveUnitPrice ? `<div class="price-dot"></div><span class="price-text">Precio en vivo</span><span class="live-unit-price" style="color:var(--text)">BTC ${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
-      </div>
+      <div style="margin-top:6px;font-size:10px;color:var(--muted2)">${a.note}</div>
+      ${a.id === 'btc' && a.liveUnitPrice ? `<div style="display:flex;align-items:center;gap:5px;margin-top:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span><span style="font-size:10px;color:var(--muted2)">Precio en vivo</span></div>` : ''}
     </div>
   `;
 }
@@ -1814,38 +1813,52 @@ function addPPAportacion(direction) {
 
 function setExactAmount() {
   const el = document.getElementById('setAmountInput');
-  const v = parseFloat(el ? el.value : '');
-  if (!v || v <= 0) { showToast('Introduce un importe válido'); return; }
+  if (!el) return;
+  const raw = el.value.replace(',', '.');
+  const v = parseFloat(raw);
+  if (!selectedAssetId) { showToast('Error: ningún activo seleccionado'); return; }
+  if (isNaN(v) || v <= 0) { showToast('Introduce un importe válido'); return; }
   const a = assets.find(x => x.id === selectedAssetId);
+  if (!a) return;
   a.invested = v;
   if (a.rentabilidad != null) {
     a.currentPrice = a.invested * (1 + a.rentabilidad / 100);
   }
   saveState();
-  if (el) el.value = '';
+  el.value = '';
   document.getElementById('modalOverlay').classList.remove('open');
-  showToast(`${a.name}: total invertido actualizado a ${fmtEur(v)}`);
+  showToast(`${a.name}: total invertido → ${fmtEur(v)}`);
   render();
 }
 
 function setRentabilidad() {
-  const pct = parseFloat(document.getElementById('rentabilidadInput').value);
+  const el = document.getElementById('rentabilidadInput');
+  if (!el) return;
+  const raw = el.value.replace(',', '.');
+  const pct = parseFloat(raw);
+  if (!selectedAssetId) { showToast('Error: ningún activo seleccionado'); return; }
   if (isNaN(pct)) { showToast('Introduce un porcentaje válido'); return; }
   const a = assets.find(x => x.id === selectedAssetId);
+  if (!a) return;
   a.rentabilidad = pct;
   a.currentPrice = a.invested * (1 + pct / 100);
   saveState();
-  showToast(`${a.name}: rentabilidad ${fmtPct(pct)}, valor ${fmtEur(a.currentPrice)}`);
+  el.value = '';
   document.getElementById('modalOverlay').classList.remove('open');
+  showToast(`${a.name}: ${fmtPct(pct)} → ${fmtEur(a.currentPrice)}`);
   render();
 }
 
 function setBtcUnits() {
-  const units = parseFloat(document.getElementById('btcUnitsInput').value);
+  const el = document.getElementById('btcUnitsInput');
+  if (!el) return;
+  const raw = el.value.replace(',', '.');
+  const units = parseFloat(raw);
+  if (!selectedAssetId) { showToast('Error: ningún activo seleccionado'); return; }
   if (isNaN(units) || units <= 0) { showToast('Introduce un número de BTC válido'); return; }
   const a = assets.find(x => x.id === selectedAssetId);
+  if (!a) return;
   a.btcUnits = units;
-  // Compute value if we have live price
   if (a.liveUnitPrice) {
     a.currentPrice = units * a.liveUnitPrice;
     a.rentabilidad = ((a.currentPrice - a.invested) / a.invested) * 100;
@@ -1854,6 +1867,7 @@ function setBtcUnits() {
     showToast(`BTC: ${units} unidades guardadas`);
   }
   saveState();
+  el.value = '';
   document.getElementById('modalOverlay').classList.remove('open');
   render();
 }
