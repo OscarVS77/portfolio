@@ -102,8 +102,8 @@
 
   .header-top {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 10px;
   }
 
@@ -230,34 +230,6 @@
   .asset-card::before { display: none; }
   .asset-card:active { transform: scale(0.99); }
 
-  .card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 14px;
-  }
-
-  .asset-info { flex: 1; }
-
-  .asset-name {
-    font-family: var(--font-display);
-    font-size: 17px;
-    font-weight: 600;
-    margin-bottom: 3px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    color: var(--text);
-  }
-
-  .asset-dot {
-    display: inline-block;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
   .asset-ticker {
     font-family: var(--font-sans);
     font-size: 10px;
@@ -265,19 +237,6 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     font-weight: 400;
-  }
-
-  .asset-right {
-    text-align: right;
-  }
-
-  .asset-current {
-    font-family: var(--font-display);
-    
-    font-size: 20px;
-    font-weight: 400;
-    color: var(--text);
-    margin-bottom: 4px;
   }
 
   .asset-pnl-badge {
@@ -293,16 +252,6 @@
   .positive { background: transparent; color: #00C896; }
   .negative { background: transparent; color: #FF3B30; }
   .neutral { background: rgba(100,100,100,0.1); color: var(--muted); }
-
-  .card-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-  }
-
-  .card-stat { text-align: center; }
 
   .stat-label {
     font-family: var(--font-sans);
@@ -877,27 +826,27 @@
 
 <div id="stickyTop" style="position:sticky;top:0;z-index:100;">
 <div class="header">
-  <div class="header-top">
-    <div style="display:flex;align-items:baseline;gap:10px">
+  <div class="header-top" style="justify-content:center">
+    <div style="display:flex;align-items:baseline;gap:10px;justify-content:center">
       <div class="header-title">Portfolio</div>
       <div style="font-family:var(--font-sans);font-size:10px;color:var(--text);letter-spacing:0.08em">6 activos</div>
       <div class="header-date" id="headerDate"></div>
     </div>
   </div>
   <div id="headerTiles" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
-    <div class="summary-tile">
+    <div class="summary-tile" style="text-align:center">
       <div class="summary-tile-label">Total invertido</div>
       <div class="summary-tile-value" id="hTotalInvested">—</div>
     </div>
-    <div class="summary-tile">
+    <div class="summary-tile" style="text-align:center">
       <div class="summary-tile-label">Valor actual</div>
       <div class="summary-tile-value" id="hTotalCurrent">—</div>
     </div>
-    <div class="summary-tile">
+    <div class="summary-tile" style="text-align:center">
       <div class="summary-tile-label">P&L absoluto</div>
       <div class="summary-tile-value" id="hPnlAbs">—</div>
     </div>
-    <div class="summary-tile">
+    <div class="summary-tile" style="text-align:center">
       <div class="summary-tile-label">Rentabilidad</div>
       <div class="summary-tile-value" id="hPnlPct">—</div>
     </div>
@@ -929,7 +878,7 @@
       <div class="modal-section-desc">Suma o resta del contador del año en curso.</div>
       <div class="input-row">
         <div class="input-currency">€</div>
-        <input type="number" class="amount-input" id="ppAportacionInput" placeholder="0.00" step="0.01" min="0">
+        <input type="text" inputmode="decimal" class="amount-input" id="ppAportacionInput" placeholder="0,00">
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
         <button class="btn-add" onclick="addPPAportacion(1)">+ Sumar</button>
@@ -943,7 +892,7 @@
       <div class="modal-section-desc" id="totalInvertidoDesc">Introduce la cifra exacta que ves en el broker.</div>
       <div class="input-row">
         <div class="input-currency">€</div>
-        <input type="number" class="amount-input" id="setAmountInput" placeholder="0.00" step="0.01" min="0">
+        <input type="text" inputmode="decimal" class="amount-input" id="setAmountInput" placeholder="0,00">
       </div>
       <button class="btn-set" onclick="setExactAmount()">Actualizar total invertido</button>
     </div>
@@ -953,7 +902,7 @@
       <div class="modal-section-title">₿ · Unidades de BTC</div>
       <div class="modal-section-desc">Total de BTC que tienes. El valor y rentabilidad se calculan solos con el precio en vivo.</div>
       <div class="price-input-group">
-        <input type="number" class="price-input" id="btcUnitsInput" placeholder="0.00000000" step="0.00000001" min="0">
+        <input type="text" inputmode="decimal" class="price-input" id="btcUnitsInput" placeholder="0,00000000">
         <span style="color: var(--muted2); font-size:13px; font-family: var(--font-sans)">BTC</span>
       </div>
       <div class="modal-result-preview" id="btcUnitsPreview"></div>
@@ -965,7 +914,7 @@
       <div class="modal-section-title">2 · Rentabilidad actual</div>
       <div class="modal-section-desc" id="rentabilidadDesc">Introduce el % que ves en Trade Republic o MyInvestor.</div>
       <div class="price-input-group">
-        <input type="number" class="price-input" id="rentabilidadInput" placeholder="0.00" step="0.01">
+        <input type="text" inputmode="decimal" class="price-input" id="rentabilidadInput" placeholder="0,00">
         <span style="color: var(--muted2); font-size:15px; font-family: var(--font-sans)">%</span>
       </div>
       <div class="modal-result-preview" id="resultPreview"></div>
@@ -1345,11 +1294,8 @@ function renderCard(a, totalCurrent, totalSinPP) {
           <div style="font-size:14px;color:${pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)'}">${fmtEur(pnlAbs)}</div>
         </div>
       </div>
-      <div style="margin-top:10px;height:2px;background:var(--border);border-radius:2px;overflow:hidden">
-        <div style="width:${Math.min(weight, 100)}%;height:100%;background:${a.color};border-radius:2px"></div>
-      </div>
-      <div style="margin-top:6px;font-size:10px;color:var(--muted2)">${a.note}</div>
-      ${a.id === 'btc' && a.liveUnitPrice ? `<div style="display:flex;align-items:center;gap:5px;margin-top:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span><span style="font-size:10px;color:var(--muted2)">Precio en vivo</span></div>` : ''}
+      <div style="margin-top:8px;font-size:10px;color:var(--muted2)">${a.note}</div>
+      ${a.id === 'btc' && a.liveUnitPrice ? `<div style="display:flex;align-items:center;gap:5px;margin-top:5px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span><span style="font-size:10px;color:var(--muted2)">Precio en vivo</span></div>` : ''}
     </div>
   `;
 }
@@ -1365,104 +1311,46 @@ function renderPPCard(a) {
   const pnlAbs = current - a.invested;
 
   return `
-    <div class="asset-card" style="--accent-color: ${a.color}; border-style: dashed;" onclick="openModal('${a.id}')">
-      <div class="card-top">
-        <div class="asset-info">
-          <div class="asset-name"><span class="asset-dot" style="background:${a.color}"></span>${a.name}</div>
-          <div class="asset-ticker">${a.ticker} · Sin rebalanceo</div>
+    <div class="asset-card" style="--accent-color:${a.color};border-style:dashed" onclick="openModal('${a.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50%;background:${a.color};flex-shrink:0"></span>
+          <span style="font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text)">${a.name}</span>
         </div>
-        <div class="asset-right">
-          <div class="asset-current">${fmtEur(current)}</div>
-          <span class="asset-pnl-badge ${pnlClass(pnl)}">${fmtPct(pnl)}</span>
+        <span style="font-family:var(--font-display);font-size:17px;font-weight:500;color:var(--text)">${fmtEur(current)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+        <span style="font-size:11px;color:var(--muted2)">${a.ticker} · Sin rebalanceo</span>
+        <span class="asset-pnl-badge ${pnlClass(pnl)}">${fmtPct(pnl)}</span>
+      </div>
+      <div style="height:0.5px;background:var(--border);margin:10px 0"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">Invertido</div>
+          <div style="font-size:14px;color:var(--text)">${fmtEur(a.invested)}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">P&L</div>
+          <div style="font-size:14px;color:${pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)'}">${fmtEur(pnlAbs)}</div>
         </div>
       </div>
-
-      <div style="margin: 12px 0 6px; padding: 12px; background: var(--surface2); border-radius: 10px;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px">
-          <span style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted2)">Aportado ${year}</span>
-          <span style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted2)">Límite IRPF</span>
+      <div style="margin:10px 0 6px;padding:10px 12px;background:var(--surface2);border-radius:10px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2)">Aportado ${year}</span>
+          <span style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2)">Límite IRPF</span>
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px">
-          <span style="font-size:20px; font-weight:700; color:${a.color}">${fmtEur(aportadoAño)}</span>
-          <span style="font-size:14px; color:var(--muted2)">${fmtEur(a.ppLimit, 0)}</span>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <span style="font-size:16px;font-weight:600;color:${a.color}">${fmtEur(aportadoAño)}</span>
+          <span style="font-size:13px;color:var(--muted2)">${fmtEur(a.ppLimit, 0)}</span>
         </div>
-        <div class="weight-bar-track">
-          <div class="weight-bar-fill" style="width:${progresoPct}%; background:${a.color}"></div>
+        <div style="height:2px;background:var(--border);border-radius:2px;overflow:hidden">
+          <div style="width:${progresoPct}%;height:100%;background:${a.color};border-radius:2px"></div>
         </div>
-        <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:11px; color:var(--muted2)">
+        <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:var(--muted2)">
           <span>${fmt(progresoPct, 1)}% completado</span>
-          <span>Resta: <span style="color:var(--text); font-weight:600">${fmtEur(restante, 0)}</span></span>
+          <span>Resta: <span style="color:var(--text);font-weight:600">${fmtEur(restante, 0)}</span></span>
         </div>
       </div>
-
-      <div class="card-bottom" style="margin-top:4px">
-        <div class="card-stat">
-          <div class="stat-label">Total invertido</div>
-          <div class="stat-value">${fmtEur(a.invested)}</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">P&L</div>
-          <div class="stat-value" style="color: ${pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)'}">${fmtEur(pnlAbs)}</div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function renderResumen() {
-  const {totalInvested, totalCurrent, pnl} = getTotals();
-  const pnlAbs = totalCurrent - totalInvested;
-
-  return `
-    <div class="summary-grid">
-      <div class="summary-tile">
-        <div class="summary-tile-label">Total invertido</div>
-        <div class="summary-tile-value">${fmtEur(totalInvested, 0)}</div>
-      </div>
-      <div class="summary-tile">
-        <div class="summary-tile-label">Valor actual</div>
-        <div class="summary-tile-value">${fmtEur(totalCurrent, 0)}</div>
-      </div>
-      <div class="summary-tile">
-        <div class="summary-tile-label">P&L absoluto</div>
-        <div class="summary-tile-value" style="color: ${pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)'}">${fmtEur(pnlAbs)}</div>
-      </div>
-      <div class="summary-tile">
-        <div class="summary-tile-label">Rentabilidad</div>
-        <div class="summary-tile-value" style="color:${pnl >= 0 ? 'var(--accent)' : 'var(--red)'}">${fmtPct(pnl)}</div>
-      </div>
-    </div>
-    <div class="section-header" style="margin-top:20px">
-      <span class="section-label">Desglose por activo</span>
-    </div>
-    <div class="assets-grid" style="gap:8px">
-      ${(() => {
-        const pp = assets.find(a => a.id === 'pp');
-        const totalSinPP = totalCurrent - (pp ? getAssetCurrent(pp) : 0);
-        return assets.map(a => {
-          const current = getAssetCurrent(a);
-          const pnl = getAssetPnl(a);
-          const weight = a.id === 'pp' ? 0 : (totalSinPP > 0 ? (current / totalSinPP) * 100 : 0);
-          const weightLabel = a.id === 'pp' ? 'Sin rebalanceo' : `${fmt(weight,1)}% del portfolio`;
-          return `
-            <div class="rebalance-card" style="padding:14px">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
-                <span style="font-family:var(--font-display); font-weight:600; font-size:14px; color:var(--text); display:flex; align-items:center; gap:6px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${a.color};flex-shrink:0"></span>${a.name}</span>
-                <span class="asset-pnl-badge ${pnlClass(pnl)}">${fmtPct(pnl)}</span>
-              </div>
-              <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--muted2); margin-bottom:4px">
-                <span>Invertido: <span style="color:var(--text)">${fmtEur(a.invested)}</span></span>
-                <span>Actual: <span style="color:var(--text)">${fmtEur(current)}</span></span>
-              </div>
-              ${a.id !== 'pp' ? `
-              <div class="weight-bar-track" style="margin-top:8px">
-                <div class="weight-bar-fill" style="width:${Math.min(weight,100)}%; background:${a.color}"></div>
-              </div>` : ''}
-              <div style="font-size:10px; color:var(--muted2); margin-top:4px; text-align:right">${weightLabel}</div>
-            </div>
-          `;
-        }).join('');
-      })()}
     </div>
   `;
 }
@@ -1649,22 +1537,29 @@ function renderRebalanceo() {
   // Dual bar block: shows actual + target bars for each asset, compact
   function dualBar(asset, current, total, targetPct) {
     const actualPct = total > 0 ? (current / total) * 100 : 0;
+    const diff = actualPct - targetPct;
+    const inRange = Math.abs(diff) <= REBAL_THRESHOLD;
+    const diffColor = inRange ? 'var(--muted2)' : (diff > 0 ? 'var(--red)' : 'var(--accent)');
+    const diffLabel = (diff >= 0 ? '+' : '') + fmt(diff, 1) + '%';
     return `
-      <div style="margin-bottom:10px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
-          <div style="display:flex;align-items:center;gap:5px">
-            <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${asset.color};flex-shrink:0"></span>
-            <span style="font-size:11px;font-weight:500;color:var(--text)">${asset.name}</span>
+      <div style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div style="display:flex;align-items:center;gap:7px">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${asset.color};flex-shrink:0"></span>
+            <span style="font-size:14px;font-weight:600;color:var(--text)">${asset.name}</span>
           </div>
-          <span style="font-size:10px;color:var(--muted2)">${fmt(actualPct,1)}% <span style="color:var(--muted2);opacity:.5">/</span> ${fmt(targetPct,0)}%</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:13px;color:var(--text);font-weight:500">${fmt(actualPct,1)}%</span>
+            <span style="font-size:12px;color:var(--muted2)">/ ${fmt(targetPct,0)}%</span>
+            <span style="font-size:13px;font-weight:600;color:${diffColor}">${diffLabel}</span>
+          </div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:3px">
-          <div style="position:relative;height:5px;background:rgba(128,128,128,0.15);border-radius:3px;overflow:hidden">
-            <div style="position:absolute;left:0;top:0;height:100%;width:${Math.min(actualPct,100)}%;background:${asset.color};border-radius:3px;transition:width .5s"></div>
-          </div>
-          <div style="position:relative;height:5px;background:rgba(128,128,128,0.15);border-radius:3px;overflow:hidden">
-            <div style="position:absolute;left:0;top:0;height:100%;width:${Math.min(targetPct,100)}%;background:${asset.color};opacity:.35;border-radius:3px"></div>
-          </div>
+        <div style="position:relative;height:7px;background:var(--border);border-radius:4px;overflow:hidden">
+          <div style="position:absolute;left:0;top:0;height:100%;width:${Math.min(actualPct,100)}%;background:${asset.color};border-radius:4px;transition:width .5s"></div>
+        </div>
+        <div style="position:relative;height:3px;background:transparent;margin-top:2px">
+          <div style="position:absolute;left:0;top:0;height:3px;width:${Math.min(targetPct,100)}%;background:${asset.color};opacity:.3;border-radius:2px"></div>
+          <div style="position:absolute;top:-2px;left:${Math.min(targetPct,100)}%;transform:translateX(-50%);width:2px;height:7px;background:${asset.color};opacity:.7;border-radius:1px"></div>
         </div>
       </div>`;
   }
@@ -1675,42 +1570,20 @@ function renderRebalanceo() {
       <!-- NIVEL 1 -->
       <div class="rebalance-card">
         <div class="rebalance-header">Fondos indexados</div>
-        <div style="display:flex;justify-content:flex-end;gap:12px;margin-bottom:10px">
-          <span style="font-size:9px;color:var(--muted2);letter-spacing:.08em">ACTUAL ─── OBJETIVO ░░░</span>
-        </div>
         ${dualBar(world,    vWorld,    totalFondos, 70)}
         ${dualBar(emerging, vEmerging, totalFondos, 20)}
         ${dualBar(smallcap, vSmallcap, totalFondos, 10)}
-        <div style="height:1px;background:var(--border);margin:10px 0"></div>
-        <div style="font-size:10px;color:var(--muted2);margin-bottom:4px;display:grid;grid-template-columns:1fr 46px 40px 40px 72px;gap:8px;padding:0 0 4px">
-          <span></span><span></span><span style="text-align:right">Real</span><span style="text-align:right">Obj.</span><span style="text-align:right">Desv.</span>
-        </div>
-        ${compactRow(world,    vWorld,    totalFondos, 70)}
-        ${compactRow(emerging, vEmerging, totalFondos, 20)}
-        ${compactRow(smallcap, vSmallcap, totalFondos, 10)}
         ${actionPlan(fondosRows)}
       </div>
 
       <!-- NIVEL 2 -->
       <div class="rebalance-card">
         <div class="rebalance-header">Portfolio completo</div>
-        <div style="display:flex;justify-content:flex-end;gap:12px;margin-bottom:10px">
-          <span style="font-size:9px;color:var(--muted2);letter-spacing:.08em">ACTUAL ─── OBJETIVO ░░░</span>
-        </div>
         ${dualBar(gold,     vGold,     total5, 5)}
         ${dualBar(btc,      vBtc,      total5, 15)}
         ${dualBar(world,    vWorld,    total5, nivel2Targets.world)}
         ${dualBar(emerging, vEmerging, total5, nivel2Targets.emerging)}
         ${dualBar(smallcap, vSmallcap, total5, nivel2Targets.smallcap)}
-        <div style="height:1px;background:var(--border);margin:10px 0"></div>
-        <div style="font-size:10px;color:var(--muted2);margin-bottom:4px;display:grid;grid-template-columns:1fr 46px 40px 40px 72px;gap:8px;padding:0 0 4px">
-          <span></span><span></span><span style="text-align:right">Real</span><span style="text-align:right">Obj.</span><span style="text-align:right">Desv.</span>
-        </div>
-        ${compactRow(gold,     vGold,     total5, 5)}
-        ${compactRow(btc,      vBtc,      total5, 15)}
-        ${compactRow(world,    vWorld,    total5, nivel2Targets.world)}
-        ${compactRow(emerging, vEmerging, total5, nivel2Targets.emerging)}
-        ${compactRow(smallcap, vSmallcap, total5, nivel2Targets.smallcap)}
         ${actionPlan(portfolioRows)}
       </div>
 
@@ -1727,7 +1600,7 @@ function openModal(id) {
   document.getElementById('modalSubtitle').textContent = `${a.ticker} · Invertido: ${fmtEur(a.invested)}`;
   const setAmountEl = document.getElementById('setAmountInput');
   if (setAmountEl) setAmountEl.value = '';
-  document.getElementById('rentabilidadInput').value = a.rentabilidad != null ? fmt(a.rentabilidad, 2) : '';
+  document.getElementById('rentabilidadInput').value = a.rentabilidad != null ? fmt(a.rentabilidad, 2).replace('.', ',') : '';
   document.getElementById('resultPreview').textContent = a.rentabilidad != null
     ? `Valor actual calculado: ${fmtEur(a.invested * (1 + a.rentabilidad / 100))}`
     : '';
@@ -1765,11 +1638,11 @@ function openModal(id) {
 
   // Live preview on rentabilidad input
   document.getElementById('rentabilidadInput').oninput = function() {
-    const pct = parseFloat(this.value);
+    const pct = parseFloat(this.value.replace(',', '.'));
     const asset = assets.find(x => x.id === selectedAssetId);
-    if (!isNaN(pct)) {
+    if (!isNaN(pct) && asset) {
       const val = asset.invested * (1 + pct / 100);
-      document.getElementById('resultPreview').textContent = `Valor actual calculado: ${fmtEur(val)}`;
+      document.getElementById('resultPreview').textContent = `Valor calculado: ${fmtEur(val)}`;
     } else {
       document.getElementById('resultPreview').textContent = '';
     }
@@ -1777,10 +1650,10 @@ function openModal(id) {
 
   // Live preview on BTC units input
   document.getElementById('btcUnitsInput').oninput = function() {
-    const units = parseFloat(this.value);
+    const units = parseFloat(this.value.replace(',', '.'));
     const asset = assets.find(x => x.id === selectedAssetId);
     const preview = document.getElementById('btcUnitsPreview');
-    if (!isNaN(units) && asset.liveUnitPrice) {
+    if (!isNaN(units) && asset && asset.liveUnitPrice) {
       preview.textContent = `Valor actual: ${fmtEur(units * asset.liveUnitPrice)}`;
     } else if (!isNaN(units)) {
       preview.textContent = `${units} BTC · actualiza precio para ver valor`;
@@ -1876,7 +1749,7 @@ function setBtcUnits() {
 
 function switchTab(tab) {
   activeTab = tab;
-  document.querySelectorAll('.tab').forEach((t, i) => {
+  document.querySelectorAll('.tab:not(#refreshBtn)').forEach((t, i) => {
     const tabs = ['activos', 'rebalanceo'];
     t.classList.toggle('active', tabs[i] === tab);
   });
@@ -1904,10 +1777,10 @@ const excel = {
 };
 
 function applyExcelDefaults() {
+  // Only apply if no localStorage data exists — first run only
   assets.forEach(a => {
     if (excel[a.id]) {
       if (!a.currentPrice) a.currentPrice = excel[a.id].currentPrice;
-      if (a.invested === (DEFAULT_ASSETS.find(d => d.id === a.id)?.invested)) a.invested = excel[a.id].invested;
       if (a.rentabilidad == null) a.rentabilidad = excel[a.id].rentabilidad;
     }
   });
@@ -1915,15 +1788,15 @@ function applyExcelDefaults() {
 
 // Start: load localStorage immediately for instant render
 loadState();
-applyExcelDefaults();
+// Only apply excel defaults if localStorage was empty (first ever load)
+const hasLocalData = !!localStorage.getItem('portfolio_v3');
+if (!hasLocalData) applyExcelDefaults();
 render();
 
 // Then try Supabase — if newer data exists, update
 dbLoad().then(remoteData => {
   if (remoteData && remoteData.length) {
     mergeState(remoteData);
-    applyExcelDefaults();
-    // Sync remote to local
     localStorage.setItem('portfolio_v3', JSON.stringify(remoteData));
     render();
   }
