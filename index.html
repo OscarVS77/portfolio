@@ -905,7 +905,6 @@ if ('serviceWorker' in navigator) {
         <div class="input-currency">€</div>
         <input type="text" inputmode="decimal" class="amount-input" id="setAmountInput" placeholder="0,00">
       </div>
-      <button class="btn-set" onclick="setExactAmount()">Actualizar total invertido</button>
     </div>
 
     <!-- SECCIÓN BTC UNITS: solo BTC -->
@@ -917,20 +916,35 @@ if ('serviceWorker' in navigator) {
         <span style="color: var(--muted2); font-size:13px; font-family: var(--font-sans)">BTC</span>
       </div>
       <div class="modal-result-preview" id="btcUnitsPreview"></div>
-      <button class="btn-set" onclick="setBtcUnits()">Guardar unidades</button>
     </div>
 
     <!-- SECCIÓN: Valor actual (no BTC) -->
     <div class="modal-section" id="valorActualSection">
       <div class="modal-section-title">2 · Valor actual</div>
-      <div class="modal-section-desc">Lo que vale hoy tu posición en el broker. La app calcula P&L y rentabilidad sola.</div>
+      <div class="modal-section-desc">Lo que vale hoy tu posición en el broker.</div>
       <div class="input-row">
         <div class="input-currency">€</div>
         <input type="text" inputmode="decimal" class="amount-input" id="valorActualInput" placeholder="0,00">
       </div>
       <div class="modal-result-preview" id="resultPreview"></div>
-      <button class="btn-set" onclick="setValorActual()">Actualizar valor actual</button>
     </div>
+
+    <!-- SECCIÓN: Aportación año actual (solo PP) -->
+    <div class="modal-section" id="ppAportacionSection" style="display:none">
+      <div class="modal-section-title">Aportado en 2026</div>
+      <div class="modal-section-desc">Suma o resta del contador del año en curso.</div>
+      <div class="input-row">
+        <div class="input-currency">€</div>
+        <input type="text" inputmode="decimal" class="amount-input" id="ppAportacionInput" placeholder="0,00">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+        <button class="btn-add" onclick="addPPAportacion(1)">+ Sumar</button>
+        <button class="btn-add" style="background:#c0392b" onclick="addPPAportacion(-1)">− Restar</button>
+      </div>
+    </div>
+
+    <!-- BOTÓN GUARDAR TODO -->
+    <button class="btn-set" id="saveAllBtn" onclick="saveAll()" style="margin-top:8px;width:100%;background:var(--surface2);border:1px solid var(--accent);color:var(--accent);font-size:13px;font-weight:700;letter-spacing:.08em">GUARDAR TODO</button>
   </div>
 </div>
 
@@ -1609,85 +1623,112 @@ function openModal(id) {
   const a = assets.find(x => x.id === id);
   document.getElementById('modalTitle').textContent = a.name;
   document.getElementById('modalSubtitle').textContent = `${a.ticker} · Invertido: ${fmtEur(a.invested)}`;
-  const setAmountEl = document.getElementById('setAmountInput');
-  if (setAmountEl) setAmountEl.value = '';
-  document.getElementById('rentabilidadInput').value = a.rentabilidad != null ? fmt(a.rentabilidad, 2).replace('.', ',') : '';
-  document.getElementById('resultPreview').textContent = a.rentabilidad != null
-    ? `Valor actual calculado: ${fmtEur(a.invested * (1 + a.rentabilidad / 100))}`
-    : '';
 
-  // Show/hide sections based on asset type
-  const ppSection = document.getElementById('ppAportacionSection');
+  const ppSection    = document.getElementById('ppAportacionSection');
   const totalSection = document.getElementById('totalInvertidoSection');
-  const btcSection = document.getElementById('btcUnitsSection');
+  const btcSection   = document.getElementById('btcUnitsSection');
   const valorSection = document.getElementById('valorActualSection');
 
+  // Reset inputs
+  document.getElementById('setAmountInput').value = '';
+  document.getElementById('valorActualInput').value = '';
+  document.getElementById('ppAportacionInput').value = '';
+  document.getElementById('resultPreview').textContent = '';
+  document.getElementById('btcUnitsPreview').textContent = '';
+
   if (id === 'btc') {
-    ppSection.style.display = 'none';
+    ppSection.style.display    = 'none';
     totalSection.style.display = 'none';
-    btcSection.style.display = 'block';
+    btcSection.style.display   = 'block';
     valorSection.style.display = 'none';
     document.getElementById('btcUnitsInput').value = a.btcUnits ? a.btcUnits.toFixed(8) : '';
-    const preview = document.getElementById('btcUnitsPreview');
-    preview.textContent = a.btcUnits && a.liveUnitPrice
+    document.getElementById('btcUnitsPreview').textContent = a.btcUnits && a.liveUnitPrice
       ? `Valor actual: ${fmtEur(a.btcUnits * a.liveUnitPrice)}`
-      : a.btcUnits ? `${a.btcUnits} BTC · actualiza precio para ver valor` : '';
-  } else if (id === 'pp') {
-    ppSection.style.display = 'block';
-    document.getElementById('ppAportacionInput').value = '';
-    totalSection.style.display = 'block';
-    btcSection.style.display = 'none';
-    valorSection.style.display = 'block';
+      : '';
   } else {
-    ppSection.style.display = 'none';
+    ppSection.style.display    = id === 'pp' ? 'block' : 'none';
     totalSection.style.display = 'block';
-    btcSection.style.display = 'none';
+    btcSection.style.display   = 'none';
     valorSection.style.display = 'block';
-  }
 
-  // Pre-fill valor actual
-  const current = getAssetCurrent(a);
-  const valorInput = document.getElementById('valorActualInput');
-  if (valorInput) {
-    valorInput.value = current ? fmt(current, 2).replace('.', ',') : '';
-    const preview = document.getElementById('resultPreview');
-    if (current && a.invested) {
+    // Pre-fill current values
+    document.getElementById('setAmountInput').value = fmt(a.invested, 2).replace('.', ',');
+    const current = getAssetCurrent(a);
+    if (current) {
+      document.getElementById('valorActualInput').value = fmt(current, 2).replace('.', ',');
       const pnl = current - a.invested;
       const pct = (pnl / a.invested) * 100;
-      preview.textContent = `P&L: ${fmtEur(pnl)} · ${fmtPct(pct)}`;
-    } else {
-      preview.textContent = '';
+      document.getElementById('resultPreview').textContent = `P&L: ${fmtEur(pnl)} · ${fmtPct(pct)}`;
     }
   }
 
   // Live preview on valor actual input
   document.getElementById('valorActualInput').oninput = function() {
     const val = parseFloat(this.value.replace(',', '.'));
-    const asset = assets.find(x => x.id === selectedAssetId);
-    if (!isNaN(val) && asset) {
-      const pnl = val - asset.invested;
-      const pct = (pnl / asset.invested) * 100;
+    const inv = parseFloat(document.getElementById('setAmountInput').value.replace(',', '.')) || a.invested;
+    if (!isNaN(val) && inv) {
+      const pnl = val - inv;
+      const pct = (pnl / inv) * 100;
       document.getElementById('resultPreview').textContent = `P&L: ${fmtEur(pnl)} · ${fmtPct(pct)}`;
     } else {
       document.getElementById('resultPreview').textContent = '';
     }
   };
 
-  document.getElementById('modalOverlay').classList.add('open');
-
   // Live preview on BTC units input
   document.getElementById('btcUnitsInput').oninput = function() {
     const units = parseFloat(this.value.replace(',', '.'));
-    const asset = assets.find(x => x.id === selectedAssetId);
-    const preview = document.getElementById('btcUnitsPreview');
-    if (!isNaN(units) && asset && asset.liveUnitPrice) {
-      preview.textContent = `Valor actual: ${fmtEur(units * asset.liveUnitPrice)}`;
-    } else if (!isNaN(units)) {
-      preview.textContent = `${units} BTC · actualiza precio para ver valor`;
+    if (!isNaN(units) && a.liveUnitPrice) {
+      document.getElementById('btcUnitsPreview').textContent = `Valor actual: ${fmtEur(units * a.liveUnitPrice)}`;
     } else {
-      preview.textContent = '';
+      document.getElementById('btcUnitsPreview').textContent = '';
     }
   };
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function saveAll() {
+  if (!selectedAssetId) return;
+  const a = assets.find(x => x.id === selectedAssetId);
+  if (!a) return;
+
+  let changed = false;
+
+  if (selectedAssetId === 'btc') {
+    // BTC: save units
+    const units = parseFloat(document.getElementById('btcUnitsInput').value.replace(',', '.'));
+    if (!isNaN(units) && units > 0) {
+      a.btcUnits = units;
+      if (a.liveUnitPrice) {
+        a.currentPrice = units * a.liveUnitPrice;
+        a.rentabilidad = ((a.currentPrice - a.invested) / a.invested) * 100;
+      }
+      changed = true;
+    }
+  } else {
+    // Total invertido
+    const inv = parseFloat(document.getElementById('setAmountInput').value.replace(',', '.'));
+    if (!isNaN(inv) && inv > 0) {
+      a.invested = inv;
+      changed = true;
+    }
+
+    // Valor actual
+    const val = parseFloat(document.getElementById('valorActualInput').value.replace(',', '.'));
+    if (!isNaN(val) && val > 0) {
+      a.currentPrice = val;
+      a.rentabilidad = ((val - a.invested) / a.invested) * 100;
+      changed = true;
+    }
+  }
+
+  if (!changed) { showToast('No hay cambios que guardar'); return; }
+
+  saveState();
+  document.getElementById('modalOverlay').classList.remove('open');
+  showToast(`${a.name} actualizado`);
+  render();
 }
 
 function closeModal(e) {
