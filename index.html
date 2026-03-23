@@ -1786,32 +1786,31 @@ function applyExcelDefaults() {
 }
 
 async function init() {
-  // Step 1: Load localStorage for instant first render
-  const hasLocalData = !!localStorage.getItem('portfolio_v3');
-  loadState();
-  if (!hasLocalData) applyExcelDefaults();
-  render();
-
-  // Step 2: Always try Supabase — it has the real data
-  // If Supabase returns data, it ALWAYS wins over localStorage
+  // Try Supabase FIRST — always the source of truth
+  let loadedFromSupabase = false;
   try {
     const remoteData = await dbLoad();
     if (remoteData && remoteData.length) {
       mergeState(remoteData);
-      // Update localStorage to match Supabase
       localStorage.setItem('portfolio_v3', JSON.stringify(remoteData));
-      render();
-    } else if (!hasLocalData) {
-      // No Supabase data and no local data — first ever use
-      // Save excel defaults to Supabase so future loads work
-      saveState();
+      loadedFromSupabase = true;
     }
-  } catch(e) {
-    // Supabase unavailable — keep localStorage data
+  } catch(e) {}
+
+  // If Supabase failed or returned nothing, fall back to localStorage
+  if (!loadedFromSupabase) {
+    const hasLocalData = !!localStorage.getItem('portfolio_v3');
+    loadState();
+    if (!hasLocalData) {
+      applyExcelDefaults();
+      saveState(); // Push defaults to Supabase on first ever use
+    }
   }
 
-  // Step 3: Fetch live prices after data is loaded
-  setTimeout(() => { fetchPrices(); }, 500);
+  render();
+
+  // Fetch live prices after render
+  setTimeout(() => { fetchPrices(); }, 300);
 }
 
 init();
