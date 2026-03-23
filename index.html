@@ -1187,8 +1187,17 @@ let pinBuffer = '';
 let isDemo = false;
 
 function showLockScreen() {
+  // Restore real assets if leaving demo
+  if (isDemo && realAssets) {
+    assets = realAssets.map(a => ({...a}));
+    realAssets = null;
+  }
+  isDemo = false;
   document.getElementById('lockScreen').style.display = 'flex';
   document.getElementById('pinScreen').style.display = 'none';
+  document.getElementById('stickyTop').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'none';
+  document.getElementById('demoBadge').style.display = 'none';
   pinBuffer = '';
   updatePinDots();
 }
@@ -1201,18 +1210,27 @@ function showPinScreen() {
   document.getElementById('pinError').textContent = '';
 }
 
+let realAssets = null; // Stores real data while in demo
+
 function enterDemo() {
   isDemo = true;
+  realAssets = assets.map(a => ({...a}));
   document.getElementById('lockScreen').style.display = 'none';
   document.getElementById('stickyTop').style.display = 'block';
   document.getElementById('mainContent').style.display = 'block';
   document.getElementById('demoBadge').style.display = 'inline-block';
-  loadDemoData();
+  // Load static demo data — never changes, no API calls
+  assets = DEMO_ASSETS.map(a => ({...a}));
   render();
-  setTimeout(() => fetchPrices(), 300);
+  // No fetchPrices() in demo
 }
 
 function enterApp() {
+  // If coming from demo, restore real assets
+  if (isDemo && realAssets) {
+    assets = realAssets.map(a => ({...a}));
+    realAssets = null;
+  }
   isDemo = false;
   document.getElementById('lockScreen').style.display = 'none';
   document.getElementById('pinScreen').style.display = 'none';
@@ -1261,12 +1279,12 @@ document.addEventListener('keydown', function(e) {
 });
 
 const DEMO_ASSETS = [
-  { id: 'gold',     invested: 1200,    currentPrice: 1380,    rentabilidad: 15.0,  color: '#F5C400', name: 'Oro',        ticker: 'XAUEUR', note: 'IE00B4ND3602 · iShares Physical Gold ETC · Trade Republic', target: 8,  excludeRebalance: false },
-  { id: 'btc',      invested: 3500,    currentPrice: 2870,    rentabilidad: -18.0, color: '#F07820', name: 'Bitcoin',    ticker: 'BTC',    note: 'Binance + Tangem', target: 17, btcUnits: 0.048, liveUnitPrice: null, excludeRebalance: false },
-  { id: 'pp',       invested: 4200,    currentPrice: 4380,    rentabilidad: 4.3,   color: '#888899', name: 'Plan Pensiones', ticker: 'PP Demo', note: 'MyInvestor · Indexado Global', target: 0, excludeRebalance: true, ppLimit: 1500, ppYearlyContributions: { '2026': 500 } },
-  { id: 'world',    invested: 12000,   currentPrice: 11640,   rentabilidad: -3.0,  color: '#C0394B', name: 'MSCI World', ticker: 'FMWO',   note: 'Fidelity MSCI World P-ACC-EUR · MyInvestor', target: 50, excludeRebalance: false },
-  { id: 'emerging', invested: 3200,    currentPrice: 3584,    rentabilidad: 12.0,  color: '#5BA4E8', name: 'Emergentes', ticker: 'VFEM',   note: 'Vanguard Emerging Markets EUR Acc · MyInvestor', target: 6, excludeRebalance: false },
-  { id: 'smallcap', invested: 1800,    currentPrice: 1890,    rentabilidad: 5.0,   color: '#22C97A', name: 'Small Cap',  ticker: 'VGSCP',  note: 'Vanguard Global Small-Cap · MyInvestor', target: 3,  excludeRebalance: false },
+  { id: 'gold',     invested: 16800,  currentPrice: 20160,  rentabilidad: 20.0,  color: '#F5C400', name: 'Oro',        ticker: 'XAUEUR', note: 'IE00B4ND3602 · iShares Physical Gold ETC · Trade Republic', target: 8,  excludeRebalance: false },
+  { id: 'btc',      invested: 36000,  currentPrice: 51120,  rentabilidad: 42.0,  color: '#F07820', name: 'Bitcoin',    ticker: 'BTC',    note: 'Binance + Tangem', target: 17, btcUnits: null, liveUnitPrice: null, excludeRebalance: false },
+  { id: 'pp',       invested: 12000,  currentPrice: 12840,  rentabilidad: 7.0,   color: '#888899', name: 'Plan Pensiones', ticker: 'PP Demo', note: 'MyInvestor · Indexado Global', target: 0, excludeRebalance: true, ppLimit: 1500, ppYearlyContributions: { '2026': 1200 } },
+  { id: 'world',    invested: 120000, currentPrice: 139200, rentabilidad: 16.0,  color: '#C0394B', name: 'MSCI World', ticker: 'FMWO',   note: 'Fidelity MSCI World P-ACC-EUR · MyInvestor', target: 50, excludeRebalance: false },
+  { id: 'emerging', invested: 36000,  currentPrice: 46800,  rentabilidad: 30.0,  color: '#5BA4E8', name: 'Emergentes', ticker: 'VFEM',   note: 'Vanguard Emerging Markets EUR Acc · MyInvestor', target: 6, excludeRebalance: false },
+  { id: 'smallcap', invested: 19200,  currentPrice: 21696,  rentabilidad: 13.0,  color: '#22C97A', name: 'Small Cap',  ticker: 'VGSCP',  note: 'Vanguard Global Small-Cap · MyInvestor', target: 3,  excludeRebalance: false },
 ];
 
 function loadDemoData() {
@@ -1439,6 +1457,7 @@ function loadState() {
 }
 
 function saveState() {
+  if (isDemo) return; // Never save demo data
   const toSave = assets.map(a => ({
     id: a.id,
     invested: a.invested,
@@ -1484,6 +1503,7 @@ function getTotals() {
 // ─── PRICE FETCHING ───────────────────────────────────────────────────────────
 
 async function fetchPrices() {
+  if (isDemo) return; // Demo uses static data only
   const btn = document.getElementById('refreshBtn');
   if (btn) btn.classList.add('spinning');
 
