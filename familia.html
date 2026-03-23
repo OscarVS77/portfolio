@@ -177,6 +177,8 @@ if ('serviceWorker' in navigator) {
   .tabs { display:flex; gap:6px; padding:10px 20px; background:var(--bg); border-bottom:1px solid var(--border); }
   .tab { flex:1; padding:9px; border:1px solid var(--border); border-radius:var(--radius-sm); background:transparent; color:var(--muted); font-family:var(--font); font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; text-align:center; }
   .tab.active { background:var(--surface2); border-color:var(--border2); color:var(--text); }
+  #refreshBtn { border-color:#00C896 !important; color:#00C896 !important; }
+  @media (prefers-color-scheme: dark) { #refreshBtn { border-color:#FFD700 !important; color:#FFD700 !important; } }
 
   /* REBALANCEO */
   .rebal-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; }
@@ -198,7 +200,6 @@ if ('serviceWorker' in navigator) {
   <div class="lock-tagline">Nuestra familia,<br>nuestro futuro.</div>
   <div class="lock-sub">Inversiones de Pai, Abril y Júna.</div>
   <button class="lock-btn-primary" style="margin-bottom:0" onclick="showPinScreen()">🔐 Acceder</button>
-  <button class="lock-back" onclick="window.location.href='index.html'">← Volver al inicio</button>
 </div>
 
 <!-- PIN SCREEN -->
@@ -248,6 +249,7 @@ if ('serviceWorker' in navigator) {
   <div class="tabs">
     <button class="tab active" onclick="switchTab('activos')">Activos</button>
     <button class="tab" onclick="switchTab('rebalanceo')">Rebalanceo</button>
+    <button class="tab" id="refreshBtn" onclick="refreshData()">ACTUALIZAR</button>
   </div>
 
   <main id="mainContent"></main>
@@ -655,6 +657,25 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+async function refreshData() {
+  const btn = document.getElementById('refreshBtn');
+  if (btn) btn.style.opacity = '0.5';
+  try {
+    const remote = await dbLoad();
+    if (remote && remote.length) {
+      mergeData(remote);
+      localStorage.setItem('familia_v1', JSON.stringify(remote));
+      render();
+      showToast('Datos actualizados');
+    } else {
+      showToast('Sin datos en servidor');
+    }
+  } catch(e) {
+    showToast('Error al actualizar');
+  }
+  if (btn) btn.style.opacity = '1';
 }
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
