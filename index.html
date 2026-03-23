@@ -1187,9 +1187,9 @@ let pinBuffer = '';
 let isDemo = false;
 
 function showLockScreen() {
-  // Restore real assets if leaving demo
-  if (isDemo && realAssets) {
-    assets = realAssets.map(a => ({...a}));
+  // If leaving demo, restore real assets
+  if (isDemo && realAssets && realAssets.length) {
+    assets = JSON.parse(JSON.stringify(realAssets));
     realAssets = null;
   }
   isDemo = false;
@@ -1210,33 +1210,35 @@ function showPinScreen() {
   document.getElementById('pinError').textContent = '';
 }
 
-let realAssets = null; // Stores real data while in demo
+let realAssets = null;
 
 function enterDemo() {
   isDemo = true;
-  realAssets = assets.map(a => ({...a}));
+  // Deep copy real assets before loading demo
+  realAssets = JSON.parse(JSON.stringify(assets));
   document.getElementById('lockScreen').style.display = 'none';
   document.getElementById('stickyTop').style.display = 'block';
   document.getElementById('mainContent').style.display = 'block';
   document.getElementById('demoBadge').style.display = 'inline-block';
-  // Load static demo data — never changes, no API calls
   assets = DEMO_ASSETS.map(a => ({...a}));
   render();
-  // No fetchPrices() in demo
 }
 
 function enterApp() {
-  // If coming from demo, restore real assets
-  if (isDemo && realAssets) {
-    assets = realAssets.map(a => ({...a}));
-    realAssets = null;
-  }
   isDemo = false;
+  if (realAssets && realAssets.length) {
+    assets = JSON.parse(JSON.stringify(realAssets));
+  } else {
+    loadState();
+  }
+  realAssets = null;
   document.getElementById('lockScreen').style.display = 'none';
   document.getElementById('pinScreen').style.display = 'none';
   document.getElementById('stickyTop').style.display = 'block';
   document.getElementById('mainContent').style.display = 'block';
   document.getElementById('demoBadge').style.display = 'none';
+  render();
+  setTimeout(() => fetchPrices(), 300);
 }
 
 function pinPress(digit) {
@@ -2229,17 +2231,9 @@ async function init() {
     }
   }
 
-  // App stays hidden behind lock screen — only render when unlocked
-  // enterApp() will be called after PIN or demo
+  // Always keep realAssets as the authoritative copy of real data
+  realAssets = JSON.parse(JSON.stringify(assets));
 }
-
-// Override enterApp to also render
-const _enterApp = enterApp;
-enterApp = function() {
-  _enterApp();
-  render();
-  setTimeout(() => fetchPrices(), 300);
-};
 
 init();
 
