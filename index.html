@@ -1797,48 +1797,29 @@ function applyExcelDefaults() {
 }
 
 async function init() {
-  function showDebug(msg) {
-    let el = document.getElementById('debugBanner');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'debugBanner';
-      el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#FFD700;color:#000;font-size:11px;padding:6px 10px;font-family:monospace;word-break:break-all';
-      document.body.appendChild(el);
-    }
-    el.textContent = msg;
-  }
-
-  showDebug('Probando Supabase...');
-
-  let debugMsg = '';
+  let loadedFromSupabase = false;
   try {
     const url = `${SUPABASE_URL}/rest/v1/portfolio_state?id=eq.oscar&select=data`;
-    showDebug('Fetch: ' + url.substring(0, 60));
     const r = await fetch(url, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
-    debugMsg = `HTTP ${r.status}`;
-    const text = await r.text();
-    debugMsg += ` · ${text.substring(0, 120)}`;
-    showDebug(debugMsg);
-
     if (r.ok) {
-      const rows = JSON.parse(text);
+      const rows = await r.json();
       if (rows.length && rows[0].data && Array.isArray(rows[0].data)) {
         mergeState(rows[0].data);
         localStorage.setItem('portfolio_v3', JSON.stringify(rows[0].data));
-        const w = rows[0].data.find(x => x.id === 'world');
-        showDebug(`OK · World inv=${w?.invested} rent=${w?.rentabilidad}`);
-      } else {
-        showDebug(`HTTP OK pero sin datos · rows=${text.substring(0,80)}`);
-        loadState();
+        loadedFromSupabase = true;
       }
-    } else {
-      loadState();
     }
-  } catch(e) {
-    showDebug(`CATCH: ${e.name} · ${e.message}`);
+  } catch(e) {}
+
+  if (!loadedFromSupabase) {
+    const hasLocalData = !!localStorage.getItem('portfolio_v3');
     loadState();
+    if (!hasLocalData) {
+      applyExcelDefaults();
+      saveState();
+    }
   }
 
   render();
