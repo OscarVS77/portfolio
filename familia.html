@@ -88,8 +88,8 @@ if ('serviceWorker' in navigator) {
   @media (prefers-color-scheme: light) { .pin-dot.filled { background:#00C896; border-color:#00C896; } }
   .pin-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; width:100%; max-width:280px; }
   .pin-key { padding:18px; border-radius:12px; border:1px solid #2C2C2C; background:#1A1A1A; color:#FFFFFF; font-family:var(--font); font-size:20px; font-weight:500; cursor:pointer; text-align:center; transition:background .1s; }
-  .pin-key:active { background:#2C2C2C; }
-  @media (prefers-color-scheme: light) { .pin-key { background:#FFFFFF; border-color:#E5E5E5; color:#1A1A1A; } .pin-key:active { background:#F2F2F2; } }
+  .pin-key:active { background:#2C2C2C; transform:scale(0.94); }
+  @media (prefers-color-scheme: light) { .pin-key { background:#FFFFFF; border-color:#E5E5E5; color:#1A1A1A; } .pin-key:active { background:#F2F2F2; transform:scale(0.94); } }
   .pin-key.del { font-size:16px; color:#8A8A8A; }
   .pin-error { color:#FF3B30; font-size:12px; font-family:var(--font); margin-top:16px; min-height:18px; }
 
@@ -211,18 +211,18 @@ if ('serviceWorker' in navigator) {
     <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
   </div>
   <div class="pin-grid">
-    <button class="pin-key" onclick="pinPress('1')">1</button>
-    <button class="pin-key" onclick="pinPress('2')">2</button>
-    <button class="pin-key" onclick="pinPress('3')">3</button>
-    <button class="pin-key" onclick="pinPress('4')">4</button>
-    <button class="pin-key" onclick="pinPress('5')">5</button>
-    <button class="pin-key" onclick="pinPress('6')">6</button>
-    <button class="pin-key" onclick="pinPress('7')">7</button>
-    <button class="pin-key" onclick="pinPress('8')">8</button>
-    <button class="pin-key" onclick="pinPress('9')">9</button>
+    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('1')}" onclick="pinPress('1')">1</button>
+    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('2')}" onclick="pinPress('2')">2</button>
+    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('3')}" onclick="pinPress('3')">3</button>
+    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('4')}" onclick="pinPress('4')">4</button>
+    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('5')}" onclick="pinPress('5')">5</button>
+    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('6')}" onclick="pinPress('6')">6</button>
+    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('7')}" onclick="pinPress('7')">7</button>
+    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('8')}" onclick="pinPress('8')">8</button>
+    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('9')}" onclick="pinPress('9')">9</button>
     <button class="pin-key" style="visibility:hidden"></button>
-    <button class="pin-key" onclick="pinPress('0')">0</button>
-    <button class="pin-key del" onclick="pinDel()">⌫</button>
+    <button class="pin-key" ontouchstart="e=>{e.preventDefault();pinPress('0')}" onclick="pinPress('0')">0</button>
+    <button class="pin-key del" ontouchstart="e=>{e.preventDefault();pinDel()}" onclick="pinDel()">⌫</button>
   </div>
   <div class="pin-error" id="pinError"></div>
 </div>
