@@ -119,7 +119,7 @@ if ('serviceWorker' in navigator) {
     border-bottom:2px solid var(--border);
   }
   .person-name { font-size:18px; font-weight:700; color:var(--text); }
-  .person-total { font-size:14px; font-weight:500; color:var(--muted); }
+  .person-total { font-size:18px; font-weight:600; color:var(--muted); }
 
   /* FUND CARD */
   .fund-card {
@@ -197,7 +197,7 @@ if ('serviceWorker' in navigator) {
 <!-- LOCK SCREEN -->
 <div class="lock-screen" id="lockScreen">
   <div class="lock-title">Portfolio Familiar</div>
-  <div class="lock-tagline">Nuestra familia,<br>nuestro futuro.</div>
+  <div class="lock-tagline">Nuestra familia.<br>Nuestro futuro.</div>
   <div class="lock-sub">Inversiones de Pai, Abril y Júna.</div>
   <button class="lock-btn-primary" style="margin-bottom:0" onclick="showPinScreen()">🔐 Acceder</button>
 </div>
@@ -320,9 +320,13 @@ const DEFAULT_DATA = [
   }
 ];
 
+const DEFAULT_OSCAR = { invested: 0, currentPrice: 0 };
+
 // ─── STATE ───────────────────────────────────────────────────────────────────
 let familyData = [];
+let oscar = { ...DEFAULT_OSCAR };
 let selectedFundId = null;
+let selectedOscar = false;
 let pinBuffer = '';
 
 // ─── SUPABASE ────────────────────────────────────────────────────────────────
@@ -357,21 +361,20 @@ function mergeData(saved) {
     person: person.person,
     funds: person.funds.map(fund => {
       const s = saved.find(x => x.id === fund.id) || {};
-      return {
-        ...fund,
-        invested:      s.invested      ?? fund.invested,
-        currentPrice:  s.currentPrice  ?? fund.currentPrice,
-      };
+      return { ...fund, invested: s.invested ?? fund.invested, currentPrice: s.currentPrice ?? fund.currentPrice };
     })
   }));
+  const o = saved.find(x => x.id === 'oscar');
+  if (o) oscar = { invested: o.invested ?? 0, currentPrice: o.currentPrice ?? 0 };
 }
 
-function flatFunds() {
-  return familyData.flatMap(p => p.funds);
-}
+function flatFunds() { return familyData.flatMap(p => p.funds); }
 
 function saveState() {
-  const toSave = flatFunds().map(f => ({ id: f.id, invested: f.invested, currentPrice: f.currentPrice }));
+  const toSave = [
+    ...flatFunds().map(f => ({ id: f.id, invested: f.invested, currentPrice: f.currentPrice })),
+    { id: 'oscar', invested: oscar.invested, currentPrice: oscar.currentPrice }
+  ];
   localStorage.setItem('familia_v1', JSON.stringify(toSave));
   dbSave(toSave);
 }
@@ -382,6 +385,7 @@ function loadState() {
     if (saved) { mergeData(JSON.parse(saved)); return; }
   } catch(e) {}
   familyData = DEFAULT_DATA.map(p => ({ ...p, funds: p.funds.map(f => ({...f})) }));
+  oscar = { ...DEFAULT_OSCAR };
 }
 
 // ─── FORMATTING ──────────────────────────────────────────────────────────────
@@ -477,12 +481,11 @@ function renderRebalanceo() {
 }
 
 function updateHeader() {
-  let totalInv = 0, totalCur = 0;
+  let totalInv = oscar.invested, totalCur = oscar.currentPrice;
   flatFunds().forEach(f => { totalInv += f.invested; totalCur += f.currentPrice; });
   const pnlAbs = totalCur - totalInv;
   const pnlPct = totalInv > 0 ? (pnlAbs / totalInv) * 100 : 0;
   const pc = pnlColor(pnlAbs);
-
   document.getElementById('hTotalInv').textContent = fmtEur(totalInv, 0);
   document.getElementById('hTotalCur').textContent = fmtEur(totalCur, 0);
   const absEl = document.getElementById('hPnlAbs');
@@ -495,7 +498,41 @@ function updateHeader() {
 
 function renderPersons() {
   const main = document.getElementById('mainContent');
-  main.innerHTML = familyData.map(person => {
+
+  // Oscar card
+  const oscarPnl = oscar.currentPrice - oscar.invested;
+  const oscarPct = oscar.invested > 0 ? (oscarPnl / oscar.invested) * 100 : 0;
+  const oscarPc  = oscarPnl >= 0 ? 'pos' : 'neg';
+  const oscarCard = `
+    <div class="person-section">
+      <div class="person-header">
+        <span class="person-name">Oscar</span>
+        <span class="person-total" style="color:${pnlColor(oscarPnl)}">${fmtPct(oscarPct)} · ${fmtEur(oscar.currentPrice)}</span>
+      </div>
+      <div class="fund-card" onclick="openOscarModal()">
+        <div class="fund-row1">
+          <div class="fund-name" style="gap:0">Mi cartera</div>
+          <span style="font-size:15px;font-weight:500;color:var(--text)">${fmtEur(oscar.currentPrice)}</span>
+        </div>
+        <div class="fund-row2">
+          <span class="fund-ticker">Resumen mensual · portfolio.html</span>
+          <span class="fund-pct ${oscarPc}">${fmtPct(oscarPct)}</span>
+        </div>
+        <div class="fund-divider"></div>
+        <div class="fund-stats">
+          <div>
+            <div class="fund-stat-label">Invertido</div>
+            <div class="fund-stat-value">${fmtEur(oscar.invested)}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="fund-stat-label">P&L</div>
+            <div class="fund-stat-value ${oscarPc}">${fmtEur(oscarPnl)}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  main.innerHTML = oscarCard + familyData.map(person => {
     const totalInv = person.funds.reduce((s, f) => s + f.invested, 0);
     const totalCur = person.funds.reduce((s, f) => s + f.currentPrice, 0);
     const pnlAbs = totalCur - totalInv;
@@ -550,6 +587,27 @@ function updateDate() {
 }
 
 // ─── MODAL ───────────────────────────────────────────────────────────────────
+function openOscarModal() {
+  selectedFundId = null;
+  selectedOscar = true;
+  document.getElementById('modalTitle').textContent = 'Oscar';
+  document.getElementById('modalSubtitle').textContent = 'Mi cartera · Resumen mensual';
+  document.getElementById('inputInvested').value = fmt(oscar.invested, 2).replace('.', ',');
+  document.getElementById('inputCurrent').value = fmt(oscar.currentPrice, 2).replace('.', ',');
+  const pnl = oscar.currentPrice - oscar.invested;
+  const pct = oscar.invested > 0 ? (pnl / oscar.invested) * 100 : 0;
+  document.getElementById('modalPreview').textContent = oscar.invested > 0 ? `P&L: ${fmtEur(pnl)} · ${fmtPct(pct)}` : '';
+  document.getElementById('inputCurrent').oninput = function() {
+    const val = parseFloat(this.value.replace(',', '.'));
+    const inv = parseFloat(document.getElementById('inputInvested').value.replace(',', '.')) || 0;
+    if (!isNaN(val) && inv) {
+      const p = val - inv;
+      document.getElementById('modalPreview').textContent = `P&L: ${fmtEur(p)} · ${fmtPct((p/inv)*100)}`;
+    }
+  };
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
 function openModal(fundId) {
   selectedFundId = fundId;
   const fund = flatFunds().find(f => f.id === fundId);
@@ -584,16 +642,25 @@ function closeModal(e) {
 }
 
 function saveModal() {
-  if (!selectedFundId) return;
-  const fund = flatFunds().find(f => f.id === selectedFundId);
-  if (!fund) return;
-
   const inv = parseFloat(document.getElementById('inputInvested').value.replace(',', '.'));
   const cur = parseFloat(document.getElementById('inputCurrent').value.replace(',', '.'));
 
+  if (selectedOscar) {
+    if (!isNaN(inv) && inv > 0) oscar.invested = inv;
+    if (!isNaN(cur) && cur > 0) oscar.currentPrice = cur;
+    selectedOscar = false;
+    saveState();
+    document.getElementById('modalOverlay').classList.remove('open');
+    showToast('Oscar actualizado');
+    render();
+    return;
+  }
+
+  if (!selectedFundId) return;
+  const fund = flatFunds().find(f => f.id === selectedFundId);
+  if (!fund) return;
   if (!isNaN(inv) && inv > 0) fund.invested = inv;
   if (!isNaN(cur) && cur > 0) fund.currentPrice = cur;
-
   saveState();
   document.getElementById('modalOverlay').classList.remove('open');
   showToast(`${fund.name} actualizado`);
