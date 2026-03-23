@@ -900,7 +900,7 @@ if ('serviceWorker' in navigator) {
     <!-- SECCIÓN: Total invertido exacto (no BTC) -->
     <div class="modal-section" id="totalInvertidoSection">
       <div class="modal-section-title">1 · Total invertido</div>
-      <div class="modal-section-desc" id="totalInvertidoDesc">Introduce la cifra exacta que ves en el broker.</div>
+      <div class="modal-section-desc">Lo que has aportado en total. Solo cambia cuando haces una aportación nueva.</div>
       <div class="input-row">
         <div class="input-currency">€</div>
         <input type="text" inputmode="decimal" class="amount-input" id="setAmountInput" placeholder="0,00">
@@ -920,16 +920,16 @@ if ('serviceWorker' in navigator) {
       <button class="btn-set" onclick="setBtcUnits()">Guardar unidades</button>
     </div>
 
-    <!-- SECCIÓN: Rentabilidad actual (no BTC) -->
-    <div class="modal-section" id="rentabilidadSection">
-      <div class="modal-section-title">2 · Rentabilidad actual</div>
-      <div class="modal-section-desc" id="rentabilidadDesc">Introduce el % que ves en Trade Republic o MyInvestor.</div>
-      <div class="price-input-group">
-        <input type="text" inputmode="decimal" class="price-input" id="rentabilidadInput" placeholder="0,00">
-        <span style="color: var(--muted2); font-size:15px; font-family: var(--font-sans)">%</span>
+    <!-- SECCIÓN: Valor actual (no BTC) -->
+    <div class="modal-section" id="valorActualSection">
+      <div class="modal-section-title">2 · Valor actual</div>
+      <div class="modal-section-desc">Lo que vale hoy tu posición en el broker. La app calcula P&L y rentabilidad sola.</div>
+      <div class="input-row">
+        <div class="input-currency">€</div>
+        <input type="text" inputmode="decimal" class="amount-input" id="valorActualInput" placeholder="0,00">
       </div>
       <div class="modal-result-preview" id="resultPreview"></div>
-      <button class="btn-set" onclick="setRentabilidad()">Actualizar rentabilidad</button>
+      <button class="btn-set" onclick="setValorActual()">Actualizar valor actual</button>
     </div>
   </div>
 </div>
@@ -1620,13 +1620,13 @@ function openModal(id) {
   const ppSection = document.getElementById('ppAportacionSection');
   const totalSection = document.getElementById('totalInvertidoSection');
   const btcSection = document.getElementById('btcUnitsSection');
-  const rentSection = document.getElementById('rentabilidadSection');
+  const valorSection = document.getElementById('valorActualSection');
 
   if (id === 'btc') {
     ppSection.style.display = 'none';
     totalSection.style.display = 'none';
     btcSection.style.display = 'block';
-    rentSection.style.display = 'none';
+    valorSection.style.display = 'none';
     document.getElementById('btcUnitsInput').value = a.btcUnits ? a.btcUnits.toFixed(8) : '';
     const preview = document.getElementById('btcUnitsPreview');
     preview.textContent = a.btcUnits && a.liveUnitPrice
@@ -1637,27 +1637,43 @@ function openModal(id) {
     document.getElementById('ppAportacionInput').value = '';
     totalSection.style.display = 'block';
     btcSection.style.display = 'none';
-    rentSection.style.display = 'block';
+    valorSection.style.display = 'block';
   } else {
     ppSection.style.display = 'none';
     totalSection.style.display = 'block';
     btcSection.style.display = 'none';
-    rentSection.style.display = 'block';
+    valorSection.style.display = 'block';
   }
 
-  document.getElementById('modalOverlay').classList.add('open');
+  // Pre-fill valor actual
+  const current = getAssetCurrent(a);
+  const valorInput = document.getElementById('valorActualInput');
+  if (valorInput) {
+    valorInput.value = current ? fmt(current, 2).replace('.', ',') : '';
+    const preview = document.getElementById('resultPreview');
+    if (current && a.invested) {
+      const pnl = current - a.invested;
+      const pct = (pnl / a.invested) * 100;
+      preview.textContent = `P&L: ${fmtEur(pnl)} · ${fmtPct(pct)}`;
+    } else {
+      preview.textContent = '';
+    }
+  }
 
-  // Live preview on rentabilidad input
-  document.getElementById('rentabilidadInput').oninput = function() {
-    const pct = parseFloat(this.value.replace(',', '.'));
+  // Live preview on valor actual input
+  document.getElementById('valorActualInput').oninput = function() {
+    const val = parseFloat(this.value.replace(',', '.'));
     const asset = assets.find(x => x.id === selectedAssetId);
-    if (!isNaN(pct) && asset) {
-      const val = asset.invested * (1 + pct / 100);
-      document.getElementById('resultPreview').textContent = `Valor calculado: ${fmtEur(val)}`;
+    if (!isNaN(val) && asset) {
+      const pnl = val - asset.invested;
+      const pct = (pnl / asset.invested) * 100;
+      document.getElementById('resultPreview').textContent = `P&L: ${fmtEur(pnl)} · ${fmtPct(pct)}`;
     } else {
       document.getElementById('resultPreview').textContent = '';
     }
   };
+
+  document.getElementById('modalOverlay').classList.add('open');
 
   // Live preview on BTC units input
   document.getElementById('btcUnitsInput').oninput = function() {
@@ -1715,21 +1731,22 @@ function setExactAmount() {
   render();
 }
 
-function setRentabilidad() {
-  const el = document.getElementById('rentabilidadInput');
+function setValorActual() {
+  const el = document.getElementById('valorActualInput');
   if (!el) return;
   const raw = el.value.replace(',', '.');
-  const pct = parseFloat(raw);
+  const val = parseFloat(raw);
   if (!selectedAssetId) { showToast('Error: ningún activo seleccionado'); return; }
-  if (isNaN(pct)) { showToast('Introduce un porcentaje válido'); return; }
+  if (isNaN(val) || val <= 0) { showToast('Introduce un valor válido'); return; }
   const a = assets.find(x => x.id === selectedAssetId);
   if (!a) return;
-  a.rentabilidad = pct;
-  a.currentPrice = a.invested * (1 + pct / 100);
+  a.currentPrice = val;
+  a.rentabilidad = ((val - a.invested) / a.invested) * 100;
   saveState();
   el.value = '';
   document.getElementById('modalOverlay').classList.remove('open');
-  showToast(`${a.name}: ${fmtPct(pct)} → ${fmtEur(a.currentPrice)}`);
+  const pnl = val - a.invested;
+  showToast(`${a.name}: ${fmtEur(val)} · ${fmtPct(a.rentabilidad)}`);
   render();
 }
 
