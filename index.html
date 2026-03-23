@@ -1797,7 +1797,20 @@ function applyExcelDefaults() {
 }
 
 async function init() {
-  // Try Supabase FIRST — always the source of truth
+  // Show debug banner
+  function showDebug(msg) {
+    let el = document.getElementById('debugBanner');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'debugBanner';
+      el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#FFD700;color:#000;font-size:11px;padding:6px 10px;font-family:monospace;word-break:break-all';
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+  }
+
+  showDebug('Conectando Supabase...');
+
   let loadedFromSupabase = false;
   try {
     const remoteData = await dbLoad();
@@ -1805,19 +1818,15 @@ async function init() {
       mergeState(remoteData);
       localStorage.setItem('portfolio_v3', JSON.stringify(remoteData));
       loadedFromSupabase = true;
-      // Debug: show what Supabase returned
       const world = remoteData.find(x => x.id === 'world');
-      const dbInfo = world ? `SB OK: World inv=${world.invested} rent=${world.rentabilidad}` : 'SB OK pero sin world';
-      console.log('Supabase data:', JSON.stringify(remoteData));
-      setTimeout(() => showToast(dbInfo), 100);
+      showDebug(`SB OK · World: inv=${world?.invested} rent=${world?.rentabilidad}`);
     } else {
-      setTimeout(() => showToast('Supabase: sin datos'), 100);
+      showDebug('Supabase respondió pero SIN DATOS');
     }
   } catch(e) {
-    setTimeout(() => showToast('Supabase error: ' + e.message), 100);
+    showDebug('Supabase ERROR: ' + e.message);
   }
 
-  // If Supabase failed or returned nothing, fall back to localStorage
   if (!loadedFromSupabase) {
     const hasLocalData = !!localStorage.getItem('portfolio_v3');
     loadState();
@@ -1825,6 +1834,7 @@ async function init() {
       applyExcelDefaults();
       saveState();
     }
+    showDebug('Usando localStorage · ' + (loadedFromSupabase ? 'SB OK' : 'SB fallido'));
   }
 
   render();
