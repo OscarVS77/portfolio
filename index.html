@@ -1065,12 +1065,13 @@ if ('serviceWorker' in navigator) {
 
 <div id="stickyTop" style="position:sticky;top:0;z-index:100;display:none">
 <div class="header">
-  <div class="header-top" style="justify-content:center">
-    <div style="display:flex;align-items:baseline;gap:10px;justify-content:center">
+  <div class="header-top" style="justify-content:space-between">
+    <button onclick="showLockScreen()" style="background:none;border:none;color:var(--muted2);font-size:11px;font-family:var(--font-sans);cursor:pointer;padding:4px 0;letter-spacing:.04em">← Salir</button>
+    <div style="display:flex;align-items:baseline;gap:8px">
       <div class="header-title">Portfolio</div>
-      <div style="font-family:var(--font-sans);font-size:10px;color:var(--text);letter-spacing:0.08em">6 activos</div>
-      <div class="header-date" id="headerDate"></div>
+      <div id="demoBadge" style="display:none;font-size:9px;background:#F07820;color:#fff;padding:2px 6px;border-radius:4px;font-family:var(--font-sans);font-weight:600;letter-spacing:.06em">DEMO</div>
     </div>
+    <div class="header-date" id="headerDate" style="font-size:10px;color:var(--text)"></div>
   </div>
   <div id="headerTiles" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
     <div class="summary-tile" style="text-align:center">
@@ -1205,6 +1206,7 @@ function enterDemo() {
   document.getElementById('lockScreen').style.display = 'none';
   document.getElementById('stickyTop').style.display = 'block';
   document.getElementById('mainContent').style.display = 'block';
+  document.getElementById('demoBadge').style.display = 'inline-block';
   loadDemoData();
   render();
   setTimeout(() => fetchPrices(), 300);
@@ -1216,6 +1218,7 @@ function enterApp() {
   document.getElementById('pinScreen').style.display = 'none';
   document.getElementById('stickyTop').style.display = 'block';
   document.getElementById('mainContent').style.display = 'block';
+  document.getElementById('demoBadge').style.display = 'none';
 }
 
 function pinPress(digit) {
@@ -1247,6 +1250,15 @@ function updatePinDots() {
     document.getElementById('d' + i).classList.toggle('filled', i < pinBuffer.length);
   }
 }
+
+// Keyboard support for PIN on desktop
+document.addEventListener('keydown', function(e) {
+  const pinVisible = document.getElementById('pinScreen').style.display === 'flex';
+  if (!pinVisible) return;
+  if (e.key >= '0' && e.key <= '9') pinPress(e.key);
+  else if (e.key === 'Backspace') pinDel();
+  else if (e.key === 'Escape') showLockScreen();
+});
 
 const DEMO_ASSETS = [
   { id: 'gold',     invested: 1200,    currentPrice: 1380,    rentabilidad: 15.0,  color: '#F5C400', name: 'Oro',        ticker: 'XAUEUR', note: 'IE00B4ND3602 · iShares Physical Gold ETC · Trade Republic', target: 8,  excludeRebalance: false },
