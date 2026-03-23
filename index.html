@@ -1505,13 +1505,13 @@ function getTotals() {
 // ─── PRICE FETCHING ───────────────────────────────────────────────────────────
 
 async function fetchPrices() {
-  if (isDemo) return; // Demo uses static data only
+  if (isDemo) return;
   const btn = document.getElementById('refreshBtn');
   if (btn) btn.classList.add('spinning');
 
-  const results = { btc: null, gold: null };
+  const results = { btc: null };
 
-  // BTC via CoinGecko — works from any origin
+  // BTC via CoinGecko
   try {
     const r = await fetch(
       'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=eur',
@@ -1523,13 +1523,10 @@ async function fetchPrices() {
     }
   } catch(e) {}
 
-  // BTC fallback via Coinbase public API
+  // BTC fallback via Coinbase
   if (!results.btc) {
     try {
-      const r = await fetch(
-        'https://api.coinbase.com/v2/prices/BTC-EUR/spot',
-        { mode: 'cors' }
-      );
+      const r = await fetch('https://api.coinbase.com/v2/prices/BTC-EUR/spot', { mode: 'cors' });
       if (r.ok) {
         const d = await r.json();
         if (d.data?.amount) results.btc = parseFloat(d.data.amount);
@@ -1537,8 +1534,6 @@ async function fetchPrices() {
     } catch(e) {}
   }
 
-  // Gold ETC (PPFB = iShares Physical Gold ETC)
-  // Cada participación representa ~0.96g de oro (ratio fijo de iShares)
   // Apply BTC price
   if (results.btc) {
     const a = assets.find(x => x.id === 'btc');
@@ -1556,9 +1551,7 @@ async function fetchPrices() {
   if (btn) btn.classList.remove('spinning');
   render();
 
-  const msgs = [];
-  if (results.btc) msgs.push(`BTC ${fmt(results.btc, 0)} €`);
-  showToast(msgs.length ? msgs.join(' · ') : 'Sin conexión con precios en vivo');
+  showToast(results.btc ? `BTC ${fmt(results.btc, 0)} €` : 'Sin conexión con precios en vivo');
 }
 
 // ─── FORMATTING ──────────────────────────────────────────────────────────────
@@ -1644,7 +1637,7 @@ function renderCard(a, totalCurrent, totalSinPP) {
         <div style="display:flex;align-items:center;gap:8px">
           <span style="width:8px;height:8px;border-radius:50%;background:${a.color};flex-shrink:0"></span>
           <span style="font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text)">${a.name}</span>
-          ${a.id === 'btc' && a.liveUnitPrice ? `<span style="font-size:11px;color:${a.color}">${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
+          ${a.id === 'btc' && a.liveUnitPrice ? `<span style="font-size:14px;font-weight:600;color:${a.color}">${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
         </div>
         <span style="font-family:var(--font-display);font-size:17px;font-weight:500;color:var(--text)">${fmtEur(current)}</span>
       </div>
