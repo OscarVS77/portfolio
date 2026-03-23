@@ -1638,9 +1638,10 @@ function openModal(id) {
 
   if (id === 'btc') {
     ppSection.style.display    = 'none';
-    totalSection.style.display = 'none';
+    totalSection.style.display = 'block';
     btcSection.style.display   = 'block';
     valorSection.style.display = 'none';
+    document.getElementById('setAmountInput').value = fmt(a.invested, 2).replace('.', ',');
     document.getElementById('btcUnitsInput').value = a.btcUnits ? a.btcUnits.toFixed(8) : '';
     document.getElementById('btcUnitsPreview').textContent = a.btcUnits && a.liveUnitPrice
       ? `Valor actual: ${fmtEur(a.btcUnits * a.liveUnitPrice)}`
@@ -1696,7 +1697,13 @@ function saveAll() {
   let changed = false;
 
   if (selectedAssetId === 'btc') {
-    // BTC: save units
+    // Total invertido BTC
+    const inv = parseFloat(document.getElementById('setAmountInput').value.replace(',', '.'));
+    if (!isNaN(inv) && inv > 0) {
+      a.invested = inv;
+      changed = true;
+    }
+    // BTC units
     const units = parseFloat(document.getElementById('btcUnitsInput').value.replace(',', '.'));
     if (!isNaN(units) && units > 0) {
       a.btcUnits = units;
