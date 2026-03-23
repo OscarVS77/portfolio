@@ -839,11 +839,231 @@ if ('serviceWorker' in navigator) {
   .asset-card:nth-child(4) { animation-delay: 0.2s; }
   .asset-card:nth-child(5) { animation-delay: 0.25s; }
   .asset-card:nth-child(6) { animation-delay: 0.3s; }
+  /* LOCK SCREEN */
+  .lock-screen {
+    position: fixed;
+    inset: 0;
+    background: #000000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 40px 32px;
+    gap: 0;
+  }
+  @media (prefers-color-scheme: light) {
+    .lock-screen { background: #F8F8F8; }
+  }
+  .lock-title {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    margin-bottom: 12px;
+  }
+  @media (prefers-color-scheme: light) {
+    .lock-title { color: #1A1A1A; }
+  }
+  .lock-tagline {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  @media (prefers-color-scheme: light) {
+    .lock-tagline { color: #1A1A1A; }
+  }
+  .lock-sub {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: #5A5A5A;
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  @media (prefers-color-scheme: light) {
+    .lock-sub { color: #6C6C6C; }
+  }
+  .lock-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 40px;
+  }
+  .lock-btn-primary {
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #FFD700;
+    background: transparent;
+    color: #FFD700;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  @media (prefers-color-scheme: light) {
+    .lock-btn-primary { border-color: #00C896; color: #00C896; }
+  }
+  .lock-btn-demo {
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #3A3A3A;
+    background: transparent;
+    color: #8A8A8A;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  @media (prefers-color-scheme: light) {
+    .lock-btn-demo { border-color: #D8D8D8; color: #6C6C6C; }
+  }
+  /* PIN PAD */
+  .pin-screen {
+    position: fixed;
+    inset: 0;
+    background: #000000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 40px 32px;
+  }
+  @media (prefers-color-scheme: light) {
+    .pin-screen { background: #F8F8F8; }
+  }
+  .pin-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    color: #8A8A8A;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 8px;
+  }
+  .pin-title {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #5A5A5A;
+    margin-bottom: 32px;
+  }
+  .pin-dots {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+  .pin-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #5A5A5A;
+    background: transparent;
+    transition: all 0.15s;
+  }
+  .pin-dot.filled {
+    background: #FFD700;
+    border-color: #FFD700;
+  }
+  @media (prefers-color-scheme: light) {
+    .pin-dot.filled { background: #00C896; border-color: #00C896; }
+  }
+  .pin-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 280px;
+  }
+  .pin-key {
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid #2C2C2C;
+    background: #1A1A1A;
+    color: #FFFFFF;
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.1s;
+  }
+  .pin-key:active { background: #2C2C2C; }
+  @media (prefers-color-scheme: light) {
+    .pin-key { background: #FFFFFF; border-color: #E5E5E5; color: #1A1A1A; }
+    .pin-key:active { background: #F2F2F2; }
+  }
+  .pin-key.del { font-size: 16px; color: #8A8A8A; }
+  .pin-error {
+    color: #FF3B30;
+    font-size: 12px;
+    font-family: var(--font-sans);
+    margin-top: 16px;
+    min-height: 18px;
+  }
 </style>
 </head>
 <body>
 
-<div id="stickyTop" style="position:sticky;top:0;z-index:100;">
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-title">Portfolio</div>
+  <div class="lock-tagline">Menos ruido.<br>Más control.</div>
+  <div class="lock-sub">Tu patrimonio, siempre a la vista.</div>
+  <div class="lock-buttons">
+    <button class="lock-btn-primary" onclick="showPinScreen()">🔐 Mi cartera</button>
+    <button class="lock-btn-demo" onclick="enterDemo()">Ver demo</button>
+  </div>
+</div>
+
+<!-- PIN SCREEN -->
+<div class="pin-screen" id="pinScreen">
+  <button class="pin-back" onclick="showLockScreen()">←</button>
+  <div class="pin-title">Introduce tu PIN</div>
+  <div class="pin-dots" id="pinDots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+    <div class="pin-dot" id="d4"></div>
+    <div class="pin-dot" id="d5"></div>
+    <div class="pin-dot" id="d6"></div>
+    <div class="pin-dot" id="d7"></div>
+  </div>
+  <div class="pin-grid">
+    <button class="pin-key" onclick="pinPress('1')">1</button>
+    <button class="pin-key" onclick="pinPress('2')">2</button>
+    <button class="pin-key" onclick="pinPress('3')">3</button>
+    <button class="pin-key" onclick="pinPress('4')">4</button>
+    <button class="pin-key" onclick="pinPress('5')">5</button>
+    <button class="pin-key" onclick="pinPress('6')">6</button>
+    <button class="pin-key" onclick="pinPress('7')">7</button>
+    <button class="pin-key" onclick="pinPress('8')">8</button>
+    <button class="pin-key" onclick="pinPress('9')">9</button>
+    <button class="pin-key" style="visibility:hidden"></button>
+    <button class="pin-key" onclick="pinPress('0')">0</button>
+    <button class="pin-key del" onclick="pinDel()">⌫</button>
+  </div>
+  <div class="pin-error" id="pinError"></div>
+</div>
+
+<div id="stickyTop" style="position:sticky;top:0;z-index:100;display:none">
 <div class="header">
   <div class="header-top" style="justify-content:center">
     <div style="display:flex;align-items:baseline;gap:10px;justify-content:center">
@@ -879,7 +1099,7 @@ if ('serviceWorker' in navigator) {
 </div>
 </div>
 
-<main id="mainContent">
+<main id="mainContent" style="display:none">
   <!-- Injected by JS -->
 </main>
 
@@ -959,6 +1179,88 @@ if ('serviceWorker' in navigator) {
 <div class="toast" id="toast"></div>
 
 <script>
+// ─── PIN & ACCESS ─────────────────────────────────────────────────────────────
+
+const PIN_CORRECT = '94401912';
+let pinBuffer = '';
+let isDemo = false;
+
+function showLockScreen() {
+  document.getElementById('lockScreen').style.display = 'flex';
+  document.getElementById('pinScreen').style.display = 'none';
+  pinBuffer = '';
+  updatePinDots();
+}
+
+function showPinScreen() {
+  document.getElementById('lockScreen').style.display = 'none';
+  document.getElementById('pinScreen').style.display = 'flex';
+  pinBuffer = '';
+  updatePinDots();
+  document.getElementById('pinError').textContent = '';
+}
+
+function enterDemo() {
+  isDemo = true;
+  document.getElementById('lockScreen').style.display = 'none';
+  document.getElementById('stickyTop').style.display = 'block';
+  document.getElementById('mainContent').style.display = 'block';
+  loadDemoData();
+  render();
+  setTimeout(() => fetchPrices(), 300);
+}
+
+function enterApp() {
+  isDemo = false;
+  document.getElementById('lockScreen').style.display = 'none';
+  document.getElementById('pinScreen').style.display = 'none';
+  document.getElementById('stickyTop').style.display = 'block';
+  document.getElementById('mainContent').style.display = 'block';
+}
+
+function pinPress(digit) {
+  if (pinBuffer.length >= 8) return;
+  pinBuffer += digit;
+  updatePinDots();
+  if (pinBuffer.length === 8) {
+    if (pinBuffer === PIN_CORRECT) {
+      document.getElementById('pinError').textContent = '';
+      enterApp();
+    } else {
+      document.getElementById('pinError').textContent = 'PIN incorrecto';
+      setTimeout(() => {
+        pinBuffer = '';
+        updatePinDots();
+        document.getElementById('pinError').textContent = '';
+      }, 800);
+    }
+  }
+}
+
+function pinDel() {
+  pinBuffer = pinBuffer.slice(0, -1);
+  updatePinDots();
+}
+
+function updatePinDots() {
+  for (let i = 0; i < 8; i++) {
+    document.getElementById('d' + i).classList.toggle('filled', i < pinBuffer.length);
+  }
+}
+
+const DEMO_ASSETS = [
+  { id: 'gold',     invested: 1200,    currentPrice: 1380,    rentabilidad: 15.0,  color: '#F5C400', name: 'Oro',        ticker: 'XAUEUR', note: 'IE00B4ND3602 · iShares Physical Gold ETC · Trade Republic', target: 8,  excludeRebalance: false },
+  { id: 'btc',      invested: 3500,    currentPrice: 2870,    rentabilidad: -18.0, color: '#F07820', name: 'Bitcoin',    ticker: 'BTC',    note: 'Binance + Tangem', target: 17, btcUnits: 0.048, liveUnitPrice: null, excludeRebalance: false },
+  { id: 'pp',       invested: 4200,    currentPrice: 4380,    rentabilidad: 4.3,   color: '#888899', name: 'Plan Pensiones', ticker: 'PP Demo', note: 'MyInvestor · Indexado Global', target: 0, excludeRebalance: true, ppLimit: 1500, ppYearlyContributions: { '2026': 500 } },
+  { id: 'world',    invested: 12000,   currentPrice: 11640,   rentabilidad: -3.0,  color: '#C0394B', name: 'MSCI World', ticker: 'FMWO',   note: 'Fidelity MSCI World P-ACC-EUR · MyInvestor', target: 50, excludeRebalance: false },
+  { id: 'emerging', invested: 3200,    currentPrice: 3584,    rentabilidad: 12.0,  color: '#5BA4E8', name: 'Emergentes', ticker: 'VFEM',   note: 'Vanguard Emerging Markets EUR Acc · MyInvestor', target: 6, excludeRebalance: false },
+  { id: 'smallcap', invested: 1800,    currentPrice: 1890,    rentabilidad: 5.0,   color: '#22C97A', name: 'Small Cap',  ticker: 'VGSCP',  note: 'Vanguard Global Small-Cap · MyInvestor', target: 3,  excludeRebalance: false },
+];
+
+function loadDemoData() {
+  assets = DEMO_ASSETS.map(d => ({...d}));
+}
+
 // ─── DATA ───────────────────────────────────────────────────────────────────
 
 const DEFAULT_ASSETS = [
@@ -1895,9 +2197,17 @@ async function init() {
     }
   }
 
-  render();
-  setTimeout(() => { fetchPrices(); }, 300);
+  // App stays hidden behind lock screen — only render when unlocked
+  // enterApp() will be called after PIN or demo
 }
+
+// Override enterApp to also render
+const _enterApp = enterApp;
+enterApp = function() {
+  _enterApp();
+  render();
+  setTimeout(() => fetchPrices(), 300);
+};
 
 init();
 
