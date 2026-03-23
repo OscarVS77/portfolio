@@ -198,8 +198,8 @@ if ('serviceWorker' in navigator) {
 <div class="lock-screen" id="lockScreen">
   <div class="lock-title">Portfolio Familiar</div>
   <div class="lock-tagline">Nuestra familia.<br>Nuestro futuro.</div>
-  <div class="lock-sub">Inversiones de Pai, Abril y Júna.</div>
-  <button class="lock-btn-primary" style="margin-bottom:0" onclick="showPinScreen()">🔐 Acceder</button>
+  <div class="lock-sub">Abril · Juna · Oscar · Pai</div>
+  <button class="lock-btn-primary" style="margin-bottom:0" onclick="showPinScreen()">Acceder</button>
 </div>
 
 <!-- PIN SCREEN -->
@@ -209,8 +209,6 @@ if ('serviceWorker' in navigator) {
   <div class="pin-dots" id="pinDots">
     <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
     <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
-    <div class="pin-dot" id="d4"></div><div class="pin-dot" id="d5"></div>
-    <div class="pin-dot" id="d6"></div><div class="pin-dot" id="d7"></div>
   </div>
   <div class="pin-grid">
     <button class="pin-key" onclick="pinPress('1')">1</button>
@@ -287,7 +285,7 @@ if ('serviceWorker' in navigator) {
 
 <script>
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const PIN = '06281406';
+const PIN = '0628';
 const SUPABASE_URL = 'https://kxqehlutocvdjfgmbdep.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4cWVobHV0b2N2ZGpmZ21iZGVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxODI2MTAsImV4cCI6MjA4OTc1ODYxMH0.MEj0wMuG9Vu6NKurtO2g_3TSqE7ITzzapSPkXMWO0jQ';
 
@@ -312,7 +310,7 @@ const DEFAULT_DATA = [
     ]
   },
   {
-    person: 'Júna',
+    person: 'Juna',
     funds: [
       { id: 'juna_world',    name: 'MSCI World',  ticker: 'FMWO',  color: COLOR_WORLD,    invested: 435.15, currentPrice: 425.19, note: 'IE00BYX5NX33 · Fidelity MSCI World P-ACC-EUR · MyInvestor' },
       { id: 'juna_emerging', name: 'Emergentes',  ticker: 'VFEM',  color: COLOR_EMERGING, invested: 102.93, currentPrice: 108.18, note: 'IE0031786696 · Vanguard Emerging Markets EUR Acc · MyInvestor' },
@@ -692,10 +690,10 @@ function enterApp() {
 }
 
 function pinPress(digit) {
-  if (pinBuffer.length >= 8) return;
+  if (pinBuffer.length >= 4) return;
   pinBuffer += digit;
   updateDots();
-  if (pinBuffer.length === 8) {
+  if (pinBuffer.length === 4) {
     if (pinBuffer === PIN) {
       document.getElementById('pinError').textContent = '';
       enterApp();
@@ -708,7 +706,7 @@ function pinPress(digit) {
 
 function pinDel() { pinBuffer = pinBuffer.slice(0, -1); updateDots(); }
 function updateDots() {
-  for (let i = 0; i < 8; i++) document.getElementById('d' + i).classList.toggle('filled', i < pinBuffer.length);
+  for (let i = 0; i < 4; i++) document.getElementById('d' + i).classList.toggle('filled', i < pinBuffer.length);
 }
 
 document.addEventListener('keydown', e => {
