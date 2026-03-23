@@ -1797,7 +1797,6 @@ function applyExcelDefaults() {
 }
 
 async function init() {
-  // Show debug banner
   function showDebug(msg) {
     let el = document.getElementById('debugBanner');
     if (!el) {
@@ -1809,32 +1808,37 @@ async function init() {
     el.textContent = msg;
   }
 
-  showDebug('Conectando Supabase...');
+  showDebug('Probando Supabase...');
 
-  let loadedFromSupabase = false;
+  let debugMsg = '';
   try {
-    const remoteData = await dbLoad();
-    if (remoteData && remoteData.length) {
-      mergeState(remoteData);
-      localStorage.setItem('portfolio_v3', JSON.stringify(remoteData));
-      loadedFromSupabase = true;
-      const world = remoteData.find(x => x.id === 'world');
-      showDebug(`SB OK · World: inv=${world?.invested} rent=${world?.rentabilidad}`);
+    const url = `${SUPABASE_URL}/rest/v1/portfolio_state?id=eq.oscar&select=data`;
+    showDebug('Fetch: ' + url.substring(0, 60));
+    const r = await fetch(url, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    debugMsg = `HTTP ${r.status}`;
+    const text = await r.text();
+    debugMsg += ` · ${text.substring(0, 120)}`;
+    showDebug(debugMsg);
+
+    if (r.ok) {
+      const rows = JSON.parse(text);
+      if (rows.length && rows[0].data && Array.isArray(rows[0].data)) {
+        mergeState(rows[0].data);
+        localStorage.setItem('portfolio_v3', JSON.stringify(rows[0].data));
+        const w = rows[0].data.find(x => x.id === 'world');
+        showDebug(`OK · World inv=${w?.invested} rent=${w?.rentabilidad}`);
+      } else {
+        showDebug(`HTTP OK pero sin datos · rows=${text.substring(0,80)}`);
+        loadState();
+      }
     } else {
-      showDebug('Supabase respondió pero SIN DATOS · rows=' + JSON.stringify(remoteData));
+      loadState();
     }
   } catch(e) {
-    showDebug('Supabase ERROR: ' + e.message + ' · ' + e.name);
-  }
-
-  if (!loadedFromSupabase) {
-    const hasLocalData = !!localStorage.getItem('portfolio_v3');
+    showDebug(`CATCH: ${e.name} · ${e.message}`);
     loadState();
-    if (!hasLocalData) {
-      applyExcelDefaults();
-      saveState();
-    }
-    showDebug('Usando localStorage · ' + (loadedFromSupabase ? 'SB OK' : 'SB fallido'));
   }
 
   render();
