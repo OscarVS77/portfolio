@@ -1027,7 +1027,7 @@ if ('serviceWorker' in navigator) {
   <div class="lock-tagline">Menos ruido.<br>Más control.</div>
   <div class="lock-sub">Tu patrimonio, siempre a la vista.</div>
   <div class="lock-buttons">
-    <button class="lock-btn-primary" onclick="showPinScreen()">🔐 Mi cartera</button>
+    <button class="lock-btn-primary" onclick="showPinScreen()">Mi cartera</button>
     <button class="lock-btn-demo" onclick="enterDemo()">Ver demo</button>
   </div>
 </div>
@@ -1644,7 +1644,7 @@ function renderCard(a, totalCurrent, totalSinPP) {
         <div style="display:flex;align-items:center;gap:8px">
           <span style="width:8px;height:8px;border-radius:50%;background:${a.color};flex-shrink:0"></span>
           <span style="font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text)">${a.name}</span>
-          ${a.id === 'btc' && a.liveUnitPrice ? `<span style="font-size:11px;color:var(--muted2)">${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
+          ${a.id === 'btc' && a.liveUnitPrice ? `<span style="font-size:11px;color:${a.color}">${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
         </div>
         <span style="font-family:var(--font-display);font-size:17px;font-weight:500;color:var(--text)">${fmtEur(current)}</span>
       </div>
