@@ -376,6 +376,19 @@ function loadState() {
 }
 
 // ─── FORMATTING ──────────────────────────────────────────────────────────────
+// Parse user input: dot = thousands separator (ignored), comma = decimal
+function parseInput(str) {
+  if (!str) return NaN;
+  const clean = str.trim().replace(/\./g, '').replace(',', '.');
+  return parseFloat(clean);
+}
+
+// Format for pre-filling inputs: no thousands dots, comma decimal
+function fmtInput(n, d=2) {
+  if (n == null || isNaN(n)) return '';
+  return n.toFixed(d).replace('.', ',');
+}
+
 function fmt(n, d=2) {
   return new Intl.NumberFormat('es-ES', { minimumFractionDigits:d, maximumFractionDigits:d }).format(n);
 }
@@ -579,14 +592,14 @@ function openOscarModal() {
   selectedOscar = true;
   document.getElementById('modalTitle').textContent = 'Oscar';
   document.getElementById('modalSubtitle').textContent = 'Mi cartera · Resumen mensual';
-  document.getElementById('inputInvested').value = fmt(oscar.invested, 2).replace('.', ',');
-  document.getElementById('inputCurrent').value = fmt(oscar.currentPrice, 2).replace('.', ',');
+  document.getElementById('inputInvested').value = fmtInput(oscar.invested, 2);
+  document.getElementById('inputCurrent').value = fmtInput(oscar.currentPrice, 2);
   const pnl = oscar.currentPrice - oscar.invested;
   const pct = oscar.invested > 0 ? (pnl / oscar.invested) * 100 : 0;
   document.getElementById('modalPreview').textContent = oscar.invested > 0 ? `P&L: ${fmtEur(pnl)} · ${fmtPct(pct)}` : '';
   document.getElementById('inputCurrent').oninput = function() {
-    const val = parseFloat(this.value.replace(',', '.'));
-    const inv = parseFloat(document.getElementById('inputInvested').value.replace(',', '.')) || 0;
+    const val = parseInput(this.value);
+    const inv = parseInput(document.getElementById('inputInvested').value) || 0;
     if (!isNaN(val) && inv) {
       const p = val - inv;
       document.getElementById('modalPreview').textContent = `P&L: ${fmtEur(p)} · ${fmtPct((p/inv)*100)}`;
@@ -602,16 +615,16 @@ function openModal(fundId) {
 
   document.getElementById('modalTitle').textContent = fund.name;
   document.getElementById('modalSubtitle').textContent = fund.note.split(' · ')[2] || 'MyInvestor';
-  document.getElementById('inputInvested').value = fmt(fund.invested, 2).replace('.', ',');
-  document.getElementById('inputCurrent').value = fmt(fund.currentPrice, 2).replace('.', ',');
+  document.getElementById('inputInvested').value = fmtInput(fund.invested, 2);
+  document.getElementById('inputCurrent').value = fmtInput(fund.currentPrice, 2);
 
   const pnl = fund.currentPrice - fund.invested;
   const pct = fund.invested > 0 ? (pnl / fund.invested) * 100 : 0;
   document.getElementById('modalPreview').textContent = `P&L: ${fmtEur(pnl)} · ${fmtPct(pct)}`;
 
   document.getElementById('inputCurrent').oninput = function() {
-    const val = parseFloat(this.value.replace(',', '.'));
-    const inv = parseFloat(document.getElementById('inputInvested').value.replace(',', '.')) || fund.invested;
+    const val = parseInput(this.value);
+    const inv = parseInput(document.getElementById('inputInvested').value) || fund.invested;
     if (!isNaN(val) && inv) {
       const p = val - inv;
       const pc = (p / inv) * 100;
@@ -629,8 +642,8 @@ function closeModal(e) {
 }
 
 function saveModal() {
-  const inv = parseFloat(document.getElementById('inputInvested').value.replace(',', '.'));
-  const cur = parseFloat(document.getElementById('inputCurrent').value.replace(',', '.'));
+  const inv = parseInput(document.getElementById('inputInvested').value);
+  const cur = parseInput(document.getElementById('inputCurrent').value);
 
   if (selectedOscar) {
     if (!isNaN(inv) && inv > 0) oscar.invested = inv;
