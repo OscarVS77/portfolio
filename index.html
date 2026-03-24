@@ -727,6 +727,17 @@ if ('serviceWorker' in navigator) {
     }
   }
 
+  /* SNAPSHOT button — same color logic as refresh */
+  #snapshotIcon {
+    color: #000000;
+  }
+  @media (prefers-color-scheme: dark) {
+    #snapshotIcon {
+      color: #FFFFFF !important;
+    }
+  }
+  #snapshotBtn:active { opacity: 0.5; transform: scale(0.92); transition: all 0.15s; }
+
   .summary-tile.full-width {
     grid-column: 1 / -1;
   }
@@ -1061,9 +1072,17 @@ if ('serviceWorker' in navigator) {
       <div id="headerDate" style="font-size:9px;color:var(--muted2);letter-spacing:.04em"></div>
       <div id="demoBadge" style="display:none;font-size:9px;background:#F07820;color:#fff;padding:2px 6px;border-radius:4px;font-family:var(--font-sans);font-weight:600;letter-spacing:.06em">DEMO</div>
     </div>
-    <button id="refreshBtn" onclick="fetchPrices()" style="background:none;border:none;cursor:pointer;padding:4px">
-      <span class="refresh-icon" style="font-size:20px;line-height:1">↻</span>
-    </button>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button id="snapshotBtn" onclick="saveSnapshot()" title="Guardar snapshot histórico" style="background:none;border:none;cursor:pointer;padding:4px;line-height:1">
+        <svg id="snapshotIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;color:#000000">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+      </button>
+      <button id="refreshBtn" onclick="fetchPrices()" style="background:none;border:none;cursor:pointer;padding:4px">
+        <span class="refresh-icon" style="font-size:20px;line-height:1">↻</span>
+      </button>
+    </div>
   </div>
   <div style="height:1px;background:var(--border);margin:8px 0 10px"></div>
   <div id="headerTiles" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 8px">
@@ -2240,6 +2259,56 @@ function applyExcelDefaults() {
       if (a.rentabilidad == null) a.rentabilidad = excel[a.id].rentabilidad;
     }
   });
+}
+
+// ─── SNAPSHOT HISTÓRICO ──────────────────────────────────────────────────────
+
+async function saveSnapshot() {
+  if (isDemo) return;
+  const { totalInvested, totalCurrent, pnl } = getTotals();
+  if (!totalInvested || totalInvested === 0) return;
+
+  const now = new Date();
+  const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
+
+  const snapshot = {
+    date: dateStr,
+    totalInvested: Math.round(totalInvested * 100) / 100,
+    totalCurrent: Math.round(totalCurrent * 100) / 100,
+    pnlPct: Math.round(pnl * 100) / 100,
+    pnlEur: Math.round((totalCurrent - totalInvested) * 100) / 100,
+    assets: assets.map(a => ({
+      id: a.id,
+      invested: a.invested,
+      current: getAssetCurrent(a)
+    }))
+  };
+
+  const btn = document.getElementById('snapshotBtn');
+  if (btn) btn.style.opacity = '0.4';
+
+  try {
+    // Upsert: si ya existe snapshot de hoy, lo sobreescribe
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/portfolio_history`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({ id: dateStr, data: snapshot })
+    });
+    if (r.ok || r.status === 201 || r.status === 200) {
+      showToast('Snapshot guardado · ' + dateStr);
+    } else {
+      showToast('Error al guardar snapshot');
+    }
+  } catch(e) {
+    showToast('Error de conexión');
+  } finally {
+    if (btn) btn.style.opacity = '1';
+  }
 }
 
 async function init() {
