@@ -1569,6 +1569,22 @@ async function fetchPrices() {
 
 // ─── FORMATTING ──────────────────────────────────────────────────────────────
 
+// Parse user input: accepts "100000,36" or "100000.36" or "100.000,36"
+// Rule: dot = thousands separator (ignored), comma = decimal separator
+function parseInput(str) {
+  if (!str) return NaN;
+  // Remove all dots (thousands separators), replace comma with dot
+  const clean = str.trim().replace(/\./g, '').replace(',', '.');
+  return parseFloat(clean);
+}
+
+// Format number for pre-filling inputs: no thousands dots, comma decimal
+// e.g. 10792.5 → "10792,50"
+function fmtInput(n, d=2) {
+  if (n == null || isNaN(n)) return '';
+  return n.toFixed(d).replace('.', ',');
+}
+
 function fmt(n, d=2) {
   return new Intl.NumberFormat('es-ES', {minimumFractionDigits: d, maximumFractionDigits: d}).format(n);
 }
@@ -1992,7 +2008,7 @@ function openModal(id) {
     totalSection.style.display = 'block';
     btcSection.style.display   = 'block';
     valorSection.style.display = 'none';
-    document.getElementById('setAmountInput').value = fmt(a.invested, 2).replace('.', ',');
+    document.getElementById('setAmountInput').value = fmtInput(a.invested, 2);
     document.getElementById('btcUnitsInput').value = a.btcUnits ? a.btcUnits.toFixed(8) : '';
     document.getElementById('btcUnitsPreview').textContent = a.btcUnits && a.liveUnitPrice
       ? `Valor actual: ${fmtEur(a.btcUnits * a.liveUnitPrice)}`
@@ -2004,10 +2020,10 @@ function openModal(id) {
     valorSection.style.display = 'block';
 
     // Pre-fill current values
-    document.getElementById('setAmountInput').value = fmt(a.invested, 2).replace('.', ',');
+    document.getElementById('setAmountInput').value = fmtInput(a.invested, 2);
     const current = getAssetCurrent(a);
     if (current) {
-      document.getElementById('valorActualInput').value = fmt(current, 2).replace('.', ',');
+      document.getElementById('valorActualInput').value = fmtInput(current, 2);
       const pnl = current - a.invested;
       const pct = (pnl / a.invested) * 100;
       document.getElementById('resultPreview').textContent = `P&L: ${fmtEur(pnl)} · ${fmtPct(pct)}`;
@@ -2016,8 +2032,8 @@ function openModal(id) {
 
   // Live preview on valor actual input
   document.getElementById('valorActualInput').oninput = function() {
-    const val = parseFloat(this.value.replace(',', '.'));
-    const inv = parseFloat(document.getElementById('setAmountInput').value.replace(',', '.')) || a.invested;
+    const val = parseInput(this.value);
+    const inv = parseInput(document.getElementById('setAmountInput').value) || a.invested;
     if (!isNaN(val) && inv) {
       const pnl = val - inv;
       const pct = (pnl / inv) * 100;
@@ -2029,7 +2045,7 @@ function openModal(id) {
 
   // Live preview on BTC units input
   document.getElementById('btcUnitsInput').oninput = function() {
-    const units = parseFloat(this.value.replace(',', '.'));
+    const units = parseInput(this.value);
     if (!isNaN(units) && a.liveUnitPrice) {
       document.getElementById('btcUnitsPreview').textContent = `Valor actual: ${fmtEur(units * a.liveUnitPrice)}`;
     } else {
@@ -2049,13 +2065,13 @@ function saveAll() {
 
   if (selectedAssetId === 'btc') {
     // Total invertido BTC
-    const inv = parseFloat(document.getElementById('setAmountInput').value.replace(',', '.'));
+    const inv = parseInput(document.getElementById('setAmountInput').value);
     if (!isNaN(inv) && inv > 0) {
       a.invested = inv;
       changed = true;
     }
     // BTC units
-    const units = parseFloat(document.getElementById('btcUnitsInput').value.replace(',', '.'));
+    const units = parseInput(document.getElementById('btcUnitsInput').value);
     if (!isNaN(units) && units > 0) {
       a.btcUnits = units;
       if (a.liveUnitPrice) {
@@ -2066,14 +2082,14 @@ function saveAll() {
     }
   } else {
     // Total invertido
-    const inv = parseFloat(document.getElementById('setAmountInput').value.replace(',', '.'));
+    const inv = parseInput(document.getElementById('setAmountInput').value);
     if (!isNaN(inv) && inv > 0) {
       a.invested = inv;
       changed = true;
     }
 
     // Valor actual
-    const val = parseFloat(document.getElementById('valorActualInput').value.replace(',', '.'));
+    const val = parseInput(document.getElementById('valorActualInput').value);
     if (!isNaN(val) && val > 0) {
       a.currentPrice = val;
       a.rentabilidad = ((val - a.invested) / a.invested) * 100;
@@ -2113,8 +2129,7 @@ function addPPAportacion(direction) {
 function setExactAmount() {
   const el = document.getElementById('setAmountInput');
   if (!el) return;
-  const raw = el.value.replace(',', '.');
-  const v = parseFloat(raw);
+  const v = parseInput(el.value);
   if (!selectedAssetId) { showToast('Error: ningún activo seleccionado'); return; }
   if (isNaN(v) || v <= 0) { showToast('Introduce un importe válido'); return; }
   const a = assets.find(x => x.id === selectedAssetId);
@@ -2133,8 +2148,7 @@ function setExactAmount() {
 function setValorActual() {
   const el = document.getElementById('valorActualInput');
   if (!el) return;
-  const raw = el.value.replace(',', '.');
-  const val = parseFloat(raw);
+  const val = parseInput(el.value);
   if (!selectedAssetId) { showToast('Error: ningún activo seleccionado'); return; }
   if (isNaN(val) || val <= 0) { showToast('Introduce un valor válido'); return; }
   const a = assets.find(x => x.id === selectedAssetId);
@@ -2152,8 +2166,7 @@ function setValorActual() {
 function setBtcUnits() {
   const el = document.getElementById('btcUnitsInput');
   if (!el) return;
-  const raw = el.value.replace(',', '.');
-  const units = parseFloat(raw);
+  const units = parseInput(el.value);
   if (!selectedAssetId) { showToast('Error: ningún activo seleccionado'); return; }
   if (isNaN(units) || units <= 0) { showToast('Introduce un número de BTC válido'); return; }
   const a = assets.find(x => x.id === selectedAssetId);
