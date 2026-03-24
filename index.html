@@ -32,10 +32,10 @@ if ('serviceWorker' in navigator) {
     --border2:  #383838;
     --text:     #FFFFFF;
     --muted:    #8A8A8A;
-    --muted2:   #5A5A5A;
+    --muted2:   #7A7A7A;
     --accent:   #00C896;
     --accent2:  #5B9EFF;
-    --red:      #FF3B30;
+    --red:      #D94F4A;
     --gold:     #FFD700;
     --font-display: 'Inter', system-ui, sans-serif;
     --font-sans:    'Inter', system-ui, sans-serif;
@@ -58,7 +58,7 @@ if ('serviceWorker' in navigator) {
       --muted2:   #ABABAB;
       --accent:   #00C896;
       --accent2:  #007AFF;
-      --red:      #FF3B30;
+      --red:      #D94F4A;
       --gold:     #FF9500;
       --shadow:    0 2px 12px rgba(0,0,0,0.05);
       --shadow-sm: 0 1px 4px rgba(0,0,0,0.03);
@@ -71,6 +71,7 @@ if ('serviceWorker' in navigator) {
     background: var(--bg);
     color: var(--text);
     font-family: var(--font-sans);
+    font-weight: 400;
     min-height: 100vh;
     overflow-x: hidden;
   }
@@ -108,7 +109,7 @@ if ('serviceWorker' in navigator) {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
-    padding: 12px 20px 12px;
+    padding: 8px 20px 10px;
   }
 
   .header-top {
@@ -153,7 +154,7 @@ if ('serviceWorker' in navigator) {
   .total-value {
     font-family: var(--font-display);
     font-size: 36px;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--text);
     letter-spacing: -0.02em;
     line-height: 1;
@@ -162,7 +163,7 @@ if ('serviceWorker' in navigator) {
   .total-pnl {
     font-family: var(--font-sans);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 400;
     padding: 4px 10px;
     border-radius: 20px;
   }
@@ -198,7 +199,7 @@ if ('serviceWorker' in navigator) {
     color: var(--muted);
     font-family: var(--font-sans);
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     cursor: pointer;
@@ -254,14 +255,14 @@ if ('serviceWorker' in navigator) {
     display: inline-block;
     font-family: var(--font-sans);
     font-size: 17px;
-    font-weight: 500;
+    font-weight: 400;
     padding: 0;
     border-radius: 0;
     letter-spacing: 0;
   }
 
   .positive { background: transparent; color: #00C896; }
-  .negative { background: transparent; color: #FF3B30; }
+  .negative { background: transparent; color: var(--red); }
   .neutral { background: rgba(100,100,100,0.1); color: var(--muted); }
 
   .stat-label {
@@ -277,7 +278,7 @@ if ('serviceWorker' in navigator) {
   .stat-value {
     font-family: var(--font-sans);
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--text);
   }
 
@@ -342,7 +343,7 @@ if ('serviceWorker' in navigator) {
   .name-live-price {
     font-family: var(--font-sans);
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--muted);
     margin-left: 8px;
     letter-spacing: 0;
@@ -468,7 +469,7 @@ if ('serviceWorker' in navigator) {
     border-radius: var(--radius-sm);
     font-family: var(--font-sans);
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
@@ -504,7 +505,7 @@ if ('serviceWorker' in navigator) {
     border-radius: var(--radius-sm);
     font-family: var(--font-sans);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
@@ -593,7 +594,7 @@ if ('serviceWorker' in navigator) {
   .rebalance-name {
     font-family: var(--font-sans);
     font-size: 11px;
-    font-weight: 500;
+    font-weight: 400;
     min-width: 80px;
     display: flex;
     align-items: center;
@@ -645,7 +646,7 @@ if ('serviceWorker' in navigator) {
   .rebalance-delta {
     font-family: var(--font-sans);
     font-size: 11px;
-    font-weight: 500;
+    font-weight: 400;
     min-width: 50px;
     text-align: right;
   }
@@ -692,16 +693,16 @@ if ('serviceWorker' in navigator) {
   }
 
   .summary-tile {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 6px 4px;
   }
 
   .summary-tile-label {
     font-family: var(--font-sans);
     font-size: 9px;
-    color: var(--text);
+    color: var(--muted2);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-bottom: 4px;
@@ -712,29 +713,17 @@ if ('serviceWorker' in navigator) {
     font-family: var(--font-display);
     font-size: 18px;
     font-weight: 600;
+    color: var(--text);
   }
 
-  /* ACTUALIZAR button — turquoise in light, yellow in dark */
-  #refreshBtn {
-    border-color: #00C896 !important;
-  }
+  /* ACTUALIZAR button — white dark, black light */
   #refreshBtn .refresh-icon {
-    color: #00C896 !important;
+    color: #000000;
+    font-size: 20px !important;
   }
-
   @media (prefers-color-scheme: dark) {
-    .summary-tile {
-      background: transparent;
-      border: 1px solid var(--border);
-    }
-    .summary-tile-label {
-      color: #FFFFFF;
-    }
-    #refreshBtn {
-      border-color: #FFD700 !important;
-    }
     #refreshBtn .refresh-icon {
-      color: #FFD700 !important;
+      color: #FFFFFF !important;
     }
   }
 
@@ -776,7 +765,7 @@ if ('serviceWorker' in navigator) {
     color: var(--text);
     font-family: var(--font-sans);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.06em;
     cursor: pointer;
     transition: all 0.2s;
@@ -858,7 +847,7 @@ if ('serviceWorker' in navigator) {
   .lock-title {
     font-family: var(--font-display);
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: #FFFFFF;
@@ -900,9 +889,9 @@ if ('serviceWorker' in navigator) {
   .lock-btn-primary {
     padding: 16px;
     border-radius: 12px;
-    border: 1px solid #FFD700;
+    border: 1px solid #FFFFFF;
     background: transparent;
-    color: #FFD700;
+    color: #FFFFFF;
     font-family: var(--font-sans);
     font-size: 13px;
     font-weight: 700;
@@ -911,23 +900,23 @@ if ('serviceWorker' in navigator) {
     cursor: pointer;
   }
   @media (prefers-color-scheme: light) {
-    .lock-btn-primary { border-color: #00C896; color: #00C896; }
+    .lock-btn-primary { border-color: #000000; color: #000000; }
   }
   .lock-btn-demo {
     padding: 16px;
     border-radius: 12px;
-    border: 1px solid #3A3A3A;
+    border: 1px solid #555555;
     background: transparent;
-    color: #8A8A8A;
+    color: #AAAAAA;
     font-family: var(--font-sans);
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     cursor: pointer;
   }
   @media (prefers-color-scheme: light) {
-    .lock-btn-demo { border-color: #D8D8D8; color: #6C6C6C; }
+    .lock-btn-demo { border-color: #BBBBBB; color: #555555; }
   }
   /* PIN PAD */
   .pin-screen {
@@ -978,11 +967,11 @@ if ('serviceWorker' in navigator) {
     transition: all 0.15s;
   }
   .pin-dot.filled {
-    background: #FFD700;
-    border-color: #FFD700;
+    background: #FFFFFF;
+    border-color: #FFFFFF;
   }
   @media (prefers-color-scheme: light) {
-    .pin-dot.filled { background: #00C896; border-color: #00C896; }
+    .pin-dot.filled { background: #000000; border-color: #000000; }
   }
   .pin-grid {
     display: grid;
@@ -999,7 +988,7 @@ if ('serviceWorker' in navigator) {
     color: #FFFFFF;
     font-family: var(--font-display);
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 400;
     cursor: pointer;
     text-align: center;
     transition: background 0.1s;
@@ -1011,7 +1000,7 @@ if ('serviceWorker' in navigator) {
   }
   .pin-key.del { font-size: 16px; color: #8A8A8A; }
   .pin-error {
-    color: #FF3B30;
+    color: var(--red);
     font-size: 12px;
     font-family: var(--font-sans);
     margin-top: 16px;
@@ -1067,13 +1056,17 @@ if ('serviceWorker' in navigator) {
 <div class="header">
   <div class="header-top" style="justify-content:space-between">
     <button onclick="showLockScreen()" style="background:none;border:none;color:var(--muted2);font-size:11px;font-family:var(--font-sans);cursor:pointer;padding:4px 0;letter-spacing:.04em">← Salir</button>
-    <div style="display:flex;align-items:baseline;gap:8px">
+    <div style="display:flex;align-items:center;gap:8px">
       <div class="header-title">Portfolio</div>
+      <div id="headerDate" style="font-size:9px;color:var(--muted2);letter-spacing:.04em"></div>
       <div id="demoBadge" style="display:none;font-size:9px;background:#F07820;color:#fff;padding:2px 6px;border-radius:4px;font-family:var(--font-sans);font-weight:600;letter-spacing:.06em">DEMO</div>
     </div>
-    <div class="header-date" id="headerDate" style="font-size:10px;color:var(--text)"></div>
+    <button id="refreshBtn" onclick="fetchPrices()" style="background:none;border:none;cursor:pointer;padding:4px">
+      <span class="refresh-icon" style="font-size:20px;line-height:1">↻</span>
+    </button>
   </div>
-  <div id="headerTiles" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
+  <div style="height:1px;background:var(--border);margin:8px 0 10px"></div>
+  <div id="headerTiles" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 8px">
     <div class="summary-tile" style="text-align:center">
       <div class="summary-tile-label">Total invertido</div>
       <div class="summary-tile-value" id="hTotalInvested">—</div>
@@ -1083,7 +1076,7 @@ if ('serviceWorker' in navigator) {
       <div class="summary-tile-value" id="hTotalCurrent">—</div>
     </div>
     <div class="summary-tile" style="text-align:center">
-      <div class="summary-tile-label">P&L absoluto</div>
+      <div class="summary-tile-label">P&L</div>
       <div class="summary-tile-value" id="hPnlAbs">—</div>
     </div>
     <div class="summary-tile" style="text-align:center">
@@ -1096,7 +1089,6 @@ if ('serviceWorker' in navigator) {
 <div class="tabs" id="tabBar">
   <button class="tab active" onclick="switchTab('activos')" style="flex:1">Activos</button>
   <button class="tab" onclick="switchTab('rebalanceo')" style="flex:1">Rebalanceo</button>
-  <button class="tab" id="refreshBtn" onclick="fetchPrices()" style="flex:1;display:flex;align-items:center;justify-content:center"><span class="refresh-icon" style="font-size:10px;letter-spacing:0.1em;font-weight:600">ACTUALIZAR</span></button>
 </div>
 </div>
 
@@ -1609,7 +1601,7 @@ function render() {
 function updateHeader() {
   const {totalInvested, totalCurrent, pnl} = getTotals();
   const pnlAbs = totalCurrent - totalInvested;
-  const pnlColor = pnl >= 0 ? '#00C896' : '#FF3B30';
+  const pnlColor = pnl >= 0 ? 'var(--accent)' : 'var(--red)';
 
   document.getElementById('hTotalInvested').textContent = fmtEur(totalInvested, 0);
   document.getElementById('hTotalCurrent').textContent = fmtEur(totalCurrent, 0);
@@ -1625,7 +1617,8 @@ function updateHeader() {
 
 function updateDateDisplay() {
   const d = new Date();
-  document.getElementById('headerDate').textContent = d.toLocaleDateString('es-ES', {day:'2-digit', month:'short', year:'numeric'});
+  const dateEl = document.getElementById('headerDate');
+  if (dateEl) dateEl.textContent = d.toLocaleDateString('es-ES', {day:'2-digit', month:'short', year:'numeric'});
 }
 
 function renderActivos() {
@@ -1653,14 +1646,16 @@ function renderCard(a, totalCurrent, totalSinPP) {
   const tickerSuffix = a.id === 'btc' ? ' · precio unitario' : '';
 
   return `
-    <div class="asset-card" style="--accent-color: ${a.color}" onclick="openModal('${a.id}')">
+    <div class="asset-card" onclick="openModal('${a.id}')">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="width:8px;height:8px;border-radius:50%;background:${a.color};flex-shrink:0"></span>
-          <span style="font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text)">${a.name}</span>
-          ${a.id === 'btc' && a.liveUnitPrice ? `<span style="font-size:14px;font-weight:600;color:${a.color}">${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <span style="font-family:var(--font-display);font-size:17px;font-weight:400;color:var(--text)">${a.name}</span>
+          <span style="display:block;width:100%;height:2px;background:${a.color};border-radius:2px"></span>
         </div>
-        <span style="font-family:var(--font-display);font-size:17px;font-weight:500;color:var(--text)">${fmtEur(current)}</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          ${a.id === 'btc' && a.liveUnitPrice ? `<span style="font-size:14px;font-weight:400;color:${a.color}">${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
+          <span style="font-family:var(--font-display);font-size:17px;font-weight:400;color:var(--text)">${fmtEur(current)}</span>
+        </div>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
         <span style="font-size:11px;color:var(--muted2)">${a.ticker}${tickerSuffix}</span>
@@ -1694,16 +1689,16 @@ function renderPPCard(a) {
   const pnlAbs = current - a.invested;
 
   return `
-    <div class="asset-card" style="--accent-color:${a.color};border-style:dashed" onclick="openModal('${a.id}')">
+    <div class="asset-card" onclick="openModal('${a.id}')">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="width:8px;height:8px;border-radius:50%;background:${a.color};flex-shrink:0"></span>
-          <span style="font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text)">${a.name}</span>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <span style="font-family:var(--font-display);font-size:17px;font-weight:400;color:var(--text)">${a.name}</span>
+          <span style="display:block;width:100%;height:2px;background:${a.color};border-radius:2px"></span>
         </div>
-        <span style="font-family:var(--font-display);font-size:17px;font-weight:500;color:var(--text)">${fmtEur(current)}</span>
+        <span style="font-family:var(--font-display);font-size:17px;font-weight:400;color:var(--text)">${fmtEur(current)}</span>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-        <span style="font-size:11px;color:var(--muted2)">${a.ticker} · Sin rebalanceo</span>
+        <span style="font-size:11px;color:var(--muted2)">${a.ticker} · MyInvestor · Sin rebalanceo</span>
         <span class="asset-pnl-badge ${pnlClass(pnl)}">${fmtPct(pnl)}</span>
       </div>
       <div style="height:0.5px;background:var(--border);margin:10px 0"></div>
@@ -1723,7 +1718,7 @@ function renderPPCard(a) {
           <span style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2)">Límite IRPF</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:16px;font-weight:600;color:${a.color}">${fmtEur(aportadoAño)}</span>
+          <span style="font-size:16px;font-weight:400;color:${a.color}">${fmtEur(aportadoAño)}</span>
           <span style="font-size:13px;color:var(--muted2)">${fmtEur(a.ppLimit, 0)}</span>
         </div>
         <div style="height:2px;background:var(--border);border-radius:2px;overflow:hidden">
@@ -1731,7 +1726,7 @@ function renderPPCard(a) {
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:var(--muted2)">
           <span>${fmt(progresoPct, 1)}% completado</span>
-          <span>Resta: <span style="color:var(--text);font-weight:600">${fmtEur(restante, 0)}</span></span>
+          <span>Resta: <span style="color:var(--text);font-weight:400">${fmtEur(restante, 0)}</span></span>
         </div>
       </div>
     </div>
@@ -1803,12 +1798,11 @@ function renderRebalanceo() {
     const absDelta = Math.abs(delta);
     const action = absDelta <= REBAL_THRESHOLD
       ? `<span style="color:var(--muted2);font-size:10px">${delta >= 0 ? '+' : ''}${fmt(delta,1)}%</span>`
-      : `<span style="color:${delta > 0 ? 'var(--red)' : 'var(--accent)'};font-size:11px;font-weight:600">${delta > 0 ? '↓' : '↑'} ${fmtEur(Math.abs((delta/100)*total), 0)}</span>`;
+      : `<span style="color:${delta > 0 ? 'var(--red)' : 'var(--accent)'};font-size:11px;font-weight:400">${delta > 0 ? '↓' : '↑'} ${fmtEur(Math.abs((delta/100)*total), 0)}</span>`;
 
     return `
       <div style="display:grid;grid-template-columns:1fr 46px 40px 40px 72px;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border)">
-        <div style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--text)">
-          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${asset.color};flex-shrink:0"></span>
+        <div style="font-size:12px;font-weight:400;color:var(--text)">
           ${asset.name}
         </div>
         <div style="position:relative;height:6px;background:rgba(128,128,128,0.2);border-radius:3px;overflow:visible">
@@ -1857,10 +1851,10 @@ function renderRebalanceo() {
     const eurDiff = Math.abs((delta / 100) * total);
     if (delta > 0) {
       // Overweight → skip next contribution
-      return `<span style="color:var(--red);font-size:10px;font-weight:600">Omite próx. aport.</span>`;
+      return `<span style="color:var(--red);font-size:10px;font-weight:400">Omite próx. aport.</span>`;
     } else {
       // Underweight → add extra
-      return `<span style="color:var(--accent);font-size:10px;font-weight:600">+${fmtEur(eurDiff,0)} próx. mes</span>`;
+      return `<span style="color:var(--accent);font-size:10px;font-weight:400">+${fmtEur(eurDiff,0)} próx. mes</span>`;
     }
   }
 
@@ -1870,7 +1864,7 @@ function renderRebalanceo() {
     if (!alerts.length) return `
       <div style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:rgba(0,200,150,0.06);border:1px solid rgba(0,200,150,0.15);border-radius:10px;margin-top:10px">
         <span style="font-size:16px">✓</span>
-        <span style="font-size:12px;color:var(--accent);font-weight:500">Portfolio equilibrado. No es necesario actuar.</span>
+        <span style="font-size:12px;color:var(--accent);font-weight:400">Portfolio equilibrado. No es necesario actuar.</span>
       </div>`;
 
     const items = alerts.map(r => {
@@ -1879,19 +1873,19 @@ function renderRebalanceo() {
         return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
           <div style="display:flex;align-items:center;gap:6px">
             <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${r.color}"></span>
-            <span style="font-size:12px;font-weight:500;color:var(--text)">${r.name}</span>
+            <span style="font-size:12px;font-weight:400;color:var(--text)">${r.name}</span>
             <span style="font-size:10px;color:var(--muted2)">(+${fmt(r.delta,1)}% sobre obj.)</span>
           </div>
-          <span style="font-size:12px;color:var(--red);font-weight:600">Omite próxima aportación</span>
+          <span style="font-size:12px;color:var(--red);font-weight:400">Omite próxima aportación</span>
         </div>`;
       } else {
         return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
           <div style="display:flex;align-items:center;gap:6px">
             <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${r.color}"></span>
-            <span style="font-size:12px;font-weight:500;color:var(--text)">${r.name}</span>
+            <span style="font-size:12px;font-weight:400;color:var(--text)">${r.name}</span>
             <span style="font-size:10px;color:var(--muted2)">(${fmt(r.delta,1)}% bajo obj.)</span>
           </div>
-          <span style="font-size:12px;color:var(--accent);font-weight:600">Añade ${fmtEur(eurDiff,0)} próx. mes</span>
+          <span style="font-size:12px;color:var(--accent);font-weight:400">Añade ${fmtEur(eurDiff,0)} próx. mes</span>
         </div>`;
       }
     }).join('');
@@ -1928,13 +1922,12 @@ function renderRebalanceo() {
       <div style="margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
           <div style="display:flex;align-items:center;gap:7px">
-            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${asset.color};flex-shrink:0"></span>
-            <span style="font-size:14px;font-weight:600;color:var(--text)">${asset.name}</span>
+            <span style="font-size:14px;font-weight:400;color:var(--text)">${asset.name}</span>
           </div>
           <div style="display:flex;align-items:center;gap:10px">
-            <span style="font-size:13px;color:var(--text);font-weight:500">${fmt(actualPct,1)}%</span>
+            <span style="font-size:13px;color:var(--text);font-weight:400">${fmt(actualPct,1)}%</span>
             <span style="font-size:12px;color:var(--muted2)">/ ${fmt(targetPct,0)}%</span>
-            <span style="font-size:13px;font-weight:600;color:${diffColor}">${diffLabel}</span>
+            <span style="font-size:13px;font-weight:400;color:${diffColor}">${diffLabel}</span>
           </div>
         </div>
         <div style="position:relative;height:7px;background:var(--border);border-radius:4px;overflow:hidden">
@@ -2183,9 +2176,8 @@ function setBtcUnits() {
 
 function switchTab(tab) {
   activeTab = tab;
-  document.querySelectorAll('.tab:not(#refreshBtn)').forEach((t, i) => {
-    const tabs = ['activos', 'rebalanceo'];
-    t.classList.toggle('active', tabs[i] === tab);
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', ['activos','rebalanceo'][i] === tab);
   });
   render();
 }
