@@ -2601,7 +2601,7 @@ Responde ÚNICAMENTE en español. Sin títulos, sin markdown, sin asteriscos. So
 ]`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://anthropic-proxy.oscar-visa.workers.dev', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
