@@ -1085,6 +1085,70 @@ if ('serviceWorker' in navigator) {
     border-color: var(--text);
   }
   .confirm-btn:active { opacity: 0.6; }
+  /* NOTICIAS */
+  .noticia-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+  .noticia-activo {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .noticia-texto {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .noticias-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 14px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .noticias-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--text);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  .noticias-refresh {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 14px;
+  }
+  .noticias-refresh-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: 10px;
+    letter-spacing: .08em;
+    padding: 6px 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .noticias-refresh-btn:active { opacity: 0.5; }
+  .noticias-timestamp {
+    font-size: 10px;
+    color: var(--muted2);
+    text-align: center;
+    margin-top: 16px;
+    letter-spacing: .04em;
+  }
 </style>
 </head>
 <body>
@@ -1176,6 +1240,7 @@ if ('serviceWorker' in navigator) {
 <div class="tabs" id="tabBar">
   <button class="tab active" onclick="switchTab('activos')" style="flex:1">Activos</button>
   <button class="tab" onclick="switchTab('rebalanceo')" style="flex:1">Rebalanceo</button>
+  <button class="tab" onclick="switchTab('noticias')" style="flex:1">Noticias</button>
 </div>
 </div>
 
@@ -1728,7 +1793,8 @@ function render() {
   updateHeader();
   const content = document.getElementById('mainContent');
   if (activeTab === 'activos') content.innerHTML = renderActivos();
-  else content.innerHTML = renderRebalanceo();
+  else if (activeTab === 'rebalanceo') content.innerHTML = renderRebalanceo();
+  else if (activeTab === 'noticias') content.innerHTML = renderNoticias();
   updateDateDisplay();
 }
 
@@ -2308,9 +2374,14 @@ function setBtcUnits() {
 function switchTab(tab) {
   activeTab = tab;
   document.querySelectorAll('.tab').forEach((t, i) => {
-    t.classList.toggle('active', ['activos','rebalanceo'][i] === tab);
+    t.classList.toggle('active', ['activos','rebalanceo','noticias'][i] === tab);
   });
-  render();
+  if (tab === 'noticias') {
+    render();
+    loadNoticias();
+  } else {
+    render();
+  }
 }
 
 // ─── TOAST ───────────────────────────────────────────────────────────────────
@@ -2450,6 +2521,127 @@ async function init() {
     render();
     setTimeout(() => fetchPrices(), 300);
   }
+}
+
+
+// ─── NOTICIAS ─────────────────────────────────────────────────────────────────
+
+let ANTHROPIC_KEY = null;
+
+async function loadAnthropicKey() {
+  if (ANTHROPIC_KEY) return true;
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/app_config?id=eq.anthropic_key&select=value`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    if (r.ok) {
+      const rows = await r.json();
+      if (rows.length && rows[0].value) { ANTHROPIC_KEY = rows[0].value; return true; }
+    }
+  } catch(e) {}
+  return false;
+}
+let noticiasCache = null;
+let noticiasTimestamp = null;
+let noticiasLoading = false;
+
+function renderNoticias() {
+  if (noticiasLoading) {
+    return `<div class="noticias-loading">
+      <div class="noticias-spinner"></div>
+      <span>Buscando noticias...</span>
+    </div>`;
+  }
+  if (!noticiasCache) {
+    return `<div class="noticias-loading">
+      <span style="color:var(--muted)">Cargando...</span>
+    </div>`;
+  }
+  const ts = noticiasTimestamp ? new Date(noticiasTimestamp).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'}) : '';
+  return `
+    <div class="noticias-refresh">
+      <button class="noticias-refresh-btn" onclick="loadNoticias(true)">↻ Actualizar</button>
+    </div>
+    ${noticiasCache.map(n => `
+      <div class="noticia-card">
+        <div class="noticia-activo" style="color:${n.color}">${n.activo}</div>
+        <div class="noticia-texto">${n.texto}</div>
+      </div>
+    `).join('')}
+    ${ts ? `<div class="noticias-timestamp">Actualizado a las ${ts}</div>` : ''}
+  `;
+}
+
+async function loadNoticias(force = false) {
+  // Cache de 30 minutos salvo force
+  if (!force && noticiasCache && noticiasTimestamp && (Date.now() - noticiasTimestamp < 30 * 60 * 1000)) return;
+  if (noticiasLoading) return;
+
+  noticiasLoading = true;
+  render();
+
+  const keyLoaded = await loadAnthropicKey();
+  if (!keyLoaded) {
+    noticiasCache = [{ activo: 'Error de configuración', ticker: '', color: 'var(--red)', texto: 'No se pudo cargar la clave de acceso. Comprueba la configuración en Supabase.' }];
+    noticiasLoading = false;
+    render();
+    return;
+  }
+
+  const activosInfo = assets.map(a => `${a.name} (${a.ticker})`).join(', ');
+
+  const prompt = `Eres un asistente financiero. El usuario tiene los siguientes activos en su cartera: ${activosInfo}.
+
+Busca las noticias o datos más relevantes de las últimas 48 horas para CADA uno de estos activos. Para cada activo, escribe UN párrafo conciso (2-4 frases) con lo más importante que ha pasado o el dato clave del momento. Si no hay noticias relevantes para alguno, indica brevemente el contexto de mercado actual.
+
+Responde ÚNICAMENTE en español. Sin títulos, sin markdown, sin asteriscos. Solo el JSON con este formato exacto, sin texto antes ni después:
+[
+  {"activo": "Nombre del activo", "ticker": "TICKER", "texto": "Texto de la noticia o contexto relevante."},
+  ...
+]`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'interleaved-thinking-2025-05-14'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1500,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const fullText = (data.content || [])
+      .filter(b => b.type === 'text')
+      .map(b => b.text)
+      .join('');
+
+    const jsonMatch = fullText.match(/\[[\s\S]*\]/);
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0]);
+      const colorMap = {};
+      assets.forEach(a => { colorMap[a.ticker] = a.color; colorMap[a.name] = a.color; });
+      noticiasCache = parsed.map(n => ({
+        ...n,
+        color: colorMap[n.ticker] || colorMap[n.activo] || 'var(--muted)'
+      }));
+      noticiasTimestamp = Date.now();
+    } else {
+      noticiasCache = [{ activo: 'Aviso', ticker: '', color: 'var(--muted)', texto: 'No se pudieron cargar las noticias. Inténtalo de nuevo.' }];
+    }
+  } catch(e) {
+    noticiasCache = [{ activo: 'Error', ticker: '', color: 'var(--red)', texto: 'Error de conexión al cargar noticias.' }];
+  }
+
+  noticiasLoading = false;
+  if (activeTab === 'noticias') render();
 }
 
 init();
