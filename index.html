@@ -738,6 +738,19 @@ if ('serviceWorker' in navigator) {
   #snapshotBtn { transition: opacity 0.15s; }
   #snapshotBtn:active { opacity: 0.4; }
 
+  /* EYE BUTTON */
+  #eyeBtn { transition: opacity 0.15s; }
+  #eyeBtn:active { opacity: 0.4; }
+  #eyeIcon { color: #000000; }
+  @media (prefers-color-scheme: dark) { #eyeIcon { color: #FFFFFF !important; } }
+
+  /* PRIVACY MODE */
+  body.privacy .privacy-hide {
+    filter: blur(8px);
+    user-select: none;
+    pointer-events: none;
+  }
+
   .summary-tile.full-width {
     grid-column: 1 / -1;
   }
@@ -1161,7 +1174,6 @@ if ('serviceWorker' in navigator) {
   <div class="lock-sub">Tu patrimonio, siempre a la vista.</div>
   <div class="lock-buttons">
     <button class="lock-btn-primary" onclick="showPinScreen()">Mi cartera</button>
-    <button class="lock-btn-demo" onclick="enterDemo()">Ver demo</button>
   </div>
 </div>
 
@@ -1203,9 +1215,14 @@ if ('serviceWorker' in navigator) {
     <div style="display:flex;align-items:center;gap:8px">
       <div class="header-title">Portfolio</div>
       <div id="headerDate" style="font-size:9px;color:var(--muted2);letter-spacing:.04em"></div>
-      <div id="demoBadge" style="display:none;font-size:9px;background:#F07820;color:#fff;padding:2px 6px;border-radius:4px;font-family:var(--font-sans);font-weight:600;letter-spacing:.06em">DEMO</div>
     </div>
     <div style="display:flex;align-items:center;gap:10px">
+      <button id="eyeBtn" onclick="togglePrivacy()" title="Ocultar valores" style="background:none;border:none;cursor:pointer;padding:4px;line-height:1">
+        <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </button>
       <button id="snapshotBtn" onclick="saveSnapshot()" title="Guardar snapshot histórico" style="background:none;border:none;cursor:pointer;padding:4px;line-height:1">
         <svg id="snapshotIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block">
           <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
@@ -1221,19 +1238,19 @@ if ('serviceWorker' in navigator) {
   <div id="headerTiles" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 8px">
     <div class="summary-tile" style="text-align:center">
       <div class="summary-tile-label">Total invertido</div>
-      <div class="summary-tile-value" id="hTotalInvested">—</div>
+      <div class="summary-tile-value privacy-hide" id="hTotalInvested">—</div>
     </div>
     <div class="summary-tile" style="text-align:center">
       <div class="summary-tile-label">Valor actual</div>
-      <div class="summary-tile-value" id="hTotalCurrent">—</div>
+      <div class="summary-tile-value privacy-hide" id="hTotalCurrent">—</div>
     </div>
     <div class="summary-tile" style="text-align:center">
       <div class="summary-tile-label">P&L</div>
-      <div class="summary-tile-value" id="hPnlAbs">—</div>
+      <div class="summary-tile-value privacy-hide" id="hPnlAbs">—</div>
     </div>
     <div class="summary-tile" style="text-align:center">
       <div class="summary-tile-label">Rentabilidad</div>
-      <div class="summary-tile-value" id="hPnlPct">—</div>
+      <div class="summary-tile-value privacy-hide" id="hPnlPct">—</div>
     </div>
   </div>
 </div>
@@ -1250,6 +1267,20 @@ if ('serviceWorker' in navigator) {
 </main>
 
 <!-- Modal de aportación -->
+<div class="confirm-overlay" id="privacyPinOverlay">
+  <div class="confirm-box">
+    <div class="confirm-title">Introduce el código</div>
+    <div class="confirm-msg">Necesitas el código para mostrar los valores.</div>
+    <input id="privacyPinInput" type="password" inputmode="numeric" maxlength="6"
+      style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:12px;font-family:var(--font-sans);font-size:20px;color:var(--text);text-align:center;letter-spacing:.3em;margin-bottom:8px;outline:none;"
+      oninput="checkPrivacyPin()" placeholder="······">
+    <div id="privacyPinError" style="font-size:11px;color:var(--red);text-align:center;min-height:16px;margin-bottom:12px"></div>
+    <div class="confirm-btns">
+      <button class="confirm-btn" onclick="cancelPrivacyPin()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
     <div class="confirm-title">Guardar snapshot</div>
@@ -1340,21 +1371,13 @@ if ('serviceWorker' in navigator) {
 
 const PIN_CORRECT = null; // PIN stored securely in Supabase, not in code
 let pinBuffer = '';
-let isDemo = false;
 
 function showLockScreen() {
-  // If leaving demo, restore real assets
-  if (isDemo && realAssets && realAssets.length) {
-    assets = JSON.parse(JSON.stringify(realAssets));
-    realAssets = null;
-  }
-  isDemo = false;
   sessionStorage.removeItem('portfolio_auth');
   document.getElementById('lockScreen').style.display = 'flex';
   document.getElementById('pinScreen').style.display = 'none';
   document.getElementById('stickyTop').style.display = 'none';
   document.getElementById('mainContent').style.display = 'none';
-  document.getElementById('demoBadge').style.display = 'none';
   pinBuffer = '';
   updatePinDots();
 }
@@ -1367,34 +1390,13 @@ function showPinScreen() {
   document.getElementById('pinError').textContent = '';
 }
 
-let realAssets = null;
-
-function enterDemo() {
-  isDemo = true;
-  // Deep copy real assets before loading demo
-  realAssets = JSON.parse(JSON.stringify(assets));
-  document.getElementById('lockScreen').style.display = 'none';
-  document.getElementById('stickyTop').style.display = 'block';
-  document.getElementById('mainContent').style.display = 'block';
-  document.getElementById('demoBadge').style.display = 'inline-block';
-  assets = DEMO_ASSETS.map(a => ({...a}));
-  render();
-}
-
 function enterApp() {
-  isDemo = false;
-  if (realAssets && realAssets.length) {
-    assets = JSON.parse(JSON.stringify(realAssets));
-  } else {
-    loadState();
-  }
-  realAssets = null;
+  loadState();
   sessionStorage.setItem('portfolio_auth', '1');
   document.getElementById('lockScreen').style.display = 'none';
   document.getElementById('pinScreen').style.display = 'none';
   document.getElementById('stickyTop').style.display = 'block';
   document.getElementById('mainContent').style.display = 'block';
-  document.getElementById('demoBadge').style.display = 'none';
   render();
   setTimeout(() => fetchPrices(), 300);
 }
@@ -1476,19 +1478,6 @@ document.addEventListener('keydown', function(e) {
   else if (e.key === 'Backspace') { pinBuffer = pinBuffer.slice(0, -1); updatePinDots(); }
   else if (e.key === 'Escape') showLockScreen();
 });
-
-const DEMO_ASSETS = [
-  { id: 'gold',     invested: 16800,  currentPrice: 20160,  rentabilidad: 20.0,  color: '#F5C400', name: 'Oro',        ticker: 'XAUEUR', note: 'IE00B4ND3602 · iShares Physical Gold ETC · Trade Republic', target: 8,  excludeRebalance: false },
-  { id: 'btc',      invested: 36000,  currentPrice: 51120,  rentabilidad: 42.0,  color: '#F07820', name: 'Bitcoin',    ticker: 'BTC',    note: 'Binance + Tangem', target: 17, btcUnits: null, liveUnitPrice: null, excludeRebalance: false },
-  { id: 'pp',       invested: 12000,  currentPrice: 12840,  rentabilidad: 7.0,   color: '#888899', name: 'Plan Pensiones', ticker: 'PP Demo', note: 'MyInvestor · Indexado Global', target: 0, excludeRebalance: true, ppLimit: 1500, ppYearlyContributions: { '2026': 1200 } },
-  { id: 'world',    invested: 120000, currentPrice: 139200, rentabilidad: 16.0,  color: '#C0394B', name: 'MSCI World', ticker: 'FMWO',   note: 'Fidelity MSCI World P-ACC-EUR · MyInvestor', target: 50, excludeRebalance: false },
-  { id: 'emerging', invested: 36000,  currentPrice: 46800,  rentabilidad: 30.0,  color: '#5BA4E8', name: 'Emergentes', ticker: 'VFEM',   note: 'Vanguard Emerging Markets EUR Acc · MyInvestor', target: 6, excludeRebalance: false },
-  { id: 'smallcap', invested: 19200,  currentPrice: 21696,  rentabilidad: 13.0,  color: '#22C97A', name: 'Small Cap',  ticker: 'VGSCP',  note: 'Vanguard Global Small-Cap · MyInvestor', target: 3,  excludeRebalance: false },
-];
-
-function loadDemoData() {
-  assets = DEMO_ASSETS.map(d => ({...d}));
-}
 
 // ─── DATA ───────────────────────────────────────────────────────────────────
 
@@ -1656,7 +1645,6 @@ function loadState() {
 }
 
 function saveState() {
-  if (isDemo) return; // Never save demo data
   const toSave = assets.map(a => ({
     id: a.id,
     invested: a.invested,
@@ -1702,7 +1690,6 @@ function getTotals() {
 // ─── PRICE FETCHING ───────────────────────────────────────────────────────────
 
 async function fetchPrices() {
-  if (isDemo) return;
   const btn = document.getElementById('refreshBtn');
   if (btn) btn.classList.add('spinning');
 
@@ -1854,23 +1841,23 @@ function renderCard(a, totalCurrent, totalSinPP) {
           <span style="display:block;width:100%;height:2px;background:${a.color};border-radius:2px"></span>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
-          ${a.id === 'btc' && a.liveUnitPrice ? `<span style="font-size:14px;font-weight:400;color:${a.color}">${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
-          <span style="font-family:var(--font-display);font-size:17px;font-weight:400;color:var(--text)">${fmtEur(current)}</span>
+          ${a.id === 'btc' && a.liveUnitPrice ? `<span class="privacy-hide" style="font-size:14px;font-weight:400;color:${a.color}">${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
+          <span class="privacy-hide" style="font-family:var(--font-display);font-size:17px;font-weight:400;color:var(--text)">${fmtEur(current)}</span>
         </div>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
         <span style="font-size:11px;color:var(--muted2)">${a.ticker}${tickerSuffix}</span>
-        <span class="asset-pnl-badge ${pnlClass(pnl)}">${fmtPct(pnl)}</span>
+        <span class="asset-pnl-badge privacy-hide ${pnlClass(pnl)}">${fmtPct(pnl)}</span>
       </div>
       <div style="height:0.5px;background:var(--border);margin:10px 0"></div>
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div>
           <div style="font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">Invertido</div>
-          <div style="font-size:14px;color:var(--text)">${fmtEur(a.invested)}</div>
+          <div class="privacy-hide" style="font-size:14px;color:var(--text)">${fmtEur(a.invested)}</div>
         </div>
         <div style="text-align:right">
           <div style="font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">P&L</div>
-          <div style="font-size:14px;color:${pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)'}">${fmtEur(pnlAbs)}</div>
+          <div class="privacy-hide" style="font-size:14px;color:${pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)'}">${fmtEur(pnlAbs)}</div>
         </div>
       </div>
       <div style="margin-top:8px;font-size:10px;color:var(--muted2)">${a.note}</div>
@@ -1896,21 +1883,21 @@ function renderPPCard(a) {
           <span style="font-family:var(--font-display);font-size:17px;font-weight:400;color:var(--text)">${a.name}</span>
           <span style="display:block;width:100%;height:2px;background:${a.color};border-radius:2px"></span>
         </div>
-        <span style="font-family:var(--font-display);font-size:17px;font-weight:400;color:var(--text)">${fmtEur(current)}</span>
+        <span class="privacy-hide" style="font-family:var(--font-display);font-size:17px;font-weight:400;color:var(--text)">${fmtEur(current)}</span>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
         <span style="font-size:11px;color:var(--muted2)">${a.ticker} · MyInvestor · Sin rebalanceo</span>
-        <span class="asset-pnl-badge ${pnlClass(pnl)}">${fmtPct(pnl)}</span>
+        <span class="asset-pnl-badge privacy-hide ${pnlClass(pnl)}">${fmtPct(pnl)}</span>
       </div>
       <div style="height:0.5px;background:var(--border);margin:10px 0"></div>
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div>
           <div style="font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">Invertido</div>
-          <div style="font-size:14px;color:var(--text)">${fmtEur(a.invested)}</div>
+          <div class="privacy-hide" style="font-size:14px;color:var(--text)">${fmtEur(a.invested)}</div>
         </div>
         <div style="text-align:right">
           <div style="font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">P&L</div>
-          <div style="font-size:14px;color:${pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)'}">${fmtEur(pnlAbs)}</div>
+          <div class="privacy-hide" style="font-size:14px;color:${pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)'}">${fmtEur(pnlAbs)}</div>
         </div>
       </div>
       <div style="margin:10px 0 6px;padding:10px 12px;background:var(--surface2);border-radius:10px">
@@ -1919,7 +1906,7 @@ function renderPPCard(a) {
           <span style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2)">Límite IRPF</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:16px;font-weight:400;color:${a.color}">${fmtEur(aportadoAño)}</span>
+          <span class="privacy-hide" style="font-size:16px;font-weight:400;color:${a.color}">${fmtEur(aportadoAño)}</span>
           <span style="font-size:13px;color:var(--muted2)">${fmtEur(a.ppLimit, 0)}</span>
         </div>
         <div style="height:2px;background:var(--border);border-radius:2px;overflow:hidden">
@@ -2426,7 +2413,6 @@ function confirmAccept() {
 }
 
 function saveSnapshot() {
-  if (isDemo) return;
   const { totalInvested, totalCurrent } = getTotals();
   if (!totalInvested || totalInvested === 0) return;
   const now = new Date();
@@ -2438,7 +2424,6 @@ function saveSnapshot() {
 }
 
 async function doSaveSnapshot() {
-  if (isDemo) return;
   const { totalInvested, totalCurrent, pnl } = getTotals();
   if (!totalInvested || totalInvested === 0) return;
 
@@ -2509,9 +2494,6 @@ async function init() {
       saveState();
     }
   }
-
-  // Always keep realAssets as the authoritative copy of real data
-  realAssets = JSON.parse(JSON.stringify(assets));
 
   // Si ya estaba autenticado en esta sesión (refresh), entrar directamente sin PIN
   if (sessionStorage.getItem('portfolio_auth') === '1') {
@@ -2652,6 +2634,66 @@ Responde ÚNICAMENTE en español. Sin títulos, sin markdown, sin asteriscos. So
 
   noticiasLoading = false;
   if (activeTab === 'noticias') render();
+}
+
+
+// ─── PRIVACY MODE ─────────────────────────────────────────────────────────────
+
+const PRIVACY_PIN = '062806';
+let privacyMode = false;
+
+function togglePrivacy() {
+  if (!privacyMode) {
+    // Activate privacy — no PIN needed
+    privacyMode = true;
+    document.body.classList.add('privacy');
+    updateEyeIcon();
+  } else {
+    // Deactivate privacy — requires PIN
+    document.getElementById('privacyPinInput').value = '';
+    document.getElementById('privacyPinError').textContent = '';
+    document.getElementById('privacyPinOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('privacyPinInput').focus(), 100);
+  }
+}
+
+function checkPrivacyPin() {
+  const val = document.getElementById('privacyPinInput').value;
+  if (val.length === PRIVACY_PIN.length) {
+    if (val === PRIVACY_PIN) {
+      document.getElementById('privacyPinOverlay').classList.remove('open');
+      privacyMode = false;
+      document.body.classList.remove('privacy');
+      updateEyeIcon();
+    } else {
+      document.getElementById('privacyPinError').textContent = 'Código incorrecto';
+      document.getElementById('privacyPinInput').value = '';
+      setTimeout(() => {
+        document.getElementById('privacyPinError').textContent = '';
+      }, 1500);
+    }
+  }
+}
+
+function cancelPrivacyPin() {
+  document.getElementById('privacyPinOverlay').classList.remove('open');
+}
+
+function updateEyeIcon() {
+  const icon = document.getElementById('eyeIcon');
+  if (privacyMode) {
+    // Eye with slash (hidden)
+    icon.innerHTML = `
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+      <line x1="1" y1="1" x2="23" y2="23"/>
+    `;
+  } else {
+    // Eye open (visible)
+    icon.innerHTML = `
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    `;
+  }
 }
 
 init();
