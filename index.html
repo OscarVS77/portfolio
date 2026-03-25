@@ -2591,15 +2591,22 @@ async function loadNoticias(force = false) {
 
   const activosInfo = assets.map(a => `${a.name} (${a.ticker})`).join(', ');
 
-  const prompt = `Eres un asistente que ayuda a personas con poca experiencia en economía y finanzas a entender qué está pasando con sus inversiones.
+  const prompt = `Eres un asesor financiero personal que informa a un inversor particular sobre sus activos. El usuario invierte a largo plazo en fondos indexados, Bitcoin, oro y un plan de pensiones. No es un experto financiero pero es inteligente y quiere información de valor real, no simplificaciones vacías.
 
-El usuario tiene estos activos en su cartera: ${activosInfo}.
+El usuario tiene estos activos: ${activosInfo}.
 
-Para CADA activo, busca la noticia o el dato más importante de las últimas 24 horas. Explícalo de forma clara y sencilla, como si se lo contaras a alguien que no sabe mucho de finanzas. Usa frases cortas, evita tecnicismos y si usas algún término específico explícalo brevemente. El objetivo es que el usuario entienda qué está pasando y si debe estar tranquilo o prestar atención. Máximo 3-4 frases por activo.
+Para CADA activo, busca las noticias y datos más relevantes de las últimas 24-48 horas y redacta un resumen informativo. Sigue estas reglas:
+
+- Explica los conceptos técnicos cuando aparezcan, pero no los evites si son importantes
+- Da contexto: si algo ha subido o bajado, explica por qué
+- Si hay un dato concreto relevante (cambio regulatorio, evento corporativo, dato macro, movimiento de precio significativo), inclúyelo
+- No des consejos de compra/venta a corto plazo ni recomendaciones contradictorias con una estrategia DCA a largo plazo
+- Si no hay noticias relevantes del día, describe el contexto de mercado actual para ese activo
+- Extensión: lo que sea necesario para que la información sea útil, sin límite artificial. Entre 3 y 6 frases según la actualidad del activo.
 
 Responde ÚNICAMENTE en español. Sin títulos, sin markdown, sin asteriscos. Solo el JSON con este formato exacto, sin texto antes ni después:
 [
-  {"activo": "Nombre del activo", "ticker": "TICKER", "texto": "Explicación sencilla aquí."},
+  {"activo": "Nombre del activo", "ticker": "TICKER", "texto": "Información aquí."},
   ...
 ]`;
 
@@ -2614,7 +2621,7 @@ Responde ÚNICAMENTE en español. Sin títulos, sin markdown, sin asteriscos. So
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1500,
+        max_tokens: 3000,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: [{ role: 'user', content: prompt }]
       })
