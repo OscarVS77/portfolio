@@ -1572,7 +1572,7 @@ async function verifyPin(pin) {
 }
 
 function updatePinDots() {
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 6; i++) {
     document.getElementById('d' + i).classList.toggle('filled', i < pinBuffer.length);
   }
 }
