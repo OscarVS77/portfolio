@@ -2821,23 +2821,22 @@ Responde solo con el JSON. Nada más.`;
       .map(b => b.text)
       .join('');
 
-    // Try to extract JSON array — handle cases where model adds text before/after
+    // Try to extract JSON array — strip markdown fences first, then parse
     let parsed = null;
     try {
-      // Find outermost JSON array
-      const start = fullText.indexOf('[');
-      const end = fullText.lastIndexOf(']');
+      const clean = fullText.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+      const start = clean.indexOf('[');
+      const end = clean.lastIndexOf(']');
       if (start !== -1 && end !== -1 && end > start) {
-        parsed = JSON.parse(fullText.slice(start, end + 1));
+        parsed = JSON.parse(clean.slice(start, end + 1));
       }
     } catch(parseErr) {
-      // Try stripping markdown code fences
+      // last resort: try raw fullText
       try {
-        const clean = fullText.replace(/```json|```/g, '').trim();
-        const start = clean.indexOf('[');
-        const end = clean.lastIndexOf(']');
-        if (start !== -1 && end !== -1) {
-          parsed = JSON.parse(clean.slice(start, end + 1));
+        const start = fullText.indexOf('[');
+        const end = fullText.lastIndexOf(']');
+        if (start !== -1 && end !== -1 && end > start) {
+          parsed = JSON.parse(fullText.slice(start, end + 1));
         }
       } catch(e2) {}
     }
