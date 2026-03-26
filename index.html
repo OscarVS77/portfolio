@@ -2688,13 +2688,58 @@ function renderNoticias() {
   `;
 }
 
+async function saveNoticiasToSupabase(data) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/noticias_cache?id=eq.latest`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ data: { items: data, timestamp: Date.now() } })
+    });
+  } catch(e) {}
+}
+
+async function loadNoticiasFromSupabase() {
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/noticias_cache?id=eq.latest&select=data`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    if (r.ok) {
+      const rows = await r.json();
+      if (rows.length && rows[0].data && rows[0].data.timestamp) {
+        const age = Date.now() - rows[0].data.timestamp;
+        if (age < 12 * 60 * 60 * 1000) {
+          return rows[0].data;
+        }
+      }
+    }
+  } catch(e) {}
+  return null;
+}
+
 async function loadNoticias(force = false) {
-  // Cache de 12 horas salvo force
+  // Check local memory cache first
   if (!force && noticiasCache && noticiasTimestamp && (Date.now() - noticiasTimestamp < 12 * 60 * 60 * 1000)) return;
   if (noticiasLoading) return;
 
   noticiasLoading = true;
   render();
+
+  // Check Supabase cache before calling API
+  if (!force) {
+    const cached = await loadNoticiasFromSupabase();
+    if (cached && cached.items && cached.items.length > 0) {
+      noticiasCache = cached.items;
+      noticiasTimestamp = cached.timestamp;
+      noticiasLoading = false;
+      if (activeTab === 'noticias') render();
+      return;
+    }
+  }
 
   const keyLoaded = await loadAnthropicKey();
   if (!keyLoaded) {
@@ -2881,6 +2926,7 @@ Responde ÚNICAMENTE con el JSON array. Nada más.`;
         color: n.ticker === 'RESUMEN' ? 'var(--muted)' : (colorMap[n.ticker] || colorMap[n.activo] || 'var(--muted)')
       }));
       noticiasTimestamp = Date.now();
+      saveNoticiasToSupabase(noticiasCache);
     } else {
       noticiasCache = [{ activo: 'Aviso', ticker: '', color: 'var(--muted)', texto: 'No se pudieron cargar las noticias. Inténtalo de nuevo.' }];
     }
