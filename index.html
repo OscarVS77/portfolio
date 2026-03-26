@@ -2681,7 +2681,7 @@ function renderNoticias() {
     ${noticiasCache.map(n => `
       <div class="noticia-card">
         <div class="noticia-activo" style="color:${n.color}">${n.activo}</div>
-        <div class="noticia-texto">${n.texto}</div>
+        <div class="noticia-texto">${n.texto.replace(/\n/g, '<br>')}</div>
       </div>
     `).join('')}
     ${ts ? `<div class="noticias-timestamp">Actualizado a las ${ts}</div>` : ''}
@@ -2706,24 +2706,48 @@ async function loadNoticias(force = false) {
 
   const activosInfo = assets.map(a => `${a.name} (${a.ticker})`).join(', ');
 
-  const prompt = `Eres un asesor financiero personal que informa a un inversor particular sobre sus activos. El usuario invierte a largo plazo en fondos indexados, Bitcoin, oro y un plan de pensiones. No es un experto financiero pero es inteligente y quiere información de valor real, no simplificaciones vacías.
+  const prompt = `Actúa como mi analista personal de inversiones y explícamelo todo de forma clara, sencilla y útil, pensando que llevo solo 1 año invirtiendo y que tengo un nivel medio-bajo. No uses tecnicismos complejos ni lenguaje demasiado financiero. Si necesitas usar una palabra técnica, explícamela en una frase muy simple.
 
-El usuario tiene estos activos: ${activosInfo}.
+Quiero un resumen de noticias y situación de mis activos que sea entendible de verdad, sin tono de prensa financiera, sin exageraciones y sin narrativa innecesaria. No quiero un texto que "suene bien", quiero un texto que me ayude a entender qué está pasando y si eso importa o no para mis inversiones.
 
-Para CADA activo, busca las noticias y datos más relevantes de las últimas 24-48 horas y redacta un resumen informativo. Sigue estas reglas:
+Para CADA activo, usa SIEMPRE esta estructura exacta:
 
-- Explica los conceptos técnicos cuando aparezcan, pero no los evites si son importantes
-- Da contexto: si algo ha subido o bajado, explica por qué
-- Si hay un dato concreto relevante (cambio regulatorio, evento corporativo, dato macro, movimiento de precio significativo), inclúyelo
-- No des consejos de compra/venta a corto plazo ni recomendaciones contradictorias con una estrategia DCA a largo plazo
-- Si no hay noticias relevantes del día, describe el contexto de mercado actual para ese activo
-- Extensión: lo que sea necesario para que la información sea útil, sin límite artificial. Entre 3 y 6 frases según la actualidad del activo.
+1. Hecho verificable: Explica solo el dato o hecho importante y real, con lenguaje sencillo. Sin opiniones todavía.
+2. Por qué afecta a este activo en concreto: Explícalo de forma práctica. No hables del mercado en general si no afecta directamente a mi producto.
+3. Qué pesa más ahora: Coyuntura (ruido o situación de corto plazo) o Estructura (algo más profundo y duradero del activo). Explícalo con palabras simples.
+4. Sesgo para mi DCA: Clasifica cada activo como: Irrelevante / Vigilar / Relevante.
+5. Opinión: Dame una conclusión breve y práctica, en lenguaje simple. Máximo 2 frases. Sin dramatizar y sin intentar predecir el mercado.
 
-Responde ÚNICAMENTE en español. Sin títulos, sin markdown, sin asteriscos. Solo el JSON con este formato exacto, sin texto antes ni después:
+Normas obligatorias:
+- Escribe para una persona normal, no para un experto.
+- Frases claras y directas.
+- Nada de jerga compleja.
+- Nada de análisis técnico tipo soportes, resistencias, RSI, medias móviles o similares, salvo que sea absolutamente imprescindible, y si aparece, explícalo muy fácil.
+- No mezcles dato y opinión.
+- No uses frases como "esto demuestra", "confirma", "todo apunta a", "sin precedentes", "señal muy alcista", etc.
+- No inventes causas si no están claras.
+- Si algo no está claro o es discutible, dilo claramente.
+- Da más importancia a lo que afecta de verdad a largo plazo que al ruido semanal.
+- Adapta cada explicación al activo concreto, no hagas texto genérico.
+
+Mis activos exactos y mis aportaciones:
+1. ORO — Trade Republic — iShares Physical Gold ETC — ISIN: IE00B4ND3602 — 50€/mes
+2. BITCOIN — Binance — DCA — 25€/semana (lunes 07:00h)
+3. MSCI WORLD — MyInvestor — Fidelity MSCI World Index Fund P-ACC-EUR — ISIN: IE00BYX5NX33 — 350€/mes
+4. MERCADOS EMERGENTES — MyInvestor — Vanguard Emerging Markets Stock Index Fund EUR Acc — ISIN: IE0031786696 — 100€/mes
+5. SMALL CAPS GLOBALES — MyInvestor — Vanguard Global Small-Cap Index Fund — ISIN: IE00B42W3S00 — 50€/mes
+6. PLAN DE PENSIONES — MyInvestor — Indexado Global PP N5396 — 1.500€/año
+
+Formato de salida — responde ÚNICAMENTE en español. Sin markdown, sin asteriscos. Solo el JSON con este formato exacto, sin texto antes ni después. El campo "texto" debe contener el análisis completo con las 5 secciones separadas por saltos de línea (\n):
 [
-  {"activo": "Nombre del activo", "ticker": "TICKER", "texto": "Información aquí."},
+  {"activo": "Nombre del activo", "ticker": "TICKER", "texto": "Hecho verificable:\n[texto]\n\nPor qué afecta a este activo:\n[texto]\n\nQué pesa más ahora:\n[Coyuntura/Estructura — texto]\n\nSesgo para mi DCA:\n[Irrelevante/Vigilar/Relevante]\n\nOpinión:\n[texto]"},
   ...
-]`;
+]
+
+Al final del JSON, añade un objeto de cierre con id "resumen_cartera":
+{"activo": "Resumen de cartera", "ticker": "RESUMEN", "texto": "Lo más importante esta semana:\n[texto]\n\nActivos con más ruido que impacto real:\n[texto]\n\nAportaciones periódicas:\n[si seguir igual o qué vigilar]"}
+
+Responde solo con el JSON. Nada más.`;
 
   try {
     const response = await fetch('https://anthropic-proxy.oscar-visa.workers.dev', {
@@ -2736,7 +2760,7 @@ Responde ÚNICAMENTE en español. Sin títulos, sin markdown, sin asteriscos. So
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 3000,
+        max_tokens: 6000,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: [{ role: 'user', content: prompt }]
       })
