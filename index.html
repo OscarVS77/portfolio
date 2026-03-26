@@ -2706,46 +2706,48 @@ async function loadNoticias(force = false) {
 
   const activosInfo = assets.map(a => `${a.name} (${a.ticker})`).join(', ');
 
-  const prompt = `Actúa como mi analista personal de inversiones y explícamelo todo de forma clara, sencilla y útil, pensando que llevo solo 1 año invirtiendo y que tengo un nivel medio-bajo. No uses tecnicismos complejos ni lenguaje demasiado financiero. Si necesitas usar una palabra técnica, explícamela en una frase muy simple.
+  const prompt = `Actúa como mi analista personal de inversiones. Llevo solo 1 año invirtiendo y tengo un nivel medio-bajo. Explícamelo todo de forma clara, sencilla y útil. No uses tecnicismos complejos. Si necesitas usar una palabra técnica, explícala en una frase muy simple.
 
-Quiero un resumen de noticias y situación de mis activos que sea entendible de verdad, sin tono de prensa financiera, sin exageraciones y sin narrativa innecesaria. No quiero un texto que "suene bien", quiero un texto que me ayude a entender qué está pasando y si eso importa o no para mis inversiones.
+REGLAS ESTRICTAS DE LENGUAJE Y FIABILIDAD:
+- Nunca expliques el mercado como si tuvieras la causa exacta. Los mercados se mueven por muchos factores a la vez. Si no está claro por qué algo subió o bajó, dilo: "Las causas no están del todo claras" o "hay varios factores posibles".
+- Nunca uses frases como "la caída se debe a X" o "subió por Y" cuando hay múltiples causas posibles. Di "uno de los factores puede ser" o "entre las posibles razones".
+- Nunca uses frases de predicción o timing: "cerca de un suelo", "podría rebotar", "parece que toca fondo", "señal alcista", "todo apunta a", "confirma", "sin precedentes".
+- No incluyas objetivos de precio de bancos o analistas. Eso es ruido para un inversor DCA.
+- No uses jerga: nada de "whale holders", "resistencias", "soportes", "RSI", "medias móviles". Si es imprescindible usar un término técnico, explícalo en lenguaje simple.
+- No mezcles dato y opinión en la misma frase.
+- Nombra los productos correctamente: el oro es un ETC (Exchange Traded Commodity), no un fondo.
+- No confundas una noticia general del mercado con una noticia específica del vehículo. No basta decir "sube el oro" o "suben emergentes": explica siempre por qué esa noticia afecta de verdad a este producto concreto. Por ejemplo, si sube el oro, ¿cambia algo en el ETC iShares Physical Gold? Si hay noticias de emergentes, recuerda que el Vanguard Emerging Markets tiene mucho peso en Asia y en grandes empresas concretas.
+- Da prioridad a los factores estructurales del producto: concentración geográfica, sectorial, tamaño de empresa, divisa, tipo de vehículo y función dentro de la cartera. Las noticias de corto plazo solo deben destacarse si cambian realmente el contexto del activo, no solo porque generen titulares.
+- La opinión final no debe animar a adelantar compras, aumentar aportaciones ni aprovechar caídas salvo que yo lo pida expresamente. No uses frases como "es buen momento para comprar más", "aprovecha la caída" o similares. La opinión debe limitarse a decir si mi estrategia actual tiene motivos para cambiar o no.
+- Para el sesgo DCA: usa "Relevante" solo si hay un cambio estructural real en el activo (regulación que lo afecta de fondo, cambio en su naturaleza, evento que altera la tesis de inversión a largo plazo). La volatilidad normal, correcciones, ruido macro o titulares de prensa NO son motivo para marcar "Relevante". En esos casos usa "Vigilar" o "Irrelevante".
+- Da más peso a lo que afecta a largo plazo que al ruido semanal.
+- Adapta cada explicación al activo concreto, no hagas texto genérico.
+- Escribe para una persona inteligente pero no experta. Frases claras y directas.
 
 Para CADA activo, usa SIEMPRE esta estructura exacta:
 
-1. Hecho verificable: Explica solo el dato o hecho importante y real, con lenguaje sencillo. Sin opiniones todavía.
-2. Por qué afecta a este activo en concreto: Explícalo de forma práctica. No hables del mercado en general si no afecta directamente a mi producto.
-3. Qué pesa más ahora: Coyuntura (ruido o situación de corto plazo) o Estructura (algo más profundo y duradero del activo). Explícalo con palabras simples.
-4. Sesgo para mi DCA: Clasifica cada activo como: Irrelevante / Vigilar / Relevante.
-5. Opinión: Dame una conclusión breve y práctica, en lenguaje simple. Máximo 2 frases. Sin dramatizar y sin intentar predecir el mercado.
+1. Hecho verificable: Solo el dato o hecho real más importante. Sin opiniones todavía. Si no hay noticias relevantes, describe el contexto actual del activo con honestidad.
+2. Por qué puede afectar a este activo: Explícalo de forma práctica y concreta para este producto específico. Si la relación causa-efecto no está clara, dilo.
+3. Qué pesa más ahora: ¿Es Coyuntura (ruido de corto plazo que pasará) o Estructura (algo más profundo y duradero)? Explícalo con palabras simples.
+4. Sesgo para mi DCA: Clasifica como Irrelevante, Vigilar o Relevante. Sé conservador. La mayoría de semanas debería ser Irrelevante o Vigilar.
+5. Opinión: Conclusión breve y práctica. Máximo 2 frases. Sin dramatizar, sin predecir, sin timing.
 
-Normas obligatorias:
-- Escribe para una persona normal, no para un experto.
-- Frases claras y directas.
-- Nada de jerga compleja.
-- Nada de análisis técnico tipo soportes, resistencias, RSI, medias móviles o similares, salvo que sea absolutamente imprescindible, y si aparece, explícalo muy fácil.
-- No mezcles dato y opinión.
-- No uses frases como "esto demuestra", "confirma", "todo apunta a", "sin precedentes", "señal muy alcista", etc.
-- No inventes causas si no están claras.
-- Si algo no está claro o es discutible, dilo claramente.
-- Da más importancia a lo que afecta de verdad a largo plazo que al ruido semanal.
-- Adapta cada explicación al activo concreto, no hagas texto genérico.
-
-Mis activos exactos y mis aportaciones:
-1. ORO — Trade Republic — iShares Physical Gold ETC — ISIN: IE00B4ND3602 — 50€/mes
+Mis activos exactos:
+1. ORO — Trade Republic — iShares Physical Gold ETC (es un ETC, no un fondo) — ISIN: IE00B4ND3602 — 50€/mes
 2. BITCOIN — Binance — DCA — 25€/semana (lunes 07:00h)
 3. MSCI WORLD — MyInvestor — Fidelity MSCI World Index Fund P-ACC-EUR — ISIN: IE00BYX5NX33 — 350€/mes
 4. MERCADOS EMERGENTES — MyInvestor — Vanguard Emerging Markets Stock Index Fund EUR Acc — ISIN: IE0031786696 — 100€/mes
 5. SMALL CAPS GLOBALES — MyInvestor — Vanguard Global Small-Cap Index Fund — ISIN: IE00B42W3S00 — 50€/mes
 6. PLAN DE PENSIONES — MyInvestor — Indexado Global PP N5396 — 1.500€/año
 
-Formato de salida — responde ÚNICAMENTE en español. Sin markdown, sin asteriscos. Solo el JSON con este formato exacto, sin texto antes ni después. El campo "texto" debe contener el análisis completo con las 5 secciones separadas por saltos de línea (\n):
+Formato de salida — responde ÚNICAMENTE en español. Sin markdown, sin asteriscos. Solo el JSON con este formato exacto, sin texto antes ni después. El campo "texto" contiene el análisis completo con las 5 secciones separadas por saltos de línea (\n):
 [
-  {"activo": "Nombre del activo", "ticker": "TICKER", "texto": "Hecho verificable:\n[texto]\n\nPor qué afecta a este activo:\n[texto]\n\nQué pesa más ahora:\n[Coyuntura/Estructura — texto]\n\nSesgo para mi DCA:\n[Irrelevante/Vigilar/Relevante]\n\nOpinión:\n[texto]"},
+  {"activo": "Nombre del activo", "ticker": "TICKER", "texto": "Hecho verificable:\n[texto]\n\nPor qué puede afectar a este activo:\n[texto]\n\nQué pesa más ahora:\n[Coyuntura o Estructura — texto breve]\n\nSesgo para mi DCA:\n[Irrelevante / Vigilar / Relevante]\n\nOpinión:\n[texto]"},
   ...
 ]
 
-Al final del JSON, añade un objeto de cierre con id "resumen_cartera":
-{"activo": "Resumen de cartera", "ticker": "RESUMEN", "texto": "Lo más importante esta semana:\n[texto]\n\nActivos con más ruido que impacto real:\n[texto]\n\nAportaciones periódicas:\n[si seguir igual o qué vigilar]"}
+Al final del JSON, añade un objeto de cierre con ticker "RESUMEN":
+{"activo": "Resumen de cartera", "ticker": "RESUMEN", "texto": "Lo más importante esta semana:\n[texto — máximo 3 frases]\n\nActivos con más ruido que impacto real:\n[lista breve]\n\nAportaciones periódicas:\n[seguir igual / o qué merece vigilancia especial y por qué]"}
 
 Responde solo con el JSON. Nada más.`;
 
