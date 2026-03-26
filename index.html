@@ -2990,7 +2990,11 @@ function renderFamilia() {
           <div style="width:10px;height:10px;border-radius:50%;background:${persona.color}"></div>
           <span class="familia-persona-name">${persona.name}</span>
         </div>
-        <span class="familia-persona-pnl privacy-hide" style="color:${pPnlColor}">${fmtPct(pPnl)} · ${fmtEur(pCurrent - pInvested)}</span>
+        <div class="familia-persona-pnl privacy-hide" style="display:flex;gap:10px;align-items:center">
+          <span style="color:var(--text)">${fmtEur(pCurrent)}</span>
+          <span style="color:${pPnlColor}">${fmtPct(pPnl)}</span>
+          <span style="color:${pPnlColor}">${fmtEur(pCurrent - pInvested)}</span>
+        </div>
       </div>`;
 
     FAMILIA_FONDOS.forEach(fondo => {
@@ -3010,7 +3014,7 @@ function renderFamilia() {
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center">
             <span style="font-size:11px;color:var(--muted2)">${fondo.ticker} · Objetivo ${fondo.target}%</span>
-            <span class="asset-pnl-badge privacy-hide ${fPnl >= 0 ? 'pnl-pos' : 'pnl-neg'}">${fmtPct(fPnl)}</span>
+            <span class="asset-pnl-badge privacy-hide" style="color:${fPnlColor};border-color:${fPnlColor}20;background:${fPnl >= 0 ? 'rgba(0,200,150,0.08)' : 'rgba(217,79,74,0.08)'}">${fmtPct(fPnl)}</span>
           </div>
           <div style="height:0.5px;background:var(--border);margin:8px 0"></div>
           <div style="display:flex;justify-content:space-between">
