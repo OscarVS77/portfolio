@@ -727,17 +727,6 @@ if ('serviceWorker' in navigator) {
     }
   }
 
-  #snapshotIcon {
-    color: #000000;
-  }
-  @media (prefers-color-scheme: dark) {
-    #snapshotIcon {
-      color: #FFFFFF !important;
-    }
-  }
-  #snapshotBtn { transition: opacity 0.15s; }
-  #snapshotBtn:active { opacity: 0.4; }
-
   /* EYE BUTTON */
   #eyeBtn { transition: opacity 0.15s; }
   #eyeBtn:active { opacity: 0.4; }
@@ -1330,12 +1319,6 @@ if ('serviceWorker' in navigator) {
           <circle cx="12" cy="12" r="3"/>
         </svg>
       </button>
-      <button id="snapshotBtn" onclick="saveSnapshot()" title="Guardar snapshot histórico" style="background:none;border:none;cursor:pointer;padding:4px;line-height:1">
-        <svg id="snapshotIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-          <circle cx="12" cy="13" r="4"/>
-        </svg>
-      </button>
     </div>
   </div>
   <div style="height:1px;background:var(--border);margin:8px 0 10px"></div>
@@ -1405,17 +1388,6 @@ if ('serviceWorker' in navigator) {
     </div>
     <div id="familiaResultPreview" style="font-size:12px;color:var(--muted);margin:8px 0 16px;min-height:18px"></div>
     <button onclick="saveFamiliaFondo()" class="modal-save-btn">GUARDAR TODO</button>
-  </div>
-</div>
-
-<div class="confirm-overlay" id="confirmOverlay">
-  <div class="confirm-box">
-    <div class="confirm-title">Guardar snapshot</div>
-    <div class="confirm-msg" id="confirmMsg"></div>
-    <div class="confirm-btns">
-      <button class="confirm-btn" onclick="confirmCancel()">No</button>
-      <button class="confirm-btn primary" onclick="confirmAccept()">Sí, guardar</button>
-    </div>
   </div>
 </div>
 
@@ -2530,72 +2502,6 @@ function applyExcelDefaults() {
 }
 
 // ─── SNAPSHOT HISTÓRICO ──────────────────────────────────────────────────────
-
-function confirmCancel() {
-  document.getElementById('confirmOverlay').classList.remove('open');
-}
-
-function confirmAccept() {
-  document.getElementById('confirmOverlay').classList.remove('open');
-  doSaveSnapshot();
-}
-
-function saveSnapshot() {
-  const { totalInvested, totalCurrent } = getTotals();
-  if (!totalInvested || totalInvested === 0) return;
-  const now = new Date();
-  const dateStr = now.toISOString().split('T')[0];
-  const [y, m, d] = dateStr.split('-');
-  document.getElementById('confirmMsg').textContent =
-    `Se guardará el estado actual del portfolio (${d}/${m}/${y}). Si ya existe un snapshot de hoy, se sobreescribirá.`;
-  document.getElementById('confirmOverlay').classList.add('open');
-}
-
-async function doSaveSnapshot() {
-  const { totalInvested, totalCurrent, pnl } = getTotals();
-  if (!totalInvested || totalInvested === 0) return;
-
-  const now = new Date();
-  const dateStr = now.toISOString().split('T')[0];
-
-  const snapshot = {
-    date: dateStr,
-    totalInvested: Math.round(totalInvested * 100) / 100,
-    totalCurrent: Math.round(totalCurrent * 100) / 100,
-    pnlPct: Math.round(pnl * 100) / 100,
-    pnlEur: Math.round((totalCurrent - totalInvested) * 100) / 100,
-    assets: assets.map(a => ({
-      id: a.id,
-      invested: a.invested,
-      current: getAssetCurrent(a)
-    }))
-  };
-
-  const btn = document.getElementById('snapshotBtn');
-  if (btn) btn.style.opacity = '0.4';
-
-  try {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/portfolio_history`, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'resolution=merge-duplicates'
-      },
-      body: JSON.stringify({ id: dateStr, data: snapshot })
-    });
-    if (r.ok || r.status === 201 || r.status === 200) {
-      showToast('Snapshot guardado · ' + dateStr);
-    } else {
-      showToast('Error al guardar snapshot');
-    }
-  } catch(e) {
-    showToast('Error de conexión');
-  } finally {
-    if (btn) btn.style.opacity = '1';
-  }
-}
 
 async function init() {
   let loadedFromSupabase = false;
