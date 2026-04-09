@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="F-Pace">
+<meta name="theme-color" content="#000000">
+<title>F-Pace · Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23000'/%3E%3Cg fill='none' stroke='%23fff' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M130 300 L160 240 Q180 220 200 216 L310 212 Q335 216 355 236 L385 300'/%3E%3Cpath d='M96 300 Q256 260 416 300 L416 355 Q256 375 96 355 Z'/%3E%3Ccircle cx='175' cy='358' r='28'/%3E%3Ccircle cx='175' cy='358' r='12'/%3E%3Ccircle cx='337' cy='358' r='28'/%3E%3Ccircle cx='337' cy='358' r='12'/%3E%3C/g%3E%3C/svg%3E">
+
+<style>
+:root {
+  --bg: #000000;
+  --surface: #0d0d0d;
+  --surface2: #161616;
+  --surface3: #1e1e1e;
+  --border: #242424;
+  --border2: #2e2e2e;
+  --text: #ffffff;
+  --text2: #a0a0a0;
+  --text3: #5a5a5a;
+  --accent: #c9a84c;
+  --accent2: #e8c878;
+  --red: #e05555;
+  --green: #4caf7d;
+  --font: 'DM Sans', system-ui, sans-serif;
+  --mono: 'DM Mono', monospace;
+  --r: 12px;
+  --r-sm: 8px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; padding-bottom: 100px; }
+.nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
+.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 4px 10px; background: none; border: none; color: var(--text3); font-family: var(--font); font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; transition: color .2s; }
+.nav-btn.active { color: var(--accent); }
+.nav-btn svg { width: 22px; height: 22px; }
+.header { padding: 56px 20px 20px; border-bottom: 1px solid var(--border); }
+.header-label { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; font-weight: 500; }
+.header-title { font-size: 26px; font-weight: 300; letter-spacing: -.01em; color: var(--text); }
+.header-title span { color: var(--accent); }
+.page { display: none; }
+.page.active { display: block; }
+.content { padding: 20px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; margin-bottom: 10px; }
+.card-label { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; font-weight: 500; }
+.card-value { font-size: 22px; font-weight: 300; color: var(--text); font-family: var(--mono); }
+.card-value.accent { color: var(--accent); }
+.card-sub { font-size: 12px; color: var(--text2); margin-top: 3px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.cycle-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; margin-bottom: 10px; }
+.cycle-label { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--text3); margin-bottom: 12px; font-weight: 500; }
+.cycle-steps { display: flex; gap: 8px; align-items: center; }
+.cycle-step { flex: 1; height: 36px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; border: 1px solid var(--border2); color: var(--text3); background: var(--surface2); transition: all .3s; }
+.cycle-step.done { background: var(--surface3); border-color: var(--border2); color: var(--text2); }
+.cycle-step.current { background: var(--accent); border-color: var(--accent); color: #000; }
+.cycle-step.premium.done { background: #1a1400; border-color: #3d2e00; color: var(--accent); }
+.cycle-step.premium.current { background: var(--accent); border-color: var(--accent2); color: #000; }
+.cycle-next { margin-top: 10px; font-size: 12px; color: var(--text2); }
+.cycle-next strong { color: var(--accent); }
+.list-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.list-item-left { flex: 1; min-width: 0; }
+.list-item-date { font-size: 10px; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px; }
+.list-item-title { font-size: 15px; font-weight: 400; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.list-item-sub { font-size: 12px; color: var(--text2); }
+.list-item-right { text-align: right; flex-shrink: 0; }
+.list-item-price { font-size: 16px; font-family: var(--mono); color: var(--text); font-weight: 500; }
+.list-item-actions { display: flex; gap: 8px; margin-top: 4px; justify-content: flex-end; }
+.btn-action { background: none; border: none; cursor: pointer; padding: 4px; color: var(--text3); font-size: 13px; font-family: var(--font); transition: color .15s; }
+.btn-action.delete:active { color: var(--red); }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.badge-normal { background: #1a1a1a; color: var(--text2); border: 1px solid var(--border2); }
+.badge-premium { background: #1a1400; color: var(--accent); border: 1px solid #3d2e00; }
+.section-title { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--text3); font-weight: 500; margin: 20px 0 10px; }
+.totals-row { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.totals-row-label { font-size: 12px; color: var(--text2); }
+.totals-row-value { font-size: 16px; font-family: var(--mono); color: var(--text); font-weight: 500; }
+.last-record { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; margin-bottom: 10px; border-left: 3px solid var(--accent); }
+.fab { position: fixed; bottom: 70px; right: 20px; width: 54px; height: 54px; border-radius: 50%; background: var(--accent); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(201,168,76,0.4); z-index: 99; transition: transform .2s; }
+.fab:active { transform: scale(0.93); }
+.fab svg { width: 24px; height: 24px; color: #000; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity .25s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { width: 100%; background: var(--surface); border-radius: 20px 20px 0 0; border-top: 1px solid var(--border2); padding: 20px 20px calc(20px + env(safe-area-inset-bottom)); transform: translateY(100%); transition: transform .3s cubic-bezier(.34,1.56,.64,1); max-height: 90vh; overflow-y: auto; }
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-handle { width: 36px; height: 4px; background: var(--border2); border-radius: 2px; margin: 0 auto 18px; }
+.modal-title { font-size: 17px; font-weight: 500; margin-bottom: 18px; color: var(--text); }
+.form-group { margin-bottom: 14px; }
+.form-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); font-weight: 500; margin-bottom: 6px; display: block; }
+.form-input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--r-sm); padding: 12px 14px; color: var(--text); font-family: var(--font); font-size: 15px; outline: none; transition: border-color .2s; -webkit-appearance: none; }
+.form-input:focus { border-color: var(--accent); }
+.form-input::placeholder { color: var(--text3); }
+.type-selector { display: flex; gap: 8px; margin-bottom: 14px; }
+.type-btn { flex: 1; padding: 11px; border-radius: var(--r-sm); border: 1px solid var(--border2); background: var(--surface2); color: var(--text2); font-family: var(--font); font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s; text-align: center; }
+.type-btn.active-normal { background: var(--surface3); border-color: var(--text2); color: var(--text); }
+.type-btn.active-premium { background: #1a1400; border-color: var(--accent); color: var(--accent); }
+.btn-save { width: 100%; padding: 14px; background: var(--surface2); border: 1px solid var(--accent); border-radius: var(--r-sm); color: var(--accent); font-family: var(--font); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; margin-top: 6px; transition: opacity .2s; }
+.btn-save:active { opacity: .7; }
+.empty { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 13px; }
+.km-since { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; margin-bottom: 10px; }
+.km-since-label { font-size: 10px; color: var(--text3); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+.km-since-value { font-size: 18px; font-family: var(--mono); color: var(--accent); font-weight: 400; }
+.km-since-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div id="page-inicio" class="page active">
+  <div class="header"><div class="header-label">Panel de control</div><div class="header-title">Jaguar <span>F-Pace</span></div></div>
+  <div class="content" id="dashboard-content"></div>
+</div>
+<div id="page-revisiones" class="page">
+  <div class="header"><div class="header-label">Mantenimiento</div><div class="header-title">Revisiones</div></div>
+  <div class="content" id="revisiones-content"></div>
+</div>
+<div id="page-combustible" class="page">
+  <div class="header"><div class="header-label">Repostaje</div><div class="header-title">Combustible</div></div>
+  <div class="content" id="combustible-content"></div>
+</div>
+<div id="page-adblue" class="page">
+  <div class="header"><div class="header-label">Aditivo</div><div class="header-title">AdBlue</div></div>
+  <div class="content" id="adblue-content"></div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="switchPage('inicio')" id="nav-inicio">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Inicio
+  </button>
+  <button class="nav-btn" onclick="switchPage('revisiones')" id="nav-revisiones">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Revisiones
+  </button>
+  <button class="nav-btn" onclick="switchPage('combustible')" id="nav-combustible">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 22V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14"/><path d="M3 22h10M13 10h2a2 2 0 0 1 2 2v2"/><path d="M17 14v4a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-7l-2-3"/><line x1="3" y1="14" x2="13" y2="14"/></svg>Combustible
+  </button>
+  <button class="nav-btn" onclick="switchPage('adblue')" id="nav-adblue">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>AdBlue
+  </button>
+</nav>
+
+<button class="fab" onclick="openAddModal()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+
+<div class="modal-overlay" id="modal" onclick="handleModalClick(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-title">Añadir</div>
+    <div id="modal-form"></div>
+  </div>
+</div>
+
+<script>
+let data = { revisiones: [], combustible: [], adblue: [] };
+let editingId = null;
+let currentPage = 'inicio';
+
+function load() {
+  const saved = localStorage.getItem('fpace_v1');
+  if (saved) { try { data = JSON.parse(saved); } catch(e) {} }
+  else {
+    data = {
+      revisiones: [
+        { id:1, fecha:'2024-10-15', km:42000, precio:320, taller:'Jaguar Barcelona', notas:'Revisión 40.000 km. Aceite, filtros, frenos.' },
+        { id:2, fecha:'2025-03-20', km:52000, precio:185, taller:'Jaguar Barcelona', notas:'Revisión intermedia. Aceite y filtro.' },
+      ],
+      combustible: [
+        { id:1, fecha:'2025-01-10', km:45200, tipo:'normal', importe:72.40, notas:'' },
+        { id:2, fecha:'2025-01-28', km:45900, tipo:'normal', importe:68.20, notas:'' },
+        { id:3, fecha:'2025-02-14', km:46600, tipo:'normal', importe:71.80, notas:'' },
+        { id:4, fecha:'2025-02-28', km:47300, tipo:'premium', importe:89.50, notas:'BP Ultimate' },
+        { id:5, fecha:'2025-03-15', km:48000, tipo:'normal', importe:70.10, notas:'' },
+        { id:6, fecha:'2025-04-01', km:48800, tipo:'normal', importe:73.60, notas:'' },
+      ],
+      adblue: [
+        { id:1, fecha:'2024-11-20', km:44000, precio:18.50, notas:'5 litros' },
+        { id:2, fecha:'2025-02-05', km:47000, precio:22.00, notas:'6 litros Repsol' },
+      ]
+    };
+    save();
+  }
+}
+
+function save() { localStorage.setItem('fpace_v1', JSON.stringify(data)); }
+function nextId(arr) { return arr.length > 0 ? Math.max(...arr.map(x=>x.id))+1 : 1; }
+
+function getCycleState() {
+  const sorted = [...data.combustible].sort((a,b) => new Date(a.fecha)-new Date(b.fecha) || a.id-b.id);
+  const pos = sorted.length % 4;
+  const nextType = pos === 3 ? 'premium' : 'normal';
+  const currentCycleStart = sorted.length - pos;
+  const doneFull = sorted.slice(currentCycleStart);
+  return { stepNum: pos+1, nextType, doneFull, total: sorted.length };
+}
+
+function fmtDate(d) { if(!d) return '—'; const [y,m,day]=d.split('-'); return `${day}/${m}/${y}`; }
+function fmtEur(n) { return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n||0); }
+function fmtKm(n) { return new Intl.NumberFormat('es-ES').format(n||0)+' km'; }
+function today() { return new Date().toISOString().split('T')[0]; }
+
+function switchPage(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.getElementById('nav-'+page).classList.add('active');
+  currentPage = page;
+  renderPage(page);
+}
+
+function renderPage(p) {
+  if(p==='inicio') renderDashboard();
+  if(p==='revisiones') renderRevisiones();
+  if(p==='combustible') renderCombustible();
+  if(p==='adblue') renderAdblue();
+}
+
+function cycleWidget(cycle) {
+  const labels=['N','N','N','P'], prem=[false,false,false,true];
+  const done = cycle.doneFull.length;
+  let steps='';
+  for(let i=0;i<4;i++){
+    let cls = prem[i]?'cycle-step premium':'cycle-step';
+    if(i<done) cls+=' done'; else if(i===done) cls+=' current';
+    steps+=`<div class="${cls}">${labels[i]}</div>`;
+  }
+  return `<div class="cycle-card">
+    <div class="cycle-label">Ciclo combustible · Depósito ${done+1} de 4</div>
+    <div class="cycle-steps">${steps}</div>
+    <div class="cycle-next">Próximo: <strong>Diésel ${cycle.nextType==='premium'?'Premium':'Normal'}</strong></div>
+  </div>`;
+}
+
+function renderDashboard() {
+  const rev=[...data.revisiones].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const totalRev=data.revisiones.reduce((s,x)=>s+x.precio,0);
+  const totalComb=data.combustible.reduce((s,x)=>s+x.importe,0);
+  const totalAdbl=data.adblue.reduce((s,x)=>s+x.precio,0);
+  const cycle=getCycleState();
+  const lastRev=rev[0];
+  const all=[
+    ...data.revisiones.map(x=>({...x,_tipo:'Revisión',_label:x.taller,_importe:x.precio})),
+    ...data.combustible.map(x=>({...x,_tipo:x.tipo==='premium'?'Premium':'Normal',_label:'Combustible',_importe:x.importe})),
+    ...data.adblue.map(x=>({...x,_tipo:'AdBlue',_label:'AdBlue',_importe:x.precio})),
+  ].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const last=all[0];
+  document.getElementById('dashboard-content').innerHTML=`
+    ${cycleWidget(cycle)}
+    <div class="section-title">Última revisión</div>
+    ${lastRev?`<div class="last-record">
+      <div style="font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">${fmtDate(lastRev.fecha)} · ${fmtKm(lastRev.km)}</div>
+      <div style="font-size:15px;font-weight:400">${lastRev.taller}</div>
+      ${lastRev.notas?`<div style="font-size:12px;color:var(--text2);margin-top:3px">${lastRev.notas}</div>`:''}
+      <div style="font-size:16px;font-family:var(--mono);color:var(--accent);margin-top:6px">${fmtEur(lastRev.precio)}</div>
+    </div>`:`<div class="card"><div class="card-sub">Sin revisiones</div></div>`}
+    <div class="section-title">Gastos totales</div>
+    <div class="grid2">
+      <div class="card"><div class="card-label">Revisiones</div><div class="card-value" style="font-size:18px">${fmtEur(totalRev)}</div></div>
+      <div class="card"><div class="card-label">Combustible</div><div class="card-value" style="font-size:18px">${fmtEur(totalComb)}</div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><div class="card-label">AdBlue</div><div class="card-value" style="font-size:18px">${fmtEur(totalAdbl)}</div></div>
+      <div class="card" style="border-color:var(--accent)"><div class="card-label">Total general</div><div class="card-value accent" style="font-size:18px">${fmtEur(totalRev+totalComb+totalAdbl)}</div></div>
+    </div>
+    ${last?`<div class="section-title">Último registro</div>
+    <div class="card">
+      <div class="card-label">${last._tipo} · ${fmtDate(last.fecha)}</div>
+      <div style="font-size:15px">${last._label}</div>
+      <div style="font-size:16px;font-family:var(--mono);color:var(--text2);margin-top:4px">${fmtEur(last._importe)}</div>
+    </div>`:''}
+  `;
+}
+
+function renderRevisiones() {
+  const sorted=[...data.revisiones].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const total=data.revisiones.reduce((s,x)=>s+x.precio,0);
+  let html=`<div class="totals-row"><span class="totals-row-label">Total revisiones</span><span class="totals-row-value">${fmtEur(total)}</span></div>
+  <div class="section-title">${sorted.length} registros</div>`;
+  if(!sorted.length) html+=`<div class="empty">Sin revisiones. Pulsa + para añadir.</div>`;
+  else sorted.forEach(r=>{html+=`<div class="list-item">
+    <div class="list-item-left">
+      <div class="list-item-date">${fmtDate(r.fecha)} · ${fmtKm(r.km)}</div>
+      <div class="list-item-title">${r.taller}</div>
+      ${r.notas?`<div class="list-item-sub">${r.notas}</div>`:''}
+    </div>
+    <div class="list-item-right">
+      <div class="list-item-price">${fmtEur(r.precio)}</div>
+      <div class="list-item-actions">
+        <button class="btn-action" onclick="editRevision(${r.id})">Editar</button>
+        <button class="btn-action delete" onclick="deleteRevision(${r.id})">Borrar</button>
+      </div>
+    </div>
+  </div>`;});
+  document.getElementById('revisiones-content').innerHTML=html;
+}
+
+function renderCombustible() {
+  const sorted=[...data.combustible].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const tN=data.combustible.filter(x=>x.tipo==='normal').reduce((s,x)=>s+x.importe,0);
+  const tP=data.combustible.filter(x=>x.tipo==='premium').reduce((s,x)=>s+x.importe,0);
+  const cycle=getCycleState();
+  let html=`${cycleWidget(cycle)}
+  <div class="grid2" style="margin-bottom:10px">
+    <div class="card"><div class="card-label">Normal</div><div class="card-value" style="font-size:17px">${fmtEur(tN)}</div></div>
+    <div class="card"><div class="card-label">Premium</div><div class="card-value accent" style="font-size:17px">${fmtEur(tP)}</div></div>
+  </div>
+  <div class="totals-row" style="margin-bottom:16px"><span class="totals-row-label">Total combustible</span><span class="totals-row-value">${fmtEur(tN+tP)}</span></div>
+  <div class="section-title">${sorted.length} repostajes</div>`;
+  if(!sorted.length) html+=`<div class="empty">Sin repostajes. Pulsa + para añadir.</div>`;
+  else sorted.forEach(r=>{html+=`<div class="list-item">
+    <div class="list-item-left">
+      <div class="list-item-date">${fmtDate(r.fecha)} · ${fmtKm(r.km)}</div>
+      <div class="list-item-title"><span class="badge ${r.tipo==='premium'?'badge-premium':'badge-normal'}">${r.tipo==='premium'?'Premium':'Normal'}</span></div>
+      ${r.notas?`<div class="list-item-sub">${r.notas}</div>`:''}
+    </div>
+    <div class="list-item-right">
+      <div class="list-item-price">${fmtEur(r.importe)}</div>
+      <div class="list-item-actions">
+        <button class="btn-action" onclick="editCombustible(${r.id})">Editar</button>
+        <button class="btn-action delete" onclick="deleteCombustible(${r.id})">Borrar</button>
+      </div>
+    </div>
+  </div>`;});
+  document.getElementById('combustible-content').innerHTML=html;
+}
+
+function renderAdblue() {
+  const sorted=[...data.adblue].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const total=data.adblue.reduce((s,x)=>s+x.precio,0);
+  let kmHtml='';
+  if(sorted.length>0){
+    const lastKm=sorted[0].km;
+    const maxKm=Math.max(...[...data.combustible,...data.revisiones,...data.adblue].map(x=>x.km||0));
+    const diff=maxKm-lastKm;
+    kmHtml=`<div class="km-since">
+      <div class="km-since-label">Km desde último AdBlue</div>
+      <div class="km-since-value">${fmtKm(diff)}</div>
+      <div class="km-since-sub">Último: ${fmtDate(sorted[0].fecha)}</div>
+    </div>`;
+  }
+  let html=`${kmHtml}
+  <div class="totals-row"><span class="totals-row-label">Total AdBlue</span><span class="totals-row-value">${fmtEur(total)}</span></div>
+  <div class="section-title">${sorted.length} registros</div>`;
+  if(!sorted.length) html+=`<div class="empty">Sin registros. Pulsa + para añadir.</div>`;
+  else sorted.forEach(r=>{html+=`<div class="list-item">
+    <div class="list-item-left">
+      <div class="list-item-date">${fmtDate(r.fecha)} · ${fmtKm(r.km)}</div>
+      <div class="list-item-title">AdBlue</div>
+      ${r.notas?`<div class="list-item-sub">${r.notas}</div>`:''}
+    </div>
+    <div class="list-item-right">
+      <div class="list-item-price">${fmtEur(r.precio)}</div>
+      <div class="list-item-actions">
+        <button class="btn-action" onclick="editAdblue(${r.id})">Editar</button>
+        <button class="btn-action delete" onclick="deleteAdblue(${r.id})">Borrar</button>
+      </div>
+    </div>
+  </div>`;});
+  document.getElementById('adblue-content').innerHTML=html;
+}
+
+function openModal() { document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); editingId=null; }
+function handleModalClick(e) { if(e.target===document.getElementById('modal')) closeModal(); }
+
+function openAddModal() {
+  const cycle=getCycleState();
+  if(currentPage==='revisiones') showRevisionForm(null);
+  else if(currentPage==='combustible') showCombustibleForm(null,cycle.nextType);
+  else if(currentPage==='adblue') showAdblueForm(null);
+  else {
+    document.getElementById('modal-title').textContent='Añadir';
+    document.getElementById('modal-form').innerHTML=`
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button class="btn-save" onclick="showRevisionForm(null)">Revisión</button>
+        <button class="btn-save" onclick="showCombustibleForm(null,'${cycle.nextType}')">Combustible</button>
+        <button class="btn-save" onclick="showAdblueForm(null)">AdBlue</button>
+      </div>`;
+    openModal();
+  }
+}
+
+function showRevisionForm(r) {
+  document.getElementById('modal-title').textContent=r?'Editar revisión':'Nueva revisión';
+  document.getElementById('modal-form').innerHTML=`
+    <div class="form-group"><label class="form-label">Fecha</label><input class="form-input" type="date" id="f-fecha" value="${r?r.fecha:today()}"></div>
+    <div class="form-group"><label class="form-label">Kilómetros</label><input class="form-input" type="number" id="f-km" value="${r?r.km:''}"></div>
+    <div class="form-group"><label class="form-label">Precio (€)</label><input class="form-input" type="number" step="0.01" id="f-precio" value="${r?r.precio:''}"></div>
+    <div class="form-group"><label class="form-label">Taller</label><input class="form-input" type="text" id="f-taller" value="${r?r.taller:''}"></div>
+    <div class="form-group"><label class="form-label">Notas (opcional)</label><input class="form-input" type="text" id="f-notas" value="${r?r.notas||'':''}"></div>
+    <button class="btn-save" onclick="saveRevision()">Guardar</button>`;
+  openModal();
+}
+function saveRevision() {
+  const fecha=document.getElementById('f-fecha').value;
+  const km=parseInt(document.getElementById('f-km').value);
+  const precio=parseFloat(document.getElementById('f-precio').value);
+  const taller=document.getElementById('f-taller').value.trim();
+  const notas=document.getElementById('f-notas').value.trim();
+  if(!fecha||!km||!precio||!taller){alert('Rellena los campos obligatorios.');return;}
+  if(editingId){const i=data.revisiones.findIndex(x=>x.id===editingId);if(i>=0)data.revisiones[i]={id:editingId,fecha,km,precio,taller,notas};}
+  else data.revisiones.push({id:nextId(data.revisiones),fecha,km,precio,taller,notas});
+  save();closeModal();renderPage(currentPage);
+}
+function editRevision(id){editingId=id;showRevisionForm(data.revisiones.find(x=>x.id===id));}
+function deleteRevision(id){if(!confirm('¿Borrar esta revisión?'))return;data.revisiones=data.revisiones.filter(x=>x.id!==id);save();renderPage(currentPage);}
+
+function showCombustibleForm(c,sugTipo) {
+  const tipo=c?c.tipo:(sugTipo||'normal');
+  document.getElementById('modal-title').textContent=c?'Editar repostaje':'Nuevo repostaje';
+  document.getElementById('modal-form').innerHTML=`
+    <div class="form-group"><label class="form-label">Fecha</label><input class="form-input" type="date" id="f-fecha" value="${c?c.fecha:today()}"></div>
+    <div class="form-group"><label class="form-label">Kilómetros</label><input class="form-input" type="number" id="f-km" value="${c?c.km:''}"></div>
+    <div class="form-group"><label class="form-label">Tipo</label>
+      <div class="type-selector">
+        <button class="type-btn ${tipo==='normal'?'active-normal':''}" id="btn-normal" onclick="selTipo('normal')">Diésel Normal</button>
+        <button class="type-btn ${tipo==='premium'?'active-premium':''}" id="btn-premium" onclick="selTipo('premium')">Diésel Premium</button>
+      </div>
+      <input type="hidden" id="f-tipo" value="${tipo}">
+    </div>
+    <div class="form-group"><label class="form-label">Importe (€)</label><input class="form-input" type="number" step="0.01" id="f-importe" value="${c?c.importe:''}"></div>
+    <div class="form-group"><label class="form-label">Notas (opcional)</label><input class="form-input" type="text" id="f-notas" value="${c?c.notas||'':''}"></div>
+    <button class="btn-save" onclick="saveCombustible()">Guardar</button>`;
+  openModal();
+}
+function selTipo(t){
+  document.getElementById('f-tipo').value=t;
+  document.getElementById('btn-normal').className='type-btn '+(t==='normal'?'active-normal':'');
+  document.getElementById('btn-premium').className='type-btn '+(t==='premium'?'active-premium':'');
+}
+function saveCombustible(){
+  const fecha=document.getElementById('f-fecha').value;
+  const km=parseInt(document.getElementById('f-km').value);
+  const tipo=document.getElementById('f-tipo').value;
+  const importe=parseFloat(document.getElementById('f-importe').value);
+  const notas=document.getElementById('f-notas').value.trim();
+  if(!fecha||!km||!importe){alert('Rellena los campos obligatorios.');return;}
+  if(editingId){const i=data.combustible.findIndex(x=>x.id===editingId);if(i>=0)data.combustible[i]={id:editingId,fecha,km,tipo,importe,notas};}
+  else data.combustible.push({id:nextId(data.combustible),fecha,km,tipo,importe,notas});
+  save();closeModal();renderPage(currentPage);
+}
+function editCombustible(id){editingId=id;const c=data.combustible.find(x=>x.id===id);showCombustibleForm(c,c.tipo);}
+function deleteCombustible(id){if(!confirm('¿Borrar este repostaje?'))return;data.combustible=data.combustible.filter(x=>x.id!==id);save();renderPage(currentPage);}
+
+function showAdblueForm(a){
+  document.getElementById('modal-title').textContent=a?'Editar AdBlue':'Nuevo AdBlue';
+  document.getElementById('modal-form').innerHTML=`
+    <div class="form-group"><label class="form-label">Fecha</label><input class="form-input" type="date" id="f-fecha" value="${a?a.fecha:today()}"></div>
+    <div class="form-group"><label class="form-label">Kilómetros</label><input class="form-input" type="number" id="f-km" value="${a?a.km:''}"></div>
+    <div class="form-group"><label class="form-label">Precio (€)</label><input class="form-input" type="number" step="0.01" id="f-precio" value="${a?a.precio:''}"></div>
+    <div class="form-group"><label class="form-label">Notas (opcional)</label><input class="form-input" type="text" id="f-notas" value="${a?a.notas||'':''}"></div>
+    <button class="btn-save" onclick="saveAdblue()">Guardar</button>`;
+  openModal();
+}
+function saveAdblue(){
+  const fecha=document.getElementById('f-fecha').value;
+  const km=parseInt(document.getElementById('f-km').value);
+  const precio=parseFloat(document.getElementById('f-precio').value);
+  const notas=document.getElementById('f-notas').value.trim();
+  if(!fecha||!km||!precio){alert('Rellena los campos obligatorios.');return;}
+  if(editingId){const i=data.adblue.findIndex(x=>x.id===editingId);if(i>=0)data.adblue[i]={id:editingId,fecha,km,precio,notas};}
+  else data.adblue.push({id:nextId(data.adblue),fecha,km,precio,notas});
+  save();closeModal();renderPage(currentPage);
+}
+function editAdblue(id){editingId=id;showAdblueForm(data.adblue.find(x=>x.id===id));}
+function deleteAdblue(id){if(!confirm('¿Borrar este registro?'))return;data.adblue=data.adblue.filter(x=>x.id!==id);save();renderPage(currentPage);}
+
+load();
+renderDashboard();
+</script>
+</body>
+</html>
