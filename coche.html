@@ -160,6 +160,46 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 let D = { revisiones:[], combustible:[], adblue:[] };
 let editId = null, curPage = 'inicio';
 
+const SUPA_URL = 'https://kxqehlutocvdjfgmbdep.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4cWVobHV0b2N2ZGpmZ21iZGVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxODI2MTAsImV4cCI6MjA4OTc1ODYxMH0.MEj0wMuG9Vu6NKurtO2g_3TSqE7ITzzapSPkXMWO0jQ';
+
+async function dbLoad() {
+  try {
+    const r = await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.oscar&select=data`, {
+      headers: {'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`}
+    });
+    if (r.ok) {
+      const rows = await r.json();
+      if (rows.length && rows[0].data && rows[0].data.revisiones) {
+        D = rows[0].data;
+        localStorage.setItem('fpace_v2', JSON.stringify(D));
+        rInicio();
+        return;
+      }
+    }
+  } catch(e) {}
+  // fallback to localStorage
+  const s = localStorage.getItem('fpace_v2');
+  if (s) { try { D = JSON.parse(s); } catch(e) {} }
+  rInicio();
+}
+
+async function dbSave() {
+  localStorage.setItem('fpace_v2', JSON.stringify(D));
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.oscar`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ data: D, updated_at: new Date().toISOString() })
+    });
+  } catch(e) {}
+}
+
 function loadData() {
   const s = localStorage.getItem('fpace_v2');
   if (s) { try { D = JSON.parse(s); } catch(e){} }
@@ -414,10 +454,10 @@ function saveRev(){
   const obj={id:editId||nid(D.revisiones),fecha:f,km:k?parseInt(k):null,precio:p,taller:t,notas:n};
   if(editId){const i=D.revisiones.findIndex(x=>x.id===editId);if(i>=0)D.revisiones[i]=obj;}
   else D.revisiones.push(obj);
-  save();closeModal();render(curPage);
+  dbSave();closeModal();render(curPage);
 }
 function editRev(id){editId=id;showRevForm(D.revisiones.find(x=>x.id===id));}
-function delRev(id){if(!confirm('¿Borrar esta revisión?'))return;D.revisiones=D.revisiones.filter(x=>x.id!==id);save();render(curPage);}
+function delRev(id){if(!confirm('¿Borrar esta revisión?'))return;D.revisiones=D.revisiones.filter(x=>x.id!==id);dbSave();render(curPage);}
 
 // COMBUSTIBLE — km OPTIONAL
 function showCombForm(c,sug){
@@ -449,10 +489,10 @@ function saveComb(){
   const obj={id:editId||nid(D.combustible),fecha:f,km:k?parseInt(k):'',tipo:t,importe:im,notas:n};
   if(editId){const i=D.combustible.findIndex(x=>x.id===editId);if(i>=0)D.combustible[i]=obj;}
   else D.combustible.push(obj);
-  save();closeModal();render(curPage);
+  dbSave();closeModal();render(curPage);
 }
 function editComb(id){editId=id;const c=D.combustible.find(x=>x.id===id);showCombForm(c,c.tipo);}
-function delComb(id){if(!confirm('¿Borrar este repostaje?'))return;D.combustible=D.combustible.filter(x=>x.id!==id);save();render(curPage);}
+function delComb(id){if(!confirm('¿Borrar este repostaje?'))return;D.combustible=D.combustible.filter(x=>x.id!==id);dbSave();render(curPage);}
 
 // ADBLUE
 function showAdblForm(a){
@@ -471,15 +511,15 @@ function saveAdbl(){
   const obj={id:editId||nid(D.adblue),fecha:f,km:k?parseInt(k):'',precio:p,notas:n};
   if(editId){const i=D.adblue.findIndex(x=>x.id===editId);if(i>=0)D.adblue[i]=obj;}
   else D.adblue.push(obj);
-  save();closeModal();render(curPage);
+  dbSave();closeModal();render(curPage);
 }
 function editAdbl(id){editId=id;showAdblForm(D.adblue.find(x=>x.id===id));}
-function delAdbl(id){if(!confirm('¿Borrar este registro?'))return;D.adblue=D.adblue.filter(x=>x.id!==id);save();render(curPage);}
+function delAdbl(id){if(!confirm('¿Borrar este registro?'))return;D.adblue=D.adblue.filter(x=>x.id!==id);dbSave();render(curPage);}
 
 function v(id){return document.getElementById(id)?.value||'';}
 
 loadData();
-rInicio();
+dbLoad();
 </script>
 </body>
 </html>
