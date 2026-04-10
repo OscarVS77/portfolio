@@ -25,6 +25,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .nav{position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px 10px;background:none;border:none;color:var(--text3);font-family:var(--font);font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:color .2s}
 .nav-btn.active{color:var(--accent)}
+.nav-btn#n-inicio.active{color:#f5c400}
+.nav-btn#n-revisiones.active{color:#e05555}
+.nav-btn#n-combustible.active{color:#4caf7d}
+.nav-btn#n-adblue.active{color:#5b9bd5}
+.page-inicio .header-title span,.page-inicio .section-title{color:#f5c400}
+.page-revisiones .header-title span,.page-revisiones .section-title{color:#e05555}
+.page-combustible .header-title span,.page-combustible .section-title{color:#4caf7d}
+.page-adblue .header-title span,.page-adblue .section-title{color:#5b9bd5}
 .nav-btn svg{width:22px;height:22px}
 /* HEADER */
 .header{padding:56px 20px 20px;border-bottom:1px solid var(--border)}
@@ -111,19 +119,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 </head>
 <body>
 
-<div id="p-inicio" class="page active">
+<div id="p-inicio" class="page page-inicio active">
   <div class="header"><div class="header-title">Jaguar <span>F-Pace</span></div></div>
   <div class="content" id="c-inicio"></div>
 </div>
-<div id="p-revisiones" class="page">
+<div id="p-revisiones" class="page page-revisiones">
   <div class="header"><div class="header-title">Revisiones</div></div>
   <div class="content" id="c-revisiones"></div>
 </div>
-<div id="p-combustible" class="page">
+<div id="p-combustible" class="page page-combustible">
   <div class="header"><div class="header-title">Combustible</div></div>
   <div class="content" id="c-combustible"></div>
 </div>
-<div id="p-adblue" class="page">
+<div id="p-adblue" class="page page-adblue">
   <div class="header"><div class="header-title">AdBlue</div></div>
   <div class="content" id="c-adblue"></div>
 </div>
@@ -281,12 +289,10 @@ function cycleWidget(c) {
 
 // ── INICIO ────────────────────────────────────────────────────────────────────
 function rInicio() {
-  const rev=[...D.revisiones].sort((a,b)=>b.fecha.localeCompare(a.fecha));
   const tRev=D.revisiones.reduce((s,x)=>s+x.precio,0);
   const tComb=D.combustible.reduce((s,x)=>s+x.importe,0);
   const tAdbl=D.adblue.reduce((s,x)=>s+x.precio,0);
   const cycle=getCycle();
-  const lr=rev[0];
   const all=[
     ...D.revisiones.map(x=>({f:x.fecha,t:'Revisión',l:x.taller,v:x.precio})),
     ...D.combustible.map(x=>({f:x.fecha,t:x.tipo==='premium'?'Diésel Premium':'Diésel Normal',l:'Combustible',v:x.importe})),
@@ -296,14 +302,7 @@ function rInicio() {
 
   document.getElementById('c-inicio').innerHTML=`
     ${cycleWidget(cycle)}
-    <div class="section-title">Última revisión</div>
-    ${lr?`<div class="last-rec">
-      <div style="font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">${fd(lr.fecha)}</div>
-      <div style="font-size:22px;font-family:var(--mono);font-weight:500;color:var(--text);margin-bottom:4px">${lr.km?fk(lr.km):'— km'}</div>
-      <div style="font-size:15px;font-weight:400;color:var(--text2)">${lr.taller}</div>
-      ${lr.notas?`<div style="font-size:13px;color:var(--text3);margin-top:3px">${lr.notas}</div>`:''}
-      <div style="font-size:14px;font-family:var(--mono);color:var(--text3);margin-top:6px">${fe(lr.precio)}</div>
-    </div>`:`<div class="card"><div style="font-size:13px;color:var(--text3)">Sin revisiones registradas</div></div>`}
+
     <div class="section-title">Gastos totales</div>
     <div class="grid2">
       <div class="card"><div class="card-label">Revisiones</div><div class="card-value" style="font-size:18px">${fe(tRev)}</div></div>
