@@ -9,35 +9,35 @@
 <meta name="theme-color" content="#000000">
 <title>F-Pace · Control</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23ffffff'/%3E%3Ctext x='256' y='340' font-family='Georgia,serif' font-size='320' font-weight='700' text-anchor='middle' fill='%23000000'%3EF%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23ffffff'/%3E%3Ccircle cx='256' cy='256' r='60' fill='%23000000'/%3E%3C/svg%3E">
 <style>
 :root {
   --bg:#000;--surface:#0d0d0d;--surface2:#161616;--surface3:#1e1e1e;
-  --border:#242424;--border2:#2e2e2e;--text:#fff;--text2:#d0d0d0;--text3:#8a8a8a;
+  --border:#242424;--border2:#2e2e2e;--text:#fff;--text2:#a0a0a0;--text3:#5a5a5a;
   --accent:#c9a84c;--accent2:#e8c878;--red:#e05555;--green:#4caf7d;
-  --font:'Inter',system-ui,sans-serif;--mono:'Inter',system-ui,sans-serif;
+  --font:'DM Sans',system-ui,sans-serif;--mono:'DM Mono',monospace;
   --r:12px;--r-sm:8px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:100px}
 /* NAV */
 .nav{position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px 10px;background:none;border:none;color:var(--text3);font-family:var(--font);font-size:10px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;transition:color .2s}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px 10px;background:none;border:none;color:var(--text3);font-family:var(--font);font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:color .2s}
 .nav-btn.active{color:var(--accent)}
 .nav-btn svg{width:22px;height:22px}
 /* HEADER */
 .header{padding:56px 20px 20px;border-bottom:1px solid var(--border)}
 .header-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:500}
-.header-title{font-size:28px;font-weight:300;letter-spacing:-.02em}
+.header-title{font-size:26px;font-weight:300;letter-spacing:-.01em}
 .header-title span{color:var(--accent)}
 /* PAGES */
 .page{display:none}.page.active{display:block}
 .content{padding:20px}
 /* CARDS */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px}
-.card-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:500}
-.card-value{font-size:22px;font-weight:400;font-family:var(--mono)}
+.card-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:500}
+.card-value{font-size:20px;font-weight:300;font-family:var(--mono)}
 .card-value.accent{color:var(--accent)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 /* CYCLE */
@@ -49,16 +49,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .cycle-step.current{background:var(--accent);border-color:var(--accent);color:#000;font-size:12px}
 .cycle-step.prem.done{background:#1a1400;border-color:#3d2e00;color:var(--accent)}
 .cycle-step.prem.current{background:var(--accent);border-color:var(--accent2);color:#000}
-.cycle-next{margin-top:10px;font-size:14px;color:var(--text2)}
+.cycle-next{margin-top:10px;font-size:13px;color:var(--text2)}
 .cycle-next strong{color:var(--accent)}
 /* LIST */
 .list-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
 .li-left{flex:1;min-width:0}
-.li-date{font-size:11px;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
-.li-title{font-size:17px;font-weight:400;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.li-sub{font-size:14px;color:var(--text2);margin-top:2px}
+.li-date{font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.li-title{font-size:15px;font-weight:400;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li-sub{font-size:12px;color:var(--text2);margin-top:2px}
 .li-right{text-align:right;flex-shrink:0}
-.li-price{font-size:14px;font-family:var(--mono);font-weight:400;color:var(--text2)}
+.li-price{font-size:16px;font-family:var(--mono);font-weight:500}
 .li-actions{display:flex;gap:8px;margin-top:5px;justify-content:flex-end}
 .btn-act{background:none;border:none;cursor:pointer;padding:3px 6px;color:var(--text3);font-size:12px;font-family:var(--font);border-radius:4px;transition:all .15s}
 .btn-act:active{color:var(--text2);background:var(--surface2)}
@@ -68,10 +68,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .badge-n{background:#1a1a1a;color:var(--text2);border:1px solid var(--border2)}
 .badge-p{background:#1a1400;color:var(--accent);border:1px solid #3d2e00}
 /* MISC */
-.section-title{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);font-weight:500;margin:20px 0 10px}
+.section-title{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-weight:500;margin:20px 0 10px}
 .totals-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.tr-label{font-size:13px;color:var(--text2)}
-.tr-value{font-size:17px;font-family:var(--mono);font-weight:500}
+.tr-label{font-size:12px;color:var(--text2)}
+.tr-value{font-size:16px;font-family:var(--mono);font-weight:500}
 .last-rec{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
 .km-since{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
 .km-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:500}
@@ -91,8 +91,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .modal-title{font-size:17px;font-weight:500;margin-bottom:18px}
 /* FORM */
 .fg{margin-bottom:14px}
-.fl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);font-weight:500;margin-bottom:6px;display:block}
-.fi{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:13px 14px;color:var(--text);font-family:var(--font);font-size:16px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.fl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:500;margin-bottom:6px;display:block}
+.fi{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:12px 14px;color:var(--text);font-family:var(--font);font-size:15px;outline:none;transition:border-color .2s;-webkit-appearance:none}
 .fi:focus{border-color:var(--accent)}
 .fi::placeholder{color:var(--text3)}
 .fi-optional::placeholder{color:var(--text3)}
@@ -112,19 +112,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 <body>
 
 <div id="p-inicio" class="page active">
-  <div class="header"><div class="header-title">Jaguar <span>F-Pace</span></div></div>
+  <div class="header"><div class="header-label">Panel de control</div><div class="header-title">Jaguar <span>F-Pace</span></div></div>
   <div class="content" id="c-inicio"></div>
 </div>
 <div id="p-revisiones" class="page">
-  <div class="header"><div class="header-title">Revisiones</div></div>
+  <div class="header"><div class="header-label">Mantenimiento</div><div class="header-title">Revisiones</div></div>
   <div class="content" id="c-revisiones"></div>
 </div>
 <div id="p-combustible" class="page">
-  <div class="header"><div class="header-title">Combustible</div></div>
+  <div class="header"><div class="header-label">Repostaje</div><div class="header-title">Combustible</div></div>
   <div class="content" id="c-combustible"></div>
 </div>
 <div id="p-adblue" class="page">
-  <div class="header"><div class="header-title">AdBlue</div></div>
+  <div class="header"><div class="header-label">Aditivo</div><div class="header-title">AdBlue</div></div>
   <div class="content" id="c-adblue"></div>
 </div>
 
@@ -298,10 +298,11 @@ function rInicio() {
     ${cycleWidget(cycle)}
     <div class="section-title">Última revisión</div>
     ${lr?`<div class="last-rec">
-      <div style="font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">${fd(lr.fecha)}${lr.km?' · '+fk(lr.km):''}</div>
-      <div style="font-size:15px;font-weight:500">${lr.taller}</div>
-      ${lr.notas?`<div style="font-size:12px;color:var(--text2);margin-top:3px">${lr.notas}</div>`:''}
-      <div style="font-size:17px;font-family:var(--mono);color:var(--accent);margin-top:8px">${fe(lr.precio)}</div>
+      <div style="font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">${fd(lr.fecha)}</div>
+      <div style="font-size:22px;font-family:var(--mono);font-weight:500;color:var(--text);margin-bottom:4px">${lr.km?fk(lr.km):'— km'}</div>
+      <div style="font-size:15px;font-weight:400;color:var(--text2)">${lr.taller}</div>
+      ${lr.notas?`<div style="font-size:13px;color:var(--text3);margin-top:3px">${lr.notas}</div>`:''}
+      <div style="font-size:14px;font-family:var(--mono);color:var(--text3);margin-top:6px">${fe(lr.precio)}</div>
     </div>`:`<div class="card"><div style="font-size:13px;color:var(--text3)">Sin revisiones registradas</div></div>`}
     <div class="section-title">Gastos totales</div>
     <div class="grid2">
@@ -335,13 +336,14 @@ function rRevisiones() {
       ${r.notas?`<div class="li-sub">${r.notas}</div>`:''}
     </div>
     <div class="li-right">
-      <div class="li-price">${fe(r.precio)}</div>
-      <div class="li-actions">
-        <button class="btn-act" onclick="editRev(${r.id})">Editar</button>
-        <button class="btn-act btn-del" onclick="delRev(${r.id})">Borrar</button>
+        <div style="font-size:18px;font-family:var(--mono);font-weight:500;color:var(--text)">${r.km?fk(r.km):'— km'}</div>
+        <div style="font-size:13px;font-family:var(--mono);color:var(--text2);margin-top:2px">${fe(r.precio)}</div>
+        <div class="li-actions">
+          <button class="btn-act" onclick="editRev(${r.id})">Editar</button>
+          <button class="btn-act btn-del" onclick="delRev(${r.id})">Borrar</button>
+        </div>
       </div>
-    </div>
-  </div>`;});
+    </div>`;});
   document.getElementById('c-revisiones').innerHTML=h;
 }
 
