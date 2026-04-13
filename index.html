@@ -106,10 +106,7 @@ if ('serviceWorker' in navigator) {
     position: relative;
     z-index: 100;
     background: var(--bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    padding: 8px 20px 10px;
+    padding: 0;
   }
 
   .header-top {
@@ -181,42 +178,41 @@ if ('serviceWorker' in navigator) {
   /* TABS */
   .tabs {
     display: flex;
-    gap: 6px;
-    padding: 12px 20px;
+    gap: 0;
+    padding: 0 20px;
     position: relative;
     z-index: 99;
     background: var(--bg);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 0.5px solid rgba(255,255,255,0.08);
   }
 
   .tab {
-    flex: 1;
-    padding: 9px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: transparent;
-    color: var(--muted);
+    padding: 9px 0;
+    margin-right: 20px;
     font-family: var(--font-sans);
-    font-size: 10px;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.3);
+    border: none;
+    border-bottom: 1.5px solid transparent;
+    background: transparent;
     cursor: pointer;
-    transition: all 0.2s;
+    letter-spacing: 0;
+    text-transform: none;
+    transition: color 0.15s, border-color 0.15s;
   }
 
   .tab.active {
-    background: var(--surface2);
-    border-color: var(--border2);
-    color: var(--text);
+    color: #fff;
+    border-bottom-color: #fff;
+    background: transparent;
   }
 
   /* MAIN */
   main {
     position: relative;
     z-index: 1;
-    padding: 16px 20px 100px;
+    padding: 4px 20px 100px;
     min-height: 100vh;
   }
 
@@ -224,23 +220,30 @@ if ('serviceWorker' in navigator) {
   .assets-grid {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-top: 8px;
+    gap: 0;
+    margin-top: 0;
+    padding-top: 8px;
   }
 
   .asset-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 0.5px solid rgba(255,255,255,0.05);
     cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
+    transition: background 0.15s;
+    border-radius: 0;
+    background: transparent;
+    border-top: none;
+    border-left: none;
+    border-right: none;
   }
 
-  .asset-card:hover { border-color: var(--border2); }
+  .asset-card:last-child { border-bottom: none; }
+  .asset-card:hover { background: rgba(255,255,255,0.02); margin: 0 -20px; padding-left: 20px; padding-right: 20px; }
   .asset-card::before { display: none; }
-  .asset-card:active { transform: scale(0.99); }
+  .asset-card:active { opacity: 0.85; }
 
   .asset-ticker {
     font-family: var(--font-sans);
@@ -692,12 +695,7 @@ if ('serviceWorker' in navigator) {
     margin-top: 16px;
   }
 
-  .summary-tile {
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    padding: 6px 4px;
-  }
+
 
   .summary-tile-label {
     font-family: var(--font-sans);
@@ -824,6 +822,23 @@ if ('serviceWorker' in navigator) {
 
   /* SCROLLBAR */
   ::-webkit-scrollbar { width: 0; }
+
+  /* KPI strip: 2x2 on very small screens */
+  @media (max-width: 380px) {
+    #stickyTop > div:nth-child(3) {
+      grid-template-columns: 1fr 1fr;
+    }
+    #stickyTop > div:nth-child(3) > div:nth-child(2) {
+      border-right: none;
+    }
+    #stickyTop > div:nth-child(3) > div:nth-child(3) {
+      border-top: 0.5px solid rgba(255,255,255,0.06);
+      border-right: 0.5px solid rgba(255,255,255,0.06);
+    }
+    #stickyTop > div:nth-child(3) > div:nth-child(4) {
+      border-top: 0.5px solid rgba(255,255,255,0.06);
+    }
+  }
 
   /* Animations */
   @keyframes fadeSlideUp {
@@ -1304,55 +1319,48 @@ if ('serviceWorker' in navigator) {
   <div class="pin-error" id="pinError"></div>
 </div>
 
-<div id="stickyTop" style="position:sticky;top:0;z-index:100;display:none">
-<div class="header">
-  <div class="header-top" style="justify-content:space-between">
-    <button onclick="showLockScreen()" style="background:none;border:none;color:var(--muted2);font-size:11px;font-family:var(--font-sans);cursor:pointer;padding:4px 0;letter-spacing:.04em">← Salir</button>
-    <div style="display:flex;align-items:center;gap:8px">
-      <div class="header-title">Portfolio</div>
-      <div id="headerDate" style="font-size:9px;color:var(--muted2);letter-spacing:.04em"></div>
+<div id="stickyTop" style="position:sticky;top:0;z-index:100;display:none;background:#0a0a0a">
+
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px 12px;border-bottom:0.5px solid rgba(255,255,255,0.08)">
+  <span style="font-size:15px;font-weight:600;letter-spacing:-0.02em;color:#fff">Portfolio</span>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div id="pullIndicator" style="display:none;align-items:center">
+      <span id="pullSpinner" style="font-size:16px;line-height:1;color:rgba(255,255,255,0.3);transition:transform 0.2s">↻</span>
     </div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <button id="eyeBtn" onclick="togglePrivacy()" title="Ocultar valores" style="background:none;border:none;cursor:pointer;padding:4px;line-height:1">
-        <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block">
-          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-          <circle cx="12" cy="12" r="3"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-  <div style="height:1px;background:var(--border);margin:8px 0 10px"></div>
-  <div id="pullIndicator" style="display:none;justify-content:center;align-items:center;padding:8px 0;margin-top:-8px">
-    <span id="pullSpinner" style="font-size:18px;line-height:1;color:var(--muted2);transition:transform 0.2s">↻</span>
-  </div>
-  <div id="headerTiles" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 8px">
-    <div class="summary-tile" style="text-align:center">
-      <div class="summary-tile-label">Total invertido</div>
-      <div class="summary-tile-value privacy-hide" id="hTotalInvested">—</div>
-    </div>
-    <div class="summary-tile" style="text-align:center">
-      <div class="summary-tile-label">Valor actual</div>
-      <div class="summary-tile-value privacy-hide" id="hTotalCurrent">—</div>
-    </div>
-    <div class="summary-tile" style="text-align:center">
-      <div class="summary-tile-label">P&L</div>
-      <div class="summary-tile-value privacy-hide" id="hPnlAbs">—</div>
-    </div>
-    <div class="summary-tile" style="text-align:center">
-      <div class="summary-tile-label">Rentabilidad</div>
-      <div class="summary-tile-value privacy-hide" id="hPnlPct">—</div>
-    </div>
+    <span id="headerDate" style="font-size:11px;color:rgba(255,255,255,0.3)"></span>
+    <button id="eyeBtn" onclick="togglePrivacy()" style="width:30px;height:30px;border-radius:8px;border:0.5px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex-shrink:0">
+      <svg id="eyeIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    </button>
   </div>
 </div>
 
-<div class="tabs" id="tabBar">
+<div class="tabs" id="tabBar" style="display:flex;padding:0 20px;border-bottom:0.5px solid rgba(255,255,255,0.08)">
   <button class="tab active" onclick="switchTab('activos')" style="flex:1">Activos</button>
   <button class="tab" onclick="switchTab('rebalanceo')" style="flex:1">Rebalanceo</button>
   <button class="tab" onclick="switchTab('noticias')" style="flex:1">Noticias</button>
   <button class="tab" onclick="switchTab('familia')" style="flex:1">Familia</button>
 </div>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:0.5px solid rgba(255,255,255,0.08)">
+  <div style="padding:12px 16px;border-right:0.5px solid rgba(255,255,255,0.06)">
+    <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:4px;font-weight:400">Total invertido</div>
+    <div class="privacy-hide" id="hTotalInvested" style="font-size:18px;font-weight:700;letter-spacing:-0.03em;font-variant-numeric:tabular-nums;color:#fff">—</div>
+  </div>
+  <div style="padding:12px 16px;border-right:0.5px solid rgba(255,255,255,0.06)">
+    <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:4px;font-weight:400">Valor actual</div>
+    <div class="privacy-hide" id="hTotalCurrent" style="font-size:18px;font-weight:700;letter-spacing:-0.03em;font-variant-numeric:tabular-nums;color:#fff">—</div>
+  </div>
+  <div style="padding:12px 16px;border-right:0.5px solid rgba(255,255,255,0.06)">
+    <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:4px;font-weight:400">P&L</div>
+    <div class="privacy-hide" id="hPnlAbs" style="font-size:18px;font-weight:700;letter-spacing:-0.03em;font-variant-numeric:tabular-nums;color:#fff">—</div>
+  </div>
+  <div style="padding:12px 16px">
+    <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:4px;font-weight:400">Rentabilidad</div>
+    <div class="privacy-hide" id="hPnlPct" style="font-size:18px;font-weight:700;letter-spacing:-0.03em;font-variant-numeric:tabular-nums;color:#fff">—</div>
+  </div>
 </div>
 
+</div>
 <main id="mainContent" style="display:none">
   <!-- Injected by JS -->
 </main>
@@ -1916,12 +1924,40 @@ function updateDateDisplay() {
 
 function renderActivos() {
   const {totalCurrent} = getTotals();
-  // Weight excludes PP to match rebalanceo calculation
   const pp = assets.find(a => a.id === 'pp');
   const totalSinPP = totalCurrent - (pp ? getAssetCurrent(pp) : 0);
+
+  const fondos = assets.filter(a => ['world','emerging','smallcap'].includes(a.id));
+  const otros  = assets.filter(a => ['gold','btc'].includes(a.id));
+  const ppAsset = assets.find(a => a.id === 'pp');
+
+  const totalFondos = fondos.reduce((s,a) => s + getAssetCurrent(a), 0);
+  const totalOtros  = otros.reduce((s,a) => s + getAssetCurrent(a), 0);
+
   return `
-    <div class="assets-grid">
-      ${assets.map(a => renderCard(a, totalCurrent, totalSinPP)).join('')}
+    <div style="padding-top:6px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding:12px 0 4px">
+        <span style="font-size:10px;font-weight:500;color:rgba(255,255,255,0.28);letter-spacing:0.06em">FONDOS INDEXADOS</span>
+        <span class="privacy-hide" style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.7);font-variant-numeric:tabular-nums">${fmtEur(totalFondos)}</span>
+      </div>
+      <div class="assets-grid">
+        ${fondos.map(a => renderCard(a, totalCurrent, totalSinPP)).join('')}
+      </div>
+      <div style="height:0.5px;background:rgba(255,255,255,0.06);margin:4px 0"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding:12px 0 4px">
+        <span style="font-size:10px;font-weight:500;color:rgba(255,255,255,0.28);letter-spacing:0.06em">OTROS ACTIVOS</span>
+        <span class="privacy-hide" style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.7);font-variant-numeric:tabular-nums">${fmtEur(totalOtros)}</span>
+      </div>
+      <div class="assets-grid">
+        ${otros.map(a => renderCard(a, totalCurrent, totalSinPP)).join('')}
+      </div>
+      ${ppAsset ? `
+        <div style="height:0.5px;background:rgba(255,255,255,0.06);margin:4px 0"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:12px 0 4px">
+          <span style="font-size:10px;font-weight:500;color:rgba(255,255,255,0.28);letter-spacing:0.06em">PLAN DE PENSIONES</span>
+        </div>
+        <div class="assets-grid">${renderPPCard(ppAsset)}</div>
+      ` : ''}
     </div>
   `;
 }
@@ -1933,40 +1969,29 @@ function renderCard(a, totalCurrent, totalSinPP) {
   const pnl = getAssetPnl(a);
   const weight = totalSinPP > 0 ? (current / totalSinPP) * 100 : 0;
   const pnlAbs = current - a.invested;
-  const liveTag = a.id === 'btc'
-    ? ''
-    : '';
-  const tickerSuffix = a.id === 'btc' ? ' · precio unitario' : '';
+  const pnlColor = pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)';
+  const btcLive = a.id === 'btc' && a.liveUnitPrice;
 
   return `
     <div class="asset-card" onclick="openModal('${a.id}')">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="display:flex;flex-direction:column;gap:3px">
-          <span style="font-family:var(--font-display);font-size:17px;font-weight:400;color:var(--text)">${a.name}</span>
-          <span style="display:block;width:100%;height:2px;background:${a.color};border-radius:2px"></span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          ${a.id === 'btc' && a.liveUnitPrice ? `<span class="privacy-hide" style="font-size:14px;font-weight:400;color:${a.color}">${fmt(a.liveUnitPrice, 0)} €</span>` : ''}
-          <span class="privacy-hide" style="font-family:var(--font-display);font-size:17px;font-weight:400;color:var(--text)">${fmtEur(current)}</span>
+      <div style="width:8px;flex-shrink:0;padding-top:4px">
+        <div style="width:7px;height:7px;border-radius:50%;background:${a.color}"></div>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:14px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:2px">${a.ticker} · ${a.note.split('·').pop().trim()}</div>
+        ${btcLive ? `<div style="font-size:11px;color:rgba(255,255,255,0.18);margin-top:1px">precio ${fmt(a.liveUnitPrice, 0)} €</div>` : ''}
+      </div>
+      <div style="width:52px;flex-shrink:0;padding-top:10px">
+        <div style="height:2px;background:rgba(255,255,255,0.07);border-radius:1px">
+          <div style="height:100%;width:${Math.min(weight,100)}%;background:${a.color};border-radius:1px"></div>
         </div>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-        <span style="font-size:11px;color:var(--muted2)">${a.ticker}${tickerSuffix}</span>
-        <span class="asset-pnl-badge privacy-hide ${pnlClass(pnl)}">${fmtPct(pnl)}</span>
+      <div style="text-align:right;flex-shrink:0;min-width:88px">
+        <div class="privacy-hide" style="font-size:14px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-0.02em">${fmtEur(current)}</div>
+        <div class="privacy-hide" style="font-size:11px;font-variant-numeric:tabular-nums;margin-top:2px;color:${pnlColor}">${pnlAbs >= 0 ? '+' : ''}${fmtEur(pnlAbs)} · ${fmtPct(pnl)}</div>
+        ${btcLive ? `<div style="display:flex;align-items:center;gap:3px;justify-content:flex-end;margin-top:2px"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent)"></span><span style="font-size:10px;color:rgba(255,255,255,0.25)">en vivo</span></div>` : ''}
       </div>
-      <div style="height:0.5px;background:var(--border);margin:10px 0"></div>
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <div style="font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">Invertido</div>
-          <div class="privacy-hide" style="font-size:14px;color:var(--text)">${fmtEur(a.invested)}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">P&L</div>
-          <div class="privacy-hide" style="font-size:14px;color:${pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)'}">${fmtEur(pnlAbs)}</div>
-        </div>
-      </div>
-      <div style="margin-top:8px;font-size:10px;color:var(--muted2)">${a.note}</div>
-      ${a.id === 'btc' && a.liveUnitPrice ? `<div style="display:flex;align-items:center;gap:5px;margin-top:5px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span><span style="font-size:10px;color:var(--muted2)">Precio en vivo</span></div>` : ''}
     </div>
   `;
 }
@@ -1980,46 +2005,34 @@ function renderPPCard(a) {
   const current = getAssetCurrent(a);
   const pnl = getAssetPnl(a);
   const pnlAbs = current - a.invested;
+  const pnlColor = pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)';
 
   return `
-    <div class="asset-card" onclick="openModal('${a.id}')">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="display:flex;flex-direction:column;gap:3px">
-          <span style="font-family:var(--font-display);font-size:17px;font-weight:400;color:var(--text)">${a.name}</span>
-          <span style="display:block;width:100%;height:2px;background:${a.color};border-radius:2px"></span>
+    <div class="asset-card" onclick="openModal('${a.id}')" style="flex-direction:column;gap:0;align-items:stretch">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="width:8px;flex-shrink:0;padding-top:4px">
+          <div style="width:7px;height:7px;border-radius:50%;background:${a.color}"></div>
         </div>
-        <span class="privacy-hide" style="font-family:var(--font-display);font-size:17px;font-weight:400;color:var(--text)">${fmtEur(current)}</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-        <span style="font-size:11px;color:var(--muted2)">${a.ticker} · MyInvestor · Sin rebalanceo</span>
-        <span class="asset-pnl-badge privacy-hide ${pnlClass(pnl)}">${fmtPct(pnl)}</span>
-      </div>
-      <div style="height:0.5px;background:var(--border);margin:10px 0"></div>
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <div style="font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">Invertido</div>
-          <div class="privacy-hide" style="font-size:14px;color:var(--text)">${fmtEur(a.invested)}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:500;color:var(--text)">${a.name}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:2px">${a.ticker} · MyInvestor · sin rebalanceo</div>
         </div>
-        <div style="text-align:right">
-          <div style="font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">P&L</div>
-          <div class="privacy-hide" style="font-size:14px;color:${pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)'}">${fmtEur(pnlAbs)}</div>
+        <div style="text-align:right;flex-shrink:0;min-width:88px">
+          <div class="privacy-hide" style="font-size:14px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-0.02em">${fmtEur(current)}</div>
+          <div class="privacy-hide" style="font-size:11px;font-variant-numeric:tabular-nums;margin-top:2px;color:${pnlColor}">${pnlAbs >= 0 ? '+' : ''}${fmtEur(pnlAbs)} · ${fmtPct(pnl)}</div>
         </div>
       </div>
-      <div style="margin:10px 0 6px;padding:10px 12px;background:var(--surface2);border-radius:10px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-          <span style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2)">Aportado ${year}</span>
-          <span style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2)">Límite IRPF</span>
+      <div style="margin:10px 0 2px;padding:10px 12px;background:var(--surface2);border-radius:8px;margin-left:20px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
+          <span style="font-size:10px;color:rgba(255,255,255,0.28)">Aportado ${year}</span>
+          <span style="font-size:10px;color:rgba(255,255,255,0.28)">Límite IRPF ${fmtEur(a.ppLimit, 0)}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span class="privacy-hide" style="font-size:16px;font-weight:400;color:${a.color}">${fmtEur(aportadoAño)}</span>
-          <span style="font-size:13px;color:var(--muted2)">${fmtEur(a.ppLimit, 0)}</span>
-        </div>
-        <div style="height:2px;background:var(--border);border-radius:2px;overflow:hidden">
+        <div style="height:2px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;margin-bottom:5px">
           <div style="width:${progresoPct}%;height:100%;background:${a.color};border-radius:2px"></div>
         </div>
-        <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:var(--muted2)">
-          <span>${fmt(progresoPct, 1)}% completado</span>
-          <span>Resta: <span style="color:var(--text);font-weight:400">${fmtEur(restante, 0)}</span></span>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.28)">
+          <span class="privacy-hide">${fmtEur(aportadoAño)} · ${fmt(progresoPct, 1)}%</span>
+          <span>Resta <span class="privacy-hide" style="color:var(--text)">${fmtEur(restante, 0)}</span></span>
         </div>
       </div>
     </div>
