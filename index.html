@@ -1265,21 +1265,21 @@ if ('serviceWorker' in navigator) {
   <div id="pullIndicator" style="display:none;justify-content:center;align-items:center;padding:8px 0;margin-top:-8px">
     <span id="pullSpinner" style="font-size:18px;line-height:1;color:var(--muted2);transition:transform 0.2s">↻</span>
   </div>
-  <div id="headerSummary" style="display:flex;align-items:baseline;gap:24px;flex-wrap:wrap">
+  <div id="headerSummary" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;text-align:center;padding:4px 0">
     <div>
-      <div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">Valor actual</div>
+      <div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Valor actual</div>
       <div class="privacy-hide" id="hTotalCurrent" style="font-size:32px;font-weight:300;color:var(--text);letter-spacing:-0.03em;line-height:1">—</div>
     </div>
     <div>
-      <div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">Invertido</div>
+      <div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Invertido</div>
       <div class="privacy-hide" id="hTotalInvested" style="font-size:32px;font-weight:300;color:var(--text);letter-spacing:-0.03em;line-height:1">—</div>
     </div>
     <div>
-      <div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">P&L</div>
+      <div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">P&L</div>
       <div class="privacy-hide" id="hPnlAbs" style="font-size:32px;font-weight:300;color:var(--accent);letter-spacing:-0.03em;line-height:1">—</div>
     </div>
     <div>
-      <div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">Rentabilidad</div>
+      <div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Rentabilidad</div>
       <div class="privacy-hide" id="hPnlPct" style="font-size:32px;font-weight:300;color:var(--accent);letter-spacing:-0.03em;line-height:1">—</div>
     </div>
   </div>
@@ -1885,7 +1885,7 @@ function renderActivos() {
           <div style="position:absolute;left:0;top:0;height:100%;width:${barWidth}%;background:${a.color};border-radius:3px"></div>
           <div style="position:absolute;top:-5px;left:${markerLeft}%;width:2px;height:15px;background:rgba(255,255,255,0.4);border-radius:1px"></div>
         </div>
-        <span style="font-size:14px;color:${deltaColor};white-space:nowrap;min-width:54px;text-align:right">${deltaText}</span>
+        <span style="font-size:15px;color:${deltaColor};white-space:nowrap;min-width:54px;text-align:right">${deltaText}</span>
       </div>`, delta };
   }
 
@@ -1912,14 +1912,14 @@ function renderActivos() {
 
     return `
       <tr onclick="openModal('${a.id}')" style="cursor:pointer">
-        <td style="padding:20px 0 20px 28px;width:32px;vertical-align:middle"><div style="width:5px;height:44px;border-radius:3px;background:${a.color}"></div></td>
-        <td style="padding:20px 20px 20px 16px;vertical-align:middle"><div style="font-size:20px;color:var(--text);white-space:nowrap">${a.name}</div><div style="font-size:13px;color:var(--muted);margin-top:3px;white-space:nowrap">${subtitle}</div></td>
-        <td class="privacy-hide" style="padding:20px;text-align:right;font-size:20px;color:var(--text);vertical-align:middle;font-weight:400">${fmtEur(current, 0)}</td>
-        <td class="privacy-hide" style="padding:20px;text-align:right;font-size:20px;color:var(--muted);vertical-align:middle;font-weight:300">${fmtEur(a.invested, 0)}</td>
-        <td class="privacy-hide" style="padding:20px;text-align:right;font-size:20px;color:${pnlColor};vertical-align:middle;font-weight:400">${sign}${fmtEur(Math.abs(pnlAbs), 0)}</td>
-        <td class="privacy-hide" style="padding:20px;text-align:right;font-size:18px;color:${pnlColor};vertical-align:middle;font-weight:400">${sign}${fmt(Math.abs(pnl), 2)}%</td>
-        <td class="privacy-hide" style="padding:20px;text-align:right;font-size:16px;color:var(--muted);vertical-align:middle">${weight}</td>
-        <td style="padding:20px 28px 20px 20px;vertical-align:middle">${rebal.html}</td>
+        <td style="padding:22px 0 22px 28px;width:32px;vertical-align:middle"><div style="width:5px;height:48px;border-radius:3px;background:${a.color}"></div></td>
+        <td style="padding:22px 20px 22px 16px;vertical-align:middle"><div style="font-size:22px;color:var(--text);white-space:nowrap">${a.name}</div><div style="font-size:14px;color:var(--muted);margin-top:3px;white-space:nowrap">${subtitle}</div></td>
+        <td class="privacy-hide" style="padding:22px 20px;text-align:right;font-size:22px;color:var(--text);vertical-align:middle;font-weight:400">${fmtEur(current, 0)}</td>
+        <td class="privacy-hide" style="padding:22px 20px;text-align:right;font-size:22px;color:var(--muted);vertical-align:middle;font-weight:300">${fmtEur(a.invested, 0)}</td>
+        <td class="privacy-hide" style="padding:22px 20px;text-align:right;font-size:22px;color:${pnlColor};vertical-align:middle;font-weight:400">${sign}${fmtEur(Math.abs(pnlAbs), 0)}</td>
+        <td class="privacy-hide" style="padding:22px 20px;text-align:right;font-size:20px;color:${pnlColor};vertical-align:middle;font-weight:400">${sign}${fmt(Math.abs(pnl), 2)}%</td>
+        <td class="privacy-hide" style="padding:22px 20px;text-align:right;font-size:18px;color:var(--muted);vertical-align:middle">${weight}</td>
+        <td style="padding:22px 28px 22px 20px;vertical-align:middle">${rebal.html}</td>
       </tr>`;
   }
 
