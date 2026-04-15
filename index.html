@@ -2,10 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Portfolio">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#000000">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -1164,14 +1161,7 @@ if ('serviceWorker' in navigator) {
     color: var(--muted);
     font-size: 13px;
   }
-
-  /* MOBILE: header summary 2x2 grid, smaller font */
-  @media (max-width: 768px) {
-    #headerSummary {
-      grid-template-columns: 1fr 1fr !important;
-      gap: 12px 0 !important;
-    }
-    #headerSummary > div > div:last-child {
+#headerSummary > div > div:last-child {
       font-size: 22px !important;
     }
     .desktop-table { display: none !important; }
@@ -1184,10 +1174,8 @@ if ('serviceWorker' in navigator) {
       font-size: 18px !important;
     }
   }
-  @media (min-width: 769px) {
-    .desktop-table { display: block; }
-    .mobile-cards { display: none !important; }
-  }
+  .desktop-table { display: block; }
+  .mobile-cards { display: none !important; }
 </style>
 </head>
 <body>
@@ -1483,7 +1471,7 @@ function updatePinDots() {
   }
 }
 
-// PIN grid — touchstart for instant response on iOS PWA
+// PIN grid
 document.addEventListener('DOMContentLoaded', function() {
   const grid = document.getElementById('pinGrid');
   if (!grid) return;
