@@ -1884,7 +1884,6 @@ function renderActivos() {
   const {totalCurrent} = getTotals();
   const pp = assets.find(a => a.id === 'pp');
   const totalSinPP = totalCurrent - (pp ? getAssetCurrent(pp) : 0);
-
   const gold = assets.find(a => a.id === 'gold');
   const btc = assets.find(a => a.id === 'btc');
   const world = assets.find(a => a.id === 'world');
@@ -1893,19 +1892,12 @@ function renderActivos() {
   const total5 = [gold,btc,world,emerging,smallcap].reduce((s,a) => s + getAssetCurrent(a), 0);
   const nivel2Targets = { gold: 5, btc: 15, world: 56, emerging: 16, smallcap: 8 };
   const REBAL_THRESHOLD = 5;
-
-  // Single grid definition shared by header and every row
-  const G = 'display:grid;grid-template-columns:420px 150px 150px 165px 145px 120px minmax(420px,1fr);column-gap:0;row-gap:0;align-items:center;';
   const LN = '1px solid rgba(255,255,255,0.08)';
-  const B = 'border-bottom:' + LN + ';';
-  const BR = 'border-right:' + LN + ';';
-  const P = 'padding:22px 20px;';
-  const Ph = 'padding:14px 20px;';
+  const CP = 'padding:22px 20px;border:' + LN + ';';
+  const CH = 'padding:14px 20px;border:' + LN + ';';
 
-  function getRebalCells(a) {
-    if (a.excludeRebalance || a.id === 'pp') {
-      return `<div style="${P}${B}padding-left:20px;display:flex;align-items:center"><span style="font-size:12px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;opacity:0.6">Sin rebalanceo</span></div>`;
-    }
+  function rebalContent(a) {
+    if (a.excludeRebalance || a.id === 'pp') return '<span style="font-size:12px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;opacity:0.6">Sin rebalanceo</span>';
     const current = getAssetCurrent(a);
     const target = nivel2Targets[a.id] || 0;
     const actualPct = total5 > 0 ? (current / total5) * 100 : 0;
@@ -1914,47 +1906,25 @@ function renderActivos() {
     const deltaColor = inRange ? 'var(--muted)' : (delta > 0 ? 'var(--red)' : 'var(--accent)');
     const deltaText = (delta >= 0 ? '+' : '') + fmt(delta, 1) + 'pp';
     const maxPct = Math.max(actualPct, target, 1);
-    const scale = 100 / maxPct;
-    const targetW = target * scale;
-    const actualW = actualPct * scale;
-
-    return `
-      <div style="${P}${B}padding-left:20px;padding-right:24px">
-        <div style="display:grid;grid-template-columns:36px 1fr 56px;gap:0;align-items:center">
-          <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1">
-            <span style="color:var(--muted)">Obj.</span>
-            <span style="color:var(--text)">Real</span>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:5px;padding:0 10px">
-            <div style="height:4px;background:var(--border);border-radius:2px;position:relative;width:100%">
-              <div style="position:absolute;left:0;top:0;height:100%;width:${targetW}%;background:${a.color};opacity:0.35;border-radius:2px"></div>
-            </div>
-            <div style="height:4px;background:var(--border);border-radius:2px;position:relative;width:100%">
-              <div style="position:absolute;left:0;top:0;height:100%;width:${actualW}%;background:${a.color};border-radius:2px"></div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;text-align:right;line-height:1">
-            <span style="color:var(--muted)">${fmt(target,0)}%</span>
-            <span style="color:${deltaColor}">${fmt(actualPct,1)}%</span>
-          </div>
-        </div>
-        <div style="text-align:right;font-size:13px;color:${deltaColor};margin-top:6px">${deltaText}</div>
-      </div>`;
+    const sc = 100 / maxPct;
+    const tW = target * sc;
+    const aW = actualPct * sc;
+    return `<div style="display:grid;grid-template-columns:36px 1fr 56px;gap:0;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1"><span style="color:var(--muted)">Obj.</span><span style="color:var(--text)">Real</span></div>
+      <div style="display:flex;flex-direction:column;gap:5px;padding:0 10px">
+        <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${tW}%;background:${a.color};opacity:0.35;border-radius:2px"></div></div>
+        <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${aW}%;background:${a.color};border-radius:2px"></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;text-align:right;line-height:1"><span style="color:var(--muted)">${fmt(target,0)}%</span><span style="color:${deltaColor}">${fmt(actualPct,1)}%</span></div>
+    </div><div style="text-align:right;font-size:13px;color:${deltaColor};margin-top:6px">${deltaText}</div>`;
   }
 
   function getAssetMeta(a) {
     let subtitle = '';
     const subtitleColor = a.id === 'btc' && a.liveUnitPrice ? a.color : 'var(--muted)';
-    if (a.id === 'btc') {
-      subtitle = a.liveUnitPrice ? 'BTC \u00b7 ' + fmt(a.liveUnitPrice, 0) + ' \u20ac/u' : 'BTC';
-    } else if (a.id === 'pp') {
-      const year = new Date().getFullYear().toString();
-      const yc = a.ppYearlyContributions || {};
-      const aportado = yc[year] || 0;
-      subtitle = fmtEur(aportado) + ' / ' + fmtEur(a.ppLimit);
-    } else {
-      subtitle = a.ticker + (a.isin ? ' \u00b7 ' + a.isin : '');
-    }
+    if (a.id === 'btc') { subtitle = a.liveUnitPrice ? 'BTC \u00b7 ' + fmt(a.liveUnitPrice, 0) + ' \u20ac/u' : 'BTC'; }
+    else if (a.id === 'pp') { const y = new Date().getFullYear().toString(); const yc = a.ppYearlyContributions || {}; subtitle = fmtEur(yc[y]||0) + ' / ' + fmtEur(a.ppLimit); }
+    else { subtitle = a.ticker + (a.isin ? ' \u00b7 ' + a.isin : ''); }
     return { subtitle, subtitleColor };
   }
 
@@ -1967,17 +1937,15 @@ function renderActivos() {
     const rentSign = pnl >= 0 ? '+' : '-';
     const weight = a.id === 'pp' ? '\u2014' : (totalSinPP > 0 ? fmt(current / totalSinPP * 100, 1) + '%' : '0%');
     const { subtitle, subtitleColor } = getAssetMeta(a);
-
-    return `
-      <div style="${G}" onclick="openModal('${a.id}')" class="grid-row">
-        <div style="${P}${BR}${B}display:flex;align-items:center;gap:14px;padding-left:20px"><div style="width:5px;height:48px;border-radius:3px;background:${a.color};flex-shrink:0"></div><div><div style="font-size:22px;color:var(--text);white-space:nowrap">${a.name}</div><div style="font-size:14px;color:${subtitleColor};margin-top:3px;white-space:nowrap">${subtitle}</div></div></div>
-        <div class="privacy-hide" style="${P}${BR}${B}text-align:right;white-space:nowrap;font-size:22px;color:var(--text);font-weight:400">${fmtEur(current)}</div>
-        <div class="privacy-hide" style="${P}${BR}${B}text-align:right;white-space:nowrap;font-size:22px;color:var(--muted);font-weight:300">${fmtEur(a.invested)}</div>
-        <div class="privacy-hide" style="${P}${BR}${B}text-align:right;white-space:nowrap;font-size:22px;color:${pnlColor};font-weight:400">${pnlSign}${fmtEur(Math.abs(pnlAbs))}</div>
-        <div class="privacy-hide" style="${P}${BR}${B}text-align:right;white-space:nowrap;font-size:20px;color:${pnlColor};font-weight:400">${rentSign}${fmt(Math.abs(pnl), 2)}%</div>
-        <div class="privacy-hide" style="${P}${BR}${B}text-align:right;white-space:nowrap;font-size:18px;color:var(--muted)">${weight}</div>
-        ${getRebalCells(a)}
-      </div>`;
+    return `<tr onclick="openModal('${a.id}')" class="grid-row" style="cursor:pointer">
+      <td style="${CP}vertical-align:middle;padding-left:20px"><div style="display:flex;align-items:center;gap:14px"><div style="width:5px;height:48px;border-radius:3px;background:${a.color};flex-shrink:0"></div><div><div style="font-size:22px;color:var(--text);white-space:nowrap">${a.name}</div><div style="font-size:14px;color:${subtitleColor};margin-top:3px;white-space:nowrap">${subtitle}</div></div></div></td>
+      <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:22px;color:var(--text);vertical-align:middle;font-weight:400">${fmtEur(current)}</td>
+      <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:22px;color:var(--muted);vertical-align:middle;font-weight:300">${fmtEur(a.invested)}</td>
+      <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:22px;color:${pnlColor};vertical-align:middle;font-weight:400">${pnlSign}${fmtEur(Math.abs(pnlAbs))}</td>
+      <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:20px;color:${pnlColor};vertical-align:middle;font-weight:400">${rentSign}${fmt(Math.abs(pnl), 2)}%</td>
+      <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:18px;color:var(--muted);vertical-align:middle">${weight}</td>
+      <td style="${CP}vertical-align:middle;padding-left:20px;padding-right:24px">${rebalContent(a)}</td>
+    </tr>`;
   }
 
   function renderMobileCard(a) {
@@ -1989,46 +1957,36 @@ function renderActivos() {
     const rentSign = pnl >= 0 ? '+' : '-';
     const { subtitle, subtitleColor } = getAssetMeta(a);
     const weight = a.id === 'pp' ? '\u2014' : (totalSinPP > 0 ? fmt(current/totalSinPP*100,1)+'%' : '0%');
-
     let rebalMobile = '';
     if (!a.excludeRebalance && a.id !== 'pp') {
-      const current2 = getAssetCurrent(a);
       const target = nivel2Targets[a.id] || 0;
-      const actualPct = total5 > 0 ? (current2 / total5) * 100 : 0;
+      const actualPct = total5 > 0 ? (getAssetCurrent(a) / total5) * 100 : 0;
       const delta = actualPct - target;
       const inRange = Math.abs(delta) <= REBAL_THRESHOLD;
       const deltaColor = inRange ? 'var(--muted)' : (delta > 0 ? 'var(--red)' : 'var(--accent)');
       const deltaText = (delta >= 0 ? '+' : '') + fmt(delta, 1) + 'pp';
       const maxPct = Math.max(actualPct, target, 1);
-      const scale = 100 / maxPct;
-      const targetW = target * scale;
-      const actualW = actualPct * scale;
+      const sc = 100 / maxPct;
+      const tW = target * sc;
+      const aW = actualPct * sc;
       rebalMobile = `
         <div style="display:grid;grid-template-columns:32px 1fr 42px;gap:0;align-items:center;padding:8px 0 0">
-          <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1">
-            <span style="color:var(--muted)">Obj.</span><span style="color:var(--text)">Real</span>
-          </div>
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1"><span style="color:var(--muted)">Obj.</span><span style="color:var(--text)">Real</span></div>
           <div style="display:flex;flex-direction:column;gap:5px;padding:0 6px">
-            <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${targetW}%;background:${a.color};opacity:0.35;border-radius:2px"></div></div>
-            <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${actualW}%;background:${a.color};border-radius:2px"></div></div>
+            <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${tW}%;background:${a.color};opacity:0.35;border-radius:2px"></div></div>
+            <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${aW}%;background:${a.color};border-radius:2px"></div></div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;text-align:right;line-height:1">
-            <span style="color:var(--muted)">${fmt(target,0)}%</span><span style="color:${deltaColor}">${fmt(actualPct,1)}%</span>
-          </div>
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;text-align:right;line-height:1"><span style="color:var(--muted)">${fmt(target,0)}%</span><span style="color:${deltaColor}">${fmt(actualPct,1)}%</span></div>
         </div>
         <div style="text-align:right;white-space:nowrap;font-size:13px;color:${deltaColor};margin-top:4px">${deltaText}</div>`;
     } else {
       rebalMobile = '<div style="font-size:12px;color:var(--muted2);padding-top:8px">Excluido de rebalanceo</div>';
     }
-
     return `
       <div onclick="openModal('${a.id}')" style="padding:16px;border-bottom:1px solid var(--border);cursor:pointer">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
           <div style="width:4px;height:36px;border-radius:2px;background:${a.color}"></div>
-          <div style="flex:1">
-            <div style="font-size:17px;color:var(--text)">${a.name}</div>
-            <div style="font-size:12px;color:${subtitleColor};margin-top:2px">${subtitle}</div>
-          </div>
+          <div style="flex:1"><div style="font-size:17px;color:var(--text)">${a.name}</div><div style="font-size:12px;color:${subtitleColor};margin-top:2px">${subtitle}</div></div>
           <div style="text-align:right">
             <div class="privacy-hide" style="font-size:17px;color:var(--text);font-weight:400">${fmtEur(current)}</div>
             <div class="privacy-hide" style="font-size:13px;color:${pnlColor};margin-top:2px">${rentSign}${fmt(Math.abs(pnl), 2)}%  ${pnlSign}${fmtEur(Math.abs(pnlAbs))}</div>
@@ -2046,21 +2004,33 @@ function renderActivos() {
   const assetOrder = ['btc','gold','world','emerging','smallcap','pp'];
   const sortedAssets = assetOrder.map(id => assets.find(a => a.id === id)).filter(Boolean);
 
-  const headerRow = `
-    <div style="${G}font-size:12px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-weight:500;opacity:0.85;">
-      <div style="${Ph}${BR}${B}text-align:left;padding-left:20px">Activo</div>
-      <div style="${Ph}${BR}${B}text-align:right">Valor</div>
-      <div style="${Ph}${BR}${B}text-align:right">Invertido</div>
-      <div style="${Ph}${BR}${B}text-align:right">P&L</div>
-      <div style="${Ph}${BR}${B}text-align:right">Rent.</div>
-      <div style="${Ph}${BR}${B}text-align:right">Peso</div>
-      <div style="${Ph}${B}text-align:left;padding-left:20px">Rebalanceo</div>
-    </div>`;
-
   const desktopHtml = `
-    <div class="desktop-table" style="margin:-16px -20px;padding:0 20px 0 0">
-      ${headerRow}
-      ${sortedAssets.map(a => renderRow(a)).join('')}
+    <div class="desktop-table" style="margin:-16px -20px;padding:0 20px 0 0;overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;table-layout:fixed">
+        <colgroup>
+          <col style="width:420px">
+          <col style="width:150px">
+          <col style="width:150px">
+          <col style="width:165px">
+          <col style="width:145px">
+          <col style="width:120px">
+          <col>
+        </colgroup>
+        <thead>
+          <tr style="font-size:12px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-weight:500">
+            <th style="${CH}text-align:left;padding-left:20px;font-weight:500">Activo</th>
+            <th style="${CH}text-align:right;font-weight:500">Valor</th>
+            <th style="${CH}text-align:right;font-weight:500">Invertido</th>
+            <th style="${CH}text-align:right;font-weight:500">P&L</th>
+            <th style="${CH}text-align:right;font-weight:500">Rent.</th>
+            <th style="${CH}text-align:right;font-weight:500">Peso</th>
+            <th style="${CH}text-align:left;padding-left:20px;font-weight:500">Rebalanceo</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${sortedAssets.map(a => renderRow(a)).join('')}
+        </tbody>
+      </table>
     </div>`;
 
   const mobileHtml = `
@@ -2762,69 +2732,51 @@ async function saveFamiliaToSupabase() {
 }
 
 function renderFamilia() {
-  if (!familiaLoaded || !familiaData) {
-    return `<div class="familia-loading">Cargando datos de familia...</div>`;
-  }
-
+  if (!familiaLoaded || !familiaData) return `<div class="familia-loading">Cargando datos de familia...</div>`;
   const REBAL_THRESHOLD = 5;
-  const G = 'display:grid;grid-template-columns:420px 150px 150px 165px 145px 120px minmax(420px,1fr);column-gap:0;row-gap:0;align-items:center;';
   const LN = '1px solid rgba(255,255,255,0.08)';
-  const B = 'border-bottom:' + LN + ';';
-  const BR = 'border-right:' + LN + ';';
-  const P = 'padding:22px 20px;';
-  const Ph = 'padding:14px 20px;';
+  const CP = 'padding:22px 20px;border:' + LN + ';';
+  const CH = 'padding:14px 20px;border:' + LN + ';';
 
-  function rebalCells(fondo, actualPct) {
+  function rebalContent(fondo, actualPct) {
     const desv = actualPct - fondo.target;
     const inRange = Math.abs(desv) <= REBAL_THRESHOLD;
     const deltaColor = inRange ? 'var(--muted)' : (desv > 0 ? 'var(--red)' : 'var(--accent)');
     const deltaText = (desv >= 0 ? '+' : '') + fmt(desv, 1) + 'pp';
     const maxPct = Math.max(actualPct, fondo.target, 1);
-    const scale = 100 / maxPct;
-    const targetW = fondo.target * scale;
-    const actualW = actualPct * scale;
-    return `
-      <div style="${P}${B}padding-left:20px;padding-right:24px">
-        <div style="display:grid;grid-template-columns:36px 1fr 56px;gap:0;align-items:center">
-          <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1">
-            <span style="color:var(--muted)">Obj.</span><span style="color:var(--text)">Real</span>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:5px;padding:0 10px">
-            <div style="height:4px;background:var(--border);border-radius:2px;position:relative;width:100%"><div style="position:absolute;left:0;top:0;height:100%;width:${targetW}%;background:${fondo.color};opacity:0.35;border-radius:2px"></div></div>
-            <div style="height:4px;background:var(--border);border-radius:2px;position:relative;width:100%"><div style="position:absolute;left:0;top:0;height:100%;width:${actualW}%;background:${fondo.color};border-radius:2px"></div></div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;text-align:right;line-height:1">
-            <span style="color:var(--muted)">${fmt(fondo.target,0)}%</span>
-            <span style="color:${deltaColor}">${fmt(actualPct,1)}%</span>
-          </div>
-        </div>
-        <div style="text-align:right;font-size:13px;color:${deltaColor};margin-top:6px">${deltaText}</div>
-      </div>`;
+    const sc = 100 / maxPct;
+    const tW = fondo.target * sc;
+    const aW = actualPct * sc;
+    return `<div style="display:grid;grid-template-columns:36px 1fr 56px;gap:0;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1"><span style="color:var(--muted)">Obj.</span><span style="color:var(--text)">Real</span></div>
+      <div style="display:flex;flex-direction:column;gap:5px;padding:0 10px">
+        <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${tW}%;background:${fondo.color};opacity:0.35;border-radius:2px"></div></div>
+        <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${aW}%;background:${fondo.color};border-radius:2px"></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;text-align:right;line-height:1"><span style="color:var(--muted)">${fmt(fondo.target,0)}%</span><span style="color:${deltaColor}">${fmt(actualPct,1)}%</span></div>
+    </div><div style="text-align:right;font-size:13px;color:${deltaColor};margin-top:6px">${deltaText}</div>`;
   }
 
-  function rebalMobileCells(fondo, actualPct) {
+  function rebalMobileContent(fondo, actualPct) {
     const desv = actualPct - fondo.target;
     const inRange = Math.abs(desv) <= REBAL_THRESHOLD;
     const deltaColor = inRange ? 'var(--muted)' : (desv > 0 ? 'var(--red)' : 'var(--accent)');
     const deltaText = (desv >= 0 ? '+' : '') + fmt(desv, 1) + 'pp';
     const maxPct = Math.max(actualPct, fondo.target, 1);
-    const scale = 100 / maxPct;
-    const targetW = fondo.target * scale;
-    const actualW = actualPct * scale;
-    return `
-      <div style="display:grid;grid-template-columns:32px 1fr 42px;gap:0;align-items:center;padding:8px 0 0">
-        <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1"><span style="color:var(--muted)">Obj.</span><span style="color:var(--text)">Real</span></div>
-        <div style="display:flex;flex-direction:column;gap:5px;padding:0 6px">
-          <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${targetW}%;background:${fondo.color};opacity:0.35;border-radius:2px"></div></div>
-          <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${actualW}%;background:${fondo.color};border-radius:2px"></div></div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;text-align:right;line-height:1"><span style="color:var(--muted)">${fmt(fondo.target,0)}%</span><span style="color:${deltaColor}">${fmt(actualPct,1)}%</span></div>
+    const sc = 100 / maxPct;
+    const tW = fondo.target * sc;
+    const aW = actualPct * sc;
+    return `<div style="display:grid;grid-template-columns:32px 1fr 42px;gap:0;align-items:center;padding:8px 0 0">
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1"><span style="color:var(--muted)">Obj.</span><span style="color:var(--text)">Real</span></div>
+      <div style="display:flex;flex-direction:column;gap:5px;padding:0 6px">
+        <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${tW}%;background:${fondo.color};opacity:0.35;border-radius:2px"></div></div>
+        <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${aW}%;background:${fondo.color};border-radius:2px"></div></div>
       </div>
-      <div style="text-align:right;white-space:nowrap;font-size:13px;color:${deltaColor};margin-top:4px">${deltaText}</div>`;
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;text-align:right;line-height:1"><span style="color:var(--muted)">${fmt(fondo.target,0)}%</span><span style="color:${deltaColor}">${fmt(actualPct,1)}%</span></div>
+    </div><div style="text-align:right;font-size:13px;color:${deltaColor};margin-top:4px">${deltaText}</div>`;
   }
 
   let html = '';
-
   FAMILIA_PERSONAS.forEach(persona => {
     const fondos = familiaData[persona.id] || [];
     let pInvested = 0, pCurrent = 0;
@@ -2835,23 +2787,25 @@ function renderFamilia() {
     const pSign = pPnlAbs >= 0 ? '+' : '-';
     const totalP = pCurrent;
 
-    html += `
-      <div style="margin-bottom:32px">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:0 16px">
-          <div style="width:12px;height:12px;border-radius:50%;background:${persona.color}"></div>
-          <span style="font-size:20px;font-weight:500;color:var(--text)">${persona.name}</span>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;text-align:center;padding:0 16px 16px;border-bottom:1px solid rgba(255,255,255,0.06)" class="familia-header-grid">
-          <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Valor actual</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:var(--text)">${fmtEur(pCurrent)}</div></div>
-          <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Invertido</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:var(--text)">${fmtEur(pInvested)}</div></div>
-          <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">P&L</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:${pPnlColor}">${pSign}${fmtEur(Math.abs(pPnlAbs))}</div></div>
-          <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Rentabilidad</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:${pPnlColor}">${pSign}${fmt(Math.abs(pPnlPct), 2)}%</div></div>
-        </div>`;
+    html += `<div style="margin-bottom:32px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:0 20px">
+        <div style="width:12px;height:12px;border-radius:50%;background:${persona.color}"></div>
+        <span style="font-size:20px;font-weight:500;color:var(--text)">${persona.name}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;text-align:center;padding:0 20px 16px;border-bottom:1px solid rgba(255,255,255,0.06)" class="familia-header-grid">
+        <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Valor actual</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:var(--text)">${fmtEur(pCurrent)}</div></div>
+        <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Invertido</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:var(--text)">${fmtEur(pInvested)}</div></div>
+        <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">P&L</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:${pPnlColor}">${pSign}${fmtEur(Math.abs(pPnlAbs))}</div></div>
+        <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Rentabilidad</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:${pPnlColor}">${pSign}${fmt(Math.abs(pPnlPct), 2)}%</div></div>
+      </div>`;
 
-    // Desktop header
-    html += `<div class="desktop-table" style="padding-right:20px"><div style="${G}font-size:12px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-weight:500;opacity:0.85;">
-      <div style="${Ph}${BR}${B}text-align:left;padding-left:20px">Fondo</div><div style="${Ph}${BR}${B}text-align:right">Valor</div><div style="${Ph}${BR}${B}text-align:right">Invertido</div><div style="${Ph}${BR}${B}text-align:right">P&L</div><div style="${Ph}${BR}${B}text-align:right">Rent.</div><div style="${Ph}${BR}${B}text-align:right">Peso</div><div style="${Ph}${B}text-align:left;padding-left:20px">Rebalanceo</div>
-    </div>`;
+    // Desktop table
+    html += `<div class="desktop-table" style="padding-right:20px;overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;table-layout:fixed">
+        <colgroup><col style="width:420px"><col style="width:150px"><col style="width:150px"><col style="width:165px"><col style="width:145px"><col style="width:120px"><col></colgroup>
+        <thead><tr style="font-size:12px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-weight:500">
+          <th style="${CH}text-align:left;padding-left:20px;font-weight:500">Fondo</th><th style="${CH}text-align:right;font-weight:500">Valor</th><th style="${CH}text-align:right;font-weight:500">Invertido</th><th style="${CH}text-align:right;font-weight:500">P&L</th><th style="${CH}text-align:right;font-weight:500">Rent.</th><th style="${CH}text-align:right;font-weight:500">Peso</th><th style="${CH}text-align:left;padding-left:20px;font-weight:500">Rebalanceo</th>
+        </tr></thead><tbody>`;
 
     FAMILIA_FONDOS.forEach(fondo => {
       const f = fondos.find(x => x.id === fondo.id) || { invested: 0, currentPrice: 0 };
@@ -2862,18 +2816,17 @@ function renderFamilia() {
       const fRentSign = fPnl >= 0 ? '+' : '-';
       const fWeight = totalP > 0 ? fmt(f.currentPrice / totalP * 100, 1) + '%' : '0%';
       const actualPct = totalP > 0 ? (f.currentPrice / totalP) * 100 : 0;
-
-      html += `<div style="${G}" onclick="openFamiliaModal('${persona.id}','${fondo.id}')" class="grid-row">
-        <div style="${P}${BR}${B}display:flex;align-items:center;gap:14px;padding-left:20px"><div style="width:5px;height:48px;border-radius:3px;background:${fondo.color};flex-shrink:0"></div><div><div style="font-size:22px;color:var(--text);white-space:nowrap">${fondo.name}</div><div style="font-size:14px;color:var(--muted);margin-top:3px;white-space:nowrap">${fondo.ticker} \u00b7 Obj. ${fondo.target}%</div></div></div>
-        <div class="privacy-hide" style="${P}${BR}${B}text-align:right;white-space:nowrap;font-size:22px;color:var(--text);font-weight:400">${fmtEur(f.currentPrice)}</div>
-        <div class="privacy-hide" style="${P}${BR}${B}text-align:right;white-space:nowrap;font-size:22px;color:var(--muted);font-weight:300">${fmtEur(f.invested)}</div>
-        <div class="privacy-hide" style="${P}${BR}${B}text-align:right;white-space:nowrap;font-size:22px;color:${fPnlColor};font-weight:400">${fSign}${fmtEur(Math.abs(fPnlAbs))}</div>
-        <div class="privacy-hide" style="${P}${BR}${B}text-align:right;white-space:nowrap;font-size:20px;color:${fPnlColor};font-weight:400">${fRentSign}${fmt(Math.abs(fPnl), 2)}%</div>
-        <div class="privacy-hide" style="${P}${BR}${B}text-align:right;white-space:nowrap;font-size:18px;color:var(--muted)">${fWeight}</div>
-        ${rebalCells(fondo, actualPct)}
-      </div>`;
+      html += `<tr onclick="openFamiliaModal('${persona.id}','${fondo.id}')" class="grid-row" style="cursor:pointer">
+        <td style="${CP}vertical-align:middle;padding-left:20px"><div style="display:flex;align-items:center;gap:14px"><div style="width:5px;height:48px;border-radius:3px;background:${fondo.color};flex-shrink:0"></div><div><div style="font-size:22px;color:var(--text);white-space:nowrap">${fondo.name}</div><div style="font-size:14px;color:var(--muted);margin-top:3px;white-space:nowrap">${fondo.ticker} \u00b7 Obj. ${fondo.target}%</div></div></div></td>
+        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:22px;color:var(--text);vertical-align:middle;font-weight:400">${fmtEur(f.currentPrice)}</td>
+        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:22px;color:var(--muted);vertical-align:middle;font-weight:300">${fmtEur(f.invested)}</td>
+        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:22px;color:${fPnlColor};vertical-align:middle;font-weight:400">${fSign}${fmtEur(Math.abs(fPnlAbs))}</td>
+        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:20px;color:${fPnlColor};vertical-align:middle;font-weight:400">${fRentSign}${fmt(Math.abs(fPnl), 2)}%</td>
+        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:18px;color:var(--muted);vertical-align:middle">${fWeight}</td>
+        <td style="${CP}vertical-align:middle;padding-left:20px;padding-right:24px">${rebalContent(fondo, actualPct)}</td>
+      </tr>`;
     });
-    html += `</div>`;
+    html += `</tbody></table></div>`;
 
     // Mobile cards
     html += `<div class="mobile-cards" style="display:none">`;
@@ -2884,28 +2837,25 @@ function renderFamilia() {
       const fPnlColor = fPnlAbs >= 0 ? 'var(--accent)' : 'var(--red)';
       const fSign = fPnlAbs >= 0 ? '+' : '-';
       const fRentSign = fPnl >= 0 ? '+' : '-';
-      const actualPct = totalP > 0 ? (f.currentPrice / totalP) * 100 : 0;
-
-      html += `
-        <div onclick="openFamiliaModal('${persona.id}','${fondo.id}')" style="padding:16px;border-bottom:1px solid var(--border);cursor:pointer">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <div style="width:4px;height:36px;border-radius:2px;background:${fondo.color}"></div>
-            <div style="flex:1"><div style="font-size:17px;color:var(--text)">${fondo.name}</div><div style="font-size:12px;color:var(--muted);margin-top:2px">${fondo.ticker} \u00b7 Obj. ${fondo.target}%</div></div>
-            <div style="text-align:right">
-              <div class="privacy-hide" style="font-size:17px;color:var(--text)">${fmtEur(f.currentPrice)}</div>
-              <div class="privacy-hide" style="font-size:13px;color:${fPnlColor};margin-top:2px">${fRentSign}${fmt(Math.abs(fPnl),2)}%  ${fSign}${fmtEur(Math.abs(fPnlAbs))}</div>
-            </div>
+      const actualPct = (f.currentPrice + (fondos.find(x=>x.id!=fondo.id)||{currentPrice:0}).currentPrice) > 0 ? (f.currentPrice / totalP) * 100 : 0;
+      html += `<div onclick="openFamiliaModal('${persona.id}','${fondo.id}')" style="padding:16px;border-bottom:1px solid var(--border);cursor:pointer">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="width:4px;height:36px;border-radius:2px;background:${fondo.color}"></div>
+          <div style="flex:1"><div style="font-size:17px;color:var(--text)">${fondo.name}</div><div style="font-size:12px;color:var(--muted);margin-top:2px">${fondo.ticker} \u00b7 Obj. ${fondo.target}%</div></div>
+          <div style="text-align:right">
+            <div class="privacy-hide" style="font-size:17px;color:var(--text)">${fmtEur(f.currentPrice)}</div>
+            <div class="privacy-hide" style="font-size:13px;color:${fPnlColor};margin-top:2px">${fRentSign}${fmt(Math.abs(fPnl),2)}%  ${fSign}${fmtEur(Math.abs(fPnlAbs))}</div>
           </div>
-          <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
-            <div><div style="font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Invertido</div><div style="font-size:14px;color:var(--muted)">${fmtEur(f.invested)}</div></div>
-            <div style="text-align:right"><div style="font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">P&L</div><div style="font-size:14px;color:${fPnlColor}">${fSign}${fmtEur(Math.abs(fPnlAbs))}</div></div>
-          </div>
-          ${rebalMobileCells(fondo, actualPct)}
-        </div>`;
+        </div>
+        <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
+          <div><div style="font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Invertido</div><div style="font-size:14px;color:var(--muted)">${fmtEur(f.invested)}</div></div>
+          <div style="text-align:right"><div style="font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">P&L</div><div style="font-size:14px;color:${fPnlColor}">${fSign}${fmtEur(Math.abs(fPnlAbs))}</div></div>
+        </div>
+        ${rebalMobileContent(fondo, actualPct)}
+      </div>`;
     });
     html += `</div></div>`;
   });
-
   return html;
 }
 
