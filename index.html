@@ -2757,30 +2757,6 @@ function renderFamilia() {
     </div><div style="text-align:right;font-size:13px;color:${deltaColor};margin-top:6px">${deltaText}</div>`;
   }
 
-  function rebalMobileSummary(fondos, totalP) {
-    return FAMILIA_FONDOS.map(fondo => {
-      const f = fondos.find(x => x.id === fondo.id) || { invested: 0, currentPrice: 0 };
-      const actualPct = totalP > 0 ? (f.currentPrice / totalP) * 100 : 0;
-      const desv = actualPct - fondo.target;
-      const inRange = Math.abs(desv) <= REBAL_THRESHOLD;
-      const deltaColor = inRange ? 'var(--muted)' : (desv > 0 ? 'var(--red)' : 'var(--accent)');
-      const deltaText = (desv >= 0 ? '+' : '') + fmt(desv, 1) + 'pp';
-      const maxPct = Math.max(actualPct, fondo.target, 1);
-      const sc = 100 / maxPct;
-      const aW = actualPct * sc;
-      return `<div style="margin-bottom:14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px;margin-bottom:6px">
-          <div style="font-weight:500;color:var(--text)">${fondo.name}</div>
-          <div style="display:flex;gap:6px;color:var(--muted)"><span style="color:var(--text)">${fmt(actualPct,1)}%</span><span>/ ${fmt(fondo.target,0)}%</span><span style="color:${deltaColor}">${deltaText}</span></div>
-        </div>
-        <div style="height:8px;background:#1B1B1B;border-radius:999px;overflow:hidden;position:relative">
-          <div style="height:100%;width:${aW}%;background:${fondo.color};border-radius:999px;position:relative"></div>
-          <div style="position:absolute;left:${Math.min(aW,100)}%;top:50%;transform:translate(-1px,-50%);width:2px;height:14px;background:${fondo.color};opacity:0.85;border-radius:1px"></div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
   function metricColor(value) {
     return value >= 0 ? 'var(--accent)' : 'var(--red)';
   }
@@ -2794,10 +2770,12 @@ function renderFamilia() {
     const pPnlPct = pInvested > 0 ? (pPnlAbs / pInvested) * 100 : 0;
     const pPnlColor = metricColor(pPnlAbs);
     const pSign = pPnlAbs >= 0 ? '+' : '-';
+    const pRentSign = pPnlPct >= 0 ? '+' : '-';
     const totalP = pCurrent;
 
-    html += `<div style="margin-bottom:32px">
-      <div class="familia-persona-title-row" style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:0 20px">
+    // Desktop unchanged
+    html += `<div class="desktop-table" style="margin-bottom:32px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:0 20px">
         <div style="width:12px;height:12px;border-radius:50%;background:${persona.color}"></div>
         <span style="font-size:20px;font-weight:500;color:var(--text)">${persona.name}</span>
       </div>
@@ -2805,15 +2783,14 @@ function renderFamilia() {
         <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Valor actual</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:var(--text)">${fmtEur(pCurrent)}</div></div>
         <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Invertido</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:var(--text)">${fmtEur(pInvested)}</div></div>
         <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">P&L</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:${pPnlColor}">${pSign}${fmtEur(Math.abs(pPnlAbs))}</div></div>
-        <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Rentabilidad</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:${pPnlColor}">${pSign}${fmt(Math.abs(pPnlPct), 2)}%</div></div>
-      </div>`;
-
-    html += `<div class="desktop-table" style="padding-right:20px;overflow-x:auto">
-      <table style="width:100%;border-collapse:collapse;table-layout:fixed">
-        <colgroup><col style="width:420px"><col style="width:150px"><col style="width:150px"><col style="width:165px"><col style="width:145px"><col style="width:120px"><col></colgroup>
-        <thead><tr style="font-size:12px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-weight:500">
-          <th style="${CH}text-align:left;padding-left:20px;font-weight:500">Fondo</th><th style="${CH}text-align:right;font-weight:500">Valor</th><th style="${CH}text-align:right;font-weight:500">Invertido</th><th style="${CH}text-align:right;font-weight:500">P&L</th><th style="${CH}text-align:right;font-weight:500">Rent.</th><th style="${CH}text-align:right;font-weight:500">Peso</th><th style="${CH}text-align:left;padding-left:20px;font-weight:500">Rebalanceo</th>
-        </tr></thead><tbody>`;
+        <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Rentabilidad</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:${pPnlColor}">${pRentSign}${fmt(Math.abs(pPnlPct), 2)}%</div></div>
+      </div>
+      <div style="padding-right:20px;overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;table-layout:fixed">
+          <colgroup><col style="width:420px"><col style="width:150px"><col style="width:150px"><col style="width:165px"><col style="width:145px"><col style="width:120px"><col></colgroup>
+          <thead><tr style="font-size:12px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-weight:500">
+            <th style="${CH}text-align:left;padding-left:20px;font-weight:500">Fondo</th><th style="${CH}text-align:right;font-weight:500">Valor</th><th style="${CH}text-align:right;font-weight:500">Invertido</th><th style="${CH}text-align:right;font-weight:500">P&L</th><th style="${CH}text-align:right;font-weight:500">Rent.</th><th style="${CH}text-align:right;font-weight:500">Peso</th><th style="${CH}text-align:left;padding-left:20px;font-weight:500">Rebalanceo</th>
+          </tr></thead><tbody>`;
 
     FAMILIA_FONDOS.forEach(fondo => {
       const f = fondos.find(x => x.id === fondo.id) || { invested: 0, currentPrice: 0 };
@@ -2834,19 +2811,24 @@ function renderFamilia() {
         <td style="${CP}vertical-align:middle;padding-left:20px;padding-right:24px">${rebalContent(fondo, actualPct)}</td>
       </tr>`;
     });
-    html += `</tbody></table></div>`;
+    html += `</tbody></table></div></div>`;
 
-    html += `<div class="mobile-cards" style="display:none;padding:0 12px">`;
+    // Mobile approved version
+    html += `<div class="mobile-cards" style="display:none;padding:0 12px 28px">`;
 
-    html += `<div style="background:var(--surface);border:1px solid var(--border);border-radius:30px;padding:18px 18px 16px;margin-bottom:12px">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px">
-        <div style="display:flex;align-items:center;gap:12px"><div style="width:16px;height:16px;border-radius:50%;background:${persona.color}"></div><div style="font-size:22px;font-weight:500;color:var(--text)">${persona.name}</div></div>
-        <div class="privacy-hide" style="text-align:right;font-size:22px;font-weight:600;color:var(--text)">${fmtEur(pCurrent)}</div>
+    html += `<section style="margin-bottom:28px">`;
+    html += `<div style="background:var(--surface);border:1px solid var(--border);border-radius:32px;padding:20px 20px 18px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px">
+        <div style="display:flex;align-items:center;gap:14px;min-width:0">
+          <div style="width:18px;height:18px;border-radius:50%;background:${persona.color};flex-shrink:0"></div>
+          <div style="font-size:26px;line-height:1.05;color:var(--text);font-weight:500;white-space:nowrap">${persona.name}</div>
+        </div>
+        <div class="privacy-hide" style="text-align:right;font-size:24px;color:var(--text);font-weight:500;letter-spacing:-0.02em;white-space:nowrap">${fmtEur(pCurrent)}</div>
       </div>
-      <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-        <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Invertido</div><div style="font-size:15px;color:var(--muted)">${fmtEur(pInvested)}</div></div>
-        <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">P&L</div><div style="font-size:15px;color:${pPnlColor};font-weight:500">${pSign}${fmtEur(Math.abs(pPnlAbs))}</div></div>
-        <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Rent.</div><div style="font-size:15px;color:${pPnlColor};font-weight:500">${pSign}${fmt(Math.abs(pPnlPct),2)}%</div></div>
+      <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px">
+        <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">Invertido</div><div style="font-size:16px;color:var(--muted)">${fmtEur(pInvested)}</div></div>
+        <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">P&L</div><div style="font-size:16px;color:${pPnlColor};font-weight:500">${pSign}${fmtEur(Math.abs(pPnlAbs))}</div></div>
+        <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">Rent.</div><div style="font-size:16px;color:${pPnlColor};font-weight:500">${pRentSign}${fmt(Math.abs(pPnlPct), 2)}%</div></div>
       </div>
     </div>`;
 
@@ -2857,25 +2839,53 @@ function renderFamilia() {
       const fPnlColor = metricColor(fPnlAbs);
       const fSign = fPnlAbs >= 0 ? '+' : '-';
       const fRentSign = fPnl >= 0 ? '+' : '-';
-      html += `<div onclick="openFamiliaModal('${persona.id}','${fondo.id}')" style="background:var(--surface);border:1px solid var(--border);border-radius:30px;padding:18px 18px 16px;margin-bottom:12px;cursor:pointer">
+      html += `<div onclick="openFamiliaModal('${persona.id}','${fondo.id}')" style="background:var(--surface);border:1px solid var(--border);border-radius:32px;padding:20px 20px 18px;margin-bottom:12px;cursor:pointer">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
-          <div style="display:flex;align-items:flex-start;gap:12px;min-width:0"><div style="width:5px;height:48px;border-radius:3px;background:${fondo.color};flex-shrink:0;margin-top:2px"></div><div style="min-width:0"><div style="font-size:20px;color:var(--text);font-weight:500;line-height:1.1">${fondo.name}</div><div style="font-size:12px;color:var(--muted);margin-top:8px">${fondo.ticker}</div></div></div>
-          <div class="privacy-hide" style="text-align:right;flex-shrink:0"><div style="font-size:17px;color:var(--text);font-weight:600;line-height:1">${fmtEur(f.currentPrice)}</div></div>
+          <div style="display:flex;align-items:flex-start;gap:14px;min-width:0">
+            <div style="width:6px;height:64px;border-radius:4px;background:${fondo.color};flex-shrink:0"></div>
+            <div style="min-width:0">
+              <div style="font-size:24px;line-height:1.05;color:var(--text);font-weight:500;white-space:nowrap">${fondo.name}</div>
+              <div style="font-size:14px;color:var(--muted);margin-top:12px">${fondo.ticker}</div>
+            </div>
+          </div>
+          <div class="privacy-hide" style="text-align:right;font-size:22px;color:var(--text);font-weight:500;letter-spacing:-0.02em;white-space:nowrap">${fmtEur(f.currentPrice)}</div>
         </div>
-        <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px">
-          <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Invertido</div><div style="font-size:15px;color:var(--muted)">${fmtEur(f.invested)}</div></div>
-          <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">P&L</div><div style="font-size:15px;color:${fPnlColor};font-weight:500">${fSign}${fmtEur(Math.abs(fPnlAbs))}</div></div>
-          <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Rent.</div><div style="font-size:15px;color:${fPnlColor};font-weight:500">${fRentSign}${fmt(Math.abs(fPnl),2)}%</div></div>
+        <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:22px">
+          <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">Invertido</div><div style="font-size:16px;color:var(--muted)">${fmtEur(f.invested)}</div></div>
+          <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">P&L</div><div style="font-size:16px;color:${fPnlColor};font-weight:500">${fSign}${fmtEur(Math.abs(fPnlAbs))}</div></div>
+          <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">Rent.</div><div style="font-size:16px;color:${fPnlColor};font-weight:500">${fRentSign}${fmt(Math.abs(fPnl), 2)}%</div></div>
         </div>
       </div>`;
     });
 
-    html += `<div style="background:var(--surface);border:1px solid var(--border);border-radius:30px;padding:18px 18px 16px;margin-bottom:12px">
-      <div style="font-size:11px;color:var(--muted2);letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px">Rebalanceo conjunto</div>
-      ${rebalMobileSummary(fondos, totalP)}
-    </div>`;
+    html += `<div style="background:var(--surface);border:1px solid var(--border);border-radius:32px;padding:20px 20px 20px">
+      <div style="margin-bottom:18px;font-size:11px;color:var(--muted2);letter-spacing:.18em;text-transform:uppercase">Rebalanceo conjunto</div>`;
 
-    html += `</div></div>`;
+    FAMILIA_FONDOS.forEach(fondo => {
+      const f = fondos.find(x => x.id === fondo.id) || { invested: 0, currentPrice: 0 };
+      const actualPct = totalP > 0 ? (f.currentPrice / totalP) * 100 : 0;
+      const desv = actualPct - fondo.target;
+      const deltaText = (desv >= 0 ? '+' : '') + fmt(desv, 1) + 'pp';
+      const maxPct = Math.max(actualPct, fondo.target, 1);
+      const sc = 100 / maxPct;
+      const aW = actualPct * sc;
+      html += `<div style="${fondo.id === 'emerging' ? '' : 'margin-bottom:26px;'}">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px">
+          <div style="font-size:20px;color:var(--text);font-weight:500">${fondo.name}</div>
+          <div class="privacy-hide" style="display:flex;gap:10px;align-items:center;white-space:nowrap;font-size:16px;color:var(--muted)">
+            <span style="color:var(--text)">${fmt(actualPct,1)}%</span>
+            <span>/ ${fmt(fondo.target,0)}%</span>
+            <span>${deltaText}</span>
+          </div>
+        </div>
+        <div style="height:12px;background:#1B1B1B;border-radius:999px;position:relative;overflow:visible">
+          <div style="height:12px;width:${aW}%;background:${fondo.color};border-radius:999px;position:relative"></div>
+          <div style="position:absolute;left:calc(${fondo.target}% - 1px);top:50%;transform:translateY(-50%);width:2px;height:24px;background:${fondo.color};border-radius:2px;opacity:0.9"></div>
+        </div>
+      </div>`;
+    });
+
+    html += `</div></section></div>`;
   });
   return html;
 }
