@@ -2775,13 +2775,8 @@ function renderFamilia() {
         <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Rentabilidad</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:${pPnlColor}">${pSign}${fmt(Math.abs(pPnlPct), 2)}%</div></div>
       </div>`;
 
-    // Desktop table
-    html += `<div class="desktop-table" style="padding-right:20px;overflow-x:auto">
-      <table style="width:100%;border-collapse:collapse;table-layout:fixed">
-        <colgroup><col style="width:420px"><col style="width:150px"><col style="width:150px"><col style="width:165px"><col style="width:145px"><col style="width:120px"><col></colgroup>
-        <thead><tr style="font-size:12px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-weight:500">
-          <th style="${CH}text-align:left;padding-left:20px;font-weight:500">Fondo</th><th style="${CH}text-align:right;font-weight:500">Valor</th><th style="${CH}text-align:right;font-weight:500">Invertido</th><th style="${CH}text-align:right;font-weight:500">P&L</th><th style="${CH}text-align:right;font-weight:500">Rent.</th><th style="${CH}text-align:right;font-weight:500">Peso</th><th style="${CH}text-align:left;padding-left:20px;font-weight:500">Rebalanceo</th>
-        </tr></thead><tbody>`;
+    // Desktop bubble cards
+    html += `<div class="desktop-table" style="padding:16px 20px 0;display:flex;flex-direction:column;gap:14px">`;
 
     FAMILIA_FONDOS.forEach(fondo => {
       const f = fondos.find(x => x.id === fondo.id) || { invested: 0, currentPrice: 0 };
@@ -2792,17 +2787,27 @@ function renderFamilia() {
       const fRentSign = fPnl >= 0 ? '+' : '-';
       const fWeight = totalP > 0 ? fmt(f.currentPrice / totalP * 100, 1) + '%' : '0%';
       const actualPct = totalP > 0 ? (f.currentPrice / totalP) * 100 : 0;
-      html += `<tr onclick="openFamiliaModal('${persona.id}','${fondo.id}')" class="grid-row" style="cursor:pointer">
-        <td style="${CP}vertical-align:middle;padding-left:20px"><div style="display:flex;align-items:center;gap:14px"><div style="width:5px;height:48px;border-radius:3px;background:${fondo.color};flex-shrink:0"></div><div><div style="font-size:22px;color:var(--text);white-space:nowrap">${fondo.name}</div><div style="font-size:14px;color:var(--muted);margin-top:3px;white-space:nowrap">${fondo.ticker} \u00b7 Obj. ${fondo.target}%</div></div></div></td>
-        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:22px;color:var(--text);vertical-align:middle;font-weight:400">${fmtEur(f.currentPrice)}</td>
-        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:22px;color:var(--muted);vertical-align:middle;font-weight:300">${fmtEur(f.invested)}</td>
-        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:22px;color:${fPnlColor};vertical-align:middle;font-weight:400">${fSign}${fmtEur(Math.abs(fPnlAbs))}</td>
-        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:20px;color:${fPnlColor};vertical-align:middle;font-weight:400">${fRentSign}${fmt(Math.abs(fPnl), 2)}%</td>
-        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:18px;color:var(--muted);vertical-align:middle">${fWeight}</td>
-        <td style="${CP}vertical-align:middle;padding-left:20px;padding-right:24px">${rebalContent(fondo, actualPct)}</td>
-      </tr>`;
+      html += `<div onclick="openFamiliaModal('${persona.id}','${fondo.id}')" style="background:var(--surface);border:1px solid var(--border);border-radius:28px;padding:22px 26px;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="display:grid;grid-template-columns:340px 560px minmax(360px,1fr);gap:24px;align-items:center">
+          <div style="display:flex;align-items:center;gap:16px;min-width:0">
+            <div style="width:5px;height:54px;border-radius:3px;background:${fondo.color};flex-shrink:0"></div>
+            <div style="min-width:0">
+              <div style="font-size:24px;color:var(--text);line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${fondo.name}</div>
+              <div style="font-size:14px;color:var(--muted);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${fondo.ticker} · Obj. ${fondo.target}%</div>
+            </div>
+          </div>
+          <div class="privacy-hide" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:22px">
+            <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px">Valor</div><div style="font-size:20px;color:var(--text);white-space:nowrap">${fmtEur(f.currentPrice)}</div></div>
+            <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px">Invertido</div><div style="font-size:20px;color:var(--muted);white-space:nowrap">${fmtEur(f.invested)}</div></div>
+            <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px">P&L</div><div style="font-size:20px;color:${fPnlColor};white-space:nowrap">${fSign}${fmtEur(Math.abs(fPnlAbs))}</div></div>
+            <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px">Rent.</div><div style="font-size:20px;color:${fPnlColor};white-space:nowrap">${fRentSign}${fmt(Math.abs(fPnl), 2)}%</div></div>
+            <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px">Peso</div><div style="font-size:20px;color:var(--text);white-space:nowrap">${fWeight}</div></div>
+          </div>
+          <div>${rebalContent(fondo, actualPct)}</div>
+        </div>
+      </div>`;
     });
-    html += `</tbody></table></div>`;
+    html += `</div>`;
 
     // Mobile cards
     html += `<div class="mobile-cards" style="display:none">`;
