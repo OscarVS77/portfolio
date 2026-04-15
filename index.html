@@ -1216,13 +1216,7 @@ if ('serviceWorker' in navigator) {
     }
     .desktop-table { display: none !important; }
     .mobile-cards { display: block !important; }
-    .familia-header-grid {
-      grid-template-columns: 1fr 1fr !important;
-      gap: 12px 0 !important;
-    }
-    .familia-header-grid > div > div:last-child {
-      font-size: 18px !important;
-    }
+    .familia-header-grid { display:none !important; }
   }
   @media (min-width: 769px) {
     .desktop-table { display: block; }
@@ -1956,48 +1950,34 @@ function renderActivos() {
     const pnlSign = pnlAbs >= 0 ? '+' : '-';
     const rentSign = pnl >= 0 ? '+' : '-';
     const { subtitle, subtitleColor } = getAssetMeta(a);
-    const weight = a.id === 'pp' ? '\u2014' : (totalSinPP > 0 ? fmt(current/totalSinPP*100,1)+'%' : '0%');
-    let rebalMobile = '';
-    if (!a.excludeRebalance && a.id !== 'pp') {
-      const target = nivel2Targets[a.id] || 0;
-      const actualPct = total5 > 0 ? (getAssetCurrent(a) / total5) * 100 : 0;
-      const delta = actualPct - target;
-      const inRange = Math.abs(delta) <= REBAL_THRESHOLD;
-      const deltaColor = inRange ? 'var(--muted)' : (delta > 0 ? 'var(--red)' : 'var(--accent)');
-      const deltaText = (delta >= 0 ? '+' : '') + fmt(delta, 1) + 'pp';
-      const maxPct = Math.max(actualPct, target, 1);
-      const sc = 100 / maxPct;
-      const tW = target * sc;
-      const aW = actualPct * sc;
-      rebalMobile = `
-        <div style="display:grid;grid-template-columns:32px 1fr 42px;gap:0;align-items:center;padding:8px 0 0">
-          <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1"><span style="color:var(--muted)">Obj.</span><span style="color:var(--text)">Real</span></div>
-          <div style="display:flex;flex-direction:column;gap:5px;padding:0 6px">
-            <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${tW}%;background:${a.color};opacity:0.35;border-radius:2px"></div></div>
-            <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${aW}%;background:${a.color};border-radius:2px"></div></div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;text-align:right;line-height:1"><span style="color:var(--muted)">${fmt(target,0)}%</span><span style="color:${deltaColor}">${fmt(actualPct,1)}%</span></div>
-        </div>
-        <div style="text-align:right;white-space:nowrap;font-size:13px;color:${deltaColor};margin-top:4px">${deltaText}</div>`;
-    } else {
-      rebalMobile = '<div style="font-size:12px;color:var(--muted2);padding-top:8px">Excluido de rebalanceo</div>';
-    }
     return `
-      <div onclick="openModal('${a.id}')" style="padding:16px;border-bottom:1px solid var(--border);cursor:pointer">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-          <div style="width:4px;height:36px;border-radius:2px;background:${a.color}"></div>
-          <div style="flex:1"><div style="font-size:17px;color:var(--text)">${a.name}</div><div style="font-size:12px;color:${subtitleColor};margin-top:2px">${subtitle}</div></div>
-          <div style="text-align:right">
-            <div class="privacy-hide" style="font-size:17px;color:var(--text);font-weight:400">${fmtEur(current)}</div>
-            <div class="privacy-hide" style="font-size:13px;color:${pnlColor};margin-top:2px">${rentSign}${fmt(Math.abs(pnl), 2)}%  ${pnlSign}${fmtEur(Math.abs(pnlAbs))}</div>
+      <div onclick="openModal('${a.id}')" style="margin:0 16px 12px;background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:16px;cursor:pointer">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
+          <div style="display:flex;min-width:0;align-items:flex-start;gap:12px;flex:1">
+            <div style="width:4px;height:48px;border-radius:2px;background:${a.color};flex-shrink:0;margin-top:2px"></div>
+            <div style="min-width:0;flex:1">
+              <div style="font-size:20px;color:var(--text);font-weight:500;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name}</div>
+              <div style="font-size:12px;color:${subtitleColor};margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${subtitle}</div>
+            </div>
+          </div>
+          <div class="privacy-hide" style="text-align:right;flex-shrink:0;margin-left:8px">
+            <div style="font-size:17px;color:var(--text);font-weight:500;line-height:1">${fmtEur(current)}</div>
           </div>
         </div>
-        <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:4px">
-          <div><div style="font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Invertido</div><div style="font-size:14px;color:var(--muted)">${fmtEur(a.invested)}</div></div>
-          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">P&L</div><div style="font-size:14px;color:${pnlColor}">${pnlSign}${fmtEur(Math.abs(pnlAbs))}</div></div>
-          <div style="text-align:right"><div style="font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Peso</div><div style="font-size:14px;color:var(--muted)">${weight}</div></div>
+        <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:18px">
+          <div>
+            <div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Invertido</div>
+            <div style="font-size:15px;color:var(--muted)">${fmtEur(a.invested)}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">P&L</div>
+            <div style="font-size:15px;color:${pnlColor};font-weight:500">${pnlSign}${fmtEur(Math.abs(pnlAbs))}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Rent.</div>
+            <div style="font-size:15px;color:${pnlColor};font-weight:500">${rentSign}${fmt(Math.abs(pnl), 2)}%</div>
+          </div>
         </div>
-        ${rebalMobile}
       </div>`;
   }
 
@@ -2034,7 +2014,7 @@ function renderActivos() {
     </div>`;
 
   const mobileHtml = `
-    <div class="mobile-cards" style="display:none;margin:-16px -20px">
+    <div class="mobile-cards" style="display:none;padding:0 0 8px">
       ${sortedAssets.map(a => renderMobileCard(a)).join('')}
     </div>`;
 
@@ -2734,6 +2714,9 @@ async function saveFamiliaToSupabase() {
 function renderFamilia() {
   if (!familiaLoaded || !familiaData) return `<div class="familia-loading">Cargando datos de familia...</div>`;
   const REBAL_THRESHOLD = 5;
+  const LN = '1px solid rgba(255,255,255,0.08)';
+  const CP = 'padding:22px 20px;border:' + LN + ';';
+  const CH = 'padding:14px 20px;border:' + LN + ';';
 
   function rebalContent(fondo, actualPct) {
     const desv = actualPct - fondo.target;
@@ -2763,20 +2746,14 @@ function renderFamilia() {
     const sc = 100 / maxPct;
     const tW = fondo.target * sc;
     const aW = actualPct * sc;
-    return `<div style="margin-top:14px;border:1px solid var(--border);background:#080808;border-radius:16px;padding:12px 12px 10px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase">Rebalanceo</div>
-        <div style="font-size:13px;color:${deltaColor}">${deltaText}</div>
+    return `<div style="display:grid;grid-template-columns:32px 1fr 42px;gap:0;align-items:center;padding:8px 0 0">
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1"><span style="color:var(--muted)">Obj.</span><span style="color:var(--text)">Real</span></div>
+      <div style="display:flex;flex-direction:column;gap:5px;padding:0 6px">
+        <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${tW}%;background:${fondo.color};opacity:0.35;border-radius:2px"></div></div>
+        <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${aW}%;background:${fondo.color};border-radius:2px"></div></div>
       </div>
-      <div style="display:grid;grid-template-columns:32px 1fr 46px;gap:0;align-items:center">
-        <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1"><span style="color:var(--muted)">Obj.</span><span style="color:var(--text)">Real</span></div>
-        <div style="display:flex;flex-direction:column;gap:6px;padding:0 8px">
-          <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${tW}%;background:${fondo.color};opacity:0.35;border-radius:2px"></div></div>
-          <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${aW}%;background:${fondo.color};border-radius:2px"></div></div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;text-align:right;line-height:1"><span style="color:var(--muted)">${fmt(fondo.target,0)}%</span><span style="color:var(--text)">${fmt(actualPct,1)}%</span></div>
-      </div>
-    </div>`;
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;text-align:right;line-height:1"><span style="color:var(--muted)">${fmt(fondo.target,0)}%</span><span style="color:${deltaColor}">${fmt(actualPct,1)}%</span></div>
+    </div><div style="text-align:right;font-size:13px;color:${deltaColor};margin-top:4px">${deltaText}</div>`;
   }
 
   let html = '';
@@ -2790,9 +2767,7 @@ function renderFamilia() {
     const pSign = pPnlAbs >= 0 ? '+' : '-';
     const totalP = pCurrent;
 
-    html += `<div style="margin-bottom:32px">`;
-
-    html += `<div class="desktop-table">
+    html += `<div style="margin-bottom:32px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:0 20px">
         <div style="width:12px;height:12px;border-radius:50%;background:${persona.color}"></div>
         <span style="font-size:20px;font-weight:500;color:var(--text)">${persona.name}</span>
@@ -2802,14 +2777,14 @@ function renderFamilia() {
         <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Invertido</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:var(--text)">${fmtEur(pInvested)}</div></div>
         <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">P&L</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:${pPnlColor}">${pSign}${fmtEur(Math.abs(pPnlAbs))}</div></div>
         <div><div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Rentabilidad</div><div class="privacy-hide" style="font-size:24px;font-weight:500;color:${pPnlColor}">${pSign}${fmt(Math.abs(pPnlPct), 2)}%</div></div>
-      </div>
-    </div>`;
+      </div>`;
 
+    // Desktop table
     html += `<div class="desktop-table" style="padding-right:20px;overflow-x:auto">
       <table style="width:100%;border-collapse:collapse;table-layout:fixed">
         <colgroup><col style="width:420px"><col style="width:150px"><col style="width:150px"><col style="width:165px"><col style="width:145px"><col style="width:120px"><col></colgroup>
         <thead><tr style="font-size:12px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-weight:500">
-          <th style="padding:14px 20px;border:1px solid rgba(255,255,255,0.08);text-align:left;padding-left:20px;font-weight:500">Fondo</th><th style="padding:14px 20px;border:1px solid rgba(255,255,255,0.08);text-align:right;font-weight:500">Valor</th><th style="padding:14px 20px;border:1px solid rgba(255,255,255,0.08);text-align:right;font-weight:500">Invertido</th><th style="padding:14px 20px;border:1px solid rgba(255,255,255,0.08);text-align:right;font-weight:500">P&L</th><th style="padding:14px 20px;border:1px solid rgba(255,255,255,0.08);text-align:right;font-weight:500">Rent.</th><th style="padding:14px 20px;border:1px solid rgba(255,255,255,0.08);text-align:right;font-weight:500">Peso</th><th style="padding:14px 20px;border:1px solid rgba(255,255,255,0.08);text-align:left;padding-left:20px;font-weight:500">Rebalanceo</th>
+          <th style="${CH}text-align:left;padding-left:20px;font-weight:500">Fondo</th><th style="${CH}text-align:right;font-weight:500">Valor</th><th style="${CH}text-align:right;font-weight:500">Invertido</th><th style="${CH}text-align:right;font-weight:500">P&L</th><th style="${CH}text-align:right;font-weight:500">Rent.</th><th style="${CH}text-align:right;font-weight:500">Peso</th><th style="${CH}text-align:left;padding-left:20px;font-weight:500">Rebalanceo</th>
         </tr></thead><tbody>`;
 
     FAMILIA_FONDOS.forEach(fondo => {
@@ -2822,30 +2797,30 @@ function renderFamilia() {
       const fWeight = totalP > 0 ? fmt(f.currentPrice / totalP * 100, 1) + '%' : '0%';
       const actualPct = totalP > 0 ? (f.currentPrice / totalP) * 100 : 0;
       html += `<tr onclick="openFamiliaModal('${persona.id}','${fondo.id}')" class="grid-row" style="cursor:pointer">
-        <td style="padding:22px 20px;border:1px solid rgba(255,255,255,0.08);vertical-align:middle;padding-left:20px"><div style="display:flex;align-items:center;gap:14px"><div style="width:5px;height:48px;border-radius:3px;background:${fondo.color};flex-shrink:0"></div><div><div style="font-size:22px;color:var(--text);white-space:nowrap">${fondo.name}</div><div style="font-size:14px;color:var(--muted);margin-top:3px;white-space:nowrap">${fondo.ticker} · Obj. ${fondo.target}%</div></div></div></td>
-        <td class="privacy-hide" style="padding:22px 20px;border:1px solid rgba(255,255,255,0.08);text-align:right;white-space:nowrap;font-size:22px;color:var(--text);vertical-align:middle;font-weight:400">${fmtEur(f.currentPrice)}</td>
-        <td class="privacy-hide" style="padding:22px 20px;border:1px solid rgba(255,255,255,0.08);text-align:right;white-space:nowrap;font-size:22px;color:var(--muted);vertical-align:middle;font-weight:300">${fmtEur(f.invested)}</td>
-        <td class="privacy-hide" style="padding:22px 20px;border:1px solid rgba(255,255,255,0.08);text-align:right;white-space:nowrap;font-size:22px;color:${fPnlColor};vertical-align:middle;font-weight:400">${fSign}${fmtEur(Math.abs(fPnlAbs))}</td>
-        <td class="privacy-hide" style="padding:22px 20px;border:1px solid rgba(255,255,255,0.08);text-align:right;white-space:nowrap;font-size:20px;color:${fPnlColor};vertical-align:middle;font-weight:400">${fRentSign}${fmt(Math.abs(fPnl), 2)}%</td>
-        <td class="privacy-hide" style="padding:22px 20px;border:1px solid rgba(255,255,255,0.08);text-align:right;white-space:nowrap;font-size:18px;color:var(--muted);vertical-align:middle">${fWeight}</td>
-        <td style="padding:22px 20px;border:1px solid rgba(255,255,255,0.08);vertical-align:middle;padding-left:20px;padding-right:24px">${rebalContent(fondo, actualPct)}</td>
+        <td style="${CP}vertical-align:middle;padding-left:20px"><div style="display:flex;align-items:center;gap:14px"><div style="width:5px;height:48px;border-radius:3px;background:${fondo.color};flex-shrink:0"></div><div><div style="font-size:22px;color:var(--text);white-space:nowrap">${fondo.name}</div><div style="font-size:14px;color:var(--muted);margin-top:3px;white-space:nowrap">${fondo.ticker} \u00b7 Obj. ${fondo.target}%</div></div></div></td>
+        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:22px;color:var(--text);vertical-align:middle;font-weight:400">${fmtEur(f.currentPrice)}</td>
+        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:22px;color:var(--muted);vertical-align:middle;font-weight:300">${fmtEur(f.invested)}</td>
+        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:22px;color:${fPnlColor};vertical-align:middle;font-weight:400">${fSign}${fmtEur(Math.abs(fPnlAbs))}</td>
+        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:20px;color:${fPnlColor};vertical-align:middle;font-weight:400">${fRentSign}${fmt(Math.abs(fPnl), 2)}%</td>
+        <td class="privacy-hide" style="${CP}text-align:right;white-space:nowrap;font-size:18px;color:var(--muted);vertical-align:middle">${fWeight}</td>
+        <td style="${CP}vertical-align:middle;padding-left:20px;padding-right:24px">${rebalContent(fondo, actualPct)}</td>
       </tr>`;
     });
     html += `</tbody></table></div>`;
 
-    html += `<div class="mobile-cards" style="display:none;padding:0 16px">`;
-    html += `<div style="background:var(--surface);border:1px solid var(--border);border-radius:28px;padding:18px 18px 16px;margin-bottom:12px">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px">
-        <div style="display:flex;align-items:center;gap:14px;min-width:0"><div style="width:18px;height:18px;border-radius:50%;background:${persona.color};flex-shrink:0"></div><div style="font-size:24px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${persona.name}</div></div>
-        <div class="privacy-hide" style="font-size:24px;font-weight:600;color:var(--text);white-space:nowrap">${fmtEur(pCurrent)}</div>
+    // Mobile cards
+    html += `<div class="mobile-cards" style="display:none;padding:0 16px 8px">`;
+    html += `<div style="background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:16px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:12px"><div style="width:12px;height:12px;border-radius:50%;background:${persona.color}"></div><div style="font-size:20px;font-weight:500;color:var(--text)">${persona.name}</div></div>
+        <div class="privacy-hide" style="text-align:right;font-size:17px;color:var(--text);font-weight:500">${fmtEur(pCurrent)}</div>
       </div>
-      <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
-        <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">Invertido</div><div style="font-size:18px;color:var(--muted)">${fmtEur(pInvested)}</div></div>
-        <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">P&L</div><div style="font-size:18px;color:${pPnlColor};font-weight:500">${pSign}${fmtEur(Math.abs(pPnlAbs))}</div></div>
-        <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">Rent.</div><div style="font-size:18px;color:${pPnlColor};font-weight:500">${pSign}${fmt(Math.abs(pPnlPct), 2)}%</div></div>
+      <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Invertido</div><div style="font-size:15px;color:var(--muted)">${fmtEur(pInvested)}</div></div>
+        <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">P&L</div><div style="font-size:15px;color:${pPnlColor};font-weight:500">${pSign}${fmtEur(Math.abs(pPnlAbs))}</div></div>
+        <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Rent.</div><div style="font-size:15px;color:${pPnlColor};font-weight:500">${pSign}${fmt(Math.abs(pPnlPct), 2)}%</div></div>
       </div>
     </div>`;
-
     FAMILIA_FONDOS.forEach(fondo => {
       const f = fondos.find(x => x.id === fondo.id) || { invested: 0, currentPrice: 0 };
       const fPnl = f.invested > 0 ? ((f.currentPrice - f.invested) / f.invested) * 100 : 0;
@@ -2854,17 +2829,23 @@ function renderFamilia() {
       const fSign = fPnlAbs >= 0 ? '+' : '-';
       const fRentSign = fPnl >= 0 ? '+' : '-';
       const actualPct = totalP > 0 ? (f.currentPrice / totalP) * 100 : 0;
-      html += `<div onclick="openFamiliaModal('${persona.id}','${fondo.id}')" style="background:var(--surface);border:1px solid var(--border);border-radius:28px;padding:18px 18px 16px;margin-bottom:12px;cursor:pointer">
+      html += `<div onclick="openFamiliaModal('${persona.id}','${fondo.id}')" style="background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:16px;margin-bottom:12px;cursor:pointer">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
-          <div style="display:flex;align-items:flex-start;gap:12px;min-width:0;flex:1"><div style="width:4px;height:48px;border-radius:3px;background:${fondo.color};margin-top:2px;flex-shrink:0"></div><div style="min-width:0"><div style="font-size:20px;color:var(--text);font-weight:500;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${fondo.name}</div><div style="font-size:14px;color:var(--muted);margin-top:8px">${fondo.ticker}</div></div></div>
-          <div class="privacy-hide" style="text-align:right"><div style="font-size:18px;color:var(--text);font-weight:600;white-space:nowrap">${fmtEur(f.currentPrice)}</div></div>
+          <div style="display:flex;min-width:0;align-items:flex-start;gap:12px;flex:1">
+            <div style="width:4px;height:48px;border-radius:2px;background:${fondo.color};flex-shrink:0;margin-top:2px"></div>
+            <div style="min-width:0;flex:1"><div style="font-size:20px;color:var(--text);font-weight:500;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${fondo.name}</div><div style="font-size:12px;color:var(--muted);margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${fondo.ticker}</div></div>
+          </div>
+          <div class="privacy-hide" style="text-align:right;flex-shrink:0;margin-left:8px"><div style="font-size:17px;color:var(--text);font-weight:500;line-height:1">${fmtEur(f.currentPrice)}</div></div>
         </div>
-        <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:16px">
-          <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">Invertido</div><div style="font-size:16px;color:var(--muted)">${fmtEur(f.invested)}</div></div>
-          <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">P&L</div><div style="font-size:16px;color:${fPnlColor};font-weight:500">${fSign}${fmtEur(Math.abs(fPnlAbs))}</div></div>
-          <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">Rent.</div><div style="font-size:16px;color:${fPnlColor};font-weight:500">${fRentSign}${fmt(Math.abs(fPnl),2)}%</div></div>
+        <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:18px">
+          <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Invertido</div><div style="font-size:15px;color:var(--muted)">${fmtEur(f.invested)}</div></div>
+          <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">P&L</div><div style="font-size:15px;color:${fPnlColor};font-weight:500">${fSign}${fmtEur(Math.abs(fPnlAbs))}</div></div>
+          <div><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Rent.</div><div style="font-size:15px;color:${fPnlColor};font-weight:500">${fRentSign}${fmt(Math.abs(fPnl),2)}%</div></div>
         </div>
-        ${rebalMobileContent(fondo, actualPct)}
+        <div style="margin-top:16px;background:#080808;border:1px solid var(--border);border-radius:16px;padding:12px 12px 10px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase">Rebalanceo</div><div style="font-size:13px;color:${Math.abs(actualPct - fondo.target) <= REBAL_THRESHOLD ? 'var(--muted)' : ((actualPct - fondo.target) > 0 ? 'var(--red)' : 'var(--accent)')}">${((actualPct - fondo.target) >= 0 ? '+' : '') + fmt(actualPct - fondo.target, 1)}pp</div></div>
+          ${rebalMobileContent(fondo, actualPct)}
+        </div>
       </div>`;
     });
     html += `</div></div>`;
