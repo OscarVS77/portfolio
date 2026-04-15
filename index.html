@@ -25,18 +25,17 @@ if ('serviceWorker' in navigator) {
 <style>
   :root {
     --bg:       #000000;
-    --surface:  #0A0A0A;
-    --surface2: #111111;
-    --border:   #1A1A1A;
-    --border2:  #232323;
-    --text:     #F5F5F5;
-    --muted:    #A1A1AA;
-    --muted2:   #6B7280;
-    --accent:   #D9A441;
-    --accent2:  #D9A441;
-    --success:  #00E0B8;
+    --surface:  #1A1A1A;
+    --surface2: #242424;
+    --border:   #2C2C2C;
+    --border2:  #383838;
+    --text:     #FFFFFF;
+    --muted:    #8A8A8A;
+    --muted2:   #7A7A7A;
+    --accent:   #00C896;
+    --accent2:  #5B9EFF;
     --red:      #D94F4A;
-    --gold:     #D9A441;
+    --gold:     #FFD700;
     --font-display: -apple-system, 'SF Pro Display', system-ui, sans-serif;
     --font-sans:    -apple-system, 'SF Pro Text', system-ui, sans-serif;
     --font-mono:    'SF Mono', ui-monospace, monospace;
@@ -46,7 +45,24 @@ if ('serviceWorker' in navigator) {
     --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
   }
 
-  
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg:       #F8F8F8;
+      --surface:  #FFFFFF;
+      --surface2: #F2F2F2;
+      --border:   #E5E5E5;
+      --border2:  #D8D8D8;
+      --text:     #1A1A1A;
+      --muted:    #6C6C6C;
+      --muted2:   #ABABAB;
+      --accent:   #00C896;
+      --accent2:  #007AFF;
+      --red:      #D94F4A;
+      --gold:     #FF9500;
+      --shadow:    0 2px 12px rgba(0,0,0,0.05);
+      --shadow-sm: 0 1px 4px rgba(0,0,0,0.03);
+    }
+  }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -193,7 +209,6 @@ if ('serviceWorker' in navigator) {
     background: var(--surface2);
     border-color: var(--border2);
     color: var(--text);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
   }
 
   /* MAIN */
@@ -253,7 +268,7 @@ if ('serviceWorker' in navigator) {
     letter-spacing: 0;
   }
 
-  .positive { background: transparent; color: var(--success); }
+  .positive { background: transparent; color: #00C896; }
   .negative { background: transparent; color: var(--red); }
   .neutral { background: rgba(100,100,100,0.1); color: var(--muted); }
 
@@ -313,7 +328,7 @@ if ('serviceWorker' in navigator) {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--success);
+    background: var(--accent);
     animation: pulse 2s infinite;
   }
 
@@ -710,16 +725,20 @@ if ('serviceWorker' in navigator) {
 
   /* ACTUALIZAR button — white dark, black light */
   #refreshBtn .refresh-icon {
-    color: var(--text);
+    color: #000000;
     font-size: 20px !important;
   }
-  
+  @media (prefers-color-scheme: dark) {
+    #refreshBtn .refresh-icon {
+      color: #FFFFFF !important;
+    }
+  }
 
   /* EYE BUTTON */
   #eyeBtn { transition: opacity 0.15s; }
   #eyeBtn:active { opacity: 0.4; }
-  #eyeIcon { color: var(--text); }
-  
+  #eyeIcon { color: #000000; }
+  @media (prefers-color-scheme: dark) { #eyeIcon { color: #FFFFFF !important; } }
 
   /* PRIVACY MODE */
   body.privacy .privacy-hide {
@@ -842,35 +861,43 @@ if ('serviceWorker' in navigator) {
     padding: 40px 32px;
     gap: 0;
   }
-  
+  @media (prefers-color-scheme: light) {
+    .lock-screen { background: #F8F8F8; }
+  }
   .lock-title {
     font-family: var(--font-display);
     font-size: 13px;
     font-weight: 400;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--text);
+    color: #FFFFFF;
     margin-bottom: 12px;
   }
-  
+  @media (prefers-color-scheme: light) {
+    .lock-title { color: #1A1A1A; }
+  }
   .lock-tagline {
     font-family: var(--font-display);
     font-size: 28px;
     font-weight: 700;
-    color: var(--text);
+    color: #FFFFFF;
     text-align: center;
     line-height: 1.2;
     margin-bottom: 6px;
   }
-  
+  @media (prefers-color-scheme: light) {
+    .lock-tagline { color: #1A1A1A; }
+  }
   .lock-sub {
     font-family: var(--font-sans);
     font-size: 13px;
-    color: var(--muted2);
+    color: #5A5A5A;
     text-align: center;
     margin-bottom: 48px;
   }
-  
+  @media (prefers-color-scheme: light) {
+    .lock-sub { color: #6C6C6C; }
+  }
   .lock-buttons {
     display: flex;
     flex-direction: column;
@@ -882,9 +909,9 @@ if ('serviceWorker' in navigator) {
   .lock-btn-primary {
     padding: 16px;
     border-radius: 12px;
-    border: 1px solid var(--border2);
-    background: var(--surface);
-    color: var(--text);
+    border: 1px solid #FFFFFF;
+    background: transparent;
+    color: #FFFFFF;
     font-family: var(--font-sans);
     font-size: 13px;
     font-weight: 700;
@@ -892,13 +919,15 @@ if ('serviceWorker' in navigator) {
     text-transform: uppercase;
     cursor: pointer;
   }
-  
+  @media (prefers-color-scheme: light) {
+    .lock-btn-primary { border-color: #000000; color: #000000; }
+  }
   .lock-btn-demo {
     padding: 16px;
     border-radius: 12px;
-    border: 1px solid var(--border);
+    border: 1px solid #555555;
     background: transparent;
-    color: var(--muted);
+    color: #AAAAAA;
     font-family: var(--font-sans);
     font-size: 13px;
     font-weight: 400;
@@ -906,7 +935,9 @@ if ('serviceWorker' in navigator) {
     text-transform: uppercase;
     cursor: pointer;
   }
-  
+  @media (prefers-color-scheme: light) {
+    .lock-btn-demo { border-color: #BBBBBB; color: #555555; }
+  }
   /* PIN PAD */
   .pin-screen {
     position: fixed;
@@ -919,14 +950,16 @@ if ('serviceWorker' in navigator) {
     z-index: 9999;
     padding: 40px 32px;
   }
-  
+  @media (prefers-color-scheme: light) {
+    .pin-screen { background: #F8F8F8; }
+  }
   .pin-back {
     position: absolute;
     top: 20px;
     left: 20px;
     background: none;
     border: none;
-    color: var(--muted);
+    color: #8A8A8A;
     font-size: 22px;
     cursor: pointer;
     padding: 8px;
@@ -937,7 +970,7 @@ if ('serviceWorker' in navigator) {
     font-weight: 600;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--muted2);
+    color: #5A5A5A;
     margin-bottom: 32px;
   }
   .pin-dots {
@@ -949,15 +982,17 @@ if ('serviceWorker' in navigator) {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    border: 2px solid var(--muted2);
+    border: 2px solid #5A5A5A;
     background: transparent;
     transition: all 0.15s;
   }
   .pin-dot.filled {
-    background: var(--text);
-    border-color: var(--text);
+    background: #FFFFFF;
+    border-color: #FFFFFF;
   }
-  
+  @media (prefers-color-scheme: light) {
+    .pin-dot.filled { background: #000000; border-color: #000000; }
+  }
   .pin-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -968,9 +1003,9 @@ if ('serviceWorker' in navigator) {
   .pin-key {
     padding: 18px;
     border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
+    border: 1px solid #2C2C2C;
+    background: #1A1A1A;
+    color: #FFFFFF;
     font-family: var(--font-display);
     font-size: 20px;
     font-weight: 400;
@@ -979,8 +1014,11 @@ if ('serviceWorker' in navigator) {
     transition: background 0.1s;
   }
   .pin-key:active { background: #2C2C2C; transform: scale(0.94); }
-  
-  .pin-key.del { font-size: 16px; color: var(--muted); }
+  @media (prefers-color-scheme: light) {
+    .pin-key { background: #FFFFFF; border-color: #E5E5E5; color: #1A1A1A; }
+    .pin-key:active { background: #F2F2F2; transform: scale(0.94); }
+  }
+  .pin-key.del { font-size: 16px; color: #8A8A8A; }
   .pin-error {
     color: var(--red);
     font-size: 12px;
@@ -1821,7 +1859,7 @@ function render() {
 function updateHeader() {
   const {totalInvested, totalCurrent, pnl} = getTotals();
   const pnlAbs = totalCurrent - totalInvested;
-  const pnlColor = pnl >= 0 ? 'var(--success)' : 'var(--red)';
+  const pnlColor = pnl >= 0 ? 'var(--accent)' : 'var(--red)';
   const sign = pnl >= 0 ? '+' : '-';
 
   document.getElementById('hTotalCurrent').textContent = fmtEur(totalCurrent);
@@ -1865,7 +1903,7 @@ function renderActivos() {
     const actualPct = total5 > 0 ? (current / total5) * 100 : 0;
     const delta = actualPct - target;
     const inRange = Math.abs(delta) <= REBAL_THRESHOLD;
-    const deltaColor = inRange ? 'var(--muted)' : (delta > 0 ? 'var(--red)' : 'var(--success)');
+    const deltaColor = inRange ? 'var(--muted)' : (delta > 0 ? 'var(--red)' : 'var(--accent)');
     const deltaText = (delta >= 0 ? '+' : '') + fmt(delta, 1) + 'pp';
     const maxPct = Math.max(actualPct, target, 1);
     const sc = 100 / maxPct;
@@ -1894,7 +1932,7 @@ function renderActivos() {
     const current = getAssetCurrent(a);
     const pnl = getAssetPnl(a);
     const pnlAbs = current - a.invested;
-    const pnlColor = pnlAbs >= 0 ? 'var(--success)' : 'var(--red)';
+    const pnlColor = pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)';
     const pnlSign = pnlAbs >= 0 ? '+' : '-';
     const rentSign = pnl >= 0 ? '+' : '-';
     const weight = a.id === 'pp' ? '\u2014' : (totalSinPP > 0 ? fmt(current / totalSinPP * 100, 1) + '%' : '0%');
@@ -1914,40 +1952,52 @@ function renderActivos() {
     const current = getAssetCurrent(a);
     const pnl = getAssetPnl(a);
     const pnlAbs = current - a.invested;
-    const pnlColor = pnlAbs >= 0 ? 'var(--success)' : 'var(--red)';
+    const pnlColor = pnlAbs >= 0 ? 'var(--accent)' : 'var(--red)';
     const pnlSign = pnlAbs >= 0 ? '+' : '-';
     const rentSign = pnl >= 0 ? '+' : '-';
     const { subtitle, subtitleColor } = getAssetMeta(a);
-    return `
-      <div onclick="openModal('${a.id}')" style="padding:0 16px 14px;cursor:pointer">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:28px;padding:18px 16px;box-shadow:var(--shadow-sm)">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
-            <div style="display:flex;align-items:flex-start;gap:14px;min-width:0;flex:1">
-              <div style="width:5px;height:52px;border-radius:3px;background:${a.color};flex-shrink:0;margin-top:2px"></div>
-              <div style="min-width:0;flex:1">
-                <div style="font-size:20px;line-height:1.05;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name}</div>
-                <div style="font-size:13px;color:${subtitleColor};margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${subtitle}</div>
-              </div>
-            </div>
-            <div class="privacy-hide" style="text-align:right;flex-shrink:0;min-width:116px">
-              <div style="font-size:19px;line-height:1;color:var(--text);font-weight:500;white-space:nowrap">${fmtEur(current)}</div>
-            </div>
+    const weight = a.id === 'pp' ? '\u2014' : (totalSinPP > 0 ? fmt(current/totalSinPP*100,1)+'%' : '0%');
+    let rebalMobile = '';
+    if (!a.excludeRebalance && a.id !== 'pp') {
+      const target = nivel2Targets[a.id] || 0;
+      const actualPct = total5 > 0 ? (getAssetCurrent(a) / total5) * 100 : 0;
+      const delta = actualPct - target;
+      const inRange = Math.abs(delta) <= REBAL_THRESHOLD;
+      const deltaColor = inRange ? 'var(--muted)' : (delta > 0 ? 'var(--red)' : 'var(--accent)');
+      const deltaText = (delta >= 0 ? '+' : '') + fmt(delta, 1) + 'pp';
+      const maxPct = Math.max(actualPct, target, 1);
+      const sc = 100 / maxPct;
+      const tW = target * sc;
+      const aW = actualPct * sc;
+      rebalMobile = `
+        <div style="display:grid;grid-template-columns:32px 1fr 42px;gap:0;align-items:center;padding:8px 0 0">
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1"><span style="color:var(--muted)">Obj.</span><span style="color:var(--text)">Real</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px;padding:0 6px">
+            <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${tW}%;background:${a.color};opacity:0.35;border-radius:2px"></div></div>
+            <div style="height:4px;background:var(--border);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${aW}%;background:${a.color};border-radius:2px"></div></div>
           </div>
-          <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:18px">
-            <div>
-              <div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">Invertido</div>
-              <div style="font-size:15px;color:var(--muted);white-space:nowrap">${fmtEur(a.invested)}</div>
-            </div>
-            <div>
-              <div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">P&L</div>
-              <div style="font-size:15px;color:${pnlColor};font-weight:500;white-space:nowrap">${pnlSign}${fmtEur(Math.abs(pnlAbs))}</div>
-            </div>
-            <div>
-              <div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">Rent.</div>
-              <div style="font-size:15px;color:${pnlColor};font-weight:500;white-space:nowrap">${rentSign}${fmt(Math.abs(pnl), 2)}%</div>
-            </div>
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;text-align:right;line-height:1"><span style="color:var(--muted)">${fmt(target,0)}%</span><span style="color:${deltaColor}">${fmt(actualPct,1)}%</span></div>
+        </div>
+        <div style="text-align:right;white-space:nowrap;font-size:13px;color:${deltaColor};margin-top:4px">${deltaText}</div>`;
+    } else {
+      rebalMobile = '<div style="font-size:12px;color:var(--muted2);padding-top:8px">Excluido de rebalanceo</div>';
+    }
+    return `
+      <div onclick="openModal('${a.id}')" style="padding:16px;border-bottom:1px solid var(--border);cursor:pointer">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="width:4px;height:36px;border-radius:2px;background:${a.color}"></div>
+          <div style="flex:1"><div style="font-size:17px;color:var(--text)">${a.name}</div><div style="font-size:12px;color:${subtitleColor};margin-top:2px">${subtitle}</div></div>
+          <div style="text-align:right">
+            <div class="privacy-hide" style="font-size:17px;color:var(--text);font-weight:400">${fmtEur(current)}</div>
+            <div class="privacy-hide" style="font-size:13px;color:${pnlColor};margin-top:2px">${rentSign}${fmt(Math.abs(pnl), 2)}%  ${pnlSign}${fmtEur(Math.abs(pnlAbs))}</div>
           </div>
         </div>
+        <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:4px">
+          <div><div style="font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Invertido</div><div style="font-size:14px;color:var(--muted)">${fmtEur(a.invested)}</div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">P&L</div><div style="font-size:14px;color:${pnlColor}">${pnlSign}${fmtEur(Math.abs(pnlAbs))}</div></div>
+          <div style="text-align:right"><div style="font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Peso</div><div style="font-size:14px;color:var(--muted)">${weight}</div></div>
+        </div>
+        ${rebalMobile}
       </div>`;
   }
 
@@ -1984,7 +2034,7 @@ function renderActivos() {
     </div>`;
 
   const mobileHtml = `
-    <div class="mobile-cards" style="display:none;margin:0 -4px">
+    <div class="mobile-cards" style="display:none;margin:-16px -20px">
       ${sortedAssets.map(a => renderMobileCard(a)).join('')}
     </div>`;
 
@@ -2056,7 +2106,7 @@ function renderRebalanceo() {
     const absDelta = Math.abs(delta);
     const action = absDelta <= REBAL_THRESHOLD
       ? `<span style="color:var(--muted2);font-size:10px">${delta >= 0 ? '+' : ''}${fmt(delta,1)}%</span>`
-      : `<span style="color:${delta > 0 ? 'var(--red)' : 'var(--success)'};font-size:11px;font-weight:400">${delta > 0 ? '↓' : '↑'} ${fmtEur(Math.abs((delta/100)*total))}</span>`;
+      : `<span style="color:${delta > 0 ? 'var(--red)' : 'var(--accent)'};font-size:11px;font-weight:400">${delta > 0 ? '↓' : '↑'} ${fmtEur(Math.abs((delta/100)*total))}</span>`;
 
     return `
       <div style="display:grid;grid-template-columns:1fr 46px 40px 40px 72px;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border)">
@@ -2112,7 +2162,7 @@ function renderRebalanceo() {
       return `<span style="color:var(--red);font-size:10px;font-weight:400">Omite próx. aport.</span>`;
     } else {
       // Underweight → add extra
-      return `<span style="color:var(--success);font-size:10px;font-weight:400">+${fmtEur(eurDiff)} próx. mes</span>`;
+      return `<span style="color:var(--accent);font-size:10px;font-weight:400">+${fmtEur(eurDiff)} próx. mes</span>`;
     }
   }
 
@@ -2122,7 +2172,7 @@ function renderRebalanceo() {
     if (!alerts.length) return `
       <div style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:rgba(0,200,150,0.06);border:1px solid rgba(0,200,150,0.15);border-radius:10px;margin-top:10px">
         <span style="font-size:16px">✓</span>
-        <span style="font-size:12px;color:var(--success);font-weight:400">Portfolio equilibrado. No es necesario actuar.</span>
+        <span style="font-size:12px;color:var(--accent);font-weight:400">Portfolio equilibrado. No es necesario actuar.</span>
       </div>`;
 
     const items = alerts.map(r => {
@@ -2143,7 +2193,7 @@ function renderRebalanceo() {
             <span style="font-size:12px;font-weight:400;color:var(--text)">${r.name}</span>
             <span style="font-size:10px;color:var(--muted2)">(${fmt(r.delta,1)}% bajo obj.)</span>
           </div>
-          <span style="font-size:12px;color:var(--success);font-weight:400">Añade ${fmtEur(eurDiff)} próx. mes</span>
+          <span style="font-size:12px;color:var(--accent);font-weight:400">Añade ${fmtEur(eurDiff)} próx. mes</span>
         </div>`;
       }
     }).join('');
@@ -2174,7 +2224,7 @@ function renderRebalanceo() {
     const actualPct = total > 0 ? (current / total) * 100 : 0;
     const diff = actualPct - targetPct;
     const inRange = Math.abs(diff) <= REBAL_THRESHOLD;
-    const diffColor = inRange ? 'var(--muted2)' : (diff > 0 ? 'var(--red)' : 'var(--success)');
+    const diffColor = inRange ? 'var(--muted2)' : (diff > 0 ? 'var(--red)' : 'var(--accent)');
     const diffLabel = (diff >= 0 ? '+' : '') + fmt(diff, 1) + '%';
     return `
       <div style="margin-bottom:16px">
@@ -2691,7 +2741,7 @@ function renderFamilia() {
   function rebalContent(fondo, actualPct) {
     const desv = actualPct - fondo.target;
     const inRange = Math.abs(desv) <= REBAL_THRESHOLD;
-    const deltaColor = inRange ? 'var(--muted)' : (desv > 0 ? 'var(--red)' : 'var(--success)');
+    const deltaColor = inRange ? 'var(--muted)' : (desv > 0 ? 'var(--red)' : 'var(--accent)');
     const deltaText = (desv >= 0 ? '+' : '') + fmt(desv, 1) + 'pp';
     const maxPct = Math.max(actualPct, fondo.target, 1);
     const sc = 100 / maxPct;
@@ -2710,7 +2760,7 @@ function renderFamilia() {
   function rebalMobileContent(fondo, actualPct) {
     const desv = actualPct - fondo.target;
     const inRange = Math.abs(desv) <= REBAL_THRESHOLD;
-    const deltaColor = inRange ? 'var(--muted)' : (desv > 0 ? 'var(--red)' : 'var(--success)');
+    const deltaColor = inRange ? 'var(--muted)' : (desv > 0 ? 'var(--red)' : 'var(--accent)');
     const deltaText = (desv >= 0 ? '+' : '') + fmt(desv, 1) + 'pp';
     const maxPct = Math.max(actualPct, fondo.target, 1);
     const sc = 100 / maxPct;
@@ -2733,7 +2783,7 @@ function renderFamilia() {
     fondos.forEach(f => { pInvested += f.invested || 0; pCurrent += f.currentPrice || 0; });
     const pPnlAbs = pCurrent - pInvested;
     const pPnlPct = pInvested > 0 ? (pPnlAbs / pInvested) * 100 : 0;
-    const pPnlColor = pPnlAbs >= 0 ? 'var(--success)' : 'var(--red)';
+    const pPnlColor = pPnlAbs >= 0 ? 'var(--accent)' : 'var(--red)';
     const pSign = pPnlAbs >= 0 ? '+' : '-';
     const totalP = pCurrent;
 
@@ -2761,7 +2811,7 @@ function renderFamilia() {
       const f = fondos.find(x => x.id === fondo.id) || { invested: 0, currentPrice: 0 };
       const fPnl = f.invested > 0 ? ((f.currentPrice - f.invested) / f.invested) * 100 : 0;
       const fPnlAbs = f.currentPrice - f.invested;
-      const fPnlColor = fPnlAbs >= 0 ? 'var(--success)' : 'var(--red)';
+      const fPnlColor = fPnlAbs >= 0 ? 'var(--accent)' : 'var(--red)';
       const fSign = fPnlAbs >= 0 ? '+' : '-';
       const fRentSign = fPnl >= 0 ? '+' : '-';
       const fWeight = totalP > 0 ? fmt(f.currentPrice / totalP * 100, 1) + '%' : '0%';
@@ -2779,7 +2829,31 @@ function renderFamilia() {
     html += `</tbody></table></div>`;
 
     // Mobile cards
-    html += `<div class="mobile-cards" style="display:none">`;
+    html += `<div class="mobile-cards" style="display:none;padding:0 16px 8px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:16px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:18px;height:18px;border-radius:50%;background:${persona.color}"></div>
+            <div style="font-size:22px;font-weight:500;color:var(--text)">${persona.name}</div>
+          </div>
+          <div class="privacy-hide" style="text-align:right;font-size:22px;font-weight:600;color:var(--text)">${fmtEur(pCurrent)}</div>
+        </div>
+        <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div>
+            <div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Invertido</div>
+            <div style="font-size:15px;color:var(--muted)">${fmtEur(pInvested)}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">P&L</div>
+            <div style="font-size:15px;font-weight:500;color:${pPnlColor}">${pSign}${fmtEur(Math.abs(pPnlAbs))}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Rent.</div>
+            <div style="font-size:15px;font-weight:500;color:${pPnlColor}">${pSign}${fmt(Math.abs(pPnlPct), 2)}%</div>
+          </div>
+        </div>
+      </div>`;
+
     FAMILIA_FONDOS.forEach(fondo => {
       const f = fondos.find(x => x.id === fondo.id) || { invested: 0, currentPrice: 0 };
       const fPnl = f.invested > 0 ? ((f.currentPrice - f.invested) / f.invested) * 100 : 0;
@@ -2787,21 +2861,65 @@ function renderFamilia() {
       const fPnlColor = fPnlAbs >= 0 ? 'var(--success)' : 'var(--red)';
       const fSign = fPnlAbs >= 0 ? '+' : '-';
       const fRentSign = fPnl >= 0 ? '+' : '-';
-      const actualPct = (f.currentPrice + (fondos.find(x=>x.id!=fondo.id)||{currentPrice:0}).currentPrice) > 0 ? (f.currentPrice / totalP) * 100 : 0;
-      html += `<div onclick="openFamiliaModal('${persona.id}','${fondo.id}')" style="padding:16px;border-bottom:1px solid var(--border);cursor:pointer">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-          <div style="width:4px;height:36px;border-radius:2px;background:${fondo.color}"></div>
-          <div style="flex:1"><div style="font-size:17px;color:var(--text)">${fondo.name}</div><div style="font-size:12px;color:var(--muted);margin-top:2px">${fondo.ticker} \u00b7 Obj. ${fondo.target}%</div></div>
-          <div style="text-align:right">
-            <div class="privacy-hide" style="font-size:17px;color:var(--text)">${fmtEur(f.currentPrice)}</div>
-            <div class="privacy-hide" style="font-size:13px;color:${fPnlColor};margin-top:2px">${fRentSign}${fmt(Math.abs(fPnl),2)}%  ${fSign}${fmtEur(Math.abs(fPnlAbs))}</div>
+      const actualPct = totalP > 0 ? (f.currentPrice / totalP) * 100 : 0;
+      const desv = actualPct - fondo.target;
+      const inRange = Math.abs(desv) <= REBAL_THRESHOLD;
+      const deltaColor = inRange ? 'var(--muted)' : (desv > 0 ? 'var(--red)' : 'var(--success)');
+      const deltaText = (desv >= 0 ? '+' : '') + fmt(desv, 1) + 'pp';
+      const maxPct = Math.max(actualPct, fondo.target, 1);
+      const sc = 100 / maxPct;
+      const tW = fondo.target * sc;
+      const aW = actualPct * sc;
+
+      html += `<div onclick="openFamiliaModal('${persona.id}','${fondo.id}')" style="background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:16px;margin-bottom:12px;cursor:pointer">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+          <div style="display:flex;align-items:flex-start;gap:12px;min-width:0;flex:1">
+            <div style="width:4px;height:48px;border-radius:2px;background:${fondo.color};margin-top:2px;flex-shrink:0"></div>
+            <div style="min-width:0;flex:1">
+              <div style="font-size:20px;color:var(--text);line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${fondo.name}</div>
+              <div style="font-size:14px;color:var(--muted);margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${fondo.ticker}</div>
+            </div>
+          </div>
+          <div class="privacy-hide" style="text-align:right;flex-shrink:0">
+            <div style="font-size:17px;font-weight:600;color:var(--text);line-height:1">${fmtEur(f.currentPrice)}</div>
           </div>
         </div>
-        <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
-          <div><div style="font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Invertido</div><div style="font-size:14px;color:var(--muted)">${fmtEur(f.invested)}</div></div>
-          <div style="text-align:right"><div style="font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">P&L</div><div style="font-size:14px;color:${fPnlColor}">${fSign}${fmtEur(Math.abs(fPnlAbs))}</div></div>
+
+        <div class="privacy-hide" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px">
+          <div>
+            <div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Invertido</div>
+            <div style="font-size:15px;color:var(--muted)">${fmtEur(f.invested)}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">P&L</div>
+            <div style="font-size:15px;font-weight:500;color:${fPnlColor}">${fSign}${fmtEur(Math.abs(fPnlAbs))}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px">Rent.</div>
+            <div style="font-size:15px;font-weight:500;color:${fPnlColor}">${fRentSign}${fmt(Math.abs(fPnl),2)}%</div>
+          </div>
         </div>
-        ${rebalMobileContent(fondo, actualPct)}
+
+        <div style="margin-top:16px;background:#080808;border:1px solid var(--border);border-radius:18px;padding:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div style="font-size:11px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase">Rebalanceo</div>
+            <div style="font-size:13px;color:${deltaColor}">${deltaText}</div>
+          </div>
+          <div class="privacy-hide" style="display:grid;grid-template-columns:36px 1fr 52px;gap:12px;align-items:center">
+            <div style="font-size:12px;line-height:1.7">
+              <div style="color:var(--muted)">Obj.</div>
+              <div style="color:var(--text)">Real</div>
+            </div>
+            <div>
+              <div style="height:4px;background:#262626;border-radius:2px;position:relative;margin-bottom:8px"><div style="position:absolute;left:0;top:0;height:100%;width:${tW}%;background:${fondo.color};opacity:0.35;border-radius:2px"></div></div>
+              <div style="height:4px;background:#262626;border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${aW}%;background:${fondo.color};border-radius:2px"></div></div>
+            </div>
+            <div style="text-align:right;font-size:12px;line-height:1.7;color:var(--muted)">
+              <div>${fmt(fondo.target,0)}%</div>
+              <div style="color:var(--text)">${fmt(actualPct,1)}%</div>
+            </div>
+          </div>
+        </div>
       </div>`;
     });
     html += `</div></div>`;
@@ -2841,7 +2959,7 @@ function updateFamiliaPreview() {
     const pnl = cur - inv;
     const pct = (pnl / inv) * 100;
     preview.textContent = `P&L: ${fmtEur(pnl)} · ${fmtPct(pct)}`;
-    preview.style.color = pnl >= 0 ? 'var(--success)' : 'var(--red)';
+    preview.style.color = pnl >= 0 ? 'var(--accent)' : 'var(--red)';
   } else {
     preview.textContent = '';
     preview.style.color = '';
@@ -2909,7 +3027,7 @@ function closeFamiliaModal(e) {
       }
       if (dy >= THRESHOLD && !triggered) {
         triggered = true;
-        if (spinner) spinner.style.color = 'var(--success)';
+        if (spinner) spinner.style.color = 'var(--accent)';
       }
     }
   }, { passive: true });
