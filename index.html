@@ -1895,9 +1895,10 @@ function renderActivos() {
   const REBAL_THRESHOLD = 5;
 
   // Single grid definition shared by header and every row
-  const G = 'display:grid;grid-template-columns:420px 150px 150px 165px 145px 120px minmax(420px,1fr);column-gap:0;align-items:center;';
-  const B = 'border-bottom:1px solid rgba(255,255,255,0.06);';
-  const BR = 'border-right:1px solid rgba(255,255,255,0.06);';
+  const G = 'display:grid;grid-template-columns:420px 150px 150px 165px 145px 120px minmax(420px,1fr);column-gap:0;row-gap:0;align-items:center;';
+  const LN = '1px solid rgba(255,255,255,0.08)';
+  const B = 'border-bottom:' + LN + ';';
+  const BR = 'border-right:' + LN + ';';
   const P = 'padding:22px 20px;';
   const Ph = 'padding:14px 20px;';
 
@@ -2766,9 +2767,10 @@ function renderFamilia() {
   }
 
   const REBAL_THRESHOLD = 5;
-  const G = 'display:grid;grid-template-columns:420px 150px 150px 165px 145px 120px minmax(420px,1fr);column-gap:0;align-items:center;';
-  const B = 'border-bottom:1px solid rgba(255,255,255,0.06);';
-  const BR = 'border-right:1px solid rgba(255,255,255,0.06);';
+  const G = 'display:grid;grid-template-columns:420px 150px 150px 165px 145px 120px minmax(420px,1fr);column-gap:0;row-gap:0;align-items:center;';
+  const LN = '1px solid rgba(255,255,255,0.08)';
+  const B = 'border-bottom:' + LN + ';';
+  const BR = 'border-right:' + LN + ';';
   const P = 'padding:22px 20px;';
   const Ph = 'padding:14px 20px;';
 
