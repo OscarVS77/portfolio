@@ -45,24 +45,7 @@ if ('serviceWorker' in navigator) {
     --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
   }
 
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg:       #F8F8F8;
-      --surface:  #FFFFFF;
-      --surface2: #F2F2F2;
-      --border:   #E5E5E5;
-      --border2:  #D8D8D8;
-      --text:     #1A1A1A;
-      --muted:    #6C6C6C;
-      --muted2:   #ABABAB;
-      --accent:   #00C896;
-      --accent2:  #007AFF;
-      --red:      #D94F4A;
-      --gold:     #FF9500;
-      --shadow:    0 2px 12px rgba(0,0,0,0.05);
-      --shadow-sm: 0 1px 4px rgba(0,0,0,0.03);
-    }
-  }
+  
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -725,20 +708,16 @@ if ('serviceWorker' in navigator) {
 
   /* ACTUALIZAR button — white dark, black light */
   #refreshBtn .refresh-icon {
-    color: #000000;
+    color: #FFFFFF;
     font-size: 20px !important;
   }
-  @media (prefers-color-scheme: dark) {
-    #refreshBtn .refresh-icon {
-      color: #FFFFFF !important;
-    }
-  }
+  
 
   /* EYE BUTTON */
   #eyeBtn { transition: opacity 0.15s; }
   #eyeBtn:active { opacity: 0.4; }
-  #eyeIcon { color: #000000; }
-  @media (prefers-color-scheme: dark) { #eyeIcon { color: #FFFFFF !important; } }
+  #eyeIcon { color: #FFFFFF; }
+  
 
   /* PRIVACY MODE */
   body.privacy .privacy-hide {
@@ -861,9 +840,7 @@ if ('serviceWorker' in navigator) {
     padding: 40px 32px;
     gap: 0;
   }
-  @media (prefers-color-scheme: light) {
-    .lock-screen { background: #F8F8F8; }
-  }
+  
   .lock-title {
     font-family: var(--font-display);
     font-size: 13px;
@@ -873,9 +850,7 @@ if ('serviceWorker' in navigator) {
     color: #FFFFFF;
     margin-bottom: 12px;
   }
-  @media (prefers-color-scheme: light) {
-    .lock-title { color: #1A1A1A; }
-  }
+  
   .lock-tagline {
     font-family: var(--font-display);
     font-size: 28px;
@@ -885,9 +860,7 @@ if ('serviceWorker' in navigator) {
     line-height: 1.2;
     margin-bottom: 6px;
   }
-  @media (prefers-color-scheme: light) {
-    .lock-tagline { color: #1A1A1A; }
-  }
+  
   .lock-sub {
     font-family: var(--font-sans);
     font-size: 13px;
@@ -895,9 +868,7 @@ if ('serviceWorker' in navigator) {
     text-align: center;
     margin-bottom: 48px;
   }
-  @media (prefers-color-scheme: light) {
-    .lock-sub { color: #6C6C6C; }
-  }
+  
   .lock-buttons {
     display: flex;
     flex-direction: column;
@@ -919,9 +890,7 @@ if ('serviceWorker' in navigator) {
     text-transform: uppercase;
     cursor: pointer;
   }
-  @media (prefers-color-scheme: light) {
-    .lock-btn-primary { border-color: #000000; color: #000000; }
-  }
+  
   .lock-btn-demo {
     padding: 16px;
     border-radius: 12px;
@@ -935,9 +904,7 @@ if ('serviceWorker' in navigator) {
     text-transform: uppercase;
     cursor: pointer;
   }
-  @media (prefers-color-scheme: light) {
-    .lock-btn-demo { border-color: #BBBBBB; color: #555555; }
-  }
+  
   /* PIN PAD */
   .pin-screen {
     position: fixed;
@@ -950,9 +917,7 @@ if ('serviceWorker' in navigator) {
     z-index: 9999;
     padding: 40px 32px;
   }
-  @media (prefers-color-scheme: light) {
-    .pin-screen { background: #F8F8F8; }
-  }
+  
   .pin-back {
     position: absolute;
     top: 20px;
@@ -990,9 +955,7 @@ if ('serviceWorker' in navigator) {
     background: #FFFFFF;
     border-color: #FFFFFF;
   }
-  @media (prefers-color-scheme: light) {
-    .pin-dot.filled { background: #000000; border-color: #000000; }
-  }
+  
   .pin-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1014,10 +977,7 @@ if ('serviceWorker' in navigator) {
     transition: background 0.1s;
   }
   .pin-key:active { background: #2C2C2C; transform: scale(0.94); }
-  @media (prefers-color-scheme: light) {
-    .pin-key { background: #FFFFFF; border-color: #E5E5E5; color: #1A1A1A; }
-    .pin-key:active { background: #F2F2F2; transform: scale(0.94); }
-  }
+  
   .pin-key.del { font-size: 16px; color: #8A8A8A; }
   .pin-error {
     color: var(--red);
