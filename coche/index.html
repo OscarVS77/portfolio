@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="F-Pace">
+<meta name="theme-color" content="#000000">
+<title>F-Pace · Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAAB6UlEQVR42u3VwQkAIRAEwc0/aY1Awa9dBSZwO83NgrDxCRAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAD3A4wTCCAy9NeHAHKjF4MADF8IAjB8IQjA+EUgAOMXgQCMXwQCMH4RCMD4RSAA4xeBAIxfBAIQgAAEYPwiEIAABCAA4xeBAAQgAAEIwNEE0B2/CAQgAAEIQAAIQAAIQAAIQAAIoDJ+EQjAHwABCAABCAABCAABCAABCAABfB4BAhAAAhAAAohFgAAEgACKESAAASCAYgQIIBsBAshGgACyESCAbAQIIBsBAshGgACSISCAZAgIIBcDAkiEgQBAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAOBoAzP28lyQqk6eAAAAAElFTkSuQmCC">
+<style>
+:root {
+  --bg:#000;--surface:#0d0d0d;--surface2:#161616;--surface3:#1e1e1e;
+  --border:#242424;--border2:#2e2e2e;--text:#fff;--text2:#cccccc;--text3:#999999;
+  --accent:#c9a84c;--accent2:#e8c878;--red:#e05555;--green:#4caf7d;
+  --font:'Inter',system-ui,sans-serif;--mono:'Inter',system-ui,sans-serif;
+  --r:12px;--r-sm:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:100px}
+/* NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px 10px;background:none;border:none;color:var(--text3);font-family:var(--font);font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:color .2s}
+.nav-btn.active{color:var(--accent)}
+.nav-btn#n-inicio.active{color:#f5c400}
+.nav-btn#n-revisiones.active{color:#e05555}
+.nav-btn#n-combustible.active{color:#4caf7d}
+.nav-btn#n-adblue.active{color:#5b9bd5}
+.page-inicio .header-title span,.page-inicio .section-title{color:#f5c400}
+.page-revisiones .header-title span,.page-revisiones .section-title{color:#e05555}
+.page-combustible .header-title span,.page-combustible .section-title{color:#4caf7d}
+.page-adblue .header-title span,.page-adblue .section-title{color:#5b9bd5}
+.nav-btn svg{width:22px;height:22px}
+/* HEADER */
+.header{padding:56px 20px 20px;border-bottom:1px solid var(--border)}
+.header-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:500}
+.header-title{font-size:30px;font-weight:300;letter-spacing:-.01em}
+.header-title span{color:var(--accent)}
+/* PAGES */
+.page{display:none}.page.active{display:block}
+.content{padding:20px}
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px}
+.card-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:500}
+.card-value{font-size:24px;font-weight:400;font-family:var(--mono)}
+.card-value.accent{color:var(--accent)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+/* CYCLE */
+.cycle-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px}
+.cycle-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;font-weight:500}
+.cycle-steps{display:flex;gap:8px}
+.cycle-step{flex:1;height:40px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--border2);color:var(--text3);background:var(--surface2);transition:all .25s}
+.cycle-step.done{background:var(--surface3);border-color:var(--border2);color:var(--text2)}
+.cycle-step.current{background:var(--accent);border-color:var(--accent);color:#000;font-size:12px}
+.cycle-step.prem.done{background:#1a1400;border-color:#3d2e00;color:var(--accent)}
+.cycle-step.prem.current{background:var(--accent);border-color:var(--accent2);color:#000}
+.cycle-next{margin-top:10px;font-size:15px;color:var(--text2)}
+.cycle-next strong{color:var(--accent)}
+/* LIST */
+.list-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.li-left{flex:1;min-width:0}
+.li-date{font-size:12px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.li-title{font-size:15px;font-weight:400;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li-sub{font-size:14px;color:var(--text2);margin-top:2px}
+.li-right{text-align:right;flex-shrink:0}
+.li-price{font-size:16px;font-family:var(--mono);font-weight:500}
+.li-actions{display:flex;gap:8px;margin-top:5px;justify-content:flex-end}
+.btn-act{background:none;border:none;cursor:pointer;padding:3px 6px;color:var(--text3);font-size:13px;font-family:var(--font);border-radius:4px;transition:all .15s}
+.btn-act:active{color:var(--text2);background:var(--surface2)}
+.btn-del:active{color:var(--red)}
+/* BADGE */
+.badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.badge-n{background:#1a1a1a;color:var(--text2);border:1px solid var(--border2)}
+.badge-p{background:#1a1400;color:var(--accent);border:1px solid #3d2e00}
+/* MISC */
+.section-title{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-weight:500;margin:20px 0 10px}
+.totals-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.tr-label{font-size:14px;color:var(--text2)}
+.tr-value{font-size:18px;font-family:var(--mono);font-weight:500}
+.last-rec{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
+.km-since{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
+.km-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:500}
+.km-value{font-size:22px;font-family:var(--mono);color:var(--accent)}
+.km-sub{font-size:13px;color:var(--text3);margin-top:2px}
+.empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:15px}
+/* FAB */
+.fab{position:fixed;bottom:70px;right:20px;width:54px;height:54px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(201,168,76,.4);z-index:99;transition:transform .2s}
+.fab:active{transform:scale(.93)}
+.fab svg{width:24px;height:24px;color:#000}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{width:100%;background:var(--surface);border-radius:20px 20px 0 0;border-top:1px solid var(--border2);padding:20px 20px calc(24px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 18px}
+.modal-title{font-size:17px;font-weight:500;margin-bottom:18px}
+/* FORM */
+.fg{margin-bottom:14px}
+.fl{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:500;margin-bottom:6px;display:block}
+.fi{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:13px 14px;color:var(--text);font-family:var(--font);font-size:17px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.fi:focus{border-color:var(--accent)}
+.fi::placeholder{color:var(--text3)}
+.fi-optional::placeholder{color:var(--text3)}
+/* TYPE SELECTOR */
+.type-sel{display:flex;gap:8px;margin-bottom:14px}
+.type-btn{flex:1;padding:13px;border-radius:var(--r-sm);border:1px solid var(--border2);background:var(--surface2);color:var(--text2);font-family:var(--font);font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;text-align:center}
+.type-btn.sel-n{background:var(--surface3);border-color:var(--text2);color:var(--text)}
+.type-btn.sel-p{background:#1a1400;border-color:var(--accent);color:var(--accent)}
+/* SAVE BTN */
+.btn-save{width:100%;padding:14px;background:var(--surface2);border:1px solid var(--accent);border-radius:var(--r-sm);color:var(--accent);font-family:var(--font);font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:6px;transition:opacity .2s}
+.btn-save:active{opacity:.7}
+/* PICKER */
+.picker-btn{width:100%;padding:14px 16px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:15px;cursor:pointer;text-align:left;margin-bottom:8px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
+.picker-btn:active{border-color:var(--accent)}
+</style>
+</head>
+<body>
+
+<div id="p-inicio" class="page page-inicio active">
+  <div class="header"><div class="header-title">Jaguar <span>F-Pace</span></div></div>
+  <div class="content" id="c-inicio"></div>
+</div>
+<div id="p-revisiones" class="page page-revisiones">
+  <div class="header"><div class="header-title">Revisiones</div></div>
+  <div class="content" id="c-revisiones"></div>
+</div>
+<div id="p-combustible" class="page page-combustible">
+  <div class="header"><div class="header-title">Combustible</div></div>
+  <div class="content" id="c-combustible"></div>
+</div>
+<div id="p-adblue" class="page page-adblue">
+  <div class="header"><div class="header-title">AdBlue</div></div>
+  <div class="content" id="c-adblue"></div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="go('inicio')" id="n-inicio">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Inicio
+  </button>
+  <button class="nav-btn" onclick="go('revisiones')" id="n-revisiones">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Revisiones
+  </button>
+  <button class="nav-btn" onclick="go('combustible')" id="n-combustible">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 22V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14"/><path d="M3 22h10M13 10h2a2 2 0 0 1 2 2v2"/><path d="M17 14v4a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-7l-2-3"/><line x1="3" y1="14" x2="13" y2="14"/></svg>Combustible
+  </button>
+  <button class="nav-btn" onclick="go('adblue')" id="n-adblue">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>AdBlue
+  </button>
+</nav>
+
+<button class="fab" onclick="openPicker()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+let D = { revisiones:[], combustible:[], adblue:[] };
+let editId = null, curPage = 'inicio';
+
+const SUPA_URL = 'https://kxqehlutocvdjfgmbdep.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4cWVobHV0b2N2ZGpmZ21iZGVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxODI2MTAsImV4cCI6MjA4OTc1ODYxMH0.MEj0wMuG9Vu6NKurtO2g_3TSqE7ITzzapSPkXMWO0jQ';
+
+async function dbLoad() {
+  try {
+    const r = await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.oscar&select=data`, {
+      headers: {'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`}
+    });
+    if (r.ok) {
+      const rows = await r.json();
+      if (rows.length && rows[0].data && rows[0].data.revisiones) {
+        D = rows[0].data;
+        localStorage.setItem('fpace_v2', JSON.stringify(D));
+        rInicio();
+        return;
+      }
+    }
+  } catch(e) {}
+  // fallback to localStorage
+  const s = localStorage.getItem('fpace_v2');
+  if (s) { try { D = JSON.parse(s); } catch(e) {} }
+  rInicio();
+}
+
+async function dbSave() {
+  localStorage.setItem('fpace_v2', JSON.stringify(D));
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.oscar`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ data: D, updated_at: new Date().toISOString() })
+    });
+  } catch(e) {}
+}
+
+function loadData() {
+  const s = localStorage.getItem('fpace_v2');
+  if (s) { try { D = JSON.parse(s); } catch(e){} }
+  else {
+    D = {
+      revisiones:[
+        {id:1,fecha:'2024-10-15',km:42000,precio:320,taller:'Jaguar Barcelona',notas:'Revisión 40.000 km. Aceite, filtros, frenos.'},
+        {id:2,fecha:'2025-03-20',km:52000,precio:185,taller:'Jaguar Barcelona',notas:'Aceite y filtro.'},
+      ],
+      combustible:[
+        {id:1,fecha:'2025-01-10',km:45200,tipo:'normal',importe:72.40,notas:''},
+        {id:2,fecha:'2025-01-28',km:45900,tipo:'normal',importe:68.20,notas:''},
+        {id:3,fecha:'2025-02-14',km:46600,tipo:'normal',importe:71.80,notas:''},
+        {id:4,fecha:'2025-02-28',km:47300,tipo:'premium',importe:89.50,notas:'BP Ultimate'},
+        {id:5,fecha:'2025-03-15',km:48000,tipo:'normal',importe:70.10,notas:''},
+        {id:6,fecha:'2025-04-01',km:'',tipo:'normal',importe:73.60,notas:''},
+      ],
+      adblue:[
+        {id:1,fecha:'2024-11-20',km:44000,precio:18.50,notas:'5 litros'},
+        {id:2,fecha:'2025-02-05',km:47000,precio:22.00,notas:'6 litros Repsol'},
+      ]
+    };
+    save();
+  }
+}
+function save() { localStorage.setItem('fpace_v2', JSON.stringify(D)); }
+function nid(a) { return a.length>0?Math.max(...a.map(x=>x.id))+1:1; }
+
+// ── CYCLE ─────────────────────────────────────────────────────────────────────
+// Cycle is determined by ordering combustible by fecha+id and computing position
+function getCycle() {
+  const sorted = [...D.combustible].sort((a,b)=>{
+    const da=a.fecha||'', db=b.fecha||'';
+    return da<db?-1:da>db?1:a.id-b.id;
+  });
+  const pos = sorted.length % 4; // 0=about to do step1, 1=step2...
+  const done = pos; // how many done in current round
+  const nextType = pos===3?'premium':'normal';
+  return { done, nextType, total:sorted.length };
+}
+
+// ── FORMAT ────────────────────────────────────────────────────────────────────
+const fd=(d)=>{ if(!d)return'—'; const[y,m,day]=d.split('-'); return`${day}/${m}/${y}`; };
+const fe=(n)=>new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n||0);
+const fk=(n)=>n?new Intl.NumberFormat('es-ES').format(n)+' km':'—';
+const tod=()=>new Date().toISOString().split('T')[0];
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function go(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('p-'+page).classList.add('active');
+  document.getElementById('n-'+page).classList.add('active');
+  curPage=page; render(page);
+}
+
+function render(p) {
+  if(p==='inicio') rInicio();
+  if(p==='revisiones') rRevisiones();
+  if(p==='combustible') rCombustible();
+  if(p==='adblue') rAdblue();
+}
+
+// ── CYCLE WIDGET ──────────────────────────────────────────────────────────────
+function cycleWidget(c) {
+  const labels=['N','N','N','P'], prem=[0,0,0,1];
+  let s='';
+  for(let i=0;i<4;i++){
+    let cls='cycle-step'+(prem[i]?' prem':'');
+    if(i<c.done) cls+=' done'; else if(i===c.done) cls+=' current';
+    s+=`<div class="${cls}">${labels[i]}</div>`;
+  }
+  return `<div class="cycle-card">
+    <div class="cycle-label">Ciclo combustible · Depósito ${c.done+1} de 4</div>
+    <div class="cycle-steps">${s}</div>
+    <div class="cycle-next">Próximo: <strong>Diésel ${c.nextType==='premium'?'Premium':'Normal'}</strong></div>
+  </div>`;
+}
+
+// ── INICIO ────────────────────────────────────────────────────────────────────
+function rInicio() {
+  const tRev=D.revisiones.reduce((s,x)=>s+x.precio,0);
+  const tComb=D.combustible.reduce((s,x)=>s+x.importe,0);
+  const tAdbl=D.adblue.reduce((s,x)=>s+x.precio,0);
+  const cycle=getCycle();
+  const all=[
+    ...D.revisiones.map(x=>({f:x.fecha,t:'Revisión',l:x.taller,v:x.precio})),
+    ...D.combustible.map(x=>({f:x.fecha,t:x.tipo==='premium'?'Diésel Premium':'Diésel Normal',l:'Combustible',v:x.importe})),
+    ...D.adblue.map(x=>({f:x.fecha,t:'AdBlue',l:'AdBlue',v:x.precio})),
+  ].sort((a,b)=>b.f.localeCompare(a.f));
+  const la=all[0];
+
+  document.getElementById('c-inicio').innerHTML=`
+    ${cycleWidget(cycle)}
+
+    <div class="section-title">Gastos totales</div>
+    <div class="grid2">
+      <div class="card"><div class="card-label">Revisiones</div><div class="card-value" style="font-size:18px">${fe(tRev)}</div></div>
+      <div class="card"><div class="card-label">Combustible</div><div class="card-value" style="font-size:18px">${fe(tComb)}</div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><div class="card-label">AdBlue</div><div class="card-value" style="font-size:18px">${fe(tAdbl)}</div></div>
+      <div class="card" style="border-color:var(--accent)"><div class="card-label">Total general</div><div class="card-value accent" style="font-size:18px">${fe(tRev+tComb+tAdbl)}</div></div>
+    </div>
+    ${la?`<div class="section-title">Último registro</div>
+    <div class="card">
+      <div class="card-label">${la.t} · ${fd(la.f)}</div>
+      <div style="font-size:15px">${la.l}</div>
+      <div style="font-size:16px;font-family:var(--mono);color:var(--text2);margin-top:4px">${fe(la.v)}</div>
+    </div>`:''}
+  `;
+}
+
+// ── REVISIONES ────────────────────────────────────────────────────────────────
+function rRevisiones() {
+  const sorted=[...D.revisiones].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const total=D.revisiones.reduce((s,x)=>s+x.precio,0);
+  let h=`<div class="totals-row"><span class="tr-label">Total revisiones</span><span class="tr-value">${fe(total)}</span></div>
+  <div class="section-title">${sorted.length} registros</div>`;
+  if(!sorted.length) h+=`<div class="empty">Sin revisiones. Pulsa + para añadir.</div>`;
+  else sorted.forEach(r=>{h+=`<div class="list-item">
+    <div class="li-left">
+      <div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div>
+      <div class="li-title">${r.taller}</div>
+      ${r.notas?`<div class="li-sub">${r.notas}</div>`:''}
+    </div>
+    <div class="li-right">
+        <div style="font-size:18px;font-family:var(--mono);font-weight:500;color:var(--text)">${r.km?fk(r.km):'— km'}</div>
+        <div style="font-size:13px;font-family:var(--mono);color:var(--text2);margin-top:2px">${fe(r.precio)}</div>
+        <div class="li-actions">
+          <button class="btn-act" onclick="editRev(${r.id})">Editar</button>
+          <button class="btn-act btn-del" onclick="delRev(${r.id})">Borrar</button>
+        </div>
+      </div>
+    </div>`;});
+  document.getElementById('c-revisiones').innerHTML=h;
+}
+
+// ── COMBUSTIBLE ───────────────────────────────────────────────────────────────
+function rCombustible() {
+  const sorted=[...D.combustible].sort((a,b)=>b.fecha.localeCompare(a.fecha)||b.id-a.id);
+  const tN=D.combustible.filter(x=>x.tipo==='normal').reduce((s,x)=>s+x.importe,0);
+  const tP=D.combustible.filter(x=>x.tipo==='premium').reduce((s,x)=>s+x.importe,0);
+  const cycle=getCycle();
+  let h=`${cycleWidget(cycle)}
+  <div class="grid2" style="margin-bottom:10px">
+    <div class="card"><div class="card-label">Normal</div><div class="card-value" style="font-size:17px">${fe(tN)}</div></div>
+    <div class="card"><div class="card-label">Premium</div><div class="card-value accent" style="font-size:17px">${fe(tP)}</div></div>
+  </div>
+  <div class="totals-row" style="margin-bottom:16px"><span class="tr-label">Total combustible</span><span class="tr-value">${fe(tN+tP)}</span></div>
+  <div class="section-title">${sorted.length} repostajes</div>`;
+  if(!sorted.length) h+=`<div class="empty">Sin repostajes. Pulsa + para añadir.</div>`;
+  else sorted.forEach(r=>{h+=`<div class="list-item">
+    <div class="li-left">
+      <div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div>
+      <div class="li-title"><span class="badge ${r.tipo==='premium'?'badge-p':'badge-n'}">${r.tipo==='premium'?'Premium':'Normal'}</span></div>
+      ${r.notas?`<div class="li-sub">${r.notas}</div>`:''}
+    </div>
+    <div class="li-right">
+      <div class="li-price">${fe(r.importe)}</div>
+      <div class="li-actions">
+        <button class="btn-act" onclick="editComb(${r.id})">Editar</button>
+        <button class="btn-act btn-del" onclick="delComb(${r.id})">Borrar</button>
+      </div>
+    </div>
+  </div>`;});
+  document.getElementById('c-combustible').innerHTML=h;
+}
+
+// ── ADBLUE ────────────────────────────────────────────────────────────────────
+function rAdblue() {
+  const sorted=[...D.adblue].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const total=D.adblue.reduce((s,x)=>s+x.precio,0);
+  let kmH='';
+  if(sorted.length>0){
+    const lastKm=sorted[0].km;
+    const allKms=[...D.combustible,...D.revisiones,...D.adblue].map(x=>parseInt(x.km)||0).filter(x=>x>0);
+    const maxKm=allKms.length?Math.max(...allKms):0;
+    if(lastKm&&maxKm>lastKm){
+      kmH=`<div class="km-since">
+        <div class="km-label">Km desde último AdBlue</div>
+        <div class="km-value">${fk(maxKm-lastKm)}</div>
+        <div class="km-sub">Último AdBlue: ${fd(sorted[0].fecha)} a ${fk(lastKm)}</div>
+      </div>`;
+    }
+  }
+  let h=`${kmH}<div class="totals-row"><span class="tr-label">Total AdBlue</span><span class="tr-value">${fe(total)}</span></div>
+  <div class="section-title">${sorted.length} registros</div>`;
+  if(!sorted.length) h+=`<div class="empty">Sin registros. Pulsa + para añadir.</div>`;
+  else sorted.forEach(r=>{h+=`<div class="list-item">
+    <div class="li-left">
+      <div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div>
+      <div class="li-title">AdBlue</div>
+      ${r.notas?`<div class="li-sub">${r.notas}</div>`:''}
+    </div>
+    <div class="li-right">
+      <div class="li-price">${fe(r.precio)}</div>
+      <div class="li-actions">
+        <button class="btn-act" onclick="editAdbl(${r.id})">Editar</button>
+        <button class="btn-act btn-del" onclick="delAdbl(${r.id})">Borrar</button>
+      </div>
+    </div>
+  </div>`;});
+  document.getElementById('c-adblue').innerHTML=h;
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function openModal(){document.getElementById('modal').classList.add('open');}
+function closeModal(){document.getElementById('modal').classList.remove('open');editId=null;}
+
+function openPicker(){
+  const cycle=getCycle();
+  document.getElementById('modal-title').textContent='¿Qué quieres añadir?';
+  document.getElementById('modal-body').innerHTML=`
+    <button class="picker-btn" onclick="showRevForm(null)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="1.6" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      Revisión
+    </button>
+    <button class="picker-btn" onclick="showCombForm(null,'${cycle.nextType}')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${cycle.nextType==='premium'?'#c9a84c':'var(--text2)'}" stroke-width="1.6" stroke-linecap="round"><path d="M3 22V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14"/><path d="M3 22h10"/><path d="M17 14v4a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-7l-2-3"/><line x1="3" y1="14" x2="13" y2="14"/></svg>
+      Repostaje <small style="color:var(--text3);font-size:11px;margin-left:4px">· ${cycle.nextType==='premium'?'Premium recomendado':'Normal recomendado'}</small>
+    </button>
+    <button class="picker-btn" onclick="showAdblForm(null)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue,#5b9bd5)" stroke-width="1.6" stroke-linecap="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
+      AdBlue
+    </button>`;
+  openModal();
+}
+
+// REVISION
+function showRevForm(r){
+  document.getElementById('modal-title').textContent=r?'Editar revisión':'Nueva revisión';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="ff" value="${r?r.fecha:tod()}"></div>
+    <div class="fg"><label class="fl">Kilómetros</label><input class="fi" type="number" id="fk" placeholder="50000" value="${r&&r.km?r.km:''}"></div>
+    <div class="fg"><label class="fl">Precio (€)</label><input class="fi" type="number" step="0.01" id="fp" placeholder="0,00" value="${r?r.precio:''}"></div>
+    <div class="fg"><label class="fl">Taller</label><input class="fi" type="text" id="ft" placeholder="Nombre del taller" value="${r?r.taller:''}"></div>
+    <div class="fg"><label class="fl">Notas <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="text" id="fn" placeholder="Trabajos realizados..." value="${r?r.notas||'':''}"></div>
+    <button class="btn-save" onclick="saveRev()">Guardar</button>`;
+  openModal();
+}
+function saveRev(){
+  const f=v('ff'),k=v('fk'),p=parseFloat(v('fp')),t=v('ft').trim(),n=v('fn').trim();
+  if(!f||!p||!t){alert('Fecha, precio y taller son obligatorios.');return;}
+  const obj={id:editId||nid(D.revisiones),fecha:f,km:k?parseInt(k):null,precio:p,taller:t,notas:n};
+  if(editId){const i=D.revisiones.findIndex(x=>x.id===editId);if(i>=0)D.revisiones[i]=obj;}
+  else D.revisiones.push(obj);
+  dbSave();closeModal();render(curPage);
+}
+function editRev(id){editId=id;showRevForm(D.revisiones.find(x=>x.id===id));}
+function delRev(id){if(!confirm('¿Borrar esta revisión?'))return;D.revisiones=D.revisiones.filter(x=>x.id!==id);dbSave();render(curPage);}
+
+// COMBUSTIBLE — km OPTIONAL
+function showCombForm(c,sug){
+  const tipo=c?c.tipo:(sug||'normal');
+  document.getElementById('modal-title').textContent=c?'Editar repostaje':'Nuevo repostaje';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="ff" value="${c?c.fecha:tod()}"></div>
+    <div class="fg"><label class="fl">Kilómetros <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="number" id="fk" placeholder="50000" value="${c&&c.km?c.km:''}"></div>
+    <div class="fg"><label class="fl">Tipo de combustible</label>
+      <div class="type-sel">
+        <button class="type-btn ${tipo==='normal'?'sel-n':''}" id="btn-n" onclick="selT('normal')">Diésel Normal</button>
+        <button class="type-btn ${tipo==='premium'?'sel-p':''}" id="btn-p" onclick="selT('premium')">Diésel Premium</button>
+      </div>
+      <input type="hidden" id="fti" value="${tipo}">
+    </div>
+    <div class="fg"><label class="fl">Importe (€)</label><input class="fi" type="number" step="0.01" id="fi2" placeholder="0,00" value="${c?c.importe:''}"></div>
+    <div class="fg"><label class="fl">Notas <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="text" id="fn" placeholder="Gasolinera, litros..." value="${c?c.notas||'':''}"></div>
+    <button class="btn-save" onclick="saveComb()">Guardar</button>`;
+  openModal();
+}
+function selT(t){
+  document.getElementById('fti').value=t;
+  document.getElementById('btn-n').className='type-btn'+(t==='normal'?' sel-n':'');
+  document.getElementById('btn-p').className='type-btn'+(t==='premium'?' sel-p':'');
+}
+function saveComb(){
+  const f=v('ff'),k=v('fk'),t=v('fti'),im=parseFloat(v('fi2')),n=v('fn').trim();
+  if(!f||!im){alert('Fecha e importe son obligatorios.');return;}
+  const obj={id:editId||nid(D.combustible),fecha:f,km:k?parseInt(k):'',tipo:t,importe:im,notas:n};
+  if(editId){const i=D.combustible.findIndex(x=>x.id===editId);if(i>=0)D.combustible[i]=obj;}
+  else D.combustible.push(obj);
+  dbSave();closeModal();render(curPage);
+}
+function editComb(id){editId=id;const c=D.combustible.find(x=>x.id===id);showCombForm(c,c.tipo);}
+function delComb(id){if(!confirm('¿Borrar este repostaje?'))return;D.combustible=D.combustible.filter(x=>x.id!==id);dbSave();render(curPage);}
+
+// ADBLUE
+function showAdblForm(a){
+  document.getElementById('modal-title').textContent=a?'Editar AdBlue':'Nuevo AdBlue';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="ff" value="${a?a.fecha:tod()}"></div>
+    <div class="fg"><label class="fl">Kilómetros</label><input class="fi" type="number" id="fk" placeholder="50000" value="${a?a.km||'':''}"></div>
+    <div class="fg"><label class="fl">Precio (€)</label><input class="fi" type="number" step="0.01" id="fp" placeholder="0,00" value="${a?a.precio:''}"></div>
+    <div class="fg"><label class="fl">Notas <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="text" id="fn" value="${a?a.notas||'':''}"></div>
+    <button class="btn-save" onclick="saveAdbl()">Guardar</button>`;
+  openModal();
+}
+function saveAdbl(){
+  const f=v('ff'),k=v('fk'),p=parseFloat(v('fp')),n=v('fn').trim();
+  if(!f||!p){alert('Fecha y precio son obligatorios.');return;}
+  const obj={id:editId||nid(D.adblue),fecha:f,km:k?parseInt(k):'',precio:p,notas:n};
+  if(editId){const i=D.adblue.findIndex(x=>x.id===editId);if(i>=0)D.adblue[i]=obj;}
+  else D.adblue.push(obj);
+  dbSave();closeModal();render(curPage);
+}
+function editAdbl(id){editId=id;showAdblForm(D.adblue.find(x=>x.id===id));}
+function delAdbl(id){if(!confirm('¿Borrar este registro?'))return;D.adblue=D.adblue.filter(x=>x.id!==id);dbSave();render(curPage);}
+
+function v(id){return document.getElementById(id)?.value||'';}
+
+loadData();
+dbLoad();
+</script>
+</body>
+</html>
