@@ -243,10 +243,16 @@ function getCycle() {
     const da=a.fecha||'', db=b.fecha||'';
     return da<db?-1:da>db?1:a.id-b.id;
   });
-  const pos = sorted.length % 4; // 0=about to do step1, 1=step2...
-  const done = pos; // how many done in current round
-  const nextType = pos===3?'premium':'normal';
-  return { done, nextType, total:sorted.length };
+  // Count deposits since the last premium (premium resets the cycle)
+  let countSincePremium = 0;
+  for (let i = sorted.length - 1; i >= 0; i--) {
+    if (sorted[i].tipo === 'premium') break;
+    countSincePremium++;
+  }
+  const pos = countSincePremium % 4; // 0=just did premium or start, 1=did 1 normal...
+  const done = pos;
+  const nextType = pos === 3 ? 'premium' : 'normal';
+  return { done, nextType, total: sorted.length };
 }
 
 // ── FORMAT ────────────────────────────────────────────────────────────────────
