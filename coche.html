@@ -6,80 +6,82 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="F-Pace">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#0B0F14">
 <title>F-Pace · Control</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAAB6UlEQVR42u3VwQkAIRAEwc0/aY1Awa9dBSZwO83NgrDxCRAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAD3A4wTCCAy9NeHAHKjF4MADF8IAjB8IQjA+EUgAOMXgQCMXwQCMH4RCMD4RSAA4xeBAIxfBAIQgAAEYPwiEIAABCAA4xeBAAQgAAEIwNEE0B2/CAQgAAEIQAAIQAAIQAAIQAAIoDJ+EQjAHwABCAABCAABCAABCAABCAABfB4BAhAAAhAAAohFgAAEgACKESAAASCAYgQIIBsBAshGgACyESCAbAQIIBsBAshGgACSISCAZAgIIBcDAkiEgQBAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAOBoAzP28lyQqk6eAAAAAElFTkSuQmCC">
 <style>
 :root {
-  --bg:#000;--surface:#0d0d0d;--surface2:#161616;--surface3:#1e1e1e;
-  --border:#242424;--border2:#2e2e2e;--text:#fff;--text2:#cccccc;--text3:#999999;
-  --accent:#c9a84c;--accent2:#e8c878;--red:#e05555;--green:#4caf7d;
-  --font:'Inter',system-ui,sans-serif;--mono:'Inter',system-ui,sans-serif;
-  --r:12px;--r-sm:8px;
+  --bg:#0B0F14;--bg-page:#070A0E;
+  --surface:#121821;--surface2:#18202B;--surface3:#1E2836;
+  --border:#26313D;--border2:rgba(38,49,61,0.72);
+  --text:#F2F5F7;--text2:#9CA8B3;--text3:#6F7A86;
+  --accent:#2F80A8;--accent-h:#3A92BD;--accent-s:rgba(47,128,168,0.18);
+  --red:#FC8181;--red-bg:rgba(197,48,48,0.16);
+  --green:#68D391;--green-bg:rgba(56,161,105,0.16);
+  --amber:#E0B15A;--amber-bg:rgba(214,158,46,0.16);
+  --neutral:#CBD5E0;--neutral-bg:rgba(160,174,192,0.14);
+  --font:-apple-system,'SF Pro Text','Inter',system-ui,sans-serif;--mono:-apple-system,'SF Mono','Inter',system-ui,sans-serif;
+  --r:20px;--r-sm:12px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:100px}
+body{font-family:var(--font);background:radial-gradient(circle at top,#13202B 0%,#0B0F14 42%,#070A0E 100%);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:100px}
 /* NAV */
-.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px 10px;background:none;border:none;color:var(--text3);font-family:var(--font);font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:color .2s}
-.nav-btn.active{color:var(--accent)}
-.nav-btn#n-inicio.active{color:#f5c400}
-.nav-btn#n-revisiones.active{color:#e05555}
-.nav-btn#n-combustible.active{color:#4caf7d}
-.nav-btn#n-adblue.active{color:#5b9bd5}
-.page-inicio .header-title span,.page-inicio .section-title{color:#f5c400}
-.page-revisiones .header-title span,.page-revisiones .section-title{color:#e05555}
-.page-combustible .header-title span,.page-combustible .section-title{color:#4caf7d}
-.page-adblue .header-title span,.page-adblue .section-title{color:#5b9bd5}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#090D12;border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px 10px;background:none;border:none;color:var(--text3);font-family:var(--font);font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:0}
+.nav-btn.active{color:var(--text);background:var(--accent-s);border-top:2px solid var(--accent)}
 .nav-btn svg{width:22px;height:22px}
 /* HEADER */
-.header{padding:56px 20px 20px;border-bottom:1px solid var(--border)}
-.header-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:500}
-.header-title{font-size:30px;font-weight:300;letter-spacing:-.01em}
-.header-title span{color:var(--accent)}
+.header{padding:56px 20px 20px;background:linear-gradient(180deg,#121A24 0%,#0B0F14 100%);border-bottom:1px solid var(--border)}
+.header-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:600}
+.header-title{font-size:30px;font-weight:300;letter-spacing:-.03em;color:var(--text)}
+.header-title span{color:var(--text2)}
+.header-sub{display:inline-block;margin-top:8px;padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--text2);letter-spacing:.02em}
+/* SECTION TITLES - unified */
+.section-title{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-weight:500;margin:20px 0 10px}
+.page-inicio .section-title,.page-revisiones .section-title,.page-combustible .section-title,.page-adblue .section-title,.page-aditivos .section-title{color:var(--text3)}
+.page-inicio .header-title span,.page-revisiones .header-title span,.page-combustible .header-title span,.page-adblue .header-title span,.page-aditivos .header-title span{color:var(--text2)}
 /* PAGES */
 .page{display:none}.page.active{display:block}
 .content{padding:20px}
 /* CARDS */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;box-shadow:0 14px 40px rgba(0,0,0,0.22)}
 .card-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:500}
-.card-value{font-size:24px;font-weight:400;font-family:var(--mono)}
+.card-value{font-size:24px;font-weight:400;font-family:var(--mono);color:var(--text)}
 .card-value.accent{color:var(--accent)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 /* CYCLE */
-.cycle-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px}
+.cycle-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;box-shadow:0 14px 40px rgba(0,0,0,0.22)}
 .cycle-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;font-weight:500}
 .cycle-steps{display:flex;gap:8px}
-.cycle-step{flex:1;height:40px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--border2);color:var(--text3);background:var(--surface2);transition:all .25s}
-.cycle-step.done{background:var(--surface3);border-color:var(--border2);color:var(--text2)}
-.cycle-step.current{background:var(--accent);border-color:var(--accent);color:#000;font-size:12px}
-.cycle-step.prem.done{background:#1a1400;border-color:#3d2e00;color:var(--accent)}
-.cycle-step.prem.current{background:var(--accent);border-color:var(--accent2);color:#000}
+.cycle-step{flex:1;height:40px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--border);color:var(--text3);background:var(--surface2);transition:all .25s}
+.cycle-step.done{background:var(--surface3);border-color:var(--border);color:var(--text2)}
+.cycle-step.current{background:var(--accent);border-color:var(--accent);color:#fff;font-size:12px}
+.cycle-step.prem.done{background:rgba(214,158,46,0.12);border-color:rgba(214,158,46,0.3);color:var(--amber)}
+.cycle-step.prem.current{background:var(--amber);border-color:var(--amber);color:#000}
 .cycle-next{margin-top:10px;font-size:15px;color:var(--text2)}
-.cycle-next strong{color:var(--accent)}
+.cycle-next strong{color:var(--text)}
 /* LIST */
-.list-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.list-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;box-shadow:0 14px 40px rgba(0,0,0,0.22)}
 .li-left{flex:1;min-width:0}
 .li-date{font-size:12px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
 .li-title{font-size:15px;font-weight:400;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .li-sub{font-size:14px;color:var(--text2);margin-top:2px}
 .li-right{text-align:right;flex-shrink:0}
-.li-price{font-size:16px;font-family:var(--mono);font-weight:500}
+.li-price{font-size:16px;font-family:var(--mono);font-weight:500;color:var(--text)}
 .li-actions{display:flex;gap:8px;margin-top:5px;justify-content:flex-end}
 .btn-act{background:none;border:none;cursor:pointer;padding:3px 6px;color:var(--text3);font-size:13px;font-family:var(--font);border-radius:4px;transition:all .15s}
 .btn-act:active{color:var(--text2);background:var(--surface2)}
 .btn-del:active{color:var(--red)}
 /* BADGE */
-.badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
-.badge-n{background:#1a1a1a;color:var(--text2);border:1px solid var(--border2)}
-.badge-p{background:#1a1400;color:var(--accent);border:1px solid #3d2e00}
+.badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.badge-n{background:var(--neutral-bg);color:var(--neutral);border:1px solid rgba(160,174,192,0.2)}
+.badge-p{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(214,158,46,0.25)}
 /* MISC */
-.section-title{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-weight:500;margin:20px 0 10px}
-.totals-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.totals-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;box-shadow:0 14px 40px rgba(0,0,0,0.22)}
 .tr-label{font-size:14px;color:var(--text2)}
-.tr-value{font-size:18px;font-family:var(--mono);font-weight:500}
+.tr-value{font-size:18px;font-family:var(--mono);font-weight:500;color:var(--text)}
 .last-rec{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
 .km-since{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
 .km-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:500}
@@ -87,63 +89,58 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .km-sub{font-size:13px;color:var(--text3);margin-top:2px}
 .empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:15px}
 /* FAB */
-.fab{position:fixed;bottom:70px;right:20px;width:54px;height:54px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(201,168,76,.4);z-index:99;transition:transform .2s}
+.fab{position:fixed;bottom:70px;right:20px;width:54px;height:54px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(47,128,168,.4);z-index:99;transition:transform .2s}
 .fab:active{transform:scale(.93)}
-.fab svg{width:24px;height:24px;color:#000}
+.fab svg{width:24px;height:24px;color:#fff}
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-overlay.open{opacity:1;pointer-events:all}
-.modal{width:100%;background:var(--surface);border-radius:20px 20px 0 0;border-top:1px solid var(--border2);padding:20px 20px calc(24px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto}
+.modal{width:100%;background:var(--surface);border-radius:var(--r) var(--r) 0 0;border-top:1px solid var(--border);padding:20px 20px calc(24px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto}
 .modal-overlay.open .modal{transform:translateY(0)}
-.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 18px}
-.modal-title{font-size:17px;font-weight:500;margin-bottom:18px}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px}
+.modal-title{font-size:17px;font-weight:500;margin-bottom:18px;color:var(--text)}
 /* FORM */
 .fg{margin-bottom:14px}
 .fl{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:500;margin-bottom:6px;display:block}
-.fi{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:13px 14px;color:var(--text);font-family:var(--font);font-size:17px;outline:none;transition:border-color .2s;-webkit-appearance:none}
-.fi:focus{border-color:var(--accent)}
+.fi{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:13px 14px;color:var(--text);font-family:var(--font);font-size:17px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.fi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(47,128,168,0.18)}
 .fi::placeholder{color:var(--text3)}
-.fi-optional::placeholder{color:var(--text3)}
 /* TYPE SELECTOR */
 .type-sel{display:flex;gap:8px;margin-bottom:14px}
-.type-btn{flex:1;padding:13px;border-radius:var(--r-sm);border:1px solid var(--border2);background:var(--surface2);color:var(--text2);font-family:var(--font);font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;text-align:center}
+.type-btn{flex:1;padding:13px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-family:var(--font);font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;text-align:center}
 .type-btn.sel-n{background:var(--surface3);border-color:var(--text2);color:var(--text)}
-.type-btn.sel-p{background:#1a1400;border-color:var(--accent);color:var(--accent)}
+.type-btn.sel-p{background:var(--amber-bg);border-color:var(--amber);color:var(--amber)}
 /* SAVE BTN */
-.btn-save{width:100%;padding:14px;background:var(--surface2);border:1px solid var(--accent);border-radius:var(--r-sm);color:var(--accent);font-family:var(--font);font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:6px;transition:opacity .2s}
+.btn-save{width:100%;padding:14px;background:var(--accent);border:1px solid rgba(47,128,168,0.4);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:6px;transition:all .2s}
+.btn-save:hover{background:var(--accent-h)}
 .btn-save:active{opacity:.7}
 /* PICKER */
-.picker-btn{width:100%;padding:14px 16px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:15px;cursor:pointer;text-align:left;margin-bottom:8px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
+.picker-btn{width:100%;padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:15px;cursor:pointer;text-align:left;margin-bottom:8px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
 .picker-btn:active{border-color:var(--accent)}
-
 /* ADITIVOS */
-.page-aditivos .header-title span,.page-aditivos .section-title{color:#b07ce8}
-.nav-btn#n-aditivos.active{color:#b07ce8}
-.badge-adv{background:#1a1400;color:var(--accent);border:1px solid #3d2e00}
-.badge-dpf{background:#1a0a2e;color:#b07ce8;border:1px solid #3d1a6e}
-.badge-st{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
-.badge-pendiente{background:#1a1400;color:var(--accent);border:1px solid #3d2e00}
-.badge-aplicado{background:#0a1a0a;color:var(--green);border:1px solid #1a3d1a}
-.badge-completado{background:var(--surface2);color:var(--text3);border:1px solid var(--border2)}
-.badge-saltado{background:var(--surface2);color:var(--text3);border:1px solid var(--border2)}
-.adit-next{background:var(--surface);border:1px solid var(--border);border-left:3px solid #b07ce8;border-radius:var(--r);padding:16px;margin-bottom:10px}
-.adit-next-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#b07ce8;margin-bottom:8px;font-weight:500}
+.badge-adv{background:var(--neutral-bg);color:var(--neutral);border:1px solid rgba(160,174,192,0.2)}
+.badge-dpf{background:var(--accent-s);color:var(--accent);border:1px solid rgba(47,128,168,0.3)}
+.badge-st{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.badge-pendiente{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(214,158,46,0.25)}
+.badge-aplicado{background:var(--green-bg);color:var(--green);border:1px solid rgba(56,161,105,0.25)}
+.badge-completado{background:var(--neutral-bg);color:var(--neutral);border:1px solid rgba(160,174,192,0.2)}
+.badge-saltado{background:var(--neutral-bg);color:var(--neutral);border:1px solid rgba(160,174,192,0.2)}
+.adit-next{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r);padding:16px;margin-bottom:10px;box-shadow:0 14px 40px rgba(0,0,0,0.22)}
+.adit-next-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:500}
 .adit-next-product{font-size:17px;font-weight:400;color:var(--text);margin-bottom:4px}
 .adit-next-detail{font-size:13px;color:var(--text3);line-height:1.5}
-.adit-cal-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.adit-cal-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border2)}
 .adit-cal-row:last-child{border-bottom:none}
 .adit-cal-mes{font-size:14px;font-weight:500;color:var(--text);min-width:60px}
 .adit-cal-prod{font-size:13px;color:var(--text2);flex:1;margin:0 12px}
-.adit-cal-prio{font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-right:10px}
-.adit-cal-prio.alta{color:var(--red)}.adit-cal-prio.media{color:var(--accent)}
-.adit-rules{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;font-size:12px;color:var(--text3);line-height:1.7}
+.adit-rules{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;font-size:12px;color:var(--text3);line-height:1.7;box-shadow:0 14px 40px rgba(0,0,0,0.22)}
 .adit-rules strong{color:var(--text2);font-weight:500}
 </style>
 </head>
 <body>
 
 <div id="p-inicio" class="page page-inicio active">
-  <div class="header"><div class="header-title">Jaguar <span>F-Pace</span></div></div>
+  <div class="header"><div class="header-label">Control vehículo</div><div class="header-title">Jaguar <span>F-Pace</span></div><div class="header-sub">7495 JRG · 2.0D Ingenium</div></div>
   <div class="content" id="c-inicio"></div>
 </div>
 <div id="p-revisiones" class="page page-revisiones">
@@ -341,8 +338,78 @@ function rInicio() {
   ].sort((a,b)=>b.f.localeCompare(a.f));
   const la=all[0];
 
+  // Estado general
+  const lastRev=D.revisiones.length?[...D.revisiones].sort((a,b)=>b.fecha.localeCompare(a.fecha))[0]:null;
+  const lastKm=lastRev?fk(lastRev.km):'—';
+  const lastRevDate=lastRev?fd(lastRev.fecha):'—';
+
+  // Estado aditivos
+  const ult=typeof getUltimoAplicado==='function'?getUltimoAplicado():null;
+  const prox=typeof getProximoPrevisto==='function'?getProximoPrevisto():null;
+  const mi=typeof getMesActualInfo==='function'?getMesActualInfo():{hay:false};
+  let aditBadge='',aditBadgeClass='badge-st badge-pendiente';
+  if(mi.hay){
+    if(mi.estado==='Aplicado'){aditBadge='Aplicado';aditBadgeClass='badge-st badge-aplicado';}
+    else if(mi.estado==='No aplicado'){aditBadge='No aplicado';aditBadgeClass='badge-st badge-completado';}
+    else{aditBadge='Pendiente';aditBadgeClass='badge-st badge-pendiente';}
+  }
+
+  // Last combustible
+  const lastComb=D.combustible.length?[...D.combustible].sort((a,b)=>b.fecha.localeCompare(a.fecha))[0]:null;
+
   document.getElementById('c-inicio').innerHTML=`
+    <div class="card" style="border-left:3px solid var(--accent)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:15px;font-weight:500;color:var(--text)">Estado general</div>
+        <span class="badge-st badge-aplicado">Al día</span>
+      </div>
+      <div style="font-size:32px;font-weight:500;color:var(--text);margin-bottom:4px">${lastKm}</div>
+      <div style="font-size:13px;color:var(--text3)">Última revisión registrada el ${lastRevDate}</div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:500;color:var(--text)">Estado aditivos</div>
+        ${mi.hay?`<span class="${aditBadgeClass}">${aditBadge}</span>`:''}
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border2)">
+        <span style="font-size:13px;color:var(--text3)">Último aplicado</span>
+        <span style="font-size:14px;font-weight:400;color:var(--text)">${ult?ult.corto+' · '+ult.mesNombre:'Ninguno'}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border2)">
+        <span style="font-size:13px;color:var(--text3)">Próximo previsto</span>
+        <span style="font-size:14px;font-weight:400;color:var(--accent)">${prox?prox.corto+' · '+prox.mesNombre:'—'}</span>
+      </div>
+      ${mi.hay?`<div style="display:flex;justify-content:space-between;padding:8px 0">
+        <span style="font-size:13px;color:var(--text3)">Este mes</span>
+        <span style="font-size:14px;font-weight:400;color:var(--text)">${mi.estado==='Pendiente'?'Toca '+mi.pauta.corto:mi.pauta.corto+' '+mi.estado.toLowerCase()}</span>
+      </div>`:`<div style="display:flex;justify-content:space-between;padding:8px 0">
+        <span style="font-size:13px;color:var(--text3)">Este mes</span>
+        <span style="font-size:14px;color:var(--text3)">No toca aditivo</span>
+      </div>`}
+    </div>
+
     ${cycleWidget(cycle)}
+
+    <div class="grid2">
+      <div class="card"><div class="card-label">Combustible</div><div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:2px">Último depósito</div><div style="font-size:13px;color:var(--text3)">${lastComb?'Diésel '+(lastComb.tipo==='premium'?'premium':'normal'):'—'}</div></div>
+      <div class="card"><div class="card-label">AdBlue</div><div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:2px">${D.adblue.length?'Registrado':'Sin aviso'}</div><div style="font-size:13px;color:var(--text3)">Control manual</div></div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:500;color:var(--text)">Próximos controles</div>
+        <span class="badge-st badge-completado">Resumen</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border2)">
+        <span style="font-size:13px;color:var(--text3)">Aceite recomendado</span>
+        <span style="font-size:14px;font-weight:400;color:var(--text)">0W30 STJLR.03.5007</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0">
+        <span style="font-size:13px;color:var(--text3)">Uso habitual</span>
+        <span style="font-size:14px;font-weight:400;color:var(--text)">Urbano corto</span>
+      </div>
+    </div>
 
     <div class="section-title">Gastos totales</div>
     <div class="grid2">
@@ -351,13 +418,13 @@ function rInicio() {
     </div>
     <div class="grid2">
       <div class="card"><div class="card-label">AdBlue</div><div class="card-value" style="font-size:18px">${fe(tAdbl)}</div></div>
-      <div class="card"><div class="card-label">Aditivos</div><div class="card-value" style="font-size:18px;color:#b07ce8">${fe(tAdit)}</div></div>
+      <div class="card"><div class="card-label">Aditivos</div><div class="card-value" style="font-size:18px">${fe(tAdit)}</div></div>
     </div>
     <div class="card" style="border-color:var(--accent)"><div class="card-label">Total general</div><div class="card-value accent" style="font-size:18px">${fe(tRev+tComb+tAdbl+tAdit)}</div></div>
     ${la?`<div class="section-title">Último registro</div>
     <div class="card">
       <div class="card-label">${la.t} · ${fd(la.f)}</div>
-      <div style="font-size:15px">${la.l}</div>
+      <div style="font-size:15px;color:var(--text2)">${la.l}</div>
       <div style="font-size:16px;font-family:var(--mono);color:var(--text2);margin-top:4px">${fe(la.v)}</div>
     </div>`:''}
   `;
@@ -473,11 +540,11 @@ function openPicker(){
       Repostaje <small style="color:var(--text3);font-size:11px;margin-left:4px">· ${cycle.nextType==='premium'?'Premium recomendado':'Normal recomendado'}</small>
     </button>
     <button class="picker-btn" onclick="showAdblForm(null)">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue,#5b9bd5)" stroke-width="1.6" stroke-linecap="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
       AdBlue
     </button>
     <button class="picker-btn" onclick="showAditForm(null)">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b07ce8" stroke-width="1.6" stroke-linecap="round"><path d="M9 3h6l2 4H7L9 3z"/><rect x="7" y="7" width="10" height="13" rx="2"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="9.5" y1="13.5" x2="14.5" y2="13.5"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"><path d="M9 3h6l2 4H7L9 3z"/><rect x="7" y="7" width="10" height="13" rx="2"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="9.5" y1="13.5" x2="14.5" y2="13.5"/></svg>
       Aditivo diésel / DPF
     </button>`;
   openModal();
@@ -541,13 +608,6 @@ function saveComb(){
   const f=v('ff'),k=v('fk'),t=v('fti'),im=parseFloat(v('fi2')),n=v('fn').trim();
   if(!f||!im){alert('Fecha e importe son obligatorios.');return;}
   const aditSel=v('fcomb-adit')||'no';
-  // Check separation rule
-  if(aditSel!=='no'&&!editId){
-    const st=aditGetEstadoActual();
-    if(st.estado==='consumo'||st.estado==='separacion'){
-      if(!confirm('⚠ El depósito anterior tuvo aditivo. Debe haber 1 depósito sin aditivo entre tratamientos.\n\n¿Guardar igualmente?'))return;
-    }
-  }
   const obj={id:editId||nid(D.combustible),fecha:f,km:k?parseInt(k):'',tipo:t,importe:im,notas:n,aditivo:aditSel};
   if(editId){const i=D.combustible.findIndex(x=>x.id===editId);if(i>=0)D.combustible[i]=obj;}
   else {
@@ -594,173 +654,62 @@ const PAUTA_ANUAL = [
   {mes:11,mesNombre:'Diciembre',producto:'dpf',nombre:'Forté DPF Cleaner & Regenerator',prioridad:'Media',motivo:'Apoyo preventivo tras uso urbano y antes de trayectos navidad'},
 ];
 
-function getAditSorted(){return[...(D.aditivos||[])].sort((a,b)=>a.fecha<b.fecha?-1:a.fecha>b.fecha?1:a.id-b.id);}
-function getCombSorted(){return[...D.combustible].sort((a,b)=>a.fecha<b.fecha?-1:a.fecha>b.fecha?1:a.id-b.id);}
-
-function aditGetEstadoActual(){
-  // Returns: 'libre', 'consumo', 'separacion'
-  const adit=getAditSorted();
-  if(!adit.length)return{estado:'libre',last:null};
-  const last=adit[adit.length-1];
-  const combAfter=getCombSorted().filter(c=>c.fecha>last.fecha||(c.fecha===last.fecha&&c.id>(last.depositoId||0)));
-  if(combAfter.length===0)return{estado:'consumo',last};
-  if(combAfter.length===1){
-    // 1 deposit after = separation deposit done, but need to check if it had aditivo
-    if(combAfter[0].aditivo&&combAfter[0].aditivo!=='no')return{estado:'consumo',last};
-    return{estado:'separacion',last};
-  }
-  return{estado:'libre',last};
-}
-
 function aditRequiereSeparacion(){
-  const s=aditGetEstadoActual();
-  return s.estado==='consumo'||s.estado==='separacion';
+  const a=D.aditivos||[];if(!a.length)return false;
+  const last=[...a].sort((x,y)=>y.fecha.localeCompare(x.fecha))[0];
+  const after=[...D.combustible].filter(c=>c.fecha>last.fecha).length;
+  return after<1;
 }
-
-function aditPuedeUsar(){
-  const s=aditGetEstadoActual();
-  return s.estado==='libre';
-}
-
-function getAditEstado(r){
-  if(!r)return r.estado||'';
-  if(r.estado==='Saltado'||r.estado==='Reprogramado')return r.estado;
-  const combAfter=getCombSorted().filter(c=>c.fecha>r.fecha||(c.fecha===r.fecha&&c.id>(r.depositoId||0)));
-  const sinAditAfter=combAfter.filter(c=>!c.aditivo||c.aditivo==='no');
-  if(combAfter.length===0)return'Depósito en consumo';
-  if(sinAditAfter.length===0)return'Aplicado';
-  if(sinAditAfter.length>=1)return'Completado';
-  return'Separación obligatoria';
-}
-
-function getUsoCalidad(prod,uso){
-  if(!uso)return'';
-  if(prod==='dpf'&&uso==='Urbano')return'no-ideal';
-  if(prod==='advanced'&&['Viaje','Carretera','Uso intensivo','Mixto'].includes(uso))return'optimo';
-  if(prod==='dpf'&&['Viaje','Carretera','Uso intensivo'].includes(uso))return'optimo';
-  return'normal';
-}
-
 function getProximoAditivo(){
   const m=new Date().getMonth(),y=new Date().getFullYear(),a=D.aditivos||[];
   for(const p of PAUTA_ANUAL){
     if(p.mes<m)continue;
-    const done=a.find(x=>{const d=new Date(x.fecha);return d.getFullYear()===y&&d.getMonth()===p.mes&&(x.estado==='Aplicado'||x.estado==='Completado'||x.estado==='Depósito en consumo');});
-    const saltado=a.find(x=>{const d=new Date(x.fecha);return d.getFullYear()===y&&d.getMonth()===p.mes&&x.estado==='Saltado';});
-    if(!done&&!saltado)return p;
+    if(!a.find(x=>{const d=new Date(x.fecha);return d.getFullYear()===y&&d.getMonth()===p.mes&&(x.estado==='Aplicado'||x.estado==='Completado');}))return p;
   }
   return PAUTA_ANUAL[0];
 }
-
-function validarAditivo(prod,uso,isEdit){
-  const avisos=[],bloqueos=[];
-  const st=aditGetEstadoActual();
-  if(!isEdit&&(st.estado==='consumo'))bloqueos.push('Hay un depósito tratado todavía en consumo. Registra un repostaje sin aditivo primero.');
-  if(!isEdit&&st.estado==='separacion')bloqueos.push('Separación obligatoria: registra 1 depósito sin aditivo antes de aplicar otro.');
-  if(prod==='dpf'&&uso==='Urbano')avisos.push('No recomendado: el DPF Cleaner tiene más sentido si después habrá carretera y trayectos largos.');
-  return{puedeGuardar:bloqueos.length===0,avisos,bloqueos};
+function getAditEstado(r){
+  if(!r)return'';
+  const after=[...D.combustible].filter(c=>c.fecha>r.fecha).length;
+  if(after>=1)return'Completado';
+  return r.estado||'Aplicado';
 }
 
 function rAditivos(){
-  const aditivos=D.aditivos||[],prox=getProximoAditivo(),st=aditGetEstadoActual(),curYear=new Date().getFullYear(),curMonth=new Date().getMonth();
+  const aditivos=D.aditivos||[],prox=getProximoAditivo(),sepReq=aditRequiereSeparacion(),curYear=new Date().getFullYear(),curMonth=new Date().getMonth();
   let h='';
-
-  // Estado actual
-  let estadoTxt='',estadoColor='var(--green)';
-  if(st.estado==='libre'){estadoTxt='Libre para usar aditivo';estadoColor='var(--green)';}
-  else if(st.estado==='consumo'){estadoTxt='Depósito en consumo. Siguiente repostaje sin aditivo.';estadoColor='var(--accent)';}
-  else if(st.estado==='separacion'){estadoTxt='Separación obligatoria. Siguiente depósito sin aditivo.';estadoColor='var(--red)';}
-
-  // Próximo aditivo
-  h+=`<div class="adit-next"><div class="adit-next-label">Próximo aditivo recomendado</div><div class="adit-next-product">${prox.mesNombre} — ${prox.nombre}</div><div class="adit-next-detail">Prioridad: <span style="color:${prox.prioridad==='Alta'?'var(--red)':'var(--accent)'}">${prox.prioridad}</span><br>${prox.motivo}</div><div style="margin-top:8px;font-size:13px;color:${estadoColor}">${estadoTxt}</div></div>`;
-
-  // Reglas
-  h+=`<div class="adit-rules"><strong>Advanced</strong> = mantenimiento general diésel/inyección/combustión.<br><strong>DPF</strong> = apoyo específico FAP/DPF/regeneración.<br>No usar ambos en el mismo depósito.<br>Después de cada aditivo, dejar 1 depósito completo sin aditivo.<br>DPF solo tiene sentido si después habrá carretera y trayectos largos.<br>Advanced tiene más sentido antes de etapas de más uso o viajes.<br><br><em style="color:var(--text3)">Esta pauta es preventiva y flexible. El uso real manda. Si no hay carretera, viaje o trayectos largos, es mejor saltar o reprogramar.</em></div>`;
-
-  // Resumen anual
-  const aditYear=aditivos.filter(a=>new Date(a.fecha).getFullYear()===curYear);
-  const aplicados=aditYear.filter(a=>['Aplicado','Completado','Depósito en consumo'].includes(getAditEstado(a)));
-  const costeAnual=aditYear.reduce((s,x)=>s+(x.precioProducto||0),0);
-  const lastAdit=getAditSorted().length?getAditSorted()[getAditSorted().length-1]:null;
-
-  h+=`<div class="section-title">Resumen ${curYear}</div><div class="card" style="padding:14px 16px">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div><div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">Coste aditivos</div><div style="font-size:18px;color:#b07ce8">${fe(costeAnual)}</div></div>
-      <div><div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">Tratamientos</div><div style="font-size:18px;color:var(--text)">${aplicados.length}</div></div>
-    </div>
-    ${lastAdit?`<div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px">
-      <div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">Último aditivo</div>
-      <div style="font-size:14px;color:var(--text)">${lastAdit.producto==='advanced'?'Advanced':'DPF Cleaner'} · ${fd(lastAdit.fecha)}${lastAdit.km?' · '+fk(lastAdit.km):''}</div>
-    </div>`:''}
-    <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px">
-      <div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">Estado actual</div>
-      <div style="font-size:14px;color:${estadoColor}">${estadoTxt}</div>
-    </div>
-  </div>`;
-
-  // Calendario anual
+  h+=`<div class="adit-next"><div class="adit-next-label">Próximo aditivo recomendado</div><div class="adit-next-product">${prox.mesNombre} — ${prox.nombre}</div><div class="adit-next-detail">Prioridad: <span style="color:${prox.prioridad==='Alta'?'var(--red)':'var(--accent)'}"> ${prox.prioridad}</span><br>${prox.motivo}<br>${sepReq?'<span style="color:var(--red)">⚠ Registra 1 depósito sin aditivo antes</span>':'Después: dejar 1 depósito sin aditivo'}</div></div>`;
+  h+=`<div class="adit-rules"><strong>Advanced</strong> = mantenimiento general diésel/inyección/combustión.<br><strong>DPF</strong> = apoyo específico FAP/DPF/regeneración.<br>No usar ambos en el mismo depósito.<br>Después de cada aditivo, dejar 1 depósito completo sin aditivo.<br>DPF solo tiene sentido si después habrá carretera y trayectos largos.</div>`;
   h+=`<div class="section-title">Calendario ${curYear}</div><div class="card" style="padding:12px 16px">`;
   PAUTA_ANUAL.forEach(p=>{
-    const match=aditivos.find(a=>{const d=new Date(a.fecha);return d.getFullYear()===curYear&&d.getMonth()===p.mes;});
-    let sb='',estado='';
-    if(match){
-      estado=getAditEstado(match);
-      if(estado==='Saltado')sb='<span class="badge-st badge-saltado">Saltado</span>';
-      else if(estado==='Reprogramado')sb='<span class="badge-st badge-saltado">Reprogramado</span>';
-      else if(estado==='Completado')sb='<span class="badge-st badge-aplicado">Completado</span>';
-      else if(estado==='Depósito en consumo')sb='<span class="badge-st badge-pendiente">En consumo</span>';
-      else if(estado==='Separación obligatoria')sb='<span class="badge-st badge-separacion">Separación</span>';
-      else sb='<span class="badge-st badge-aplicado">Aplicado</span>';
-    } else {
-      const past=p.mes<curMonth;
-      sb=past?'<span class="badge-st badge-saltado">No aplicado</span>':'<span class="badge-st badge-pendiente">Pendiente</span>';
-    }
-    const skipBtn=!match&&p.mes<=curMonth?` <button class="btn-act" onclick="skipAdit(${p.mes})" style="font-size:10px;padding:1px 6px">Saltar</button>`:'';
-    h+=`<div class="adit-cal-row"><div class="adit-cal-mes">${p.mesNombre}</div><div class="adit-cal-prod">${p.producto==='advanced'?'Advanced':'DPF Cleaner'}</div><div class="adit-cal-prio ${p.prioridad.toLowerCase()}">${p.prioridad}</div>${sb}${skipBtn}</div>`;
+    const done=aditivos.find(a=>{const d=new Date(a.fecha);return d.getFullYear()===curYear&&d.getMonth()===p.mes&&(a.estado==='Aplicado'||a.estado==='Completado');});
+    const saltado=aditivos.find(a=>{const d=new Date(a.fecha);return d.getFullYear()===curYear&&d.getMonth()===p.mes&&a.estado==='Saltado';});
+    let sb='';
+    if(done)sb='<span class="badge-st badge-aplicado">Aplicado</span>';
+    else if(saltado)sb='<span class="badge-st badge-saltado">Saltado</span>';
+    else sb=`<span class="badge-st badge-pendiente">Pendiente</span>`;
+    h+=`<div class="adit-cal-row"><div class="adit-cal-mes">${p.mesNombre}</div><div class="adit-cal-prod">${p.producto==='advanced'?'Advanced':'DPF Cleaner'}</div><div class="adit-cal-prio ${p.prioridad.toLowerCase()}">${p.prioridad}</div>${sb}</div>`;
   });
   h+=`</div>`;
-
-  // Pauta verano
   if(curMonth>=5&&curMonth<=7){h+=`<div class="card" style="border-color:#3d2e00;margin-top:10px"><div class="card-label" style="color:var(--accent)">Pauta verano</div><div style="font-size:13px;color:var(--text2);line-height:1.6">Advanced en julio → 1 depósito sin aditivo → DPF en agosto antes de viaje largo.</div></div>`;}
-
-  // Historial
   const sorted=[...aditivos].sort((a,b)=>b.fecha.localeCompare(a.fecha));
   h+=`<div class="section-title">${sorted.length} registros</div>`;
   if(!sorted.length)h+=`<div class="empty">Sin registros de aditivos. Pulsa + para añadir.</div>`;
   else sorted.forEach(r=>{
     const estado=getAditEstado(r),isProd=r.producto==='advanced';
-    const calidad=getUsoCalidad(r.producto,r.usoPosterior);
-    let calidadBadge='';
-    if(calidad==='optimo')calidadBadge=' <span class="badge-st badge-aplicado">Uso óptimo</span>';
-    else if(calidad==='no-ideal')calidadBadge=' <span class="badge-st badge-separacion">Uso no ideal</span>';
-    let estadoBadgeClass='badge-pendiente';
-    if(estado==='Completado')estadoBadgeClass='badge-completado';
-    else if(estado==='Aplicado'||estado==='Depósito en consumo')estadoBadgeClass='badge-aplicado';
-    else if(estado==='Saltado'||estado==='Reprogramado')estadoBadgeClass='badge-saltado';
-    else if(estado==='Separación obligatoria')estadoBadgeClass='badge-separacion';
-    h+=`<div class="list-item"><div class="li-left"><div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div><div class="li-title"><span class="badge ${isProd?'badge-adv':'badge-dpf'}">${isProd?'Advanced':'DPF Cleaner'}</span>${calidadBadge}</div>${r.usoPosterior?`<div class="li-sub">Uso posterior: ${r.usoPosterior}</div>`:''}${r.motivo?`<div class="li-sub" style="color:var(--text3)">${r.motivo}</div>`:''}</div><div class="li-right"><div class="li-price">${fe(r.precioProducto||0)}</div><div style="margin-top:4px"><span class="badge-st ${estadoBadgeClass}">${estado}</span></div><div class="li-actions"><button class="btn-act" onclick="editAdit(${r.id})">Editar</button><button class="btn-act btn-del" onclick="delAdit(${r.id})">Borrar</button></div></div></div>`;
+    h+=`<div class="list-item"><div class="li-left"><div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div><div class="li-title"><span class="badge ${isProd?'badge-adv':'badge-dpf'}">${isProd?'Advanced':'DPF Cleaner'}</span></div>${r.usoPosterior?`<div class="li-sub">Uso: ${r.usoPosterior}</div>`:''}${r.motivo?`<div class="li-sub" style="color:var(--text3)">${r.motivo}</div>`:''}</div><div class="li-right"><div class="li-price">${fe(r.precioProducto||0)}</div><div style="margin-top:4px"><span class="badge-st badge-${estado.toLowerCase()}">${estado}</span></div><div class="li-actions"><button class="btn-act" onclick="editAdit(${r.id})">Editar</button><button class="btn-act btn-del" onclick="delAdit(${r.id})">Borrar</button></div></div></div>`;
   });
-
+  const costeAnual=aditivos.filter(a=>new Date(a.fecha).getFullYear()===curYear).reduce((s,x)=>s+(x.precioProducto||0),0);
+  if(costeAnual>0)h+=`<div class="totals-row" style="margin-top:10px"><span class="tr-label">Coste aditivos ${curYear}</span><span class="tr-value">${fe(costeAnual)}</span></div>`;
   document.getElementById('c-aditivos').innerHTML=h;
 }
 
-// Skip a calendar entry
-function skipAdit(mes){
-  if(!D.aditivos)D.aditivos=[];
-  const p=PAUTA_ANUAL.find(x=>x.mes===mes);
-  if(!p)return;
-  D.aditivos.push({id:nid(D.aditivos),fecha:new Date().getFullYear()+'-'+(mes+1).toString().padStart(2,'0')+'-01',km:'',producto:p.producto,usoPosterior:'',precioProducto:0,motivo:'',notas:'',estado:'Saltado'});
-  dbSave();render(curPage);
-}
-
 function showAditForm(a){
-  const st=aditGetEstadoActual();
-  const isEdit=!!a;
-  let warnings='';
-  if(!isEdit&&st.estado==='consumo')warnings+=`<div style="background:#1a0a0a;border:1px solid #3d1a1a;border-radius:var(--r-sm);padding:12px;margin-bottom:14px;font-size:13px;color:var(--red)">⚠ Depósito en consumo. Registra un repostaje sin aditivo antes de aplicar otro.</div>`;
-  if(!isEdit&&st.estado==='separacion')warnings+=`<div style="background:#1a0a0a;border:1px solid #3d1a1a;border-radius:var(--r-sm);padding:12px;margin-bottom:14px;font-size:13px;color:var(--red)">⚠ Separación obligatoria. Registra 1 depósito sin aditivo antes.</div>`;
+  const sepReq=aditRequiereSeparacion();
+  let w='';
+  if(sepReq&&!a)w=`<div style="background:#1a0a0a;border:1px solid #3d1a1a;border-radius:var(--r-sm);padding:12px;margin-bottom:14px;font-size:13px;color:var(--red)">⚠ El último depósito tuvo aditivo. Registra 1 depósito sin aditivo antes.</div>`;
   document.getElementById('modal-title').textContent=a?'Editar aditivo':'Nuevo aditivo';
-  document.getElementById('modal-body').innerHTML=`${warnings}
+  document.getElementById('modal-body').innerHTML=`${w}
     <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="ff" value="${a?a.fecha:tod()}"></div>
     <div class="fg"><label class="fl">Kilómetros</label><input class="fi" type="number" id="fk" placeholder="50000" value="${a&&a.km?a.km:''}"></div>
     <div class="fg"><label class="fl">Producto</label><div class="type-sel"><button class="type-btn ${a&&a.producto==='advanced'?'sel-n':(!a?'sel-n':'')}" id="btn-adv" onclick="selAditProd('advanced')" style="font-size:13px">Advanced</button><button class="type-btn ${a&&a.producto==='dpf'?'sel-p':''}" id="btn-dpf" onclick="selAditProd('dpf')" style="font-size:13px">DPF Cleaner</button></div><input type="hidden" id="fadit-prod" value="${a?a.producto:'advanced'}"></div>
@@ -769,14 +718,12 @@ function showAditForm(a){
     <div class="fg"><label class="fl">Precio producto (€)</label><input class="fi" type="number" step="0.01" id="fadit-precio" placeholder="18,95" value="${a?a.precioProducto||'':''}"></div>
     <div class="fg"><label class="fl">Motivo <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="text" id="fadit-motivo" placeholder="Preventivo verano..." value="${a?a.motivo||'':''}"></div>
     <div class="fg"><label class="fl">Notas <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="text" id="fn" value="${a?a.notas||'':''}"></div>
-    <div class="fg"><label class="fl">Estado</label><select class="fi" id="fadit-estado" style="font-size:15px"><option value="Aplicado" ${a&&a.estado==='Aplicado'?'selected':(!a?'selected':'')}>Aplicado</option><option value="Saltado" ${a&&a.estado==='Saltado'?'selected':''}>Saltado</option><option value="Reprogramado" ${a&&a.estado==='Reprogramado'?'selected':''}>Reprogramado</option></select></div>
     <button class="btn-save" onclick="saveAdit()">Guardar</button>`;
   openModal();
 }
 function checkDpfWarn(){
   const w=document.getElementById('adit-uso-warn'),p=v('fadit-prod'),u=v('fadit-uso');
-  if(p==='dpf'&&u==='Urbano')w.innerHTML='<div style="background:#1a0a0a;border:1px solid #3d1a1a;border-radius:var(--r-sm);padding:12px;margin-bottom:14px;font-size:13px;color:var(--red)">⚠ No recomendado: DPF Cleaner tiene más sentido con carretera y trayectos largos. Considere saltar o reprogramar.</div>';
-  else if(p==='advanced'&&['Viaje','Carretera','Uso intensivo','Mixto'].includes(u)){w.innerHTML='<div style="background:#0a1a0a;border:1px solid #1a3d1a;border-radius:var(--r-sm);padding:12px;margin-bottom:14px;font-size:13px;color:var(--green)">✓ Uso óptimo: Advanced antes de uso intensivo o viaje.</div>';}
+  if(p==='dpf'&&u==='Urbano')w.innerHTML='<div style="background:#1a0a0a;border:1px solid #3d1a1a;border-radius:var(--r-sm);padding:12px;margin-bottom:14px;font-size:13px;color:var(--red)">⚠ No recomendado: DPF Cleaner tiene más sentido con carretera y trayectos largos.</div>';
   else w.innerHTML='';
 }
 function selAditProd(t){
@@ -786,18 +733,12 @@ function selAditProd(t){
   checkDpfWarn();
 }
 function saveAdit(){
-  const f=v('ff'),k=v('fk'),prod=v('fadit-prod'),uso=v('fadit-uso'),precio=parseFloat(v('fadit-precio'))||0,motivo=v('fadit-motivo').trim(),notas=v('fn').trim(),estado=v('fadit-estado')||'Aplicado';
+  const f=v('ff'),k=v('fk'),prod=v('fadit-prod'),uso=v('fadit-uso'),precio=parseFloat(v('fadit-precio'))||0,motivo=v('fadit-motivo').trim(),notas=v('fn').trim();
   if(!f){alert('La fecha es obligatoria.');return;}
   if(!prod){alert('Selecciona un producto.');return;}
-  if(estado==='Aplicado'&&!uso){alert('Indica el uso posterior previsto.');return;}
-  // Validate
-  if(estado==='Aplicado'){
-    const val=validarAditivo(prod,uso,!!editId);
-    if(!val.puedeGuardar){alert(val.bloqueos.join('\n'));return;}
-    if(val.avisos.length&&!confirm(val.avisos.join('\n')+'\n\n¿Guardar igualmente?'))return;
-  }
+  if(!uso){alert('Indica el uso posterior previsto.');return;}
   if(!D.aditivos)D.aditivos=[];
-  const obj={id:editId||nid(D.aditivos),fecha:f,km:k?parseInt(k):'',producto:prod,usoPosterior:uso||'',precioProducto:precio,motivo:motivo,notas:notas,estado:estado};
+  const obj={id:editId||nid(D.aditivos),fecha:f,km:k?parseInt(k):'',producto:prod,usoPosterior:uso,precioProducto:precio,motivo:motivo,notas:notas,estado:'Aplicado'};
   if(editId){const i=D.aditivos.findIndex(x=>x.id===editId);if(i>=0)D.aditivos[i]=obj;}
   else D.aditivos.push(obj);
   dbSave();closeModal();render(curPage);
