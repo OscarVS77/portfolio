@@ -541,6 +541,13 @@ function saveComb(){
   const f=v('ff'),k=v('fk'),t=v('fti'),im=parseFloat(v('fi2')),n=v('fn').trim();
   if(!f||!im){alert('Fecha e importe son obligatorios.');return;}
   const aditSel=v('fcomb-adit')||'no';
+  // Check separation rule
+  if(aditSel!=='no'&&!editId){
+    const st=aditGetEstadoActual();
+    if(st.estado==='consumo'||st.estado==='separacion'){
+      if(!confirm('⚠ El depósito anterior tuvo aditivo. Debe haber 1 depósito sin aditivo entre tratamientos.\n\n¿Guardar igualmente?'))return;
+    }
+  }
   const obj={id:editId||nid(D.combustible),fecha:f,km:k?parseInt(k):'',tipo:t,importe:im,notas:n,aditivo:aditSel};
   if(editId){const i=D.combustible.findIndex(x=>x.id===editId);if(i>=0)D.combustible[i]=obj;}
   else {
@@ -587,62 +594,173 @@ const PAUTA_ANUAL = [
   {mes:11,mesNombre:'Diciembre',producto:'dpf',nombre:'Forté DPF Cleaner & Regenerator',prioridad:'Media',motivo:'Apoyo preventivo tras uso urbano y antes de trayectos navidad'},
 ];
 
-function aditRequiereSeparacion(){
-  const a=D.aditivos||[];if(!a.length)return false;
-  const last=[...a].sort((x,y)=>y.fecha.localeCompare(x.fecha))[0];
-  const after=[...D.combustible].filter(c=>c.fecha>last.fecha).length;
-  return after<1;
+function getAditSorted(){return[...(D.aditivos||[])].sort((a,b)=>a.fecha<b.fecha?-1:a.fecha>b.fecha?1:a.id-b.id);}
+function getCombSorted(){return[...D.combustible].sort((a,b)=>a.fecha<b.fecha?-1:a.fecha>b.fecha?1:a.id-b.id);}
+
+function aditGetEstadoActual(){
+  // Returns: 'libre', 'consumo', 'separacion'
+  const adit=getAditSorted();
+  if(!adit.length)return{estado:'libre',last:null};
+  const last=adit[adit.length-1];
+  const combAfter=getCombSorted().filter(c=>c.fecha>last.fecha||(c.fecha===last.fecha&&c.id>(last.depositoId||0)));
+  if(combAfter.length===0)return{estado:'consumo',last};
+  if(combAfter.length===1){
+    // 1 deposit after = separation deposit done, but need to check if it had aditivo
+    if(combAfter[0].aditivo&&combAfter[0].aditivo!=='no')return{estado:'consumo',last};
+    return{estado:'separacion',last};
+  }
+  return{estado:'libre',last};
 }
+
+function aditRequiereSeparacion(){
+  const s=aditGetEstadoActual();
+  return s.estado==='consumo'||s.estado==='separacion';
+}
+
+function aditPuedeUsar(){
+  const s=aditGetEstadoActual();
+  return s.estado==='libre';
+}
+
+function getAditEstado(r){
+  if(!r)return r.estado||'';
+  if(r.estado==='Saltado'||r.estado==='Reprogramado')return r.estado;
+  const combAfter=getCombSorted().filter(c=>c.fecha>r.fecha||(c.fecha===r.fecha&&c.id>(r.depositoId||0)));
+  const sinAditAfter=combAfter.filter(c=>!c.aditivo||c.aditivo==='no');
+  if(combAfter.length===0)return'Depósito en consumo';
+  if(sinAditAfter.length===0)return'Aplicado';
+  if(sinAditAfter.length>=1)return'Completado';
+  return'Separación obligatoria';
+}
+
+function getUsoCalidad(prod,uso){
+  if(!uso)return'';
+  if(prod==='dpf'&&uso==='Urbano')return'no-ideal';
+  if(prod==='advanced'&&['Viaje','Carretera','Uso intensivo','Mixto'].includes(uso))return'optimo';
+  if(prod==='dpf'&&['Viaje','Carretera','Uso intensivo'].includes(uso))return'optimo';
+  return'normal';
+}
+
 function getProximoAditivo(){
   const m=new Date().getMonth(),y=new Date().getFullYear(),a=D.aditivos||[];
   for(const p of PAUTA_ANUAL){
     if(p.mes<m)continue;
-    if(!a.find(x=>{const d=new Date(x.fecha);return d.getFullYear()===y&&d.getMonth()===p.mes&&(x.estado==='Aplicado'||x.estado==='Completado');}))return p;
+    const done=a.find(x=>{const d=new Date(x.fecha);return d.getFullYear()===y&&d.getMonth()===p.mes&&(x.estado==='Aplicado'||x.estado==='Completado'||x.estado==='Depósito en consumo');});
+    const saltado=a.find(x=>{const d=new Date(x.fecha);return d.getFullYear()===y&&d.getMonth()===p.mes&&x.estado==='Saltado';});
+    if(!done&&!saltado)return p;
   }
   return PAUTA_ANUAL[0];
 }
-function getAditEstado(r){
-  if(!r)return'';
-  const after=[...D.combustible].filter(c=>c.fecha>r.fecha).length;
-  if(after>=1)return'Completado';
-  return r.estado||'Aplicado';
+
+function validarAditivo(prod,uso,isEdit){
+  const avisos=[],bloqueos=[];
+  const st=aditGetEstadoActual();
+  if(!isEdit&&(st.estado==='consumo'))bloqueos.push('Hay un depósito tratado todavía en consumo. Registra un repostaje sin aditivo primero.');
+  if(!isEdit&&st.estado==='separacion')bloqueos.push('Separación obligatoria: registra 1 depósito sin aditivo antes de aplicar otro.');
+  if(prod==='dpf'&&uso==='Urbano')avisos.push('No recomendado: el DPF Cleaner tiene más sentido si después habrá carretera y trayectos largos.');
+  return{puedeGuardar:bloqueos.length===0,avisos,bloqueos};
 }
 
 function rAditivos(){
-  const aditivos=D.aditivos||[],prox=getProximoAditivo(),sepReq=aditRequiereSeparacion(),curYear=new Date().getFullYear(),curMonth=new Date().getMonth();
+  const aditivos=D.aditivos||[],prox=getProximoAditivo(),st=aditGetEstadoActual(),curYear=new Date().getFullYear(),curMonth=new Date().getMonth();
   let h='';
-  h+=`<div class="adit-next"><div class="adit-next-label">Próximo aditivo recomendado</div><div class="adit-next-product">${prox.mesNombre} — ${prox.nombre}</div><div class="adit-next-detail">Prioridad: <span style="color:${prox.prioridad==='Alta'?'var(--red)':'var(--accent)'}"> ${prox.prioridad}</span><br>${prox.motivo}<br>${sepReq?'<span style="color:var(--red)">⚠ Registra 1 depósito sin aditivo antes</span>':'Después: dejar 1 depósito sin aditivo'}</div></div>`;
-  h+=`<div class="adit-rules"><strong>Advanced</strong> = mantenimiento general diésel/inyección/combustión.<br><strong>DPF</strong> = apoyo específico FAP/DPF/regeneración.<br>No usar ambos en el mismo depósito.<br>Después de cada aditivo, dejar 1 depósito completo sin aditivo.<br>DPF solo tiene sentido si después habrá carretera y trayectos largos.</div>`;
+
+  // Estado actual
+  let estadoTxt='',estadoColor='var(--green)';
+  if(st.estado==='libre'){estadoTxt='Libre para usar aditivo';estadoColor='var(--green)';}
+  else if(st.estado==='consumo'){estadoTxt='Depósito en consumo. Siguiente repostaje sin aditivo.';estadoColor='var(--accent)';}
+  else if(st.estado==='separacion'){estadoTxt='Separación obligatoria. Siguiente depósito sin aditivo.';estadoColor='var(--red)';}
+
+  // Próximo aditivo
+  h+=`<div class="adit-next"><div class="adit-next-label">Próximo aditivo recomendado</div><div class="adit-next-product">${prox.mesNombre} — ${prox.nombre}</div><div class="adit-next-detail">Prioridad: <span style="color:${prox.prioridad==='Alta'?'var(--red)':'var(--accent)'}">${prox.prioridad}</span><br>${prox.motivo}</div><div style="margin-top:8px;font-size:13px;color:${estadoColor}">${estadoTxt}</div></div>`;
+
+  // Reglas
+  h+=`<div class="adit-rules"><strong>Advanced</strong> = mantenimiento general diésel/inyección/combustión.<br><strong>DPF</strong> = apoyo específico FAP/DPF/regeneración.<br>No usar ambos en el mismo depósito.<br>Después de cada aditivo, dejar 1 depósito completo sin aditivo.<br>DPF solo tiene sentido si después habrá carretera y trayectos largos.<br>Advanced tiene más sentido antes de etapas de más uso o viajes.<br><br><em style="color:var(--text3)">Esta pauta es preventiva y flexible. El uso real manda. Si no hay carretera, viaje o trayectos largos, es mejor saltar o reprogramar.</em></div>`;
+
+  // Resumen anual
+  const aditYear=aditivos.filter(a=>new Date(a.fecha).getFullYear()===curYear);
+  const aplicados=aditYear.filter(a=>['Aplicado','Completado','Depósito en consumo'].includes(getAditEstado(a)));
+  const costeAnual=aditYear.reduce((s,x)=>s+(x.precioProducto||0),0);
+  const lastAdit=getAditSorted().length?getAditSorted()[getAditSorted().length-1]:null;
+
+  h+=`<div class="section-title">Resumen ${curYear}</div><div class="card" style="padding:14px 16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div><div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">Coste aditivos</div><div style="font-size:18px;color:#b07ce8">${fe(costeAnual)}</div></div>
+      <div><div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">Tratamientos</div><div style="font-size:18px;color:var(--text)">${aplicados.length}</div></div>
+    </div>
+    ${lastAdit?`<div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px">
+      <div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">Último aditivo</div>
+      <div style="font-size:14px;color:var(--text)">${lastAdit.producto==='advanced'?'Advanced':'DPF Cleaner'} · ${fd(lastAdit.fecha)}${lastAdit.km?' · '+fk(lastAdit.km):''}</div>
+    </div>`:''}
+    <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px">
+      <div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">Estado actual</div>
+      <div style="font-size:14px;color:${estadoColor}">${estadoTxt}</div>
+    </div>
+  </div>`;
+
+  // Calendario anual
   h+=`<div class="section-title">Calendario ${curYear}</div><div class="card" style="padding:12px 16px">`;
   PAUTA_ANUAL.forEach(p=>{
-    const done=aditivos.find(a=>{const d=new Date(a.fecha);return d.getFullYear()===curYear&&d.getMonth()===p.mes&&(a.estado==='Aplicado'||a.estado==='Completado');});
-    const saltado=aditivos.find(a=>{const d=new Date(a.fecha);return d.getFullYear()===curYear&&d.getMonth()===p.mes&&a.estado==='Saltado';});
-    let sb='';
-    if(done)sb='<span class="badge-st badge-aplicado">Aplicado</span>';
-    else if(saltado)sb='<span class="badge-st badge-saltado">Saltado</span>';
-    else sb=`<span class="badge-st badge-pendiente">Pendiente</span>`;
-    h+=`<div class="adit-cal-row"><div class="adit-cal-mes">${p.mesNombre}</div><div class="adit-cal-prod">${p.producto==='advanced'?'Advanced':'DPF Cleaner'}</div><div class="adit-cal-prio ${p.prioridad.toLowerCase()}">${p.prioridad}</div>${sb}</div>`;
+    const match=aditivos.find(a=>{const d=new Date(a.fecha);return d.getFullYear()===curYear&&d.getMonth()===p.mes;});
+    let sb='',estado='';
+    if(match){
+      estado=getAditEstado(match);
+      if(estado==='Saltado')sb='<span class="badge-st badge-saltado">Saltado</span>';
+      else if(estado==='Reprogramado')sb='<span class="badge-st badge-saltado">Reprogramado</span>';
+      else if(estado==='Completado')sb='<span class="badge-st badge-aplicado">Completado</span>';
+      else if(estado==='Depósito en consumo')sb='<span class="badge-st badge-pendiente">En consumo</span>';
+      else if(estado==='Separación obligatoria')sb='<span class="badge-st badge-separacion">Separación</span>';
+      else sb='<span class="badge-st badge-aplicado">Aplicado</span>';
+    } else {
+      const past=p.mes<curMonth;
+      sb=past?'<span class="badge-st badge-saltado">No aplicado</span>':'<span class="badge-st badge-pendiente">Pendiente</span>';
+    }
+    const skipBtn=!match&&p.mes<=curMonth?` <button class="btn-act" onclick="skipAdit(${p.mes})" style="font-size:10px;padding:1px 6px">Saltar</button>`:'';
+    h+=`<div class="adit-cal-row"><div class="adit-cal-mes">${p.mesNombre}</div><div class="adit-cal-prod">${p.producto==='advanced'?'Advanced':'DPF Cleaner'}</div><div class="adit-cal-prio ${p.prioridad.toLowerCase()}">${p.prioridad}</div>${sb}${skipBtn}</div>`;
   });
   h+=`</div>`;
+
+  // Pauta verano
   if(curMonth>=5&&curMonth<=7){h+=`<div class="card" style="border-color:#3d2e00;margin-top:10px"><div class="card-label" style="color:var(--accent)">Pauta verano</div><div style="font-size:13px;color:var(--text2);line-height:1.6">Advanced en julio → 1 depósito sin aditivo → DPF en agosto antes de viaje largo.</div></div>`;}
+
+  // Historial
   const sorted=[...aditivos].sort((a,b)=>b.fecha.localeCompare(a.fecha));
   h+=`<div class="section-title">${sorted.length} registros</div>`;
   if(!sorted.length)h+=`<div class="empty">Sin registros de aditivos. Pulsa + para añadir.</div>`;
   else sorted.forEach(r=>{
     const estado=getAditEstado(r),isProd=r.producto==='advanced';
-    h+=`<div class="list-item"><div class="li-left"><div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div><div class="li-title"><span class="badge ${isProd?'badge-adv':'badge-dpf'}">${isProd?'Advanced':'DPF Cleaner'}</span></div>${r.usoPosterior?`<div class="li-sub">Uso: ${r.usoPosterior}</div>`:''}${r.motivo?`<div class="li-sub" style="color:var(--text3)">${r.motivo}</div>`:''}</div><div class="li-right"><div class="li-price">${fe(r.precioProducto||0)}</div><div style="margin-top:4px"><span class="badge-st badge-${estado.toLowerCase()}">${estado}</span></div><div class="li-actions"><button class="btn-act" onclick="editAdit(${r.id})">Editar</button><button class="btn-act btn-del" onclick="delAdit(${r.id})">Borrar</button></div></div></div>`;
+    const calidad=getUsoCalidad(r.producto,r.usoPosterior);
+    let calidadBadge='';
+    if(calidad==='optimo')calidadBadge=' <span class="badge-st badge-aplicado">Uso óptimo</span>';
+    else if(calidad==='no-ideal')calidadBadge=' <span class="badge-st badge-separacion">Uso no ideal</span>';
+    let estadoBadgeClass='badge-pendiente';
+    if(estado==='Completado')estadoBadgeClass='badge-completado';
+    else if(estado==='Aplicado'||estado==='Depósito en consumo')estadoBadgeClass='badge-aplicado';
+    else if(estado==='Saltado'||estado==='Reprogramado')estadoBadgeClass='badge-saltado';
+    else if(estado==='Separación obligatoria')estadoBadgeClass='badge-separacion';
+    h+=`<div class="list-item"><div class="li-left"><div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div><div class="li-title"><span class="badge ${isProd?'badge-adv':'badge-dpf'}">${isProd?'Advanced':'DPF Cleaner'}</span>${calidadBadge}</div>${r.usoPosterior?`<div class="li-sub">Uso posterior: ${r.usoPosterior}</div>`:''}${r.motivo?`<div class="li-sub" style="color:var(--text3)">${r.motivo}</div>`:''}</div><div class="li-right"><div class="li-price">${fe(r.precioProducto||0)}</div><div style="margin-top:4px"><span class="badge-st ${estadoBadgeClass}">${estado}</span></div><div class="li-actions"><button class="btn-act" onclick="editAdit(${r.id})">Editar</button><button class="btn-act btn-del" onclick="delAdit(${r.id})">Borrar</button></div></div></div>`;
   });
-  const costeAnual=aditivos.filter(a=>new Date(a.fecha).getFullYear()===curYear).reduce((s,x)=>s+(x.precioProducto||0),0);
-  if(costeAnual>0)h+=`<div class="totals-row" style="margin-top:10px"><span class="tr-label">Coste aditivos ${curYear}</span><span class="tr-value">${fe(costeAnual)}</span></div>`;
+
   document.getElementById('c-aditivos').innerHTML=h;
 }
 
+// Skip a calendar entry
+function skipAdit(mes){
+  if(!D.aditivos)D.aditivos=[];
+  const p=PAUTA_ANUAL.find(x=>x.mes===mes);
+  if(!p)return;
+  D.aditivos.push({id:nid(D.aditivos),fecha:new Date().getFullYear()+'-'+(mes+1).toString().padStart(2,'0')+'-01',km:'',producto:p.producto,usoPosterior:'',precioProducto:0,motivo:'',notas:'',estado:'Saltado'});
+  dbSave();render(curPage);
+}
+
 function showAditForm(a){
-  const sepReq=aditRequiereSeparacion();
-  let w='';
-  if(sepReq&&!a)w=`<div style="background:#1a0a0a;border:1px solid #3d1a1a;border-radius:var(--r-sm);padding:12px;margin-bottom:14px;font-size:13px;color:var(--red)">⚠ El último depósito tuvo aditivo. Registra 1 depósito sin aditivo antes.</div>`;
+  const st=aditGetEstadoActual();
+  const isEdit=!!a;
+  let warnings='';
+  if(!isEdit&&st.estado==='consumo')warnings+=`<div style="background:#1a0a0a;border:1px solid #3d1a1a;border-radius:var(--r-sm);padding:12px;margin-bottom:14px;font-size:13px;color:var(--red)">⚠ Depósito en consumo. Registra un repostaje sin aditivo antes de aplicar otro.</div>`;
+  if(!isEdit&&st.estado==='separacion')warnings+=`<div style="background:#1a0a0a;border:1px solid #3d1a1a;border-radius:var(--r-sm);padding:12px;margin-bottom:14px;font-size:13px;color:var(--red)">⚠ Separación obligatoria. Registra 1 depósito sin aditivo antes.</div>`;
   document.getElementById('modal-title').textContent=a?'Editar aditivo':'Nuevo aditivo';
-  document.getElementById('modal-body').innerHTML=`${w}
+  document.getElementById('modal-body').innerHTML=`${warnings}
     <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="ff" value="${a?a.fecha:tod()}"></div>
     <div class="fg"><label class="fl">Kilómetros</label><input class="fi" type="number" id="fk" placeholder="50000" value="${a&&a.km?a.km:''}"></div>
     <div class="fg"><label class="fl">Producto</label><div class="type-sel"><button class="type-btn ${a&&a.producto==='advanced'?'sel-n':(!a?'sel-n':'')}" id="btn-adv" onclick="selAditProd('advanced')" style="font-size:13px">Advanced</button><button class="type-btn ${a&&a.producto==='dpf'?'sel-p':''}" id="btn-dpf" onclick="selAditProd('dpf')" style="font-size:13px">DPF Cleaner</button></div><input type="hidden" id="fadit-prod" value="${a?a.producto:'advanced'}"></div>
@@ -651,12 +769,14 @@ function showAditForm(a){
     <div class="fg"><label class="fl">Precio producto (€)</label><input class="fi" type="number" step="0.01" id="fadit-precio" placeholder="18,95" value="${a?a.precioProducto||'':''}"></div>
     <div class="fg"><label class="fl">Motivo <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="text" id="fadit-motivo" placeholder="Preventivo verano..." value="${a?a.motivo||'':''}"></div>
     <div class="fg"><label class="fl">Notas <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="text" id="fn" value="${a?a.notas||'':''}"></div>
+    <div class="fg"><label class="fl">Estado</label><select class="fi" id="fadit-estado" style="font-size:15px"><option value="Aplicado" ${a&&a.estado==='Aplicado'?'selected':(!a?'selected':'')}>Aplicado</option><option value="Saltado" ${a&&a.estado==='Saltado'?'selected':''}>Saltado</option><option value="Reprogramado" ${a&&a.estado==='Reprogramado'?'selected':''}>Reprogramado</option></select></div>
     <button class="btn-save" onclick="saveAdit()">Guardar</button>`;
   openModal();
 }
 function checkDpfWarn(){
   const w=document.getElementById('adit-uso-warn'),p=v('fadit-prod'),u=v('fadit-uso');
-  if(p==='dpf'&&u==='Urbano')w.innerHTML='<div style="background:#1a0a0a;border:1px solid #3d1a1a;border-radius:var(--r-sm);padding:12px;margin-bottom:14px;font-size:13px;color:var(--red)">⚠ No recomendado: DPF Cleaner tiene más sentido con carretera y trayectos largos.</div>';
+  if(p==='dpf'&&u==='Urbano')w.innerHTML='<div style="background:#1a0a0a;border:1px solid #3d1a1a;border-radius:var(--r-sm);padding:12px;margin-bottom:14px;font-size:13px;color:var(--red)">⚠ No recomendado: DPF Cleaner tiene más sentido con carretera y trayectos largos. Considere saltar o reprogramar.</div>';
+  else if(p==='advanced'&&['Viaje','Carretera','Uso intensivo','Mixto'].includes(u)){w.innerHTML='<div style="background:#0a1a0a;border:1px solid #1a3d1a;border-radius:var(--r-sm);padding:12px;margin-bottom:14px;font-size:13px;color:var(--green)">✓ Uso óptimo: Advanced antes de uso intensivo o viaje.</div>';}
   else w.innerHTML='';
 }
 function selAditProd(t){
@@ -666,12 +786,18 @@ function selAditProd(t){
   checkDpfWarn();
 }
 function saveAdit(){
-  const f=v('ff'),k=v('fk'),prod=v('fadit-prod'),uso=v('fadit-uso'),precio=parseFloat(v('fadit-precio'))||0,motivo=v('fadit-motivo').trim(),notas=v('fn').trim();
+  const f=v('ff'),k=v('fk'),prod=v('fadit-prod'),uso=v('fadit-uso'),precio=parseFloat(v('fadit-precio'))||0,motivo=v('fadit-motivo').trim(),notas=v('fn').trim(),estado=v('fadit-estado')||'Aplicado';
   if(!f){alert('La fecha es obligatoria.');return;}
   if(!prod){alert('Selecciona un producto.');return;}
-  if(!uso){alert('Indica el uso posterior previsto.');return;}
+  if(estado==='Aplicado'&&!uso){alert('Indica el uso posterior previsto.');return;}
+  // Validate
+  if(estado==='Aplicado'){
+    const val=validarAditivo(prod,uso,!!editId);
+    if(!val.puedeGuardar){alert(val.bloqueos.join('\n'));return;}
+    if(val.avisos.length&&!confirm(val.avisos.join('\n')+'\n\n¿Guardar igualmente?'))return;
+  }
   if(!D.aditivos)D.aditivos=[];
-  const obj={id:editId||nid(D.aditivos),fecha:f,km:k?parseInt(k):'',producto:prod,usoPosterior:uso,precioProducto:precio,motivo:motivo,notas:notas,estado:'Aplicado'};
+  const obj={id:editId||nid(D.aditivos),fecha:f,km:k?parseInt(k):'',producto:prod,usoPosterior:uso||'',precioProducto:precio,motivo:motivo,notas:notas,estado:estado};
   if(editId){const i=D.aditivos.findIndex(x=>x.id===editId);if(i>=0)D.aditivos[i]=obj;}
   else D.aditivos.push(obj);
   dbSave();closeModal();render(curPage);
