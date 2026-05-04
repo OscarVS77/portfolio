@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<!-- APP_VERSION: 2026-05-04-FINAL-V2-SIN-ADBLUE-MENU -->
+<!-- APP_VERSION: 2026-05-04-FINAL-V3-IOS-STATUSBAR-DARK -->
 
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-title" content="Vehículos">
 <meta name="theme-color" content="#0B0F14">
-<title>Control Vehículos · FINAL V2</title>
+<title>Control Vehículos · FINAL V3</title>
 <!-- APP_VERSION: 2026-05-04-ICONO-MINIMAL-VEHICULOS -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -30,13 +31,14 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--font);background:radial-gradient(circle at top,#13202B 0%,#0B0F14 42%,#070A0E 100%);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:100px}
+html{background:#0B0F14;color-scheme:dark}
 /* NAV */
 .nav{position:fixed;bottom:0;left:0;right:0;background:#090D12;border-top:1px solid var(--border);display:none;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px 10px;background:none;border:none;color:var(--text3);font-family:var(--font);font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:0}
 .nav-btn.active{color:var(--text);background:var(--accent-s);border-top:2px solid var(--accent)}
 .nav-btn svg{width:22px;height:22px}
 /* HEADER */
-.header{padding:56px 20px 20px;background:linear-gradient(180deg,#121A24 0%,#0B0F14 100%);border-bottom:1px solid var(--border)}
+.header{padding:calc(56px + env(safe-area-inset-top)) 20px 20px;background:linear-gradient(180deg,#121A24 0%,#0B0F14 100%);border-bottom:1px solid var(--border)}
 .header-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:600}
 .header-title{font-size:30px;font-weight:300;letter-spacing:-.03em;color:var(--text)}
 .header-title span{color:var(--text2)}
@@ -146,7 +148,7 @@ body{font-family:var(--font);background:radial-gradient(circle at top,#13202B 0%
 .adit-rules strong{color:var(--text2);font-weight:500}
 
 /* VEHICLE SELECTOR */
-.selector-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px}
+.selector-screen{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(40px + env(safe-area-inset-top)) 20px calc(40px + env(safe-area-inset-bottom));background:radial-gradient(circle at top,#13202B 0%,#0B0F14 42%,#070A0E 100%)}
 .selector-title{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:600}
 .selector-heading{font-size:30px;font-weight:300;letter-spacing:-.03em;color:var(--text);margin-bottom:32px}
 .vehicle-card{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:14px;cursor:pointer;transition:all .2s;box-shadow:0 14px 40px rgba(0,0,0,0.22);text-align:center}
@@ -255,7 +257,7 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 </div>
 
 <script>
-// APP_VERSION: 2026-05-04-NAV-ICON-PULIDO
+// APP_VERSION: 2026-05-04-FINAL-V3-IOS-STATUSBAR-DARK
 // ── VEHICLE SYSTEM ────────────────────────────────────────────────────────────
 let activeVehicle = localStorage.getItem('activeVehicle') || null;
 let D = { revisiones:[], combustible:[], adblue:[], aditivos:[] };
