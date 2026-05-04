@@ -330,7 +330,6 @@ function rInicio() {
   const tComb=D.combustible.reduce((s,x)=>s+x.importe,0);
   const tAdbl=D.adblue.reduce((s,x)=>s+x.precio,0);
   const tAdit=(D.aditivos||[]).reduce((s,x)=>s+(x.precioProducto||0),0);
-  const cycle=getCycle();
   const all=[
     ...D.revisiones.map(x=>({f:x.fecha,t:'Revisión',l:x.taller,v:x.precio})),
     ...D.combustible.map(x=>({f:x.fecha,t:x.tipo==='premium'?'Diésel Premium':'Diésel Normal',l:'Combustible',v:x.importe})),
@@ -338,79 +337,7 @@ function rInicio() {
   ].sort((a,b)=>b.f.localeCompare(a.f));
   const la=all[0];
 
-  // Estado general
-  const lastRev=D.revisiones.length?[...D.revisiones].sort((a,b)=>b.fecha.localeCompare(a.fecha))[0]:null;
-  const lastKm=lastRev?fk(lastRev.km):'—';
-  const lastRevDate=lastRev?fd(lastRev.fecha):'—';
-
-  // Estado aditivos
-  const ult=typeof getUltimoAplicado==='function'?getUltimoAplicado():null;
-  const prox=typeof getProximoPrevisto==='function'?getProximoPrevisto():null;
-  const mi=typeof getMesActualInfo==='function'?getMesActualInfo():{hay:false};
-  let aditBadge='',aditBadgeClass='badge-st badge-pendiente';
-  if(mi.hay){
-    if(mi.estado==='Aplicado'){aditBadge='Aplicado';aditBadgeClass='badge-st badge-aplicado';}
-    else if(mi.estado==='No aplicado'){aditBadge='No aplicado';aditBadgeClass='badge-st badge-completado';}
-    else{aditBadge='Pendiente';aditBadgeClass='badge-st badge-pendiente';}
-  }
-
-  // Last combustible
-  const lastComb=D.combustible.length?[...D.combustible].sort((a,b)=>b.fecha.localeCompare(a.fecha))[0]:null;
-
   document.getElementById('c-inicio').innerHTML=`
-    <div class="card" style="border-left:3px solid var(--accent)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div style="font-size:15px;font-weight:500;color:var(--text)">Estado general</div>
-        <span class="badge-st badge-aplicado">Al día</span>
-      </div>
-      <div style="font-size:32px;font-weight:500;color:var(--text);margin-bottom:4px">${lastKm}</div>
-      <div style="font-size:13px;color:var(--text3)">Última revisión registrada el ${lastRevDate}</div>
-    </div>
-
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div style="font-size:15px;font-weight:500;color:var(--text)">Estado aditivos</div>
-        ${mi.hay?`<span class="${aditBadgeClass}">${aditBadge}</span>`:''}
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border2)">
-        <span style="font-size:13px;color:var(--text3)">Último aplicado</span>
-        <span style="font-size:14px;font-weight:400;color:var(--text)">${ult?ult.corto+' · '+ult.mesNombre:'Ninguno'}</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border2)">
-        <span style="font-size:13px;color:var(--text3)">Próximo previsto</span>
-        <span style="font-size:14px;font-weight:400;color:var(--accent)">${prox?prox.corto+' · '+prox.mesNombre:'—'}</span>
-      </div>
-      ${mi.hay?`<div style="display:flex;justify-content:space-between;padding:8px 0">
-        <span style="font-size:13px;color:var(--text3)">Este mes</span>
-        <span style="font-size:14px;font-weight:400;color:var(--text)">${mi.estado==='Pendiente'?'Toca '+mi.pauta.corto:mi.pauta.corto+' '+mi.estado.toLowerCase()}</span>
-      </div>`:`<div style="display:flex;justify-content:space-between;padding:8px 0">
-        <span style="font-size:13px;color:var(--text3)">Este mes</span>
-        <span style="font-size:14px;color:var(--text3)">No toca aditivo</span>
-      </div>`}
-    </div>
-
-    ${cycleWidget(cycle)}
-
-    <div class="grid2">
-      <div class="card"><div class="card-label">Combustible</div><div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:2px">Último depósito</div><div style="font-size:13px;color:var(--text3)">${lastComb?'Diésel '+(lastComb.tipo==='premium'?'premium':'normal'):'—'}</div></div>
-      <div class="card"><div class="card-label">AdBlue</div><div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:2px">${D.adblue.length?'Registrado':'Sin aviso'}</div><div style="font-size:13px;color:var(--text3)">Control manual</div></div>
-    </div>
-
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div style="font-size:15px;font-weight:500;color:var(--text)">Próximos controles</div>
-        <span class="badge-st badge-completado">Resumen</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border2)">
-        <span style="font-size:13px;color:var(--text3)">Aceite recomendado</span>
-        <span style="font-size:14px;font-weight:400;color:var(--text)">0W30 STJLR.03.5007</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0">
-        <span style="font-size:13px;color:var(--text3)">Uso habitual</span>
-        <span style="font-size:14px;font-weight:400;color:var(--text)">Urbano corto</span>
-      </div>
-    </div>
-
     <div class="section-title">Gastos totales</div>
     <div class="grid2">
       <div class="card"><div class="card-label">Revisiones</div><div class="card-value" style="font-size:18px">${fe(tRev)}</div></div>
@@ -426,7 +353,7 @@ function rInicio() {
       <div class="card-label">${la.t} · ${fd(la.f)}</div>
       <div style="font-size:15px;color:var(--text2)">${la.l}</div>
       <div style="font-size:16px;font-family:var(--mono);color:var(--text2);margin-top:4px">${fe(la.v)}</div>
-    </div>`:''}
+    </div>`:'<div class="empty">Sin registros todavía</div>'}
   `;
 }
 
