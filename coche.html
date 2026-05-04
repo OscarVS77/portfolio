@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- APP_VERSION: 2026-05-04-FINAL-V2-SIN-ADBLUE-MENU -->
+
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -7,10 +9,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Vehículos">
 <meta name="theme-color" content="#0B0F14">
-<title>Control Vehículos</title>
+<title>Control Vehículos · FINAL V2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAAB6UlEQVR42u3VwQkAIRAEwc0/aY1Awa9dBSZwO83NgrDxCRAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAD3A4wTCCAy9NeHAHKjF4MADF8IAjB8IQjA+EUgAOMXgQCMXwQCMH4RCMD4RSAA4xeBAIxfBAIQgAAEYPwiEIAABCAA4xeBAAQgAAEIwNEE0B2/CAQgAAEIQAAIQAAIQAAIQAAIoDJ+EQjAHwABCAABCAABCAABCAABCAABfB4BAhAAAhAAAohFgAAEgACKESAAASCAYgQIIBsBAshGgACyESCAbAQIIBsBAshGgACSISCAZAgIIBcDAkiEgQBAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAOBoAzP28lyQqk6eAAAAAElFTkSuQmCC">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAQXUlEQVR4nO2da3RUxR3AJ8myYRMTA7sJhGB9VNKAgpIHLzc8srxDHrYVPwnqB7XYHm21Wls8PT2thXqOtqcPj/aDCngOtqd5EQLhlQQ0AYS8JCFWDKgQkpCHCTaJSZbdfrie62V379y5s3Nn5s7e38mH3c3s3Lkzv/3P3Ln3zo2Kv9UFLCxCEc26ABb8YslhoYolh4UqlhwWqthYF4ABsY4EvC+Oj31NtiScI74c2CqgZCW2LgLKQdAGvdsSzBVB5NAlBHYTam5FmUAAUaJMPQmG4oShjcS8AIZiSjngTcKwMbgtGB4mkwNS+1xVvVnKCcc0cqhVN+d1bdJiS/Auh6krV4kZd4RfOULWJs9ViYiJ9otTOYSfbjLFDnInhylqjRSc7yxHcnBeU8bB7Y7zMkOqrCBX6myGJWFIf/cV6UWsI4EHP9hHjlhHQsTaAKe/+wpbRVjKkXbXXFabNhddFzuYbJeNHHAt5OgaacAjKH1FaMuhpkXECqGGmig0FaEnR0gtLCc0CWkJHUUoyRFghuUEBgGWUPCDxgXGlhlECKg3CsN5YyMHz1rc9tQO9MSX33zJuJLohVoIMVAOrszQpQIKbHWh44dRcijNYKUFcSHUYCWKUhEj/DBEDrZmUHMiGPqWGOoHeTlYmcHQiWBoWmKcH4TlYGIGV1oooaaIQX4YJQcFM7h1IhgKlsh+cCoHNTOIaKGrwehvEQPifhCTg1qHgtdOxBuGk2IoId65kJGDjhkY7UEhnnNVKrJ+EJbDIDP0NgCTiQdOCkmwcyEgh9FhA73SOZnkZltggsGDpBwMzeBECyUMS04qeIQrh3FmmFcLJaz2gogfnMqBUqeca6GE/u6wl8Og0YZmVZpICyU094vIyIPMxT6WGSholpzgnC+RFsGPHMr7TUjJAa8d82oRAJ3dVLYO3v0v+HKQ7VMEDhghobC/4fcsmN2K8u5FywwMKHQxynbBW2ER515Zmms5iqeFjLRr1M4tY9x/y355a0jtCGyGDGQfmV+ToFsOsmEjws2QoOaH3rbDjBxEjlMsM2QM8kNuHbx1DPTJQTBsWGYEEHKvL7/5Etna0NWCOuSwzDCagH03qCrQ2xGnWzFuRZFINkNCrgHiVYHRaqiHshTChmWGBIV6QDys1R05wgwbzA/PIhmu5zmsoYa5QJJD7lMMGm1YZlBDbkGUcQK9yGENNUyHthxGhw0LyqAHD0qRwwobZkRDDiJHsJYZ3AJvX9TIYfUpIoHYmoZ3K1bYMC8wOWhe1GPBCkgrI0WOcPqUkOcVrbDBHJQ2pfRIDUMvifv5sz995mfb4Gn2vLf35d/+PvxtTUtKOnP6hM0Gq7eJiYnsxbnXr5t+lKYaOYzoU6QoQjxslJZWaKbJz19vi4kJf1v5+evhZgAAjhytNZcZam2t3a3wf5zyxZeXG5ua4WmmT5u2fLk7/G0VF23STFNapi0rD2i2LPsLjIlQghA8HiwuCHMrs2enZWUuhKcZGBg8fvyDMDfECYLIsb/q4MTEBDzNak9efFxcOFspKsyPioqCp6morPLeuBHOVvghtBymO59y/frXR4/VwdM4HFPXrVsdzlaKi7RjD8oAiB/g51kEiRwArad/EKF11Zg3L2PO3d+Hp/n0wmdt7eexN8Eb4shRV3diYGAQnmbZsiUulxMv/+JCbbFKSsrxMucTceTw3rhRUVkFTxMTE1O4aSNG5tHR0YWFGl/0+Xzl+/ZjZM4t4sgB0Pr7YqxjlsWLcmbOmAFPU19/srf3Gkbm3BJCDtONRmXa2s//99ML8DQL5t9755136M0Z5TC4xCTTGwFAxqRCRQ4AQFnZPs00KBNZSux2+4b1a+BpRkZGDh0+qitb/hFOjopKn88HT4NyRKrEk7cyIUHjZMLB6sNjY9/oypZ/RJOjt/dafcMpeJrbv3fbwoX3oeeJEmlKSrUjlukQTQ6ANuFRXIjasyQmJqxauRye5urV7lOnP0LM0EQIKEf1oSMjIyPwNAWbNiCepN24YZ3dboenKS3b5/f7UctnHgLlMO+hiszY2DcHqw/D00yfPj039wGU3JD6FHMep8ioHbAIGDkA2ggApdVTZ85YlJMNT9PS8vGlS58jFsxciCnHqdMfXb3aDU+zds1qzZO0hQX50dEaVWT2sAFBTDn8fn9ZeSU8jcMxde1aDzyN5kHv5ORk5f4D+gpnHsSUA6D9oOFtnz7n7rlzfwDPoab2+NDQsL6SmQdh5bh48VJr6zl4GvcDSyEnaZGmzE119YZehJUDIASPmJiYgvwNIf8VFRVVWJAP//pXQ0M1tccxC2cGRJZjX2XV5OQkPI1az5KTnZmWNksj/31VXq8Xs3BmQGQ5hoaGNX/Z9903/847bg/+HOmKQHGPUyRElgOgjQmKgiY8bDbbxg3r4N/q7LzY+nEbfsnMgOBy1NQe/2poCJ4mOEisWpmblHQr/FslCNcGmB3B5fB6vZWVGvMQd9z+vfvvX6D8pEjrclGfz1dWbslhfvROeMTHx6/2rISnP3X6THd3T5gF4x/x5WhtPdfZeRGepiD/u5O069etmTp1Kjy92NMbMuLLAQAo1eoCnM7pbvcy6bXm3Nfo6Fi11llfMYgMOcr2IV47mJzsWrpkETxl9aEjI6OjxArHMREhR3d3z6nTZ+Bp1q7xxMU5CgvyY7QuAhJ+ekMmIuQACKOEuDjH2jUezYs8enp7G06eJlcurokUOaqrD4+OjsHTPL3tyfn33gNPU1aufXW7MATKoWttbBMxMjqqeV+J5n3SwGw30SOidm1opEQOQGKscK6t/cJnnUQKYwoiSI76hlM9vb3h5CBk2IAQQXL4fL7yCvy74L1eb4XWTLxgRJAcILz1M2rrPhgc1Fj/QzAiS44Ln3Wea2vH+27kTG/IhJBD1AMWCbxxw/Dw9WM1daTLwgWQ29giK3IAACoqD2Bc24eyWqF4RJwcg4ODdfrXCY2Q07ABRJwcQP/o4dLnXzQ1txhTFq6JRDmOHqsbHr6Onh5ltSAhCS2H2GPSiYmJ/VUHERP7/X7Ny0HMC3xRhaj4W10YX0u7a670or/7CoEyWhiGK3W29KLrYkfwf+GtHIndigUiOp4rayEY+M+VNe/KPqLS8OpEw6uGzLWotTWlx3hZkEL2Y9kLGiuVhQ/SmMPqWZgTHDPCDCQobQqTw+pZIgFIK1tHKyZALUIY3bOgymH1LCKB2Joaclg9C3MMDRvw9rW6Fa5h1aFI6HiurNWziAH6ItVW5OAXtmEDIMphBQ/6GDQZqmtteyty8AjEDGphA2BMn8c6EpgcwiQnJxcUFmRmZc2cOdNutw8NDfVdu9bc3FJbU9PV1aVM+fpf/pyRkSG9fvKJJy5/eVn538cef/yhzQ/Jb71e7/Dw8CcdHe/vfb+zM/BuNnhWKKUK2JzMgQMH/v7Xv+mthDDN0Bv4UeUYH/vauD5F83yBO9f9i+eeUy6443K5XC7X3HnzpkyZ8s7bb8ufp6amys0JAPB4PO++8y5k0zabzel0PuB2Z+fk/OTJp3p6vlvMSTMr9FLpgsJQA/HnjXPijawlyrpoeHUiuAoyMjJeePFFm80GANhfWVlRXtHb25uUlDR79uwVK1eM3ryOSp4nT/l25apVu97dFfJJOXt27d67d29ycvJvXt6enp4eGxu7dNnSstIyxKx0lUrenK7aIAtGq+mQw4jgEfJ8UoAfWx7dKrXBoUOH3vjHG9KH/f39/f39LS0tAV9flZcHAPB6vWfPnFmydGlKSso9997Tdk51wdC+vr7mpqb09HQAQEz0Tcu2wLPSVSpE6Aw10EcF+gakZEcbanWh/NzhcCxY8O06kP9+/1/wDDMyMmbNmgUAaGluOXLkiPShxwN7bobL5crMzAIA+P3+xsZGxKx0lQoR3swA2Ecr8qWj8iWKGED2Wa6p5ORk6XE4k5OTygFBSOSOoL6+vvFs4/j4OADA7c6dMmVKcOJHtm45UH1w93t75qTP6evr27lj56VLlxCz0lUq5ebkv6zsmx4AZZAZcuvgXeqrWw6ywQPFDwnluOGPO3fItVxa/u0owWazLV+xAgDg8/lOnTw5MTEhRYL4W+IXLV4ML0Z0dPTAQL/8Fj0rzVKhQO3AVW/bsZ/ngPvR19cnLbNkt9tnQJ8mn5WdlZiYCABob28fHh4GADTUN0j/8tw8tJTYs2t3UUHhP996CwDgdDq3b9/ucDgQs0IvlXJzG9dvkP8az56V91HtKzSnNEKCIwfNeY5jvxu2j7ZKr3/44x9JL379q5c2rt8wMDCgTJmX960B8+fPl36+z//yeemT7JyckI+UnpycLC8rb21pBQAkTZtWWFSEmNXY2Ni5j8+hlAqCcdeEhgSj1TAjh3JL4Qw7JOA/kak97wD/DQBAfn7+o489lpKSEhMTk5iYGKN4NF9cXNziJUvUcrDZbLnLVR8cXFLyH+nFpoJNNpsNMavdu3ffuKFRKgiaWoQfNpTtgvd7xr/AuL/7SvhayEh1EbLKbKPtcZf/NHbb8yDKvvnhzZsf3hycxp3rlh4NfOL4iZ07dsifZ2Zl/uGVVwAAHk/egaqqkJtuPNvY1dWVlpbmdDrdbrc91o6SVcf586+/9tozzz5rt6uWSskjW7c8snWL/PZ/I223dD4DqQqCYN94hi+HEZ3LshfsIf2wDx2zjXaMux70JmSPghlRUVGDA4PXrvU2NTV9+GE9UHQEx47etGRgc1PzwMCA0+mcO2/ezNSZPaFWs/f7/RXlFdue3gYAKCouHh//BjGr2praTzo+KSwuylyYmTIjJbhUeDWA90UI2C2lejskCvJNkYDofZEUQi4TaO6XMqiHvBEShbDkAIbdNIsyUjORIvR3B36LLCLsD2VDglJTlEf7eCAWkk/Rw40cwOA77hGbn8PKZVhyImEDkJUDMPUDcKMI2wITGW1IEJADGL9ch97ug4klnBSSVNgAxOUARi7ngjHCoGAJV6UiGDYAKTkALT8A7uUwxNuDk2IoIWsGICgHoLgWFJGDFF3tRH+LGBDsUCRIygHorhXG/3GsDIXejbgZwDg5AMW15Li1hNq4mHiHIkFYDsDID8CZIjQPlwwyAxghB2DnhwRDS+gfQhtnBjBIDsDaDwlqlrCafDPUDGCcHOBmPwDr5WyJi8J2NjbgShojzACGygE48yMAXbpwMjEvQccMYLQcEjwrYi6oaSFB45R9wD4QvLgwoqBsBqATOSQC4oeEFUU0CflbomAGoCmHREhFgGVJEGrxlY4WErTlkFBTRCJiRYF3uDS1kGAjhwRcEQsZ+lpIsJRDItaRYA1RQ9LffYXtOrDs5ZBQrvwRsa4o+1MelgfmRQ4QaukZHiqIAtzuOEdySHBbU0bA+c5yJ4cE57UWPqbYQU7lACoLnHFYg3ox0X7xK4eE2hJ1fNYmBDPuCO9yyJixcoFpiy1hGjkkIGtdclXdZiknHJPJIQFfDpVh7XNbMDxMKYcMyqK5hjYJ8wIYirnlkNG1tDJ2a9HZCj8IIocShg+FEUAIJQI+kTqghQx1RTAbAhBQjgCC2w9bF7FVCEZ8OYKJtDbGhtM1wSx4wJLDQhVLDgtV/g8VyMYwEn0D9QAAAABJRU5ErkJggg==">
 <style>
 :root {
   --bg:#0B0F14;--bg-page:#070A0E;
@@ -38,6 +40,10 @@ body{font-family:var(--font);background:radial-gradient(circle at top,#13202B 0%
 .header-title{font-size:30px;font-weight:300;letter-spacing:-.03em;color:var(--text)}
 .header-title span{color:var(--text2)}
 .header-sub{display:inline-block;margin-top:8px;padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--text2);letter-spacing:.02em}
+.back-vehicles{display:inline-flex;align-items:center;gap:6px;background:transparent;border:none;color:var(--accent);font-family:var(--font);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-bottom:14px;padding:0}
+.back-vehicles:active{opacity:.65}
+.header .back-vehicles + .header-label,.header .back-vehicles + .header-title{margin-top:0}
+
 /* SECTION TITLES - unified */
 .section-title{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-weight:500;margin:20px 0 10px}
 .page-inicio .section-title,.page-revisiones .section-title,.page-combustible .section-title,.page-adblue .section-title,.page-aditivos .section-title{color:var(--text3)}
@@ -189,35 +195,34 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 
 
 <div id="p-inicio" class="page page-inicio active">
-  <div class="header"><div class="header-label">Control vehículo</div><div class="header-title">Jaguar <span>F-Pace</span></div><div class="header-sub">7495 JRG · 2.0D Ingenium</div></div><div style="padding:4px 20px 0"><button class="change-vehicle" onclick="backToSelector()">← Cambiar vehículo</button></div>
+  <div class="header"><button class="back-vehicles" onclick="backToSelector()">← Vehículos</button><div class="header-label">Control vehículo</div><div class="header-title">Jaguar <span>F-Pace</span></div><div class="header-sub">7495 JRG · 2.0D Ingenium</div></div>
   <div class="content" id="c-inicio"></div>
 </div>
 <div id="p-revisiones" class="page page-revisiones">
-  <div class="header"><div class="header-title">Revisiones</div></div><div style="padding:4px 20px 0"><button class="change-vehicle" onclick="backToSelector()">← Cambiar vehículo</button></div>
+  <div class="header"><button class="back-vehicles" onclick="backToSelector()">← Vehículos</button><div class="header-title">Revisiones</div></div>
   <div class="content" id="c-revisiones"></div>
 </div>
 <div id="p-combustible" class="page page-combustible">
-  <div class="header"><div class="header-title">Combustible</div></div><div style="padding:4px 20px 0"><button class="change-vehicle" onclick="backToSelector()">← Cambiar vehículo</button></div>
+  <div class="header"><button class="back-vehicles" onclick="backToSelector()">← Vehículos</button><div class="header-title">Combustible</div></div>
   <div class="content" id="c-combustible"></div>
 </div>
 
 <div id="p-aditivos" class="page page-aditivos">
-  <div class="header"><div class="header-title">Aditivos <span>DPF</span></div></div><div style="padding:4px 20px 0"><button class="change-vehicle" onclick="backToSelector()">← Cambiar vehículo</button></div>
+  <div class="header"><button class="back-vehicles" onclick="backToSelector()">← Vehículos</button><div class="header-title">Aditivos <span>DPF</span></div></div>
   <div class="content" id="c-aditivos"></div>
 </div>
 
 
 <div id="p-h-inicio" class="page page-inicio">
-  <div class="header"><div class="header-label">Control vehículo</div><div class="header-title">Honda <span>ADV</span></div><div class="header-sub">Moto · Gasolina</div></div>
-  <div style="padding:4px 20px 0"><button class="change-vehicle" onclick="backToSelector()">← Cambiar vehículo</button></div>
+  <div class="header"><button class="back-vehicles" onclick="backToSelector()">← Vehículos</button><div class="header-label">Control vehículo</div><div class="header-title">Honda <span>ADV</span></div><div class="header-sub">Moto · Gasolina</div></div>
   <div class="content" id="c-h-inicio"></div>
 </div>
 <div id="p-h-combustible" class="page page-combustible">
-  <div class="header"><div class="header-title">Combustible</div></div><div style="padding:4px 20px 0"><button class="change-vehicle" onclick="backToSelector()">← Cambiar vehículo</button></div>
+  <div class="header"><button class="back-vehicles" onclick="backToSelector()">← Vehículos</button><div class="header-title">Combustible</div></div>
   <div class="content" id="c-h-combustible"></div>
 </div>
 <div id="p-h-revisiones" class="page page-revisiones">
-  <div class="header"><div class="header-title">Revisiones</div></div><div style="padding:4px 20px 0"><button class="change-vehicle" onclick="backToSelector()">← Cambiar vehículo</button></div>
+  <div class="header"><button class="back-vehicles" onclick="backToSelector()">← Vehículos</button><div class="header-title">Revisiones</div></div>
   <div class="content" id="c-h-revisiones"></div>
 </div>
 
@@ -249,6 +254,7 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 </div>
 
 <script>
+// APP_VERSION: 2026-05-04-NAV-ICON-PULIDO
 // ── VEHICLE SYSTEM ────────────────────────────────────────────────────────────
 let activeVehicle = localStorage.getItem('activeVehicle') || null;
 let D = { revisiones:[], combustible:[], adblue:[], aditivos:[] };
