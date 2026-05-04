@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="F-Pace">
+<meta name="apple-mobile-web-app-title" content="Vehículos">
 <meta name="theme-color" content="#0B0F14">
-<title>F-Pace · Control</title>
+<title>Control Vehículos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAAB6UlEQVR42u3VwQkAIRAEwc0/aY1Awa9dBSZwO83NgrDxCRAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAD3A4wTCCAy9NeHAHKjF4MADF8IAjB8IQjA+EUgAOMXgQCMXwQCMH4RCMD4RSAA4xeBAIxfBAIQgAAEYPwiEIAABCAA4xeBAAQgAAEIwNEE0B2/CAQgAAEIQAAIQAAIQAAIQAAIoDJ+EQjAHwABCAABCAABCAABCAABCAABfB4BAhAAAhAAAohFgAAEgACKESAAASCAYgQIIBsBAshGgACyESCAbAQIIBsBAshGgACSISCAZAgIIBcDAkiEgQBAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAOBoAzP28lyQqk6eAAAAAElFTkSuQmCC">
@@ -135,12 +135,49 @@ body{font-family:var(--font);background:radial-gradient(circle at top,#13202B 0%
 .adit-cal-prod{font-size:13px;color:var(--text2);flex:1;margin:0 12px}
 .adit-rules{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;font-size:12px;color:var(--text3);line-height:1.7;box-shadow:0 14px 40px rgba(0,0,0,0.22)}
 .adit-rules strong{color:var(--text2);font-weight:500}
+
+/* VEHICLE SELECTOR */
+.selector-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px}
+.selector-title{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:600}
+.selector-heading{font-size:30px;font-weight:300;letter-spacing:-.03em;color:var(--text);margin-bottom:32px}
+.vehicle-card{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:14px;cursor:pointer;transition:all .2s;box-shadow:0 14px 40px rgba(0,0,0,0.22)}
+.vehicle-card:active{transform:scale(.98)}
+.vehicle-card:hover{border-color:var(--accent)}
+.vc-name{font-size:22px;font-weight:400;color:var(--text);margin-bottom:4px}
+.vc-type{font-size:13px;color:var(--text3);margin-bottom:8px}
+.vc-sub{display:inline-block;padding:4px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:999px;font-size:11px;color:var(--text2)}
+.vc-accent{width:40px;height:4px;border-radius:2px;margin-bottom:12px}
+.change-vehicle{background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;padding:4px 8px;font-family:var(--font);letter-spacing:.04em}
+.change-vehicle:active{color:var(--text2)}
+/* Honda accent override */
+body.honda{--accent:#D8A21B;--accent-h:#F0B429;--accent-s:rgba(216,162,27,0.18)}
+body.honda .fab{box-shadow:0 4px 20px rgba(216,162,27,.4)}
+body.honda .fi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(216,162,27,0.18)}
+body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 </style>
 </head>
 <body>
 
+<div id="vehicle-selector" class="selector-screen">
+  <div class="selector-title">Control vehículos</div>
+  <div class="selector-heading">Selecciona vehículo</div>
+  <div class="vehicle-card" onclick="selectVehicle('jaguar')" style="border-left:4px solid #2F80A8">
+    <div class="vc-accent" style="background:#2F80A8"></div>
+    <div class="vc-name">Jaguar F-Pace</div>
+    <div class="vc-type">Coche · Diésel 2.0D Ingenium</div>
+    <div class="vc-sub">7495 JRG</div>
+  </div>
+  <div class="vehicle-card" onclick="selectVehicle('honda')" style="border-left:4px solid #D8A21B">
+    <div class="vc-accent" style="background:#D8A21B"></div>
+    <div class="vc-name">Honda ADV</div>
+    <div class="vc-type">Moto</div>
+    <div class="vc-sub">Gasolina</div>
+  </div>
+</div>
+
+
 <div id="p-inicio" class="page page-inicio active">
-  <div class="header"><div class="header-label">Control vehículo</div><div class="header-title">Jaguar <span>F-Pace</span></div><div class="header-sub">7495 JRG · 2.0D Ingenium</div></div>
+  <div class="header"><div class="header-label">Control vehículo</div><div class="header-title">Jaguar <span>F-Pace</span></div><div class="header-sub">7495 JRG · 2.0D Ingenium</div></div><div style="padding:4px 20px 0"><button class="change-vehicle" onclick="backToSelector()">← Cambiar vehículo</button></div>
   <div class="content" id="c-inicio"></div>
 </div>
 <div id="p-revisiones" class="page page-revisiones">
@@ -159,6 +196,21 @@ body{font-family:var(--font);background:radial-gradient(circle at top,#13202B 0%
 <div id="p-aditivos" class="page page-aditivos">
   <div class="header"><div class="header-title">Aditivos <span>DPF</span></div></div>
   <div class="content" id="c-aditivos"></div>
+</div>
+
+
+<div id="p-h-inicio" class="page page-inicio">
+  <div class="header"><div class="header-label">Control vehículo</div><div class="header-title">Honda <span>ADV</span></div><div class="header-sub">Moto · Gasolina</div></div>
+  <div style="padding:4px 20px 0"><button class="change-vehicle" onclick="backToSelector()">← Cambiar vehículo</button></div>
+  <div class="content" id="c-h-inicio"></div>
+</div>
+<div id="p-h-combustible" class="page page-combustible">
+  <div class="header"><div class="header-title">Combustible</div></div>
+  <div class="content" id="c-h-combustible"></div>
+</div>
+<div id="p-h-revisiones" class="page page-revisiones">
+  <div class="header"><div class="header-title">Revisiones</div></div>
+  <div class="content" id="c-h-revisiones"></div>
 </div>
 
 <nav class="nav">
@@ -192,14 +244,56 @@ body{font-family:var(--font);background:radial-gradient(circle at top,#13202B 0%
 </div>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────────
+// ── VEHICLE SYSTEM ────────────────────────────────────────────────────────────
+let activeVehicle = localStorage.getItem('activeVehicle') || null;
 let D = { revisiones:[], combustible:[], adblue:[], aditivos:[] };
+let DH = { combustible:[], revisiones:[] }; // Honda data
 let editId = null, curPage = 'inicio';
 
 const SUPA_URL = 'https://kxqehlutocvdjfgmbdep.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4cWVobHV0b2N2ZGpmZ21iZGVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxODI2MTAsImV4cCI6MjA4OTc1ODYxMH0.MEj0wMuG9Vu6NKurtO2g_3TSqE7ITzzapSPkXMWO0jQ';
 
+function selectVehicle(v) {
+  activeVehicle = v;
+  localStorage.setItem('activeVehicle', v);
+  document.getElementById('vehicle-selector').style.display = 'none';
+  document.body.classList.remove('honda');
+  if(v === 'honda') document.body.classList.add('honda');
+  document.querySelector('.nav').style.display = 'flex';
+  document.querySelector('.fab').style.display = 'flex';
+  buildNav();
+  go('inicio');
+}
+
+function backToSelector() {
+  activeVehicle = null;
+  localStorage.removeItem('activeVehicle');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelector('.nav').style.display = 'none';
+  document.querySelector('.fab').style.display = 'none';
+  document.getElementById('vehicle-selector').style.display = 'flex';
+  document.body.classList.remove('honda');
+}
+
+function buildNav() {
+  const nav = document.querySelector('.nav');
+  if(activeVehicle === 'honda') {
+    nav.innerHTML = `
+      <button class="nav-btn active" onclick="go('inicio')" id="n-inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Inicio</button>
+      <button class="nav-btn" onclick="go('combustible')" id="n-combustible"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 22V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14"/><path d="M3 22h10"/><path d="M17 14v4a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-7l-2-3"/><line x1="3" y1="14" x2="13" y2="14"/></svg>Combustible</button>
+      <button class="nav-btn" onclick="go('revisiones')" id="n-revisiones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Revisiones</button>`;
+  } else {
+    nav.innerHTML = `
+      <button class="nav-btn active" onclick="go('inicio')" id="n-inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Inicio</button>
+      <button class="nav-btn" onclick="go('revisiones')" id="n-revisiones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Revisiones</button>
+      <button class="nav-btn" onclick="go('combustible')" id="n-combustible"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 22V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14"/><path d="M3 22h10"/><path d="M17 14v4a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-7l-2-3"/><line x1="3" y1="14" x2="13" y2="14"/></svg>Combustible</button>
+      <button class="nav-btn" onclick="go('adblue')" id="n-adblue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>AdBlue</button>
+      <button class="nav-btn" onclick="go('aditivos')" id="n-aditivos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M9 3h6l2 4H7L9 3z"/><rect x="7" y="7" width="10" height="13" rx="2"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="9.5" y1="13.5" x2="14.5" y2="13.5"/></svg>Aditivos</button>`;
+  }
+}
+
 async function dbLoad() {
+  // Jaguar
   try {
     const r = await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.oscar&select=data`, {
       headers: {'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`}
@@ -210,31 +304,53 @@ async function dbLoad() {
         D = rows[0].data;
         if(!D.aditivos) D.aditivos=[];
         localStorage.setItem('fpace_v2', JSON.stringify(D));
-        rInicio();
-        return;
       }
     }
   } catch(e) {}
-  // fallback to localStorage
-  const s = localStorage.getItem('fpace_v2');
-  if (s) { try { D = JSON.parse(s); if(!D.aditivos)D.aditivos=[]; } catch(e) {} }
-  rInicio();
+  const sJ = localStorage.getItem('fpace_v2');
+  if (sJ) { try { const p=JSON.parse(sJ); if(p.revisiones){D=p;if(!D.aditivos)D.aditivos=[];} } catch(e) {} }
+
+  // Honda
+  try {
+    const r2 = await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.honda&select=data`, {
+      headers: {'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`}
+    });
+    if (r2.ok) {
+      const rows2 = await r2.json();
+      if (rows2.length && rows2[0].data) {
+        DH = rows2[0].data;
+        localStorage.setItem('honda_v1', JSON.stringify(DH));
+      }
+    }
+  } catch(e) {}
+  const sH = localStorage.getItem('honda_v1');
+  if (sH) { try { const p2=JSON.parse(sH); if(p2.combustible){DH=p2;} } catch(e) {} }
+
+  if(activeVehicle) {
+    selectVehicle(activeVehicle);
+  }
 }
 
 async function dbSave() {
-  localStorage.setItem('fpace_v2', JSON.stringify(D));
-  try {
-    await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.oscar`, {
-      method: 'PATCH',
-      headers: {
-        'apikey': SUPA_KEY,
-        'Authorization': `Bearer ${SUPA_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify({ data: D, updated_at: new Date().toISOString() })
-    });
-  } catch(e) {}
+  if(activeVehicle === 'honda') {
+    localStorage.setItem('honda_v1', JSON.stringify(DH));
+    try {
+      await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.honda`, {
+        method: 'PATCH',
+        headers: {'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal'},
+        body: JSON.stringify({ data: DH, updated_at: new Date().toISOString() })
+      });
+    } catch(e) {}
+  } else {
+    localStorage.setItem('fpace_v2', JSON.stringify(D));
+    try {
+      await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.oscar`, {
+        method: 'PATCH',
+        headers: {'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal'},
+        body: JSON.stringify({ data: D, updated_at: new Date().toISOString() })
+      });
+    } catch(e) {}
+  }
 }
 
 function loadData() {
@@ -295,17 +411,25 @@ const tod=()=>new Date().toISOString().split('T')[0];
 function go(page) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('p-'+page).classList.add('active');
-  document.getElementById('n-'+page).classList.add('active');
+  const prefix = activeVehicle === 'honda' ? 'p-h-' : 'p-';
+  document.getElementById(prefix+page).classList.add('active');
+  const navBtn = document.getElementById('n-'+page);
+  if(navBtn) navBtn.classList.add('active');
   curPage=page; render(page);
 }
 
 function render(p) {
-  if(p==='inicio') rInicio();
-  if(p==='revisiones') rRevisiones();
-  if(p==='combustible') rCombustible();
-  if(p==='adblue') rAdblue();
-  if(p==='aditivos') rAditivos();
+  if(activeVehicle === 'honda') {
+    if(p==='inicio') rHondaInicio();
+    if(p==='combustible') rHondaCombustible();
+    if(p==='revisiones') rHondaRevisiones();
+  } else {
+    if(p==='inicio') rInicio();
+    if(p==='revisiones') rRevisiones();
+    if(p==='combustible') rCombustible();
+    if(p==='adblue') rAdblue();
+    if(p==='aditivos') rAditivos();
+  }
 }
 
 // ── CYCLE WIDGET ──────────────────────────────────────────────────────────────
@@ -455,6 +579,7 @@ function openModal(){document.getElementById('modal').classList.add('open');}
 function closeModal(){document.getElementById('modal').classList.remove('open');editId=null;}
 
 function openPicker(){
+  if(activeVehicle === 'honda') { openHondaPicker(); return; }
   const cycle=getCycle();
   document.getElementById('modal-title').textContent='¿Qué quieres añadir?';
   document.getElementById('modal-body').innerHTML=`
@@ -675,7 +800,171 @@ function delAdit(id){if(!confirm('¿Borrar este registro?'))return;D.aditivos=(D
 
 function v(id){return document.getElementById(id)?.value||'';}
 
+// Honda data init
+function loadHondaData() {
+  const s = localStorage.getItem('honda_v1');
+  if (s) { try { DH = JSON.parse(s); } catch(e){} }
+  else { DH = { combustible:[], revisiones:[] }; }
+}
+
+// ── HONDA SECTIONS ───────────────────────────────────────────────────────────
+function rHondaInicio() {
+  const tComb=DH.combustible.reduce((s,x)=>s+(x.importe||0),0);
+  const tRev=DH.revisiones.reduce((s,x)=>s+(x.precio||0),0);
+  const all=[
+    ...DH.revisiones.map(x=>({f:x.fecha,t:'Revisión',l:x.taller||'Revisión',v:x.precio})),
+    ...DH.combustible.map(x=>({f:x.fecha,t:'Gasolina',l:'Combustible',v:x.importe})),
+  ].sort((a,b)=>b.f.localeCompare(a.f));
+  const la=all[0];
+  document.getElementById('c-h-inicio').innerHTML=`
+    <div class="section-title">Gastos totales</div>
+    <div class="grid2">
+      <div class="card"><div class="card-label">Combustible</div><div class="card-value" style="font-size:18px">${fe(tComb)}</div></div>
+      <div class="card"><div class="card-label">Revisiones</div><div class="card-value" style="font-size:18px">${fe(tRev)}</div></div>
+    </div>
+    <div class="card" style="border-color:var(--accent)"><div class="card-label">Total general</div><div class="card-value accent" style="font-size:18px">${fe(tComb+tRev)}</div></div>
+    ${la?`<div class="section-title">Último registro</div>
+    <div class="card">
+      <div class="card-label">${la.t} · ${fd(la.f)}</div>
+      <div style="font-size:15px;color:var(--text2)">${la.l}</div>
+      <div style="font-size:16px;font-family:var(--mono);color:var(--text2);margin-top:4px">${fe(la.v)}</div>
+    </div>`:'<div class="empty">Sin registros todavía</div>'}
+  `;
+}
+
+function rHondaCombustible() {
+  const sorted=[...DH.combustible].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const total=DH.combustible.reduce((s,x)=>s+(x.importe||0),0);
+  let h=`<div class="totals-row"><span class="tr-label">Total combustible</span><span class="tr-value">${fe(total)}</span></div>
+  <div class="section-title">${sorted.length} repostajes</div>`;
+  if(!sorted.length) h+=`<div class="empty">Sin repostajes. Pulsa + para añadir.</div>`;
+  else sorted.forEach(r=>{h+=`<div class="list-item">
+    <div class="li-left">
+      <div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div>
+      <div class="li-title">Gasolina</div>
+      ${r.litros?`<div class="li-sub">${r.litros} L${r.precioLitro?' · '+fe(r.precioLitro)+'/L':''}</div>`:''}
+      ${r.notas?`<div class="li-sub" style="color:var(--text3)">${r.notas}</div>`:''}
+    </div>
+    <div class="li-right">
+      <div class="li-price">${fe(r.importe)}</div>
+      <div class="li-actions">
+        <button class="btn-act" onclick="editHondaComb(${r.id})">Editar</button>
+        <button class="btn-act btn-del" onclick="delHondaComb(${r.id})">Borrar</button>
+      </div>
+    </div>
+  </div>`;});
+  document.getElementById('c-h-combustible').innerHTML=h;
+}
+
+function rHondaRevisiones() {
+  const sorted=[...DH.revisiones].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const total=DH.revisiones.reduce((s,x)=>s+(x.precio||0),0);
+  let h=`<div class="totals-row"><span class="tr-label">Total revisiones</span><span class="tr-value">${fe(total)}</span></div>
+  <div class="section-title">${sorted.length} registros</div>`;
+  if(!sorted.length) h+=`<div class="empty">Sin revisiones. Pulsa + para añadir.</div>`;
+  else sorted.forEach(r=>{h+=`<div class="list-item">
+    <div class="li-left">
+      <div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div>
+      <div class="li-title">${r.tipo||'Revisión'}</div>
+      ${r.taller?`<div class="li-sub">${r.taller}</div>`:''}
+      ${r.notas?`<div class="li-sub" style="color:var(--text3)">${r.notas}</div>`:''}
+    </div>
+    <div class="li-right">
+      <div class="li-price">${fe(r.precio)}</div>
+      <div class="li-actions">
+        <button class="btn-act" onclick="editHondaRev(${r.id})">Editar</button>
+        <button class="btn-act btn-del" onclick="delHondaRev(${r.id})">Borrar</button>
+      </div>
+    </div>
+  </div>`;});
+  document.getElementById('c-h-revisiones').innerHTML=h;
+}
+
+// Honda forms
+function openHondaPicker(){
+  document.getElementById('modal-title').textContent='¿Qué quieres añadir?';
+  document.getElementById('modal-body').innerHTML=`
+    <button class="picker-btn" onclick="showHondaCombForm(null)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="1.6" stroke-linecap="round"><path d="M3 22V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14"/><path d="M3 22h10"/><path d="M17 14v4a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-7l-2-3"/><line x1="3" y1="14" x2="13" y2="14"/></svg>
+      Repostaje gasolina
+    </button>
+    <button class="picker-btn" onclick="showHondaRevForm(null)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="1.6" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      Revisión
+    </button>`;
+  openModal();
+}
+
+function showHondaCombForm(c){
+  document.getElementById('modal-title').textContent=c?'Editar repostaje':'Nuevo repostaje';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="ff" value="${c?c.fecha:tod()}"></div>
+    <div class="fg"><label class="fl">Kilómetros <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="number" id="fk" placeholder="5000" value="${c&&c.km?c.km:''}"></div>
+    <div class="fg"><label class="fl">Litros <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="number" step="0.01" id="fl" placeholder="8,5" value="${c&&c.litros?c.litros:''}"></div>
+    <div class="fg"><label class="fl">Importe (€)</label><input class="fi" type="number" step="0.01" id="fi2" placeholder="0,00" value="${c?c.importe:''}"></div>
+    <div class="fg"><label class="fl">Precio/litro <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="number" step="0.001" id="fpl" placeholder="1,65" value="${c&&c.precioLitro?c.precioLitro:''}"></div>
+    <div class="fg"><label class="fl">Notas <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="text" id="fn" value="${c?c.notas||'':''}"></div>
+    <button class="btn-save" onclick="saveHondaComb()">Guardar</button>`;
+  openModal();
+}
+
+function saveHondaComb(){
+  const f=v('ff'),k=v('fk'),l=parseFloat(v('fl'))||null,im=parseFloat(v('fi2')),pl=parseFloat(v('fpl'))||null,n=v('fn').trim();
+  if(!f||!im){alert('Fecha e importe son obligatorios.');return;}
+  const obj={id:editId||nid(DH.combustible),fecha:f,km:k?parseInt(k):'',litros:l,importe:im,precioLitro:pl,notas:n};
+  if(editId){const i=DH.combustible.findIndex(x=>x.id===editId);if(i>=0)DH.combustible[i]=obj;}
+  else DH.combustible.push(obj);
+  dbSave();closeModal();render(curPage);
+}
+function editHondaComb(id){editId=id;showHondaCombForm(DH.combustible.find(x=>x.id===id));}
+function delHondaComb(id){if(!confirm('¿Borrar este repostaje?'))return;DH.combustible=DH.combustible.filter(x=>x.id!==id);dbSave();render(curPage);}
+
+function showHondaRevForm(r){
+  document.getElementById('modal-title').textContent=r?'Editar revisión':'Nueva revisión';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="ff" value="${r?r.fecha:tod()}"></div>
+    <div class="fg"><label class="fl">Kilómetros</label><input class="fi" type="number" id="fk" placeholder="5000" value="${r&&r.km?r.km:''}"></div>
+    <div class="fg"><label class="fl">Tipo de revisión</label>
+      <select class="fi" id="frt" style="font-size:15px">
+        <option value="Revisión periódica" ${r&&r.tipo==='Revisión periódica'?'selected':''}>Revisión periódica</option>
+        <option value="Aceite" ${r&&r.tipo==='Aceite'?'selected':''}>Aceite</option>
+        <option value="Filtro" ${r&&r.tipo==='Filtro'?'selected':''}>Filtro</option>
+        <option value="Neumáticos" ${r&&r.tipo==='Neumáticos'?'selected':''}>Neumáticos</option>
+        <option value="Frenos" ${r&&r.tipo==='Frenos'?'selected':''}>Frenos</option>
+        <option value="ITV" ${r&&r.tipo==='ITV'?'selected':''}>ITV</option>
+        <option value="Otros" ${r&&r.tipo==='Otros'?'selected':''}>Otros</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">Taller <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="text" id="ft" value="${r?r.taller||'':''}"></div>
+    <div class="fg"><label class="fl">Precio (€)</label><input class="fi" type="number" step="0.01" id="fp" placeholder="0,00" value="${r?r.precio:''}"></div>
+    <div class="fg"><label class="fl">Notas <span style="color:var(--text3)">(opcional)</span></label><input class="fi" type="text" id="fn" value="${r?r.notas||'':''}"></div>
+    <button class="btn-save" onclick="saveHondaRev()">Guardar</button>`;
+  openModal();
+}
+
+function saveHondaRev(){
+  const f=v('ff'),k=v('fk'),tipo=v('frt'),t=v('ft').trim(),p=parseFloat(v('fp')),n=v('fn').trim();
+  if(!f||!p){alert('Fecha y precio son obligatorios.');return;}
+  const obj={id:editId||nid(DH.revisiones),fecha:f,km:k?parseInt(k):'',tipo:tipo,taller:t,precio:p,notas:n};
+  if(editId){const i=DH.revisiones.findIndex(x=>x.id===editId);if(i>=0)DH.revisiones[i]=obj;}
+  else DH.revisiones.push(obj);
+  dbSave();closeModal();render(curPage);
+}
+function editHondaRev(id){editId=id;showHondaRevForm(DH.revisiones.find(x=>x.id===id));}
+function delHondaRev(id){if(!confirm('¿Borrar esta revisión?'))return;DH.revisiones=DH.revisiones.filter(x=>x.id!==id);dbSave();render(curPage);}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
 loadData();
+loadHondaData();
+
+// Hide app chrome initially if no vehicle selected
+if(!activeVehicle) {
+  document.querySelector('.nav').style.display = 'none';
+  document.querySelector('.fab').style.display = 'none';
+} else {
+  document.getElementById('vehicle-selector').style.display = 'none';
+}
+
 dbLoad();
 </script>
 </body>
