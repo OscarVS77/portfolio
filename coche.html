@@ -230,6 +230,12 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 .update-line{font-size:11px;color:var(--text3);text-align:center;margin-top:16px;line-height:1.4}
 .total-general,.totals-row{border-color:var(--accent);box-shadow:0 14px 40px rgba(0,0,0,0.22),0 0 0 1px var(--accent-s)}
 
+
+/* Valores de combustible coherentes */
+.fuel-total-card .card-value,
+.fuel-total-card .value,
+.fuel-total-card .metric-value{color:var(--text)!important}
+
 </style>
 </head>
 <body>
@@ -652,7 +658,7 @@ function rCombustible() {
   ${cycleWidget(cycle)}
   <div class="grid2" style="margin-bottom:10px">
     <div class="card metric-card"><div class="card-label">Normal</div><div class="card-value">${fe(tN)}</div></div>
-    <div class="card metric-card"><div class="card-label">Premium</div><div class="card-value accent">${fe(tP)}</div></div>
+    <div class="card metric-card"><div class="card-label">Premium</div><div class="card-value">${fe(tP)}</div></div>
   </div>
   <div class="section-title">${sorted.length} repostajes diésel</div>`;
   if(!sorted.length) h+=`<div class="empty">Sin repostajes. Pulsa + para añadir.</div>`;
