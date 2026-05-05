@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- APP_VERSION: 2026-05-04-FINAL-V3-IOS-STATUSBAR-DARK -->
+<!-- APP_VERSION: 2026-05-05-FINAL-V4-SELECTOR-MINIMAL -->
 
 <html lang="es">
 <head>
@@ -10,7 +10,7 @@
 <meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-title" content="Vehículos">
 <meta name="theme-color" content="#0B0F14">
-<title>Control Vehículos · FINAL V3</title>
+<title>Control Vehículos · FINAL V4</title>
 <!-- APP_VERSION: 2026-05-04-ICONO-MINIMAL-VEHICULOS -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -148,20 +148,23 @@ html{background:#0B0F14;color-scheme:dark}
 .adit-rules strong{color:var(--text2);font-weight:500}
 
 /* VEHICLE SELECTOR */
-.selector-screen{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(40px + env(safe-area-inset-top)) 20px calc(40px + env(safe-area-inset-bottom));background:radial-gradient(circle at top,#13202B 0%,#0B0F14 42%,#070A0E 100%)}
-.selector-title{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:600}
-.selector-heading{font-size:30px;font-weight:300;letter-spacing:-.03em;color:var(--text);margin-bottom:32px}
-.vehicle-card{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:14px;cursor:pointer;transition:all .2s;box-shadow:0 14px 40px rgba(0,0,0,0.22);text-align:center}
-.vehicle-card.jaguar-card{border:2px solid #2F80A8}
-.vehicle-card.honda-card{border:2px solid #D8A21B}
+.selector-screen{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(64px + env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom));background:radial-gradient(circle at top,rgba(47,128,168,.16) 0%,rgba(11,15,20,.94) 40%,#070A0E 100%)}
+.selector-inner{width:100%;max-width:430px;margin:0 auto}
+.selector-title{text-align:center;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:34px;font-weight:700}
+.selector-heading{display:none}
+.vehicle-card{width:100%;min-height:112px;max-width:none;background:rgba(18,24,33,.82);border:2px solid var(--border);border-radius:24px;padding:22px 18px;margin-bottom:14px;cursor:pointer;transition:all .2s;box-shadow:0 18px 50px rgba(0,0,0,.28);text-align:center;display:flex;align-items:center;justify-content:center}
+.vehicle-card.jaguar-card{border-color:rgba(47,128,168,.92)}
+.vehicle-card.honda-card{border-color:rgba(216,162,27,.92)}
 .vehicle-card:active{transform:scale(.98)}
 .vehicle-card:hover{filter:brightness(1.08)}
-.vc-name{font-size:20px;font-weight:600;color:var(--text);letter-spacing:.04em;text-transform:uppercase;margin-bottom:0}
+.vc-name{font-size:25px;line-height:1.12;font-weight:650;color:var(--text);letter-spacing:.01em;text-transform:none;margin-bottom:6px}
+.vc-year{font-size:14px;color:var(--text3);letter-spacing:.12em}
 .vc-type{font-size:13px;color:var(--text3);margin-bottom:8px}
 .vc-sub{display:inline-block;padding:4px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:999px;font-size:11px;color:var(--text2)}
 .vc-accent{width:40px;height:4px;border-radius:2px;margin-bottom:12px}
 .change-vehicle{background:var(--surface2);border:1px solid var(--border);border-radius:999px;color:var(--text2);font-size:12px;cursor:pointer;padding:7px 12px;font-family:var(--font);letter-spacing:.04em}
 .change-vehicle:active{color:var(--text2)}
+@media (max-width:360px){.vehicle-card{min-height:104px}.vc-name{font-size:22px}}
 /* Honda accent override */
 body.honda{--accent:#D8A21B;--accent-h:#F0B429;--accent-s:rgba(216,162,27,0.18)}
 body.honda .fab{box-shadow:0 4px 20px rgba(216,162,27,.4)}
@@ -180,20 +183,27 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 <body>
 
 <div id="vehicle-selector" class="selector-screen">
-  <div class="selector-title">Control vehículos</div>
-  <div class="selector-heading">Selecciona vehículo</div>
-  <div class="vehicle-card jaguar-card" onclick="selectVehicle('jaguar')">
-    <div class="vc-name">JAGUAR F-PACE (2016)</div>
+  <div class="selector-inner">
+    <div class="selector-title">Control vehículos</div>
+    <div class="vehicle-card jaguar-card" onclick="selectVehicle('jaguar')">
+      <div>
+        <div class="vc-name">Jaguar F-Pace</div>
+        <div class="vc-year">2016</div>
+      </div>
+    </div>
+    <div class="vehicle-card honda-card" onclick="selectVehicle('honda')">
+      <div>
+        <div class="vc-name">Honda ADV-350</div>
+        <div class="vc-year">2024</div>
+      </div>
+    </div>
+    <div class="selector-tools">
+      <button class="tool-btn" onclick="exportData()">Exportar</button>
+      <button class="tool-btn" onclick="triggerImport()">Importar</button>
+    </div>
+    <input type="file" id="import-file" accept="application/json" style="display:none" onchange="importData(event)">
+    <div class="sync-line" id="selector-sync"></div>
   </div>
-  <div class="vehicle-card honda-card" onclick="selectVehicle('honda')">
-    <div class="vc-name">HONDA ADV-350 (2024)</div>
-  </div>
-  <div class="selector-tools">
-    <button class="tool-btn" onclick="exportData()">Exportar datos</button>
-    <button class="tool-btn" onclick="triggerImport()">Importar datos</button>
-  </div>
-  <input type="file" id="import-file" accept="application/json" style="display:none" onchange="importData(event)">
-  <div class="sync-line" id="selector-sync"></div>
 </div>
 
 
@@ -257,7 +267,7 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 </div>
 
 <script>
-// APP_VERSION: 2026-05-04-FINAL-V3-IOS-STATUSBAR-DARK
+// APP_VERSION: 2026-05-05-FINAL-V4-SELECTOR-MINIMAL
 // ── VEHICLE SYSTEM ────────────────────────────────────────────────────────────
 let activeVehicle = localStorage.getItem('activeVehicle') || null;
 let D = { revisiones:[], combustible:[], adblue:[], aditivos:[] };
@@ -426,7 +436,7 @@ const tod=()=>new Date().toISOString().split('T')[0];
 const getLastUpdated=()=>localStorage.getItem('vehiculos_last_update')||'';
 function markUpdated(){localStorage.setItem('vehiculos_last_update',new Date().toISOString());}
 function fmtDateTime(iso){if(!iso)return 'Sin sincronización registrada';try{return new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(iso));}catch(e){return iso;}}
-function updateSelectorSync(){const el=document.getElementById('selector-sync');if(el)el.textContent='Última actualización: '+fmtDateTime(getLastUpdated());}
+function updateSelectorSync(){const el=document.getElementById('selector-sync');if(el)el.textContent=fmtDateTime(getLastUpdated());}
 function lastUpdateHtml(){return `<div class="update-line">Última actualización: ${fmtDateTime(getLastUpdated())}</div>`;}
 function exportData(){
   const payload={version:'vehiculos-v1',exportedAt:new Date().toISOString(),jaguar:D,honda:DH,lastUpdated:getLastUpdated()};
