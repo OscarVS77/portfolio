@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- APP_VERSION: 2026-05-05-FINAL-V4-SELECTOR-MINIMAL -->
+<!-- APP_VERSION: 2026-05-05-FINAL-V6-REGISTROS-POR-MES -->
 
 <html lang="es">
 <head>
@@ -10,7 +10,7 @@
 <meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-title" content="Vehículos">
 <meta name="theme-color" content="#0B0F14">
-<title>Control Vehículos · FINAL V4</title>
+<title>Control Vehículos · FINAL V7</title>
 <!-- APP_VERSION: 2026-05-04-ICONO-MINIMAL-VEHICULOS -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -30,7 +30,7 @@
   --r:20px;--r-sm:12px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:var(--font);background:radial-gradient(circle at top,#13202B 0%,#0B0F14 42%,#070A0E 100%);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:100px}
+body{font-family:var(--font);background:radial-gradient(circle at top,#13202B 0%,#0B0F14 42%,#070A0E 100%);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:160px}
 html{background:#0B0F14;color-scheme:dark}
 /* NAV */
 .nav{position:fixed;bottom:0;left:0;right:0;background:#090D12;border-top:1px solid var(--border);display:none;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
@@ -49,6 +49,8 @@ html{background:#0B0F14;color-scheme:dark}
 
 /* SECTION TITLES - unified */
 .section-title{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-weight:500;margin:20px 0 10px}
+.month-title{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:650;margin:22px 0 10px}
+.month-title:first-of-type{margin-top:12px}
 .page-inicio .section-title,.page-revisiones .section-title,.page-combustible .section-title,.page-adblue .section-title,.page-aditivos .section-title{color:var(--text3)}
 .page-inicio .header-title span,.page-revisiones .header-title span,.page-combustible .header-title span,.page-adblue .header-title span,.page-aditivos .header-title span{color:var(--text2)}
 /* PAGES */
@@ -100,9 +102,9 @@ html{background:#0B0F14;color-scheme:dark}
 .km-sub{font-size:13px;color:var(--text3);margin-top:2px}
 .empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:15px}
 /* FAB */
-.fab{position:fixed;bottom:70px;right:20px;width:54px;height:54px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(47,128,168,.4);z-index:99;transition:transform .2s}
+.fab{position:fixed;bottom:calc(108px + env(safe-area-inset-bottom));right:22px;width:58px;height:58px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 8px 26px rgba(47,128,168,.44);z-index:130;transition:transform .2s}
 .fab:active{transform:scale(.93)}
-.fab svg{width:24px;height:24px;color:#fff}
+.fab svg{width:26px;height:26px;color:#fff}
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-overlay.open{opacity:1;pointer-events:all}
@@ -267,7 +269,7 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 </div>
 
 <script>
-// APP_VERSION: 2026-05-05-FINAL-V4-SELECTOR-MINIMAL
+// APP_VERSION: 2026-05-05-FINAL-V6-REGISTROS-POR-MES
 // ── VEHICLE SYSTEM ────────────────────────────────────────────────────────────
 let activeVehicle = localStorage.getItem('activeVehicle') || null;
 let D = { revisiones:[], combustible:[], adblue:[], aditivos:[] };
@@ -429,6 +431,7 @@ function getCycle() {
 
 // ── FORMAT ────────────────────────────────────────────────────────────────────
 const fd=(d)=>{ if(!d)return'—'; const[y,m,day]=d.split('-'); return`${day}/${m}/${y}`; };
+const fm=(d)=>{ if(!d)return'Sin fecha'; const [y,m]=d.split('-'); const meses=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE']; return `${meses[(parseInt(m,10)||1)-1]} ${y}`; };
 const fe=(n)=>new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n||0);
 const fk=(n)=>n?new Intl.NumberFormat('es-ES').format(n)+' km':'—';
 const tod=()=>new Date().toISOString().split('T')[0];
@@ -552,21 +555,28 @@ function rRevisiones() {
   let h=`<div class="totals-row"><span class="tr-label">Total revisiones</span><span class="tr-value">${fe(total)}</span></div>
   <div class="section-title">${sorted.length} registros</div>`;
   if(!sorted.length) h+=`<div class="empty">Sin revisiones. Pulsa + para añadir.</div>`;
-  else sorted.forEach(r=>{h+=`<div class="list-item">
-    <div class="li-left">
-      <div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div>
-      <div class="li-title">${r.taller}</div>
-      ${r.notas?`<div class="li-sub">${r.notas}</div>`:''}
-    </div>
-    <div class="li-right">
-        <div style="font-size:18px;font-family:var(--mono);font-weight:500;color:var(--text)">${r.km?fk(r.km):'— km'}</div>
-        <div style="font-size:13px;font-family:var(--mono);color:var(--text2);margin-top:2px">${fe(r.precio)}</div>
-        <div class="li-actions">
-          <button class="btn-act" onclick="editRev(${r.id})">Editar</button>
-          <button class="btn-act btn-del" onclick="delRev(${r.id})">Borrar</button>
+  else {
+    let curMonth='';
+    sorted.forEach(r=>{
+      const m=fm(r.fecha);
+      if(m!==curMonth){curMonth=m;h+=`<div class="month-title">${m}</div>`;}
+      h+=`<div class="list-item">
+        <div class="li-left">
+          <div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div>
+          <div class="li-title">${r.taller}</div>
+          ${r.notas?`<div class="li-sub">${r.notas}</div>`:''}
         </div>
-      </div>
-    </div>`;});
+        <div class="li-right">
+          <div style="font-size:18px;font-family:var(--mono);font-weight:500;color:var(--text)">${r.km?fk(r.km):'— km'}</div>
+          <div style="font-size:13px;font-family:var(--mono);color:var(--text2);margin-top:2px">${fe(r.precio)}</div>
+          <div class="li-actions">
+            <button class="btn-act" onclick="editRev(${r.id})">Editar</button>
+            <button class="btn-act btn-del" onclick="delRev(${r.id})">Borrar</button>
+          </div>
+        </div>
+      </div>`;
+    });
+  }
   document.getElementById('c-revisiones').innerHTML=h;
 }
 
@@ -585,20 +595,27 @@ function rCombustible() {
   </div>
   <div class="section-title">${sorted.length} repostajes diésel</div>`;
   if(!sorted.length) h+=`<div class="empty">Sin repostajes. Pulsa + para añadir.</div>`;
-  else sorted.forEach(r=>{h+=`<div class="list-item">
-    <div class="li-left">
-      <div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div>
-      <div class="li-title"><span class="badge ${r.tipo==='premium'?'badge-p':'badge-n'}">${r.tipo==='premium'?'Premium':'Normal'}</span></div>
-      ${r.notas?`<div class="li-sub">${r.notas}</div>`:''}
-    </div>
-    <div class="li-right">
-      <div class="li-price">${fe(r.importe)}</div>
-      <div class="li-actions">
-        <button class="btn-act" onclick="editComb(${r.id})">Editar</button>
-        <button class="btn-act btn-del" onclick="delComb(${r.id})">Borrar</button>
-      </div>
-    </div>
-  </div>`;});
+  else {
+    let curMonth='';
+    sorted.forEach(r=>{
+      const m=fm(r.fecha);
+      if(m!==curMonth){curMonth=m;h+=`<div class="month-title">${m}</div>`;}
+      h+=`<div class="list-item">
+        <div class="li-left">
+          <div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div>
+          <div class="li-title"><span class="badge ${r.tipo==='premium'?'badge-p':'badge-n'}">${r.tipo==='premium'?'Premium':'Normal'}</span></div>
+          ${r.notas?`<div class="li-sub">${r.notas}</div>`:''}
+        </div>
+        <div class="li-right">
+          <div class="li-price">${fe(r.importe)}</div>
+          <div class="li-actions">
+            <button class="btn-act" onclick="editComb(${r.id})">Editar</button>
+            <button class="btn-act btn-del" onclick="delComb(${r.id})">Borrar</button>
+          </div>
+        </div>
+      </div>`;
+    });
+  }
 
   const adSorted=[...D.adblue].sort((a,b)=>b.fecha.localeCompare(a.fecha));
   let kmH='';
@@ -896,20 +913,27 @@ function rHondaCombustible() {
   let h=`<div class="totals-row"><span class="tr-label">Total combustible</span><span class="tr-value">${fe(total)}</span></div>
   <div class="section-title">${sorted.length} repostajes</div>`;
   if(!sorted.length) h+=`<div class="empty">Sin repostajes. Pulsa + para añadir.</div>`;
-  else sorted.forEach(r=>{h+=`<div class="list-item">
-    <div class="li-left">
-      <div class="li-date">${fd(r.fecha)}</div>
-      <div class="li-title">Gasolina</div>
-      ${r.notas?`<div class="li-sub">${r.notas}</div>`:''}
-    </div>
-    <div class="li-right">
-      <div class="li-price">${fe(r.importe)}</div>
-      <div class="li-actions">
-        <button class="btn-act" onclick="editHondaComb(${r.id})">Editar</button>
-        <button class="btn-act btn-del" onclick="delHondaComb(${r.id})">Borrar</button>
-      </div>
-    </div>
-  </div>`;});
+  else {
+    let curMonth='';
+    sorted.forEach(r=>{
+      const m=fm(r.fecha);
+      if(m!==curMonth){curMonth=m;h+=`<div class="month-title">${m}</div>`;}
+      h+=`<div class="list-item">
+        <div class="li-left">
+          <div class="li-date">${fd(r.fecha)}</div>
+          <div class="li-title">Gasolina</div>
+          ${r.notas?`<div class="li-sub">${r.notas}</div>`:''}
+        </div>
+        <div class="li-right">
+          <div class="li-price">${fe(r.importe)}</div>
+          <div class="li-actions">
+            <button class="btn-act" onclick="editHondaComb(${r.id})">Editar</button>
+            <button class="btn-act btn-del" onclick="delHondaComb(${r.id})">Borrar</button>
+          </div>
+        </div>
+      </div>`;
+    });
+  }
   document.getElementById('c-h-combustible').innerHTML=h;
 }
 
@@ -919,20 +943,27 @@ function rHondaRevisiones() {
   let h=`<div class="totals-row"><span class="tr-label">Total revisiones</span><span class="tr-value">${fe(total)}</span></div>
   <div class="section-title">${sorted.length} registros</div>`;
   if(!sorted.length) h+=`<div class="empty">Sin revisiones. Pulsa + para añadir.</div>`;
-  else sorted.forEach(r=>{h+=`<div class="list-item">
-    <div class="li-left">
-      <div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div>
-      <div class="li-title">${r.taller||'Revisión'}</div>
-      ${r.notas?`<div class="li-sub">${r.notas}</div>`:''}
-    </div>
-    <div class="li-right">
-      <div class="li-price">${fe(r.precio)}</div>
-      <div class="li-actions">
-        <button class="btn-act" onclick="editHondaRev(${r.id})">Editar</button>
-        <button class="btn-act btn-del" onclick="delHondaRev(${r.id})">Borrar</button>
-      </div>
-    </div>
-  </div>`;});
+  else {
+    let curMonth='';
+    sorted.forEach(r=>{
+      const m=fm(r.fecha);
+      if(m!==curMonth){curMonth=m;h+=`<div class="month-title">${m}</div>`;}
+      h+=`<div class="list-item">
+        <div class="li-left">
+          <div class="li-date">${fd(r.fecha)}${r.km?' · '+fk(r.km):''}</div>
+          <div class="li-title">${r.taller||'Revisión'}</div>
+          ${r.notas?`<div class="li-sub">${r.notas}</div>`:''}
+        </div>
+        <div class="li-right">
+          <div class="li-price">${fe(r.precio)}</div>
+          <div class="li-actions">
+            <button class="btn-act" onclick="editHondaRev(${r.id})">Editar</button>
+            <button class="btn-act btn-del" onclick="delHondaRev(${r.id})">Borrar</button>
+          </div>
+        </div>
+      </div>`;
+    });
+  }
   document.getElementById('c-h-revisiones').innerHTML=h;
 }
 
