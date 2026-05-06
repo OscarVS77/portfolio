@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- APP_VERSION: 2026-05-06-FINAL-V23-FIJOS -->
+<!-- APP_VERSION: 2026-05-06-FINAL-V24-GASOLINA -->
 
 <html lang="es">
 <head>
@@ -10,7 +10,7 @@
 <meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-title" content="Vehículos">
 <meta name="theme-color" content="#0B0F14">
-<title>Control Vehículos · FINAL V23</title>
+<title>Control Vehículos · FINAL V24</title>
 <!-- APP_VERSION: 2026-05-05-ICONO-VELOCIMETRO -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -355,7 +355,7 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
   <div class="content" id="c-revisiones"></div>
 </div>
 <div id="p-combustible" class="page page-combustible">
-  <div class="header"><button class="back-vehicles" onclick="backToSelector()">← Vehículos</button><div class="header-title">Combustible</div></div>
+  <div class="header"><button class="back-vehicles" onclick="backToSelector()">← Vehículos</button><div class="header-title">Gasolina</div></div>
   <div class="content" id="c-combustible"></div>
 </div>
 <div id="p-fijos" class="page page-fijos">
@@ -374,7 +374,7 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
   <div class="content" id="c-h-inicio"></div>
 </div>
 <div id="p-h-combustible" class="page page-combustible">
-  <div class="header"><button class="back-vehicles" onclick="backToSelector()">← Vehículos</button><div class="header-title">Combustible</div></div>
+  <div class="header"><button class="back-vehicles" onclick="backToSelector()">← Vehículos</button><div class="header-title">Gasolina</div></div>
   <div class="content" id="c-h-combustible"></div>
 </div>
 <div id="p-h-revisiones" class="page page-revisiones">
@@ -414,7 +414,7 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 </div>
 
 <script>
-// APP_VERSION: 2026-05-06-FINAL-V23-FIJOS
+// APP_VERSION: 2026-05-06-FINAL-V24-GASOLINA
 // ── VEHICLE SYSTEM ────────────────────────────────────────────────────────────
 let activeVehicle = localStorage.getItem('activeVehicle') || null;
 let D = { revisiones:[], combustible:[], adblue:[], aditivos:[], fijos:[] };
@@ -456,13 +456,13 @@ function buildNav() {
   if(activeVehicle === 'honda') {
     nav.innerHTML = `
       <button class="nav-btn active" onclick="go('inicio')" id="n-inicio">${homeIcon}Inicio</button>
-      <button class="nav-btn" onclick="go('combustible')" id="n-combustible">${fuelIcon}Combustible</button>
+      <button class="nav-btn" onclick="go('combustible')" id="n-combustible">${fuelIcon}Gasolina</button>
       <button class="nav-btn" onclick="go('revisiones')" id="n-revisiones">${revIcon}Revisiones</button>
       <button class="nav-btn" onclick="go('fijos')" id="n-fijos">${fixedIcon}Fijos</button>`;
   } else {
     nav.innerHTML = `
       <button class="nav-btn active" onclick="go('inicio')" id="n-inicio">${homeIcon}Inicio</button>
-      <button class="nav-btn" onclick="go('combustible')" id="n-combustible">${fuelIcon}Combustible</button>
+      <button class="nav-btn" onclick="go('combustible')" id="n-combustible">${fuelIcon}Gasolina</button>
       <button class="nav-btn" onclick="go('revisiones')" id="n-revisiones">${revIcon}Revisiones</button>
       <button class="nav-btn" onclick="go('fijos')" id="n-fijos">${fixedIcon}Fijos</button>
       <button class="nav-btn" onclick="go('aditivos')" id="n-aditivos">${aditIcon}Aditivos</button>`;
@@ -723,7 +723,7 @@ function cycleWidget(c) {
     s+=`<div class="${cls}">${labels[i]}</div>`;
   }
   return `<div class="cycle-card">
-    <div class="cycle-label">Ciclo combustible · Depósito ${c.done+1} de 4</div>
+    <div class="cycle-label">Ciclo gasolina · Depósito ${c.done+1} de 4</div>
     <div class="cycle-steps">${s}</div>
     <div class="cycle-next">Próximo: <strong>${fuelLabel(c.nextType)}</strong></div>
   </div>`;
@@ -738,7 +738,7 @@ function rInicio() {
   const tFijos=(D.fijos||[]).reduce((s,x)=>s+(x.importe||0),0);
   const all=[
     ...D.revisiones.map(x=>({f:x.fecha,t:'Revisión',l:x.taller,v:x.precio})),
-    ...D.combustible.map(x=>({f:x.fecha,t:fuelLabel(x.tipo),l:'Combustible',v:x.importe})),
+    ...D.combustible.map(x=>({f:x.fecha,t:fuelLabel(x.tipo),l:'Gasolina',v:x.importe})),
     ...D.adblue.map(x=>({f:x.fecha,t:'AdBlue',l:'AdBlue',v:x.precio})),
     ...(D.fijos||[]).map(x=>({f:x.fecha,t:x.concepto||'Fijo',l:'Fijos',v:x.importe})),
   ].sort((a,b)=>b.f.localeCompare(a.f));
@@ -749,7 +749,7 @@ function rInicio() {
     <div class="home-totals">
       <div class="card metric-card total-general"><div class="card-label">Total general</div><div class="card-value accent">${fe(tRev+tComb+tAdbl+tAdit+tFijos)}</div></div>
       <div class="card metric-card total-bubble"><div class="card-label">Revisiones</div><div class="card-value">${fe(tRev)}</div></div>
-      <div class="card metric-card total-bubble"><div class="card-label">Combustible</div><div class="card-value">${fe(tComb)}</div></div>
+      <div class="card metric-card total-bubble"><div class="card-label">Gasolina</div><div class="card-value">${fe(tComb)}</div></div>
       <div class="card metric-card total-bubble"><div class="card-label">Fijos</div><div class="card-value">${fe(tFijos)}</div></div>
       <div class="card metric-card total-bubble"><div class="card-label">AdBlue</div><div class="card-value">${fe(tAdbl)}</div></div>
       <div class="card metric-card total-bubble"><div class="card-label">Aditivos</div><div class="card-value">${fe(tAdit)}</div></div>
@@ -802,7 +802,7 @@ function rCombustible() {
   const tP=D.combustible.filter(x=>x.tipo==='premium').reduce((s,x)=>s+x.importe,0);
   const tAdbl=D.adblue.reduce((s,x)=>s+x.precio,0);
   const cycle=getCycle();
-  let h=`<div class="totals-row" style="margin-bottom:16px"><span class="tr-label">Total combustible</span><span class="tr-value">${fe(tN+tP)}</span></div>
+  let h=`<div class="totals-row" style="margin-bottom:16px"><span class="tr-label">Total gasolina</span><span class="tr-value">${fe(tN+tP)}</span></div>
   ${cycleWidget(cycle)}
   <div class="grid2" style="margin-bottom:10px">
     <div class="card metric-card"><div class="card-label">Normal</div><div class="card-value">${fe(tN)}</div></div>
@@ -1181,7 +1181,7 @@ function rHondaInicio() {
   const tFijos=(DH.fijos||[]).reduce((s,x)=>s+(x.importe||0),0);
   const all=[
     ...DH.revisiones.map(x=>({f:x.fecha,t:'Revisión',l:x.taller||'Revisión',v:x.precio})),
-    ...DH.combustible.map(x=>({f:x.fecha,t:'Gasolina',l:'Combustible',v:x.importe})),
+    ...DH.combustible.map(x=>({f:x.fecha,t:'Gasolina',l:'Gasolina',v:x.importe})),
     ...(DH.fijos||[]).map(x=>({f:x.fecha,t:x.concepto||'Fijo',l:'Fijos',v:x.importe})),
   ].sort((a,b)=>b.f.localeCompare(a.f));
   const la=all[0];
@@ -1189,7 +1189,7 @@ function rHondaInicio() {
     <div class="section-title">Gastos totales</div>
     <div class="home-totals">
       <div class="card metric-card total-general"><div class="card-label">Total general</div><div class="card-value accent">${fe(tComb+tRev+tFijos)}</div></div>
-      <div class="card metric-card total-bubble"><div class="card-label">Combustible</div><div class="card-value">${fe(tComb)}</div></div>
+      <div class="card metric-card total-bubble"><div class="card-label">Gasolina</div><div class="card-value">${fe(tComb)}</div></div>
       <div class="card metric-card total-bubble"><div class="card-label">Revisiones</div><div class="card-value">${fe(tRev)}</div></div>
       <div class="card metric-card total-bubble"><div class="card-label">Fijos</div><div class="card-value">${fe(tFijos)}</div></div>
     </div>
@@ -1208,7 +1208,7 @@ function rHondaInicio() {
 function rHondaCombustible() {
   const sorted=[...DH.combustible].sort((a,b)=>b.fecha.localeCompare(a.fecha));
   const total=DH.combustible.reduce((s,x)=>s+(x.importe||0),0);
-  let h=`<div class="totals-row"><span class="tr-label">Total combustible</span><span class="tr-value">${fe(total)}</span></div>
+  let h=`<div class="totals-row"><span class="tr-label">Total gasolina</span><span class="tr-value">${fe(total)}</span></div>
   <div class="section-title">${sorted.length} repostajes</div>`;
   if(!sorted.length) h+=`<div class="empty">Sin repostajes. Pulsa + para añadir.</div>`;
   else {
