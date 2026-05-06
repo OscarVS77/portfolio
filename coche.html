@@ -236,6 +236,64 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 .fuel-total-card .value,
 .fuel-total-card .metric-value{color:var(--text)!important}
 
+
+/* Inicio: total general con más presencia + resumen anual */
+.page-inicio .total-general .total-value,
+.page-inicio .total-general .card-value,
+.page-inicio .total-general .metric-value{
+  font-size:36px!important;
+  line-height:1!important;
+  font-weight:420!important;
+  letter-spacing:-0.055em!important;
+  white-space:nowrap!important;
+}
+.year-summary{
+  display:grid;
+  gap:10px;
+  margin-top:16px;
+}
+.year-row{
+  min-height:56px;
+  border-radius:18px;
+  border:1px solid var(--border);
+  background:rgba(18,24,33,.68);
+  padding:0 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  box-shadow:0 14px 34px rgba(0,0,0,0.18);
+}
+.year-label{
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--text3);
+  font-weight:700;
+  line-height:1.2;
+}
+.year-value{
+  font-size:20px;
+  font-weight:500;
+  white-space:nowrap;
+  color:var(--text);
+  letter-spacing:-.03em;
+}
+@media(max-width:370px){
+  .page-inicio .total-general .total-value,
+  .page-inicio .total-general .card-value,
+  .page-inicio .total-general .metric-value{
+    font-size:31px!important;
+  }
+  .year-row{
+    min-height:52px;
+    padding:0 14px;
+  }
+  .year-value{
+    font-size:18px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -511,6 +569,36 @@ function recordRow(cardHtml, editCall, delCall){return `<div class="record-row">
 
 function updateSelectorSync(){const el=document.getElementById('selector-sync');if(el)el.textContent=fmtDateTime(getLastUpdated());}
 function lastUpdateHtml(){return `<div class="update-line">Última actualización: ${fmtDateTime(getLastUpdated())}</div>`;}
+
+function getYearFromDate(d){
+  if(!d || typeof d !== 'string' || d.length < 4) return 'Sin fecha';
+  return d.slice(0,4);
+}
+function addYearTotal(map, fecha, amount){
+  const y = getYearFromDate(fecha);
+  if(!map[y]) map[y] = 0;
+  map[y] += Number(amount) || 0;
+}
+function yearTotalsHtml(vehicle){
+  const totals = {};
+  if(vehicle === 'honda'){
+    (DH.combustible || []).forEach(x => addYearTotal(totals, x.fecha, x.importe));
+    (DH.revisiones || []).forEach(x => addYearTotal(totals, x.fecha, x.precio));
+  } else {
+    (D.revisiones || []).forEach(x => addYearTotal(totals, x.fecha, x.precio));
+    (D.combustible || []).forEach(x => addYearTotal(totals, x.fecha, x.importe));
+    (D.adblue || []).forEach(x => addYearTotal(totals, x.fecha, x.precio));
+    (D.aditivos || []).forEach(x => addYearTotal(totals, x.fecha, x.precioProducto || 0));
+  }
+  const years = Object.keys(totals).filter(y => y !== 'Sin fecha').sort((a,b) => b.localeCompare(a));
+  if(!years.length) return '';
+  return `<div class="year-summary">${years.map(y => `
+    <div class="year-row">
+      <div class="year-label">Total ${y}</div>
+      <div class="year-value">${fe(totals[y])}</div>
+    </div>`).join('')}</div>`;
+}
+
 function exportData(){
   const payload={version:'vehiculos-v1',exportedAt:new Date().toISOString(),jaguar:D,honda:DH,lastUpdated:getLastUpdated()};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
@@ -614,7 +702,7 @@ function rInicio() {
       </div>
       <div class="last-summary-value">${fe(la.v)}</div>
     </div>`:'<div class="empty">Sin registros todavía</div>'}
-    ${lastUpdateHtml()}
+    ${lastUpdateHtml()}${yearTotalsHtml('jaguar')}
   `;
 }
 
@@ -965,7 +1053,7 @@ function rHondaInicio() {
       </div>
       <div class="last-summary-value">${fe(la.v)}</div>
     </div>`:'<div class="empty">Sin registros todavía</div>'}
-    ${lastUpdateHtml()}
+    ${lastUpdateHtml()}${yearTotalsHtml('honda')}
   `;
 }
 
