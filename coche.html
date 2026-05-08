@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- APP_VERSION: 2026-05-06-FINAL-V24-GASOLINA -->
+<!-- APP_VERSION: 2026-05-06-FINAL-V25-FIJOS-ITV -->
 
 <html lang="es">
 <head>
@@ -10,7 +10,7 @@
 <meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-title" content="Vehículos">
 <meta name="theme-color" content="#0B0F14">
-<title>Control Vehículos · FINAL V24</title>
+<title>Control Vehículos · FINAL V25</title>
 <!-- APP_VERSION: 2026-05-05-ICONO-VELOCIMETRO -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -414,7 +414,7 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 </div>
 
 <script>
-// APP_VERSION: 2026-05-06-FINAL-V24-GASOLINA
+// APP_VERSION: 2026-05-06-FINAL-V25-FIJOS-ITV
 // ── VEHICLE SYSTEM ────────────────────────────────────────────────────────────
 let activeVehicle = localStorage.getItem('activeVehicle') || null;
 let D = { revisiones:[], combustible:[], adblue:[], aditivos:[], fijos:[] };
@@ -1096,7 +1096,7 @@ function loadHondaData() {
 
 // ── FIJOS ────────────────────────────────────────────────────────────────────
 function conceptoOptions(selected){
-  const opts=['Seguro','Impuesto circulación','MAPIT','Otro'];
+  const opts=['Seguro','Impuesto circulación','ITV','MAPIT','Otro'];
   return opts.map(o=>`<option value="${o}" ${selected===o?'selected':''}>${o}</option>`).join('');
 }
 
