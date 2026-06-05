@@ -3445,7 +3445,9 @@ body:before{
   </main>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js">
+window.addEventListener('DOMContentLoaded', loadWorkbookCache);
+</script>
 <script>
 const pages=[
   ["dashboard","Dashboard","Resumen principal desde la hoja RESUMEN del Excel.","ok"],
@@ -3917,6 +3919,63 @@ function updateAuditoria(){
   setNavStatus('auditoria', navStatus);
 }
 
+
+const CACHE_KEY = 'portfolioOscar:lastWorkbook:v1';
+const CACHE_META_KEY = 'portfolioOscar:lastWorkbookMeta:v1';
+
+function arrayBufferToBase64(buffer){
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  const chunkSize = 0x8000;
+  for(let i=0;i<bytes.length;i+=chunkSize){
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, i+chunkSize));
+  }
+  return btoa(binary);
+}
+function base64ToArrayBuffer(base64){
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
+  return bytes.buffer;
+}
+function saveWorkbookCache(buffer, fileName){
+  try{
+    localStorage.setItem(CACHE_KEY, arrayBufferToBase64(buffer));
+    localStorage.setItem(CACHE_META_KEY, JSON.stringify({fileName, savedAt:new Date().toISOString()}));
+    return true;
+  }catch(err){
+    console.warn('No se han podido guardar los datos localmente:', err);
+    return false;
+  }
+}
+function clearWorkbookCache(){
+  localStorage.removeItem(CACHE_KEY);
+  localStorage.removeItem(CACHE_META_KEY);
+}
+function applyWorkbookAfterRead(fileName, fromCache=false){
+  const missing=validateWorkbook(importedWorkbook);
+  if(missing.length){ setStatus(false, `ERROR · faltan hojas: ${missing.join(', ')}`); setNavStatus('auditoria','bad'); return false; }
+  importedData = {fileName:fileName || 'Excel importado'};
+  updateDashboard(); updateCartera(); updateXirr(); updateHistorial(); updateAuditoria();
+  setStatus(true, fromCache ? `${fileName || 'Excel'} recuperado` : `${fileName || 'Excel'} importado`);
+  setNavStatus('dashboard','ok'); setNavStatus('cartera','ok'); setNavStatus('xirr','ok'); setNavStatus('movimientos','ok'); setNavStatus('historial','ok');
+  return true;
+}
+function loadWorkbookCache(){
+  try{
+    if(typeof XLSX==='undefined') return;
+    const stored = localStorage.getItem(CACHE_KEY);
+    if(!stored) return;
+    const meta = JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
+    const buffer = base64ToArrayBuffer(stored);
+    importedWorkbook = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
+    applyWorkbookAfterRead(meta.fileName || 'último Excel', true);
+  }catch(err){
+    console.warn('No se han podido recuperar los datos guardados:', err);
+    clearWorkbookCache();
+  }
+}
+
 function validateWorkbook(wb){
   return REQUIRED_SHEETS.filter(s=>!wb.Sheets[s]);
 }
@@ -3925,12 +3984,8 @@ async function handleExcelImport(file){
     if(typeof XLSX==='undefined') throw new Error('No se ha cargado la librería XLSX. Revisa la conexión a internet o incrusta SheetJS en local.');
     const buffer=await file.arrayBuffer();
     importedWorkbook = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
-    const missing=validateWorkbook(importedWorkbook);
-    if(missing.length){ setStatus(false, `ERROR · faltan hojas: ${missing.join(', ')}`); setNavStatus('auditoria','bad'); return; }
-    importedData = {fileName:file.name};
-    updateDashboard(); updateCartera(); updateXirr(); updateHistorial(); updateAuditoria();
-    setStatus(true, `${file.name} importado`);
-    setNavStatus('dashboard','ok'); setNavStatus('cartera','ok'); setNavStatus('xirr','ok'); setNavStatus('movimientos','ok'); setNavStatus('historial','ok');
+    const ok = applyWorkbookAfterRead(file.name, false);
+    if(ok) saveWorkbookCache(buffer, file.name);
   }catch(err){ console.error(err); setStatus(false, `ERROR · ${err.message}`); setNavStatus('auditoria','bad'); }
 }
 
