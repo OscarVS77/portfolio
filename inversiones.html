@@ -5254,24 +5254,47 @@ function configureBenchmarkApiKey(){
   benchmarkCache.clear();
   renderBenchmark();
 }
-async function fetchAlphaVantageDaily(symbol, d1, d2, apiKey){
-  const url=`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${encodeURIComponent(symbol)}&outputsize=full&apikey=${encodeURIComponent(apiKey)}`;
+async function fetchAlphaVantageJson(url){
   const res=await fetch(url,{cache:'no-store'});
   if(!res.ok) throw new Error(`HTTP ${res.status}`);
-  const json=await res.json();
-  if(json.Note) throw new Error('Límite gratuito de Alpha Vantage alcanzado. Prueba más tarde.');
-  if(json['Error Message']) throw new Error('Símbolo no disponible en Alpha Vantage.');
-  const ts=json['Time Series (Daily)'];
-  if(!ts) throw new Error('Respuesta sin histórico diario.');
-  const t1=ymdToTime(d1), t2=ymdToTime(d2);
+  return await res.json();
+}
+function alphaVantageError(json, symbol){
+  if(json.Note) return 'Límite gratuito de Alpha Vantage alcanzado. Prueba más tarde.';
+  if(json.Information) return String(json.Information).includes('API rate limit') ? 'Límite gratuito de Alpha Vantage alcanzado. Prueba más tarde.' : String(json.Information);
+  if(json['Error Message']) return `Símbolo no disponible en Alpha Vantage: ${symbol}`;
+  return '';
+}
+function parseAlphaDaily(json){
+  const ts = json['Time Series (Daily)'];
+  if(!ts) return null;
   return Object.keys(ts).map(date=>{
-    const row=ts[date];
-    const close=Number(row['5. adjusted close'] || row['4. close']);
+    const row=ts[date] || {};
+    const close=Number(row['5. adjusted close'] || row['4. close'] || row['close']);
     return {date, close};
-  }).filter(x=>{
-    const t=ymdToTime(x.date);
-    return x.date && Number.isFinite(x.close) && t>=t1-1000*60*60*24*10 && t<=t2;
-  }).sort((a,b)=>ymdToTime(a.date)-ymdToTime(b.date));
+  }).filter(x=>x.date && Number.isFinite(x.close)).sort((a,b)=>ymdToTime(a.date)-ymdToTime(b.date));
+}
+async function fetchAlphaVantageDaily(symbol, d1, d2, apiKey){
+  const base='https://www.alphavantage.co/query';
+  const tries=[
+    `${base}?function=TIME_SERIES_DAILY&symbol=${encodeURIComponent(symbol)}&outputsize=full&apikey=${encodeURIComponent(apiKey)}`,
+    `${base}?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${encodeURIComponent(symbol)}&outputsize=full&apikey=${encodeURIComponent(apiKey)}`
+  ];
+  let lastMessage='Respuesta sin histórico diario.';
+  for(const url of tries){
+    const json=await fetchAlphaVantageJson(url);
+    const err=alphaVantageError(json, symbol);
+    if(err){ lastMessage=err; continue; }
+    const parsed=parseAlphaDaily(json);
+    if(parsed && parsed.length){
+      const t1=ymdToTime(d1), t2=ymdToTime(d2);
+      return parsed.filter(x=>{
+        const t=ymdToTime(x.date);
+        return Number.isFinite(t) && t>=t1-1000*60*60*24*14 && t<=t2;
+      });
+    }
+  }
+  throw new Error(lastMessage);
 }
 async function fetchAlphaVantageCrypto(symbol, market, d1, d2, apiKey){
   const url=`https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${encodeURIComponent(symbol)}&market=${encodeURIComponent(market||'EUR')}&apikey=${encodeURIComponent(apiKey)}`;
