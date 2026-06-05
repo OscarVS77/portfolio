@@ -3244,6 +3244,57 @@ body:before{
       </div>
     </section>
 
+
+
+    <section class="section" id="benchmark">
+      <section class="benchmarkPage pageBlock">
+        <article class="card benchmarkHero">
+          <div class="cardHeader">
+            <div>
+              <h3>Benchmark</h3>
+              <p>Comparativa simple: tu cartera real frente a un índice, ambos en base 100 desde el primer cierre disponible.</p>
+            </div>
+          </div>
+          <div class="benchmarkToolbar">
+            <div class="benchmarkSelector" id="benchmarkSelector">
+              <button class="filterPill active" data-benchmark="sp500">S&amp;P 500</button>
+              <button class="filterPill" data-benchmark="nasdaq100">Nasdaq 100</button>
+              <button class="filterPill" data-benchmark="msciworld">MSCI World</button>
+              <button class="filterPill" data-benchmark="msciacwi">MSCI ACWI</button>
+              <button class="filterPill" data-benchmark="gold">Oro</button>
+              <button class="filterPill" data-benchmark="bitcoin">Bitcoin</button>
+            </div>
+          </div>
+          <div class="benchmarkMetrics">
+            <article><span>Tu cartera</span><strong id="benchPortfolioReturn">--</strong><small>Evolución desde primer cierre</small></article>
+            <article><span id="benchIndexLabel">S&amp;P 500</span><strong id="benchIndexReturn">--</strong><small>Benchmark seleccionado</small></article>
+            <article><span>Diferencia</span><strong id="benchDifference">--</strong><small>Cartera menos benchmark</small></article>
+          </div>
+          <div class="benchmarkChart chart chartClean" id="benchmarkChart">
+            <div class="chartEmpty">Importa el Excel para comparar tu cartera con un índice.</div>
+          </div>
+          <div class="benchmarkNote" id="benchmarkNote">
+            La cartera sale del Excel. El benchmark se consulta online en Stooq cuando abres esta página.
+          </div>
+        </article>
+
+        <article class="card pageBlock">
+          <div class="cardHeader">
+            <div>
+              <h3>Cierres usados</h3>
+              <p>Solo se comparan fechas con cierre real de cartera y precio disponible del índice.</p>
+            </div>
+          </div>
+          <div class="tableWrap">
+            <table class="table compactTable" id="benchmarkTable">
+              <thead><tr><th>Mes</th><th>Tu cartera</th><th>Benchmark</th><th>Cartera base 100</th><th>Benchmark base 100</th><th>Diferencia</th></tr></thead>
+              <tbody><tr><td colspan="6">Importa el Excel y selecciona un benchmark.</td></tr></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </section>
+
     <section class="section" id="movimientos">
       <div class="card pageBlock">
         <div class="cardHeader"><div><h3>Movimientos</h3><p>Movimientos reales y valoraciones terminales usadas para el XIRR.</p></div></div>
@@ -3453,6 +3504,7 @@ const pages=[
   ["dashboard","Dashboard","Resumen principal desde la hoja RESUMEN del Excel.","ok"],
   ["cartera","Cartera actual","Detalle de activos desde CARTERA ACTUAL.","ok"],
   ["xirr","XIRR global","Rentabilidad ponderada y flujos de inversión.","ok"],
+  ["benchmark","Benchmark","Comparativa simple de tu cartera contra índices de referencia.","off"],
   ["movimientos","Movimientos","Movimientos conectados con el cálculo XIRR.","ok"],
   ["historial","Historial","Resumen anual y años anteriores.","off"],
   ["auditoria","Auditoría","Visualización de la hoja AUDITORÍA del Excel.","warn"]
@@ -5118,6 +5170,252 @@ body:before{
 .legendDot,.bullet,.dot,.assetDot{box-shadow:none!important;}
 
 </style>
+
+
+<style>
+/* Benchmark v1 · comparativa simple con índices */
+.benchmarkPage{display:grid;gap:18px;}
+.benchmarkToolbar{padding:16px 20px 0;}
+.benchmarkSelector{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.benchmarkMetrics{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  padding:16px 20px 0;
+}
+.benchmarkMetrics article{
+  background:rgba(5,6,7,.72);
+  border:1px solid var(--line2);
+  border-radius:16px;
+  padding:14px 16px;
+  min-height:92px;
+}
+.benchmarkMetrics span{display:block;color:var(--muted);font-size:12px;font-weight:600;margin-bottom:8px;}
+.benchmarkMetrics strong{display:block;color:var(--text);font-size:26px;font-weight:420;letter-spacing:-.8px;font-variant-numeric:tabular-nums;}
+.benchmarkMetrics small{display:block;color:var(--muted);font-size:11px;margin-top:8px;line-height:1.25;}
+.benchmarkChart{height:360px!important;margin:16px 20px 18px!important;position:relative;}
+.benchmarkNote{margin:0 20px 20px;color:var(--muted);font-size:12px;line-height:1.35;}
+.benchmarkLinePortfolio{stroke:var(--green);}
+.benchmarkLineIndex{stroke:var(--accent);}
+.benchmarkLegend{position:absolute;left:16px;top:12px;display:flex;gap:12px;align-items:center;color:var(--muted);font-size:11px;font-weight:650;z-index:2;}
+.benchmarkLegend span{display:inline-flex;gap:6px;align-items:center;}
+.benchmarkLegend i{width:18px;height:2px;border-radius:99px;display:inline-block;background:var(--green);}
+.benchmarkLegend span:last-child i{background:var(--accent);}
+.benchmarkPointWrap .chartTooltip{opacity:0;pointer-events:none;transition:opacity .08s ease;}
+.benchmarkPointWrap:hover .chartTooltip{opacity:1;}
+@media(max-width:900px){.benchmarkMetrics{grid-template-columns:1fr;}.benchmarkChart{height:320px!important;}}
+</style>
+
+<script>
+/* Benchmark simple con Stooq: base 100 cartera vs índice. */
+let activeBenchmarkKey = 'sp500';
+let benchmarkCache = new Map();
+const BENCHMARKS = {
+  sp500:{label:'S&P 500', symbols:['^spx','spy.us']},
+  nasdaq100:{label:'Nasdaq 100', symbols:['^ndx','qqq.us']},
+  msciworld:{label:'MSCI World', symbols:['swda.uk','iwda.uk','urth.us']},
+  msciacwi:{label:'MSCI ACWI', symbols:['acwi.us','iusq.de']},
+  gold:{label:'Oro', symbols:['gld.us','gc.f','xauusd']},
+  bitcoin:{label:'Bitcoin', symbols:['btcusd','btc.v']}
+};
+function excelSerialToYMD(v){
+  const d = dateFromSerial(v);
+  if(!d || isNaN(d)) return '';
+  return d.toISOString().slice(0,10);
+}
+function ymdCompact(ymd){ return String(ymd||'').replace(/-/g,''); }
+function ymdToTime(ymd){ const t = Date.parse(String(ymd||'')+'T00:00:00Z'); return Number.isFinite(t) ? t : NaN; }
+function findNearestPreviousPrice(series, ymd){
+  const target = ymdToTime(ymd);
+  if(!Number.isFinite(target) || !series?.length) return null;
+  let best=null;
+  for(const p of series){
+    const t = ymdToTime(p.date);
+    if(Number.isFinite(t) && t <= target) best = p;
+    if(Number.isFinite(t) && t > target) break;
+  }
+  return best;
+}
+function parseCsvRows(csv){
+  const lines=String(csv||'').trim().split(/\r?\n/).filter(Boolean);
+  if(lines.length < 2) return [];
+  const header=lines[0].split(',').map(x=>x.trim().toLowerCase());
+  const dateIdx=header.indexOf('date');
+  const closeIdx=header.indexOf('close');
+  if(dateIdx < 0 || closeIdx < 0) return [];
+  return lines.slice(1).map(line=>{
+    const cols=line.split(',');
+    const close=Number(cols[closeIdx]);
+    return {date:cols[dateIdx], close};
+  }).filter(x=>x.date && Number.isFinite(x.close)).sort((a,b)=>ymdToTime(a.date)-ymdToTime(b.date));
+}
+async function fetchStooqSymbol(symbol, d1, d2){
+  const url=`https://stooq.com/q/d/l/?s=${encodeURIComponent(symbol)}&d1=${ymdCompact(d1)}&d2=${ymdCompact(d2)}&i=d`;
+  const res=await fetch(url, {cache:'force-cache'});
+  if(!res.ok) throw new Error(`Stooq ${symbol}: ${res.status}`);
+  const csv=await res.text();
+  const rows=parseCsvRows(csv);
+  if(rows.length < 2) throw new Error(`Sin datos suficientes para ${symbol}`);
+  return rows;
+}
+async function fetchBenchmarkSeries(key, d1, d2){
+  const cfg=BENCHMARKS[key] || BENCHMARKS.sp500;
+  const cacheKey=`${key}|${d1}|${d2}`;
+  if(benchmarkCache.has(cacheKey)) return benchmarkCache.get(cacheKey);
+  let lastErr=null;
+  for(const symbol of cfg.symbols){
+    try{
+      const rows=await fetchStooqSymbol(symbol,d1,d2);
+      const data={symbol, rows};
+      benchmarkCache.set(cacheKey,data);
+      return data;
+    }catch(err){ lastErr=err; }
+  }
+  throw lastErr || new Error('No se pudo descargar el benchmark.');
+}
+function getPortfolioBenchmarkClosures(){
+  const scoped = (typeof getScopeAssetClosures === 'function') ? getScopeAssetClosures('global') : [];
+  const fallback = (typeof getRealClosures === 'function') ? getRealClosures() : [];
+  const data = scoped.length >= 2 ? scoped : fallback;
+  return data.map(x=>({
+    fecha:x.fecha,
+    ymd:excelSerialToYMD(x.fecha),
+    mes:x.mes,
+    anio:x.anio,
+    valor:Number(x.valor)
+  })).filter(x=>x.ymd && Number.isFinite(x.valor) && x.valor>0).sort((a,b)=>ymdToTime(a.ymd)-ymdToTime(b.ymd));
+}
+function pctFromBase(v, base){ return base ? ((v/base)-1)*100 : NaN; }
+function fmtSignedPctNum(v){
+  if(!Number.isFinite(v)) return '--';
+  const sign=v>0?'+':'';
+  return `${sign}${v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2})}%`;
+}
+function setBenchmarkStatus(msg, bad=false){
+  const note=document.getElementById('benchmarkNote');
+  if(note) note.innerHTML = bad ? `<span class="red">${escHtml(msg)}</span>` : escHtml(msg);
+  setNavStatus('benchmark', bad ? 'warn' : 'ok');
+}
+async function renderBenchmark(){
+  const chart=document.getElementById('benchmarkChart');
+  if(!chart) return;
+  const cfg=BENCHMARKS[activeBenchmarkKey] || BENCHMARKS.sp500;
+  const label=document.getElementById('benchIndexLabel');
+  if(label) label.textContent=cfg.label;
+  const closures=getPortfolioBenchmarkClosures();
+  if(!importedWorkbook || closures.length < 2){
+    chart.innerHTML='<div class="chartEmpty">Importa el Excel para comparar tu cartera con un índice.</div>';
+    return;
+  }
+  chart.innerHTML='<div class="chartEmpty">Cargando benchmark...</div>';
+  const d1=closures[0].ymd;
+  const d2=closures[closures.length-1].ymd;
+  try{
+    const bench=await fetchBenchmarkSeries(activeBenchmarkKey,d1,d2);
+    const rows=[];
+    closures.forEach(c=>{
+      const price=findNearestPreviousPrice(bench.rows,c.ymd);
+      if(price) rows.push({...c, benchmark:price.close, benchmarkDate:price.date});
+    });
+    if(rows.length < 2) throw new Error('No hay suficientes fechas comparables entre cartera y benchmark.');
+    const p0=rows[0].valor, b0=rows[0].benchmark;
+    rows.forEach(r=>{ r.portBase=100*(r.valor/p0); r.benchBase=100*(r.benchmark/b0); r.portRet=pctFromBase(r.valor,p0); r.benchRet=pctFromBase(r.benchmark,b0); r.diff=r.portRet-r.benchRet; });
+    const last=rows[rows.length-1];
+    const pr=document.getElementById('benchPortfolioReturn');
+    const br=document.getElementById('benchIndexReturn');
+    const df=document.getElementById('benchDifference');
+    if(pr){pr.textContent=fmtSignedPctNum(last.portRet); pr.className=clsByValue(last.portRet);}
+    if(br){br.textContent=fmtSignedPctNum(last.benchRet); br.className=clsByValue(last.benchRet);}
+    if(df){df.textContent=fmtSignedPctNum(last.diff); df.className=clsByValue(last.diff);}
+    renderBenchmarkChart(chart, rows, cfg.label);
+    renderBenchmarkTable(rows, cfg.label);
+    setBenchmarkStatus(`Fuente benchmark: Stooq · símbolo usado: ${bench.symbol}. Comparativa simple en base 100, sin simular aportaciones.`);
+  }catch(err){
+    console.error(err);
+    chart.innerHTML=`<div class="chartEmpty">No se ha podido cargar el benchmark. ${escHtml(err.message || '')}</div>`;
+    setBenchmarkStatus('No se ha podido descargar el benchmark. Revisa conexión o prueba otro índice.', true);
+  }
+}
+function renderBenchmarkChart(el, rows, benchmarkLabel){
+  const all=[...rows.map(r=>r.portBase),...rows.map(r=>r.benchBase)].filter(Number.isFinite);
+  const min=Math.min(...all), max=Math.max(...all), span=max-min || 10;
+  const yMin=min-span*.22, yMax=max+span*.20;
+  const W=920,H=340,L=62,R=34,T=44,B=62, plotW=W-L-R, plotH=H-T-B;
+  const xy=(key)=>rows.map((r,i)=>({
+    x:L+(plotW*i/(rows.length-1)),
+    y:T+(yMax-r[key])/(yMax-yMin)*plotH,
+    v:r[key], r
+  }));
+  const pxy=xy('portBase'), bxy=xy('benchBase');
+  const path=pts=>pts.map((p,i)=>`${i?'L':'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+  const labels=pxy.map((pt,i)=>{
+    const label=(typeof shortMonthLabel==='function') ? shortMonthLabel(pt.r) : String(pt.r.mes||'');
+    return `<text class="chartAxisLabel" x="${pt.x.toFixed(1)}" y="${H-24}" text-anchor="middle" fill="var(--muted)" font-size="10.5">${escHtml(label)}</text>`;
+  }).join('');
+  const grid=[.25,.5,.75].map(k=>{
+    const y=T+plotH*k;
+    return `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" stroke="rgba(244,241,234,.055)"/>`;
+  }).join('')+`<line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="rgba(244,241,234,.075)"/>`;
+  const pointMarkup=(pts, type)=>pts.map(pt=>{
+    const tipW=132, tipH=54;
+    let tx=pt.x-tipW/2; if(tx<L)tx=L; if(tx+tipW>W-R)tx=W-R-tipW;
+    const ty=Math.max(8,pt.y-68);
+    const main=type==='portfolio'?'Tu cartera':benchmarkLabel;
+    const val=type==='portfolio'?fmtMoney(pt.r.valor):String(pt.r.benchmark).replace('.',',');
+    const ret=type==='portfolio'?pt.r.portRet:pt.r.benchRet;
+    return `<g class="benchmarkPointWrap">
+      <circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="4.6" fill="${type==='portfolio'?'var(--green)':'var(--accent)'}"/>
+      <g class="chartTooltip" transform="translate(${tx.toFixed(1)} ${ty.toFixed(1)})">
+        <rect width="${tipW}" height="${tipH}" rx="10"/>
+        <text x="12" y="16" class="chartTipValue">${escHtml(main)}</text>
+        <text x="12" y="31" class="chartTipNeutral">${escHtml(val)}</text>
+        <text x="12" y="46" class="${ret>=0?'chartTipPositive':'chartTipNegative'}">${escHtml(fmtSignedPctNum(ret))}</text>
+      </g>
+    </g>`;
+  }).join('');
+  el.innerHTML=`
+    <div class="benchmarkLegend"><span><i></i>Tu cartera</span><span><i></i>${escHtml(benchmarkLabel)}</span></div>
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Benchmark">
+      ${grid}
+      <path d="${path(pxy)}" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="${path(bxy)}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      ${labels}
+      ${pointMarkup(pxy,'portfolio')}
+      ${pointMarkup(bxy,'benchmark')}
+    </svg>`;
+}
+function renderBenchmarkTable(rows, benchmarkLabel){
+  const tbody=document.querySelector('#benchmarkTable tbody');
+  if(!tbody) return;
+  tbody.innerHTML=rows.map(r=>`<tr>
+    <td>${escHtml(shortMonthLabel(r))}</td>
+    <td>${fmtMoney(r.valor)}</td>
+    <td>${escHtml(String(r.benchmark).replace('.',','))}</td>
+    <td class="${clsByValue(r.portRet)}">${fmtSignedPctNum(r.portRet)}</td>
+    <td class="${clsByValue(r.benchRet)}">${fmtSignedPctNum(r.benchRet)}</td>
+    <td class="${clsByValue(r.diff)}">${fmtSignedPctNum(r.diff)}</td>
+  </tr>`).join('');
+}
+document.querySelectorAll('#benchmarkSelector .filterPill').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    activeBenchmarkKey=btn.dataset.benchmark;
+    document.querySelectorAll('#benchmarkSelector .filterPill').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderBenchmark();
+  });
+});
+const __benchmarkShow = show;
+show = function(id){
+  __benchmarkShow(id);
+  if(id==='benchmark') renderBenchmark();
+};
+const __benchmarkUpdateDashboard = updateDashboard;
+updateDashboard = function(){
+  __benchmarkUpdateDashboard();
+  renderBenchmark();
+};
+</script>
+
 </body>
 </html>
 <style>
