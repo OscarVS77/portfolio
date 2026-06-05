@@ -3274,7 +3274,10 @@ body:before{
             <div class="chartEmpty">Importa el Excel para comparar tu cartera con un índice.</div>
           </div>
           <div class="benchmarkNote" id="benchmarkNote">
-            La cartera sale del Excel. El benchmark se consulta online en Stooq cuando abres esta página.
+            La cartera sale del Excel. El benchmark se consulta online con Alpha Vantage usando una clave gratuita guardada solo en tu navegador.
+          </div>
+          <div class="benchmarkNote">
+            <button class="btn" type="button" id="benchmarkApiKeyBtn">Configurar API key benchmark</button>
           </div>
         </article>
 
@@ -5207,16 +5210,17 @@ body:before{
 </style>
 
 <script>
-/* Benchmark simple con Stooq: base 100 cartera vs índice. */
+/* Benchmark simple con Alpha Vantage: base 100 cartera vs índice.
+   Motivo: Stooq suele quedar bloqueado por CORS en navegador. La API key se guarda solo en localStorage. */
 let activeBenchmarkKey = 'sp500';
 let benchmarkCache = new Map();
 const BENCHMARKS = {
-  sp500:{label:'S&P 500', symbols:['^spx','spy.us']},
-  nasdaq100:{label:'Nasdaq 100', symbols:['^ndx','qqq.us']},
-  msciworld:{label:'MSCI World', symbols:['swda.uk','iwda.uk','urth.us']},
-  msciacwi:{label:'MSCI ACWI', symbols:['acwi.us','iusq.de']},
-  gold:{label:'Oro', symbols:['gld.us','gc.f','xauusd']},
-  bitcoin:{label:'Bitcoin', symbols:['btcusd','btc.v']}
+  sp500:{label:'S&P 500', symbol:'SPY', mode:'daily', note:'ETF equivalente SPY'},
+  nasdaq100:{label:'Nasdaq 100', symbol:'QQQ', mode:'daily', note:'ETF equivalente QQQ'},
+  msciworld:{label:'MSCI World', symbol:'URTH', mode:'daily', note:'ETF equivalente URTH'},
+  msciacwi:{label:'MSCI ACWI', symbol:'ACWI', mode:'daily', note:'ETF equivalente ACWI'},
+  gold:{label:'Oro', symbol:'GLD', mode:'daily', note:'ETF equivalente GLD'},
+  bitcoin:{label:'Bitcoin', symbol:'BTC', mode:'crypto', market:'EUR', note:'BTC/EUR'}
 };
 function excelSerialToYMD(v){
   const d = dateFromSerial(v);
@@ -5225,6 +5229,7 @@ function excelSerialToYMD(v){
 }
 function ymdCompact(ymd){ return String(ymd||'').replace(/-/g,''); }
 function ymdToTime(ymd){ const t = Date.parse(String(ymd||'')+'T00:00:00Z'); return Number.isFinite(t) ? t : NaN; }
+function ymdToUnix(ymd){ const t=ymdToTime(ymd); return Math.floor(t/1000); }
 function findNearestPreviousPrice(series, ymd){
   const target = ymdToTime(ymd);
   if(!Number.isFinite(target) || !series?.length) return null;
@@ -5236,42 +5241,68 @@ function findNearestPreviousPrice(series, ymd){
   }
   return best;
 }
-function parseCsvRows(csv){
-  const lines=String(csv||'').trim().split(/\r?\n/).filter(Boolean);
-  if(lines.length < 2) return [];
-  const header=lines[0].split(',').map(x=>x.trim().toLowerCase());
-  const dateIdx=header.indexOf('date');
-  const closeIdx=header.indexOf('close');
-  if(dateIdx < 0 || closeIdx < 0) return [];
-  return lines.slice(1).map(line=>{
-    const cols=line.split(',');
-    const close=Number(cols[closeIdx]);
-    return {date:cols[dateIdx], close};
-  }).filter(x=>x.date && Number.isFinite(x.close)).sort((a,b)=>ymdToTime(a.date)-ymdToTime(b.date));
+function getBenchmarkApiKey(){ return localStorage.getItem('portfolioOscarAlphaVantageKey') || ''; }
+function setBenchmarkApiKey(key){
+  if(key) localStorage.setItem('portfolioOscarAlphaVantageKey', key.trim());
+  else localStorage.removeItem('portfolioOscarAlphaVantageKey');
 }
-async function fetchStooqSymbol(symbol, d1, d2){
-  const url=`https://stooq.com/q/d/l/?s=${encodeURIComponent(symbol)}&d1=${ymdCompact(d1)}&d2=${ymdCompact(d2)}&i=d`;
-  const res=await fetch(url, {cache:'force-cache'});
-  if(!res.ok) throw new Error(`Stooq ${symbol}: ${res.status}`);
-  const csv=await res.text();
-  const rows=parseCsvRows(csv);
-  if(rows.length < 2) throw new Error(`Sin datos suficientes para ${symbol}`);
-  return rows;
+function configureBenchmarkApiKey(){
+  const current=getBenchmarkApiKey();
+  const key=prompt('Pega tu API key gratuita de Alpha Vantage. Se guardará solo en este navegador.', current);
+  if(key === null) return;
+  setBenchmarkApiKey(key.trim());
+  benchmarkCache.clear();
+  renderBenchmark();
+}
+async function fetchAlphaVantageDaily(symbol, d1, d2, apiKey){
+  const url=`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${encodeURIComponent(symbol)}&outputsize=full&apikey=${encodeURIComponent(apiKey)}`;
+  const res=await fetch(url,{cache:'no-store'});
+  if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json=await res.json();
+  if(json.Note) throw new Error('Límite gratuito de Alpha Vantage alcanzado. Prueba más tarde.');
+  if(json['Error Message']) throw new Error('Símbolo no disponible en Alpha Vantage.');
+  const ts=json['Time Series (Daily)'];
+  if(!ts) throw new Error('Respuesta sin histórico diario.');
+  const t1=ymdToTime(d1), t2=ymdToTime(d2);
+  return Object.keys(ts).map(date=>{
+    const row=ts[date];
+    const close=Number(row['5. adjusted close'] || row['4. close']);
+    return {date, close};
+  }).filter(x=>{
+    const t=ymdToTime(x.date);
+    return x.date && Number.isFinite(x.close) && t>=t1-1000*60*60*24*10 && t<=t2;
+  }).sort((a,b)=>ymdToTime(a.date)-ymdToTime(b.date));
+}
+async function fetchAlphaVantageCrypto(symbol, market, d1, d2, apiKey){
+  const url=`https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${encodeURIComponent(symbol)}&market=${encodeURIComponent(market||'EUR')}&apikey=${encodeURIComponent(apiKey)}`;
+  const res=await fetch(url,{cache:'no-store'});
+  if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json=await res.json();
+  if(json.Note) throw new Error('Límite gratuito de Alpha Vantage alcanzado. Prueba más tarde.');
+  if(json['Error Message']) throw new Error('Cripto no disponible en Alpha Vantage.');
+  const ts=json['Time Series (Digital Currency Daily)'];
+  if(!ts) throw new Error('Respuesta sin histórico cripto.');
+  const t1=ymdToTime(d1), t2=ymdToTime(d2);
+  return Object.keys(ts).map(date=>{
+    const row=ts[date];
+    const close=Number(row[`4. close`] || row[`4a. close (${market})`] || row[`4b. close (USD)`]);
+    return {date, close};
+  }).filter(x=>{
+    const t=ymdToTime(x.date);
+    return x.date && Number.isFinite(x.close) && t>=t1-1000*60*60*24*10 && t<=t2;
+  }).sort((a,b)=>ymdToTime(a.date)-ymdToTime(b.date));
 }
 async function fetchBenchmarkSeries(key, d1, d2){
   const cfg=BENCHMARKS[key] || BENCHMARKS.sp500;
-  const cacheKey=`${key}|${d1}|${d2}`;
+  const apiKey=getBenchmarkApiKey();
+  if(!apiKey) throw new Error('Falta API key gratuita de Alpha Vantage. Pulsa “Configurar API key benchmark”.');
+  const cacheKey=`av|${key}|${d1}|${d2}|${apiKey.slice(0,4)}`;
   if(benchmarkCache.has(cacheKey)) return benchmarkCache.get(cacheKey);
-  let lastErr=null;
-  for(const symbol of cfg.symbols){
-    try{
-      const rows=await fetchStooqSymbol(symbol,d1,d2);
-      const data={symbol, rows};
-      benchmarkCache.set(cacheKey,data);
-      return data;
-    }catch(err){ lastErr=err; }
-  }
-  throw lastErr || new Error('No se pudo descargar el benchmark.');
+  const rows = cfg.mode === 'crypto' ? await fetchAlphaVantageCrypto(cfg.symbol, cfg.market || 'EUR', d1, d2, apiKey) : await fetchAlphaVantageDaily(cfg.symbol, d1, d2, apiKey);
+  if(rows.length < 2) throw new Error(`Sin datos suficientes para ${cfg.symbol}`);
+  const data={symbol:cfg.symbol, note:cfg.note, rows};
+  benchmarkCache.set(cacheKey,data);
+  return data;
 }
 function getPortfolioBenchmarkClosures(){
   const scoped = (typeof getScopeAssetClosures === 'function') ? getScopeAssetClosures('global') : [];
@@ -5329,11 +5360,11 @@ async function renderBenchmark(){
     if(df){df.textContent=fmtSignedPctNum(last.diff); df.className=clsByValue(last.diff);}
     renderBenchmarkChart(chart, rows, cfg.label);
     renderBenchmarkTable(rows, cfg.label);
-    setBenchmarkStatus(`Fuente benchmark: Stooq · símbolo usado: ${bench.symbol}. Comparativa simple en base 100, sin simular aportaciones.`);
+    setBenchmarkStatus(`Fuente benchmark: Alpha Vantage · ${cfg.note}. Comparativa simple en base 100, sin simular aportaciones.`);
   }catch(err){
     console.error(err);
     chart.innerHTML=`<div class="chartEmpty">No se ha podido cargar el benchmark. ${escHtml(err.message || '')}</div>`;
-    setBenchmarkStatus('No se ha podido descargar el benchmark. Revisa conexión o prueba otro índice.', true);
+    setBenchmarkStatus(err.message || 'No se ha podido descargar el benchmark.', true);
   }
 }
 function renderBenchmarkChart(el, rows, benchmarkLabel){
@@ -5396,6 +5427,9 @@ function renderBenchmarkTable(rows, benchmarkLabel){
     <td class="${clsByValue(r.diff)}">${fmtSignedPctNum(r.diff)}</td>
   </tr>`).join('');
 }
+const benchmarkApiKeyBtn=document.getElementById('benchmarkApiKeyBtn');
+if(benchmarkApiKeyBtn) benchmarkApiKeyBtn.addEventListener('click', configureBenchmarkApiKey);
+
 document.querySelectorAll('#benchmarkSelector .filterPill').forEach(btn=>{
   btn.addEventListener('click',()=>{
     activeBenchmarkKey=btn.dataset.benchmark;
