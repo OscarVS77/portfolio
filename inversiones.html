@@ -3007,7 +3007,7 @@ body:before{
       <div class="actions">
         <label class="btn primary" for="excelFile">Importar Excel</label>
         <input class="fileInput" id="excelFile" type="file" accept=".xlsx,.xls">
-        <button class="btn">Exportar backup</button>
+        <button class="btn" id="backupBtn" type="button">Exportar backup</button>
         <span class="importStatus" id="importStatus"><span class="bullet bWarn"></span>Diseño demo · sin Excel conectado</span>
       </div>
     </div>
@@ -3975,6 +3975,37 @@ function loadWorkbookCache(){
     clearWorkbookCache();
   }
 }
+
+
+function exportWorkbookBackup(){
+  try{
+    const stored = localStorage.getItem(CACHE_KEY);
+    const meta = JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
+    if(!stored){
+      setStatus(false, 'SIN DATOS · importa primero el Excel');
+      return;
+    }
+    const buffer = base64ToArrayBuffer(stored);
+    const blob = new Blob([buffer], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    const stamp = new Date().toISOString().slice(0,10);
+    const baseName = (meta.fileName || '01_Portfolio_Oscar.xlsx').replace(/\.xlsx?$/i,'');
+    const fileName = `${baseName}_backup_${stamp}.xlsx`;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    setStatus(true, `Backup exportado · ${fileName}`);
+  }catch(err){
+    console.error(err);
+    setStatus(false, `ERROR backup · ${err.message}`);
+  }
+}
+
+document.getElementById('backupBtn')?.addEventListener('click', exportWorkbookBackup);
 
 function validateWorkbook(wb){
   return REQUIRED_SHEETS.filter(s=>!wb.Sheets[s]);
