@@ -3977,35 +3977,51 @@ function loadWorkbookCache(){
 }
 
 
+function getCurrentWorkbookBufferForBackup(){
+  const stored = localStorage.getItem(CACHE_KEY);
+  if(stored) return base64ToArrayBuffer(stored);
+  if(importedWorkbook && typeof XLSX !== 'undefined'){
+    return XLSX.write(importedWorkbook, {bookType:'xlsx', type:'array'});
+  }
+  return null;
+}
+
 function exportWorkbookBackup(){
   try{
-    const stored = localStorage.getItem(CACHE_KEY);
     const meta = JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
-    if(!stored){
+    const buffer = getCurrentWorkbookBufferForBackup();
+    if(!buffer){
+      alert('Primero importa el Excel. Después podrás exportar una copia de backup.');
       setStatus(false, 'SIN DATOS · importa primero el Excel');
       return;
     }
-    const buffer = base64ToArrayBuffer(stored);
     const blob = new Blob([buffer], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
     const stamp = new Date().toISOString().slice(0,10);
-    const baseName = (meta.fileName || '01_Portfolio_Oscar.xlsx').replace(/\.xlsx?$/i,'');
+    const baseName = (meta.fileName || importedData?.fileName || '01_Portfolio_Oscar.xlsx').replace(/\.xlsx?$/i,'');
     const fileName = `${baseName}_backup_${stamp}.xlsx`;
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = fileName;
+    a.style.display = 'none';
     document.body.appendChild(a);
     a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    setTimeout(()=>{
+      a.remove();
+      URL.revokeObjectURL(url);
+    }, 1000);
     setStatus(true, `Backup exportado · ${fileName}`);
   }catch(err){
     console.error(err);
+    alert('No se ha podido exportar el backup: ' + err.message);
     setStatus(false, `ERROR backup · ${err.message}`);
   }
 }
 
-document.getElementById('backupBtn')?.addEventListener('click', exportWorkbookBackup);
+const backupButton = document.getElementById('backupBtn');
+if(backupButton){
+  backupButton.addEventListener('click', exportWorkbookBackup);
+}
 
 function validateWorkbook(wb){
   return REQUIRED_SHEETS.filter(s=>!wb.Sheets[s]);
