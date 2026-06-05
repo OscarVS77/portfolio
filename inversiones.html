@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio Oscar · v24 contraste paneles</title>
+<title>Portfolio Oscar · v42 amarillo global</title>
 <style>
 :root{
   --bg:#0b0d0f;
@@ -2988,14 +2988,325 @@ body:before{
 .navStatus{box-shadow:none!important;}
 .legendDot,.bullet,.dot,.assetDot{box-shadow:none!important;}
 
+
+
+/* V38 · XIRR sin gráfica: se elimina visualización confusa y se mantiene tabla de cierres */
+#xirr .xirrInfoCard .sourceBox{
+  margin-top:12px!important;
+}
+#xirr .xirrInfoCard{
+  overflow:hidden!important;
+}
+
+
+
+/* V39 · XIRR: rentabilidades con color semántico como Dashboard */
+#xirr .kpi strong.green{color:var(--green)!important;}
+#xirr .kpi strong.red{color:var(--red)!important;}
+#xirr .xirrValue.green,#xirr .xirrSub strong.green{color:var(--green)!important;}
+#xirr .xirrValue.red,#xirr .xirrSub strong.red{color:var(--red)!important;}
+
+
+
+/* V41 · Movimientos: sin buscador, filtros claros y estables */
+#movimientos .sourceBox{
+  display:none!important;
+}
+#movimientos .movementsToolbar{
+  margin:14px 17px 0!important;
+  padding:12px!important;
+  gap:10px!important;
+  border-radius:14px!important;
+  background:rgba(255,255,255,.018)!important;
+  border:1px solid rgba(255,255,255,.055)!important;
+}
+#movimientos .movementToolbarTop.noSearch{
+  justify-content:flex-start!important;
+}
+#movimientos .movementModePills,
+#movimientos .filterPills{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+}
+#movimientos .movementToolbarBottom{
+  padding-top:10px!important;
+  border-top:1px solid rgba(255,255,255,.04)!important;
+  overflow:visible!important;
+}
+#movimientos .filterPill{
+  height:30px!important;
+  padding:0 11px!important;
+  border-radius:999px!important;
+  font-size:10.8px!important;
+  font-weight:570!important;
+  color:var(--text2)!important;
+  background:rgba(255,255,255,.035)!important;
+  border-color:rgba(255,255,255,.065)!important;
+}
+#movimientos .filterPill.active{
+  background:#f2c94c!important;
+  border-color:#f2c94c!important;
+  color:#070707!important;
+  box-shadow:0 0 0 1px rgba(242,201,76,.18),0 8px 22px rgba(242,201,76,.10)!important;
+}
+#movimientos .filterPill:hover{
+  background:rgba(255,255,255,.07)!important;
+  color:var(--text)!important;
+}
+#movimientos .filterPill.active:hover{
+  background:#f2c94c!important;
+  color:#070707!important;
+}
+#movimientos .cardHeader h3{
+  font-size:17px!important;
+  font-weight:570!important;
+}
+#movimientos .cardHeader p{
+  font-size:10.8px!important;
+}
+@media(max-width:680px){
+  #movimientos .movementToolbarTop.noSearch,
+  #movimientos .movementToolbarBottom{
+    align-items:flex-start!important;
+  }
+}
+
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V44 · Historial: valores positivos/negativos visibles en tabla de activos */
+.annualTable td.green,
+.annualTable td .green,
+.annualTable tr.total td.green{
+  color:var(--green)!important;
+  font-weight:650!important;
+}
+.annualTable td.red,
+.annualTable td .red{
+  color:var(--red)!important;
+  font-weight:650!important;
+}
+.annualTable tbody td:nth-child(4){
+  font-weight:650!important;
+}
+.annualTable tbody td:nth-child(4):not(.green):not(.red){
+  color:var(--text2)!important;
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
+
+
+
+/* V46 · Ajustes finales sidebar y Dashboard */
+.brand{
+  border-bottom:1px solid var(--line2)!important;
+}
+.brand .brandName{
+  display:block!important;
+}
+.sideFoot.sideUpdate{
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:flex-start!important;
+  min-height:auto!important;
+  padding:12px 10px!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+.sideFoot.sideUpdate .brandDate{
+  margin:0!important;
+  color:var(--muted)!important;
+  font-size:11px!important;
+  font-weight:520!important;
+  line-height:1.35!important;
+  letter-spacing:-.01em!important;
+}
+#dashboard .bigValue .dot{
+  display:none!important;
+}
+#dashboard .bigValue > div:first-child{
+  display:flex!important;
+  align-items:baseline!important;
+  gap:0!important;
+}
 </style>
 </head>
 <body>
 <div class="app">
   <aside class="sidebar">
-    <div class="brand"><div class="brandName">Portfolio Oscar</div><div class="brandDate">Última actualización · 05/06/2026</div></div>
+    <div class="brand"><div class="brandName">Portfolio Oscar</div></div>
     <div class="nav" id="nav"></div>
-    <div class="sideFoot"><strong>Excel</strong><span>Fuente única de datos.</span><span>La web solo visualiza.</span><span>Y ordena.</span></div>
+    <div class="sideFoot sideUpdate"><span class="brandDate">Última actualización · 5/6/2026</span></div>
   </aside>
 
   <main class="main">
@@ -3013,7 +3324,7 @@ body:before{
     </div>
 
     <section class="section active" id="dashboard">
-      <div class="grid two pageBlock">
+      <div class="grid pageBlock dashboardHeroOnly">
         <article class="card hero">
           <div class="cardHeader"><div><h2>Visión global</h2><p>Valor actual, lectura de plataforma y evolución general.</p></div></div>
           <div class="tabs"><span class="active">Global</span><span>MyInvestor</span><span>Trade Republic</span><span>Bitcoin</span><span>Plan Pensiones</span></div>
@@ -3024,21 +3335,6 @@ body:before{
               <div class="heroMetric good"><label>P&amp;L plataforma</label><strong class="green">+614,65 €</strong><small>Resultado que aparece al sumar los activos según plataforma.</small></div>
               <div class="heroMetric good"><label>Rentabilidad plataforma</label><strong class="green">+4,91%</strong><small>Rentabilidad simple mostrada por los activos/plataformas.</small></div>
             </div>
-            <div class="chart chartClean" id="dashboardChart">
-              <div class="chartEmpty">Importa el Excel para ver la evolución real disponible.</div>
-            </div>
-          </div>
-        </article>
-        <article class="card">
-          <div class="cardHeader"><div><h3>Allocation</h3><p>Distribución desde CARTERA ACTUAL</p></div></div>
-          <div class="tabs"><span class="active">Assets</span><span>Tipo</span><span>Plataforma</span></div>
-          <div class="donutWrap"><div class="donut"><div class="donutCenter"><div><span>Portfolio value</span><strong>13.136,12 €</strong></div></div></div></div>
-          <div class="legend">
-            <div class="legendRow"><span class="legendDot bBlue"></span><span>MSCI World</span><strong>64,80%</strong></div>
-            <div class="legendRow"><span class="legendDot bGreen"></span><span>Emerging Markets</span><strong>10,67%</strong></div>
-            <div class="legendRow"><span class="legendDot bSmall"></span><span>Small Cap</span><strong>6,15%</strong></div>
-            <div class="legendRow"><span class="legendDot bGold"></span><span>Oro</span><strong>4,73%</strong></div>
-            <div class="legendRow"><span class="legendDot bBtc"></span><span>Bitcoin</span><strong>13,65%</strong></div>
           </div>
         </article>
       </div>
@@ -3051,7 +3347,23 @@ body:before{
         <article class="capitalCard"><label>XIRR global</label><strong class="green">14,58%</strong><small>Desde el primer día. Rentabilidad anualizada.</small></article>
       </section>
 
-      <div class="grid two pageBlock dashboardOps">
+      <div class="grid two pageBlock dashboardOps dashboardDistributionAlerts">
+        <div class="dashboardDistributionBlock">
+          <article class="card distributionCard">
+            <div class="cardHeader"><div><h3>Distribución operativa</h3><p>Peso real, objetivo, desviación y estado por activo.</p></div></div>
+            <div class="legend">
+              <div class="distTableWrap"><table class="distTable"><thead><tr><th>Activo</th><th>Valor actual</th><th>Peso real</th><th>Objetivo</th><th>Desviación</th><th>Estado</th></tr></thead><tbody>
+                <tr><td><div class="distAsset"><span class="legendDot bBtc"></span><strong>Bitcoin</strong></div></td><td>1.577,12 €</td><td>13,91%</td><td>15,04%</td><td>-1,13%</td><td><span class="statusPill ok">OK</span></td></tr>
+                <tr><td><div class="distAsset"><span class="legendDot bGold"></span><strong>Oro</strong></div></td><td>535,98 €</td><td>4,73%</td><td>6,96%</td><td class="yellow">-2,23%</td><td><span class="statusPill warn">Vigilar</span></td></tr>
+                <tr><td><div class="distAsset"><span class="legendDot bBlue"></span><strong>MSCI World</strong></div></td><td>7.345,78 €</td><td>64,77%</td><td>62,40%</td><td class="yellow">2,37%</td><td><span class="statusPill warn">Vigilar</span></td></tr>
+                <tr><td><div class="distAsset"><span class="legendDot bGreen"></span><strong>Emerging Markets</strong></div></td><td>1.185,43 €</td><td>10,45%</td><td>9,75%</td><td class="green">0,70%</td><td><span class="statusPill ok">OK</span></td></tr>
+                <tr><td><div class="distAsset"><span class="legendDot bSmall"></span><strong>Small Cap</strong></div></td><td>697,16 €</td><td>6,15%</td><td>5,85%</td><td class="green">0,30%</td><td><span class="statusPill ok">OK</span></td></tr>
+                <tr><td><div class="distAsset"><span class="legendDot bOk"></span><strong>Plan Pensiones</strong></div></td><td>1.818,14 €</td><td>Separado</td><td>Separado</td><td>-</td><td><span class="statusPill neutral">Separado</span></td></tr>
+              </tbody></table></div>
+            </div>
+          </article>
+        </div>
+
         <article class="card alertsCard">
           <div class="cardHeader"><div><h3>Alertas principales</h3><p>Lectura directa de la hoja RESUMEN / AUDITORÍA del Excel.</p></div></div>
           <div class="alerts">
@@ -3063,49 +3375,6 @@ body:before{
             <div class="alert"><div class="alertName">BTC techo absoluto</div><div class="alertStatus warn"><span class="bullet bWarn"></span>BTC cerca del techo del 15% operativo: vigilar</div></div>
             <div class="alert"><div class="alertName">Diagnóstico global</div><div class="alertStatus warn"><span class="bullet bWarn"></span>Cartera razonable: ajustar con nuevas aportaciones</div></div>
           </div>
-        </article>
-
-        <article class="card reconciliationCard">
-          <div class="cardHeader"><div><h3>Conciliación por fuente</h3><p>Bloque secundario para comprobar que plataformas, Koinly y Excel cuadran.</p></div></div>
-          <div class="recoTableWrap">
-            <table class="recoTable">
-              <thead>
-                <tr>
-                  <th>Fuente</th>
-                  <th>Valor mercado</th>
-                  <th>Coste inv.</th>
-                  <th>P&amp;L</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><span class="platformName"><span class="bullet bBlue"></span>MyInvestor</span></td>
-                  <td><strong>9.231,55&nbsp;€</strong></td>
-                  <td>8.237,69&nbsp;€</td>
-                  <td><strong class="green">993,86&nbsp;€</strong></td>
-                </tr>
-                <tr>
-                  <td><span class="platformName"><span class="bullet bGold"></span>Trade Republic</span></td>
-                  <td><strong>534,92&nbsp;€</strong></td>
-                  <td>529,10&nbsp;€</td>
-                  <td><strong class="green">5,82&nbsp;€</strong></td>
-                </tr>
-                <tr>
-                  <td><span class="platformName"><span class="bullet bBtc"></span>Koinly / Bitcoin</span></td>
-                  <td><strong>1.544,41&nbsp;€</strong></td>
-                  <td>2.173,69&nbsp;€</td>
-                  <td><strong class="red">-629,28&nbsp;€</strong></td>
-                </tr>
-                <tr class="total">
-                  <td><span class="platformName"><span class="bullet bOk"></span>Total</span></td>
-                  <td><strong>13.136,12&nbsp;€</strong></td>
-                  <td>12.521,47&nbsp;€</td>
-                  <td><strong class="green">614,65&nbsp;€</strong></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="sourceBox subtleBox"><strong>Uso:</strong> no es una lectura de rentabilidad real. Sirve para detectar descuadres entre fuentes. La rentabilidad real sigue estando en el bloque de capital.</div>
         </article>
       </div>
     </section>
@@ -3169,8 +3438,8 @@ body:before{
 
     <section class="section" id="xirr">
       <section class="kpiStrip pageBlock">
-        <article class="kpi good"><label>XIRR global</label><strong>14,58%</strong><small>leído de XIRR GLOBAL</small></article>
-        <article class="kpi"><label>Rentabilidad simple real</label><strong>6,03%</strong><small>dato complementario</small></article>
+        <article class="kpi"><label>XIRR global</label><strong class="green">14,58%</strong><small>leído de XIRR GLOBAL</small></article>
+        <article class="kpi"><label>Rentabilidad simple real</label><strong class="green">6,03%</strong><small>dato complementario</small></article>
         <article class="kpi"><label>Valor actual total</label><strong>13.136,12 €</strong><small>último valor</small></article>
         <article class="kpi"><label>Cierres reales</label><strong>Activo</strong><small>base para gráficas</small></article>
       </section>
@@ -3216,15 +3485,6 @@ body:before{
         </div>
       </div>
 
-<div class="grid two pageBlock">
-        <article class="card">
-          <div class="cardHeader"><div><h3>Evolución XIRR</h3><p>Gráfico generado a partir de la hoja XIRR GLOBAL.</p></div></div>
-          <div class="chart chartClean" id="xirrChart" style="margin:20px">
-              <div class="chartEmpty">Importa el Excel para ver los cierres reales disponibles.</div>
-            </div>
-        </article>
-        <article class="card"><div class="cardHeader"><div><h3>Funcionamiento</h3><p>Relación entre XIRR y Movimientos.</p></div></div><div class="sourceBox"><strong>El XIRR no se calcula manualmente en la web.</strong><br>La web lee los movimientos, el XIRR y los cierres reales del Excel. Las aportaciones mensuales no son cierres de cartera: sirven para flujos, no para dibujar evolución de valor.</div></article>
-      </div>
       <div class="card pageBlock">
         <div class="cardHeader">
           <div>
@@ -3249,8 +3509,7 @@ body:before{
         <div class="cardHeader"><div><h3>Movimientos</h3><p>Movimientos reales y valoraciones terminales usadas para el XIRR.</p></div></div>
         <div class="sourceBox"><strong>Fuente:</strong> tabla MOVIMIENTOS dentro de XIRR GLOBAL. Por defecto se muestran solo movimientos reales; las valoraciones terminales quedan separadas.</div>
         <div class="movementsToolbar">
-          <div class="movementToolbarTop">
-            <input class="searchBox" id="movementSearch" type="search" placeholder="Buscar activo, plataforma o nota...">
+          <div class="movementToolbarTop noSearch">
             <div class="movementModePills" id="movementModeFilters">
               <button class="filterPill active" data-mode="real">Operaciones</button>
               <button class="filterPill" data-mode="terminal">Valoraciones</button>
@@ -3281,7 +3540,7 @@ body:before{
             </tbody>
           </table>
         </div>
-        <div class="noResults" id="movementNoResults">No hay movimientos que coincidan con este filtro.</div>
+        <div class="noResults" id="movementNoResults">No hay movimientos que coincidan con estos filtros.</div>
       </div>
     </section>
 
@@ -3310,17 +3569,11 @@ body:before{
               <p>Valor total de cierre anual</p>
             </div>
             <div class="yearSummarySide">
-              <div><span>P&L total</span><strong class="green">30,85 €</strong></div>
+              <div><span>Invertido</span><strong>8.407,17 €</strong></div>
+              <div><span>P&L</span><strong class="green">30,85 €</strong></div>
               <div><span>Rentabilidad</span><strong class="green">0,37%</strong></div>
-              <div><span>XIRR 2025</span><strong class="green">0,50%</strong></div>
+              <div><span>XIRR</span><strong class="green">0,50%</strong></div>
             </div>
-          </section>
-
-          <section class="yearFacts">
-            <article><span>Invertido total</span><strong>8.407,17 €</strong></article>
-            <article><span>Total sin PP</span><strong>6.898,45 €</strong></article>
-            <article><span>Deducción PP</span><strong>472,81 €</strong></article>
-            <article><span>Tipo aplicado PP</span><strong>31,5%</strong></article>
           </section>
 
           <section class="card pageBlock historyAssetBlock">
@@ -3364,81 +3617,89 @@ body:before{
     </section>
 
     <section class="section" id="auditoria">
-      <section class="auditHeader pageBlock">
-        <article class="auditHero card">
-          <span class="eyebrow">Auditoría integral</span>
-          <h2><strong class="green">OK</strong></h2>
-          <p>Última auditoría: 05/06/2026. La web muestra los controles internos del Excel, sin crear reglas financieras nuevas.</p>
+      <section class="auditWebHero card pageBlock">
+        <div>
+          <span class="eyebrow">Auditoría web</span>
+          <h2>Estado técnico de la app</h2>
+          <p>Control de la web publicada: importación, guardado local, backup y conexión visual con el Excel.</p>
+        </div>
+        <div class="auditWebState">
+          <span data-web-audit="global-label">Estado</span>
+          <strong data-web-audit="global-status" class="green">OK</strong>
+          <em data-web-audit="global-note">Web operativa</em>
+        </div>
+      </section>
+
+      <section class="auditWebGrid pageBlock">
+        <article class="auditWebCard card">
+          <span>Excel importado</span>
+          <strong data-web-audit="excel-status">Pendiente</strong>
+          <em data-web-audit="excel-note">Fuente única de datos</em>
         </article>
-        <article class="auditScore card">
-          <span>Controles OK</span>
-          <strong>19/19</strong>
-          <em>Sin errores críticos</em>
+        <article class="auditWebCard card">
+          <span>Guardado local</span>
+          <strong data-web-audit="cache-status">Pendiente</strong>
+          <em data-web-audit="cache-note">Recuperación automática</em>
         </article>
-        <article class="auditScore card">
-          <span>Correcciones</span>
-          <strong>10</strong>
-          <em>Aplicadas en Excel</em>
+        <article class="auditWebCard card">
+          <span>Backup</span>
+          <strong data-web-audit="backup-status">Disponible</strong>
+          <em>Exporta copia del Excel cargado</em>
+        </article>
+        <article class="auditWebCard card">
+          <span>APIs externas</span>
+          <strong class="yellow">No activas</strong>
+          <em>Sin benchmark ni Supabase</em>
+        </article>
+      </section>
+
+      <section class="grid two pageBlock auditWebTwo">
+        <article class="card">
+          <div class="cardHeader">
+            <div>
+              <h3>Funciones de la web</h3>
+              <p>Lo que la app puede hacer actualmente.</p>
+            </div>
+          </div>
+          <div class="sheetChecks auditWebChecks">
+            <div><strong>Importar Excel</strong><span data-web-audit="import-check" class="green">Activo</span></div>
+            <div><strong>Visualización por páginas</strong><span class="green">Activa</span></div>
+            <div><strong>Guardado local</strong><span data-web-audit="cache-check" class="yellow">Pendiente</span></div>
+            <div><strong>Exportar backup</strong><span class="green">Activo</span></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="cardHeader">
+            <div>
+              <h3>Alcance actual</h3>
+              <p>Qué queda dentro y fuera de esta fase.</p>
+            </div>
+          </div>
+          <div class="sheetChecks auditWebChecks">
+            <div><strong>Excel como fuente única</strong><span class="green">Sí</span></div>
+            <div><strong>Supabase</strong><span class="yellow">No usado</span></div>
+            <div><strong>Benchmark/API</strong><span class="yellow">No usado</span></div>
+            <div><strong>Edición desde la web</strong><span class="yellow">Pendiente</span></div>
+          </div>
         </article>
       </section>
 
       <section class="card pageBlock">
         <div class="cardHeader">
           <div>
-            <h3>Controles principales</h3>
-            <p>Lectura compacta de la hoja AUDITORÍA.</p>
+            <h3>Páginas conectadas</h3>
+            <p>Estado de las vistas principales de la app.</p>
           </div>
         </div>
-        <div class="auditGrid">
-          <div class="auditItem ok"><span>Cartera</span><strong>Total valor actual interno</strong><em>OK</em></div>
-          <div class="auditItem ok"><span>Cartera</span><strong>Pesos reales y objetivo</strong><em>OK</em></div>
-          <div class="auditItem ok"><span>XIRR</span><strong>Valor actual vs cartera</strong><em>OK</em></div>
-          <div class="auditItem ok"><span>XIRR</span><strong>Terminales y estados por activo</strong><em>OK</em></div>
-          <div class="auditItem ok"><span>Resumen</span><strong>KPIs enlazados</strong><em>OK</em></div>
-          <div class="auditItem ok"><span>Patrimonio</span><strong>Portfolio y patrimonio neto</strong><em>OK</em></div>
-          <div class="auditItem ok"><span>Objetivos</span><strong>Pesos y base de proyección</strong><em>OK</em></div>
-          <div class="auditItem ok"><span>Modelo</span><strong>Errores de fórmula</strong><em>OK</em></div>
-          <div class="auditItem ok"><span>Fechas</span><strong>Frescura de fuentes</strong><em>OK</em></div>
-          <div class="auditItem ok"><span>XIRR</span><strong>Tabla anual y leyenda</strong><em>OK</em></div>
+        <div class="auditWebPages">
+          <div><strong>Dashboard</strong><span class="green">OK</span></div>
+          <div><strong>Cartera actual</strong><span class="green">OK</span></div>
+          <div><strong>XIRR global</strong><span class="green">OK</span></div>
+          <div><strong>Movimientos</strong><span class="green">OK</span></div>
+          <div><strong>Historial</strong><span class="green">OK</span></div>
+          <div><strong>Auditoría web</strong><span class="green">OK</span></div>
         </div>
-      </section>
-
-      <section class="grid two pageBlock">
-        <article class="card">
-          <div class="cardHeader">
-            <div>
-              <h3>Correcciones aplicadas</h3>
-              <p>Cambios recientes validados por auditoría.</p>
-            </div>
-          </div>
-          <div class="auditList">
-            <div><span>XIRR</span><strong>Terminales enlazados a CARTERA ACTUAL.</strong><em>OK</em></div>
-            <div><span>RESUMEN</span><strong>Controles reforzados de XIRR, fechas y errores.</strong><em>OK</em></div>
-            <div><span>PATRIMONIO</span><strong>Fechas fuente sincronizadas con valoración y deuda.</strong><em>OK</em></div>
-            <div><span>OBJETIVOS</span><strong>Notas de oro/BTC ajustadas a pesos objetivo.</strong><em>OK</em></div>
-            <div><span>XIRR GLOBAL</span><strong>Rentabilidad plataforma integrada en tabla principal.</strong><em>OK</em></div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="cardHeader">
-            <div>
-              <h3>Importación Excel</h3>
-              <p>Control técnico de hojas necesarias.</p>
-            </div>
-          </div>
-          <div class="sheetChecks">
-            <div><strong>RESUMEN</strong><span class="green">Detectada</span></div>
-            <div><strong>CARTERA ACTUAL</strong><span class="green">Detectada</span></div>
-            <div><strong>XIRR GLOBAL</strong><span class="green">Detectada</span></div>
-            <div><strong>HISTÓRICO MENSUAL</strong><span class="green">Detectada</span></div>
-            <div><strong>AUDITORÍA</strong><span class="green">Detectada</span></div>
-            <div><strong>2025</strong><span class="green">Detectada</span></div>
-          </div>
-          <div class="auditNote">
-            <strong>Limitación auditada:</strong> no se descargan cotizaciones externas. La auditoría valida coherencia interna, fórmulas, rangos y conexiones del libro.
-          </div>
-        </article>
       </section>
     </section>
 
@@ -3455,7 +3716,7 @@ const pages=[
   ["xirr","XIRR global","Rentabilidad ponderada y flujos de inversión.","ok"],
   ["movimientos","Movimientos","Movimientos conectados con el cálculo XIRR.","ok"],
   ["historial","Historial","Resumen anual y años anteriores.","off"],
-  ["auditoria","Auditoría","Visualización de la hoja AUDITORÍA del Excel.","warn"]
+  ["auditoria","Auditoría","Estado técnico de la web y funciones activas.","warn"]
 ];
 const nav=document.getElementById("nav");
 pages.forEach((p,i)=>{
@@ -3755,8 +4016,18 @@ function parseXirrRows(){
 function updateXirr(){
   const rows = sheetRows('XIRR GLOBAL');
   const kpis = document.querySelectorAll('#xirr .kpi');
-  const vals=[fmtPct(cell(rows,4,8)),fmtPct(cell(rows,4,9)),fmtMoney(cell(rows,4,3)), 'Activo'];
-  kpis.forEach((k,i)=>{ const s=k.querySelector('strong'); if(s) s.textContent=vals[i]||s.textContent; });
+  const rawVals=[cell(rows,4,8), cell(rows,4,9), cell(rows,4,3), 'Activo'];
+  const vals=[fmtPct(rawVals[0]), fmtPct(rawVals[1]), fmtMoney(rawVals[2]), 'Activo'];
+  kpis.forEach((k,i)=>{
+    const s=k.querySelector('strong');
+    if(!s) return;
+    s.textContent=vals[i]||s.textContent;
+    s.classList.remove('green','red','yellow');
+    if(i===0 || i===1){
+      const cls = clsByValue(rawVals[i]);
+      if(cls) s.classList.add(cls);
+    }
+  });
   const grid = document.querySelector('#xirr .xirrAssetGrid');
   if(grid){
     grid.innerHTML = parseXirrRows().filter(x=>String(x.activo).toUpperCase()!=='TOTAL').map(x=>{
@@ -3891,9 +4162,7 @@ function updateHistorial(){
   const main=document.querySelector('#historial .yearSummaryMain');
   if(main) main.innerHTML=`<span class="eyebrow">Cierre 2025</span><h2>${fmtMoney(summary['Valor total'])}</h2><p>Valor total de cierre anual</p>`;
   const side=document.querySelector('#historial .yearSummarySide');
-  if(side) side.innerHTML=`<div><span>P&L total</span><strong class="${clsByValue(summary['P&L total'])}">${fmtMoney(summary['P&L total'])}</strong></div><div><span>Rentabilidad</span><strong class="${clsByValue(summary['Rentabilidad total'])}">${fmtPct(summary['Rentabilidad total'])}</strong></div><div><span>XIRR 2025</span><strong class="${clsByValue(summary['XIRR 2025'])}">${fmtPct(summary['XIRR 2025'])}</strong></div>`;
-  const facts=document.querySelector('#historial .yearFacts');
-  if(facts) facts.innerHTML=`<article><span>Invertido total</span><strong>${fmtMoney(summary['Invertido total'])}</strong></article><article><span>Total sin PP</span><strong>${fmtMoney(summary['Total sin PP'])}</strong></article><article><span>Deducción PP</span><strong>${fmtMoney(summary['Deducción estimada Plan Pensiones'])}</strong></article><article><span>Tipo aplicado PP</span><strong>${fmtPct(summary['Tipo aplicado PP'],1)}</strong></article>`;
+  if(side) side.innerHTML=`<div><span>Invertido</span><strong>${fmtMoney(summary['Invertido total'])}</strong></div><div><span>P&L</span><strong class="${clsByValue(summary['P&L total'])}">${fmtMoney(summary['P&L total'])}</strong></div><div><span>Rentabilidad</span><strong class="${clsByValue(summary['Rentabilidad total'])}">${fmtPct(summary['Rentabilidad total'])}</strong></div><div><span>XIRR</span><strong class="${clsByValue(summary['XIRR 2025'])}">${fmtPct(summary['XIRR 2025'])}</strong></div>`;
   const tbody=document.querySelector('#historial .annualTable tbody');
   if(tbody){
     const out=[]; for(let r=5;r<=11;r++){ const activo=cell(rows,r,1); if(activo) out.push({activo, plataforma:cell(rows,r,2), inv:cell(rows,r,3), rent:cell(rows,r,4), valor:cell(rows,r,5), pl:cell(rows,r,6), peso:cell(rows,r,7)}); }
@@ -3904,19 +4173,30 @@ function updateHistorial(){
 }
 
 function updateAuditoria(){
-  const rows=sheetRows('AUDITORÍA');
-  const status=cell(rows,2,5) || 'SIN DATOS';
-  const auditValue=document.querySelector('.auditState strong');
-  if(auditValue){ auditValue.textContent=status; auditValue.className=status==='OK'?'green':status==='ERROR'?'red':status==='SIN DATOS'?'':'yellow'; }
-  const auditDate=document.querySelector('.auditState p');
-  if(auditDate) auditDate.textContent=`Última auditoría: ${fmtDate(cell(rows,2,2))}. La web muestra los controles internos del Excel.`;
-  const items=document.querySelector('.auditList');
-  if(items){
-    const controls=[]; for(let r=5;r<=23;r++){ const area=cell(rows,r,1); if(area) controls.push({area,control:cell(rows,r,2),estado:cell(rows,r,5)}); }
-    items.innerHTML=controls.map(x=>`<div class="auditItem ${String(x.estado).toLowerCase()==='ok'?'ok':'warn'}"><span>${x.area}</span><strong>${x.control}</strong><em>${x.estado}</em></div>`).join('');
-  }
-  const navStatus = status==='OK' ? 'ok' : (status==='ERROR' ? 'bad' : (status==='SIN DATOS' ? 'off' : 'warn'));
-  setNavStatus('auditoria', navStatus);
+  const hasWorkbook = !!importedWorkbook;
+  const missing = hasWorkbook ? validateWorkbook(importedWorkbook) : [];
+  const cacheMeta = JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
+  const hasCache = !!localStorage.getItem(CACHE_KEY);
+  const fileName = importedData?.fileName || cacheMeta.fileName || 'Excel no importado';
+  const ok = hasWorkbook && missing.length === 0;
+
+  const set = (selector, value, cls='') => {
+    const el = document.querySelector(selector);
+    if(!el) return;
+    el.textContent = value;
+    if(cls) el.className = cls;
+  };
+
+  set('[data-web-audit="global-status"]', ok ? 'OK' : 'Pendiente', ok ? 'green' : 'yellow');
+  set('[data-web-audit="global-note"]', ok ? 'Web operativa con Excel cargado' : 'Importa el Excel para validar la web');
+  set('[data-web-audit="excel-status"]', ok ? 'Conectado' : 'Pendiente', ok ? 'green' : 'yellow');
+  set('[data-web-audit="excel-note"]', ok ? fileName : 'Fuente única de datos');
+  set('[data-web-audit="cache-status"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : 'yellow');
+  set('[data-web-audit="cache-note"]', hasCache ? 'Último Excel guardado en este navegador' : 'Se activará al importar Excel');
+  set('[data-web-audit="backup-status"]', hasWorkbook || hasCache ? 'Disponible' : 'Pendiente', hasWorkbook || hasCache ? 'green' : 'yellow');
+  set('[data-web-audit="cache-check"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : 'yellow');
+
+  setNavStatus('auditoria', ok ? 'ok' : 'warn');
 }
 
 
@@ -4543,6 +4823,176 @@ body:before{
 .navStatus{box-shadow:none!important;}
 .legendDot,.bullet,.dot,.assetDot{box-shadow:none!important;}
 
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
+
 </style>
 
 
@@ -4721,6 +5171,176 @@ body:before{
 .sideFoot strong{color:var(--text)!important;}
 .navStatus{box-shadow:none!important;}
 .legendDot,.bullet,.dot,.assetDot{box-shadow:none!important;}
+
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
 
 </style>
 <script>
@@ -4983,6 +5603,176 @@ body:before{
 .navStatus{box-shadow:none!important;}
 .legendDot,.bullet,.dot,.assetDot{box-shadow:none!important;}
 
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
+
 </style>
 
 <style>
@@ -5117,7 +5907,1587 @@ body:before{
 .navStatus{box-shadow:none!important;}
 .legendDot,.bullet,.dot,.assetDot{box-shadow:none!important;}
 
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
+
 </style>
+
+
+<style>
+/* v26 · Pulido Dashboard */
+#dashboard .hero .cardHeader h2,
+#dashboard .cardHeader h3{letter-spacing:-.02em;}
+#dashboard .hero .cardHeader p,
+#dashboard .cardHeader p{max-width:680px;}
+#dashboard .heroTopMetrics{
+  grid-template-columns:1.18fr .91fr .91fr!important;
+  gap:14px!important;
+  margin-top:18px!important;
+}
+#dashboard .heroTopMetric{
+  min-height:96px!important;
+  padding:16px 18px!important;
+  border-radius:16px!important;
+  background:rgba(5,6,7,.64)!important;
+}
+#dashboard .heroTopMetric.primary strong{
+  font-size:38px!important;
+  font-weight:380!important;
+  letter-spacing:-1.55px!important;
+}
+#dashboard .heroTopMetric strong{
+  font-size:23px!important;
+  font-weight:430!important;
+  letter-spacing:-.75px!important;
+}
+#dashboard .heroTopMetric label{
+  color:var(--muted)!important;
+  font-size:11px!important;
+  text-transform:none!important;
+  letter-spacing:.01em!important;
+  margin-bottom:9px!important;
+}
+#dashboard .heroTopMetric small{
+  color:var(--muted)!important;
+  font-size:11px!important;
+  line-height:1.28!important;
+  max-width:260px;
+}
+#dashboardChart.chartClean{
+  height:315px!important;
+  margin-top:16px!important;
+  background:linear-gradient(180deg,rgba(9,11,13,.78),rgba(5,6,7,.88))!important;
+}
+#dashboardChart .chartBadge{
+  top:14px!important;
+  right:16px!important;
+  background:rgba(244,241,234,.045)!important;
+  border-color:rgba(244,241,234,.09)!important;
+  color:var(--muted)!important;
+}
+#dashboard .capitalGrid{margin-top:18px!important;}
+#dashboard .capitalCard{min-height:82px!important;padding:14px 16px!important;}
+#dashboard .capitalCard label{font-size:10.5px!important;letter-spacing:.06em!important;}
+#dashboard .capitalCard strong{font-size:18px!important;font-weight:430!important;letter-spacing:-.45px!important;}
+#dashboard .capitalCard small{font-size:10.5px!important;line-height:1.25!important;}
+#dashboard .legendRow{grid-template-columns:auto 1fr auto!important;gap:10px!important;}
+#dashboard .donutCenter span{font-size:9.5px!important;letter-spacing:.08em!important;}
+#dashboard .donutCenter strong{font-size:16px!important;font-weight:430!important;}
+@media(max-width:1180px){
+  #dashboard .heroTopMetrics{grid-template-columns:1fr!important;}
+  #dashboard .heroTopMetric.primary strong{font-size:34px!important;}
+}
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
+
+</style>
+<script>
+(function(){
+  function polishDashboardTexts(){
+    const heroP=document.querySelector('#dashboard .hero .cardHeader p');
+    if(heroP) heroP.textContent='Valor de mercado, lectura por fuente y evolución con cierres reales.';
+    const allocationP=document.querySelector('#dashboard article.card:not(.hero) .cardHeader p');
+    if(allocationP) allocationP.textContent='Distribución actual de la cartera.';
+    document.querySelectorAll('#dashboard .donutCenter span').forEach(el=>{el.textContent='Valor cartera';});
+    document.querySelectorAll('#dashboard .heroTopMetric label').forEach(el=>{
+      if(el.textContent.trim()==='P&L plataforma') el.textContent='P&L mostrado';
+      if(el.textContent.trim()==='Rentabilidad plataforma') el.textContent='Rentabilidad mostrada';
+    });
+    document.querySelectorAll('#dashboard .heroTopMetric small').forEach(el=>{
+      const t=el.textContent.trim();
+      if(t.includes('Resultado filtrado')) el.textContent='Resultado de los activos mostrados.';
+      if(t.includes('Rentabilidad simple')) el.textContent='Rentabilidad simple de los activos mostrados.';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', polishDashboardTexts);
+  const oldRender = window.renderDashboardScope;
+  if(oldRender){
+    window.renderDashboardScope=function(scope){
+      const out=oldRender.apply(this,arguments);
+      polishDashboardTexts();
+      return out;
+    };
+  }
+})();
+</script>
+
+
+<style>
+/* v29 · Distribución de cartera: lista limpia con barras, sin tarjetas cortadas */
+#dashboard .dashboardDistributionBlock{
+  grid-template-columns:1fr!important;
+  margin-top:18px!important;
+}
+#dashboard .dashboardDistributionBlock .card{
+  min-height:0!important;
+  padding:22px 26px 24px!important;
+}
+#dashboard .dashboardDistributionBlock .cardHeader{
+  padding:0!important;
+}
+#dashboard .dashboardDistributionBlock .cardHeader h3{
+  font-size:19px!important;
+  letter-spacing:-.35px!important;
+}
+#dashboard .dashboardDistributionBlock .cardHeader p{
+  font-size:13px!important;
+  margin-top:6px!important;
+}
+#dashboard .dashboardDistributionBlock .tabs{
+  padding:16px 0 0!important;
+  gap:8px!important;
+}
+#dashboard .dashboardDistributionBlock .donutWrap{
+  display:none!important;
+}
+#dashboard .dashboardDistributionBlock .legend{
+  display:block!important;
+  max-width:780px!important;
+  margin:18px 0 0!important;
+  padding:0!important;
+}
+#dashboard .dashboardDistributionBlock .legendRow{
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:10px minmax(220px,1fr) 92px!important;
+  grid-template-rows:auto 5px!important;
+  column-gap:12px!important;
+  row-gap:8px!important;
+  align-items:center!important;
+  min-height:auto!important;
+  height:auto!important;
+  padding:10px 0 12px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  overflow:visible!important;
+  border-bottom:1px solid rgba(244,241,234,.055)!important;
+}
+#dashboard .dashboardDistributionBlock .legendRow:last-child{
+  border-bottom:0!important;
+}
+#dashboard .dashboardDistributionBlock .legendRow:before{
+  content:"";
+  grid-column:2 / 4;
+  grid-row:2;
+  height:5px;
+  border-radius:999px;
+  background:rgba(244,241,234,.055);
+}
+#dashboard .dashboardDistributionBlock .legendRow:after{
+  content:"";
+  grid-column:2 / 4;
+  grid-row:2;
+  align-self:center;
+  height:5px;
+  width:var(--w,0%);
+  border-radius:999px;
+  background:var(--c,var(--green));
+  opacity:.95;
+  position:static!important;
+}
+#dashboard .dashboardDistributionBlock .legendRow .legendDot{
+  grid-column:1!important;
+  grid-row:1!important;
+  width:7px!important;
+  height:7px!important;
+}
+#dashboard .dashboardDistributionBlock .legendRow span:nth-child(2){
+  grid-column:2!important;
+  grid-row:1!important;
+  font-size:13px!important;
+  line-height:1.25!important;
+  color:var(--text2)!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+#dashboard .dashboardDistributionBlock .legendRow strong{
+  grid-column:3!important;
+  grid-row:1!important;
+  justify-self:end!important;
+  font-size:14px!important;
+  line-height:1.25!important;
+  font-weight:620!important;
+  color:var(--text)!important;
+  letter-spacing:0!important;
+}
+@media(max-width:780px){
+  #dashboard .dashboardDistributionBlock .legend{max-width:none!important;}
+  #dashboard .dashboardDistributionBlock .legendRow{grid-template-columns:10px minmax(0,1fr) 78px!important;}
+}
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
+
+</style>
+<script>
+(function(){
+  function polishDistributionV29(){
+    const card=document.querySelector('#dashboard .dashboardDistributionBlock .card');
+    if(!card) return;
+    const h=card.querySelector('.cardHeader h3');
+    const p=card.querySelector('.cardHeader p');
+    if(h) h.textContent='Distribución de cartera';
+    if(p) p.textContent='Peso actual por activo, tipo o plataforma.';
+    const tabs=card.querySelectorAll('.tabs span');
+    if(tabs[0]) tabs[0].textContent='Activos';
+    card.querySelectorAll('.legendRow').forEach(row=>{
+      const dot=row.querySelector('.legendDot');
+      const pct=row.querySelector('strong');
+      if(dot) row.style.setProperty('--c', getComputedStyle(dot).backgroundColor);
+      if(pct){
+        const n=parseFloat((pct.textContent||'').replace('%','').replace(',','.'));
+        if(!Number.isNaN(n)) row.style.setProperty('--w', Math.max(0,Math.min(100,n))+'%');
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded', polishDistributionV29);
+  const prevAlloc=window.renderAllocationScope;
+  if(prevAlloc){
+    window.renderAllocationScope=function(){
+      const r=prevAlloc.apply(this,arguments);
+      polishDistributionV29();
+      return r;
+    };
+  }
+  const prevDash=window.updateDashboard;
+  if(prevDash){
+    window.updateDashboard=function(){
+      const r=prevDash.apply(this,arguments);
+      polishDistributionV29();
+      return r;
+    };
+  }
+})();
+</script>
+
+
+
+<style>
+/* v30 · Distribución operativa: peso real vs objetivo, desviación y estado */
+#dashboard .dashboardDistributionBlock .card{
+  padding:22px 26px 24px!important;
+}
+#dashboard .dashboardDistributionBlock .legend{
+  max-width:none!important;
+  width:100%!important;
+  margin:18px 0 0!important;
+  padding:0!important;
+}
+.distTableWrap{
+  width:100%;
+  overflow-x:auto;
+  border:1px solid rgba(244,241,234,.10);
+  border-radius:18px;
+  background:rgba(0,0,0,.18);
+}
+.distTable{
+  width:100%;
+  min-width:860px;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+.distTable th,
+.distTable td{
+  padding:13px 16px;
+  border-bottom:1px solid rgba(244,241,234,.07);
+  vertical-align:middle;
+  font-size:13px;
+}
+.distTable thead th{
+  color:var(--muted2);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-weight:800;
+  font-size:11px;
+  background:rgba(244,241,234,.045);
+}
+.distTable tbody tr:last-child td{border-bottom:0;}
+.distTable th:nth-child(1), .distTable td:nth-child(1){text-align:left;width:29%;}
+.distTable th:nth-child(2), .distTable td:nth-child(2),
+.distTable th:nth-child(3), .distTable td:nth-child(3),
+.distTable th:nth-child(4), .distTable td:nth-child(4),
+.distTable th:nth-child(5), .distTable td:nth-child(5){text-align:right;}
+.distTable th:nth-child(6), .distTable td:nth-child(6){text-align:left;width:120px;}
+.distAsset{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.distAsset .legendDot{
+  flex:0 0 8px;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+}
+.distAsset strong{
+  color:var(--text);
+  font-size:14px;
+  white-space:nowrap;
+}
+.distBarCell{
+  position:relative;
+}
+.distBarCell .barTrack{
+  display:block;
+  width:100%;
+  height:5px;
+  border-radius:999px;
+  background:rgba(244,241,234,.06);
+  margin-top:7px;
+  overflow:hidden;
+}
+.distBarCell .barFill{
+  display:block;
+  height:100%;
+  width:var(--w,0%);
+  border-radius:999px;
+  background:var(--c,var(--green));
+}
+.statusPill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:70px;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  border:1px solid rgba(244,241,234,.10);
+  background:rgba(244,241,234,.035);
+}
+.statusPill.ok{color:var(--green);border-color:rgba(95,211,155,.28);background:rgba(95,211,155,.07);}
+.statusPill.warn{color:var(--warn);border-color:rgba(232,177,74,.30);background:rgba(232,177,74,.08);}
+.statusPill.neutral{color:var(--muted);}
+.distNote{
+  margin-top:12px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+@media(max-width:900px){
+  .distTable{min-width:760px;}
+  #dashboard .dashboardDistributionBlock .card{padding:18px!important;}
+}
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
+
+</style>
+<script>
+(function(){
+  function statusForDistribution(row){
+    const asset = normalizeKey(row.activo);
+    if(asset.includes('plan pensiones') || String(row.peso).toLowerCase()==='separado'){
+      return {label:'Separado', cls:'neutral'};
+    }
+    const desv = Number(row.desv);
+    if(!Number.isFinite(desv)) return {label:'-', cls:'neutral'};
+    return Math.abs(desv) >= 0.02 ? {label:'Vigilar', cls:'warn'} : {label:'OK', cls:'ok'};
+  }
+  function renderDistributionTable(mode, cartera){
+    const legend=document.querySelector('#dashboard .dashboardDistributionBlock .legend') || document.querySelector('#dashboard .legend');
+    if(!legend) return;
+    const normalized = normalizeKey(mode || currentAllocationScope || 'activos');
+    const operational = carteraRowsOperational(cartera || parseCartera());
+    if(normalized === 'tipo' || normalized === 'plataforma'){
+      const groups = Object.values(getAllocationGroups(normalized, cartera || parseCartera())).filter(x=>x.valor>0);
+      const total = groups.reduce((s,x)=>s+(Number(x.valor)||0),0)||1;
+      legend.innerHTML = `<div class="distTableWrap"><table class="distTable"><thead><tr><th>${normalized==='tipo'?'Tipo':'Plataforma'}</th><th>Valor actual</th><th>Peso real</th><th></th><th></th><th>Estado</th></tr></thead><tbody>` +
+        groups.map(g=>{
+          const pct=(Number(g.valor)||0)/total;
+          const color=colorForGroup(g.name);
+          return `<tr><td><div class="distAsset"><span class="legendDot" style="background:${color}"></span><strong>${g.name}</strong></div></td><td>${fmtMoney(g.valor)}</td><td class="distBarCell"><strong>${fmtPct(pct)}</strong><span class="barTrack"><span class="barFill" style="--w:${Math.max(0,Math.min(100,pct*100))}%;--c:${color}"></span></span></td><td></td><td></td><td><span class="statusPill neutral">Info</span></td></tr>`;
+        }).join('') + `</tbody></table></div><div class="distNote">Vista informativa por ${normalized==='tipo'?'tipo':'plataforma'}. Los objetivos y desviaciones se controlan por activo.</div>`;
+      return;
+    }
+    const rows = operational.slice().sort((a,b)=>{
+      const order = ['bitcoin','oro','gold','msci','emerging','small','plan pensiones'];
+      const ia = order.findIndex(k=>normalizeKey(a.activo).includes(k));
+      const ib = order.findIndex(k=>normalizeKey(b.activo).includes(k));
+      return (ia<0?99:ia)-(ib<0?99:ib);
+    });
+    legend.innerHTML = `<div class="distTableWrap"><table class="distTable"><thead><tr><th>Activo</th><th>Valor actual</th><th>Peso real</th><th>Objetivo</th><th>Desviación</th><th>Estado</th></tr></thead><tbody>` +
+      rows.map(x=>{
+        const status=statusForDistribution(x);
+        const peso=Number(x.peso);
+        const color=colorForGroup(shortAssetName(x.activo));
+        return `<tr><td><div class="distAsset"><span class="legendDot ${assetClass(x.activo)}"></span><strong>${shortAssetName(x.activo)}</strong></div></td><td>${fmtMoney(x.valor)}</td><td class="distBarCell"><strong>${Number.isFinite(peso)?fmtPct(peso):x.peso}</strong>${Number.isFinite(peso)?`<span class="barTrack"><span class="barFill" style="--w:${Math.max(0,Math.min(100,peso*100))}%;--c:${color}"></span></span>`:''}</td><td>${Number.isFinite(Number(x.objetivo))?fmtPct(x.objetivo):x.objetivo || '-'}</td><td class="${clsByValue(x.desv)}">${Number.isFinite(Number(x.desv))?fmtPct(x.desv):x.desv || '-'}</td><td><span class="statusPill ${status.cls}">${status.label}</span></td></tr>`;
+      }).join('') + `</tbody></table></div><div class="distNote">Lectura operativa: compara peso real contra objetivo. Si la desviación supera aproximadamente ±2 puntos, se marca como Vigilar.</div>`;
+  }
+  const oldRenderAllocationScope = window.renderAllocationScope || renderAllocationScope;
+  window.renderAllocationScope = function(mode, carteraArg){
+    const cartera = carteraArg || parseCartera();
+    const h=document.querySelector('#dashboard .dashboardDistributionBlock .cardHeader h3');
+    const p=document.querySelector('#dashboard .dashboardDistributionBlock .cardHeader p');
+    if(h) h.textContent='Distribución operativa';
+    if(p) p.textContent='Peso real, objetivo, desviación y estado por activo.';
+    renderDistributionTable(mode || currentAllocationScope || 'activos', cartera);
+  };
+  const oldUpdateDashboard = window.updateDashboard || updateDashboard;
+  window.updateDashboard = function(){
+    const result = oldUpdateDashboard.apply(this, arguments);
+    window.renderAllocationScope(currentAllocationScope || 'activos');
+    return result;
+  };
+  document.addEventListener('DOMContentLoaded',()=>{
+    setTimeout(()=>window.renderAllocationScope(currentAllocationScope || 'activos'),50);
+  });
+})();
+</script>
+
+
+
+
+
+<style>
+/* v33 · Dashboard pulido: distribución operativa + alertas, sin conciliación */
+#dashboard .dashboardDistributionAlerts{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.35fr) minmax(360px,.65fr)!important;
+  gap:18px!important;
+  align-items:stretch!important;
+  margin-top:20px!important;
+}
+#dashboard .dashboardDistributionBlock{margin-top:0!important;display:block!important;min-width:0!important;}
+#dashboard .dashboardDistributionBlock .card{height:100%!important;padding:22px 26px!important;}
+#dashboard .dashboardDistributionBlock .tabs,
+#dashboard .dashboardDistributionBlock .donutWrap{display:none!important;}
+#dashboard .dashboardDistributionBlock .legend{width:100%!important;max-width:none!important;margin:18px 0 0!important;}
+#dashboard .dashboardDistributionBlock .distTable{min-width:720px!important;}
+#dashboard .dashboardDistributionBlock .distTable th,
+#dashboard .dashboardDistributionBlock .distTable td{padding:12px 14px!important;}
+#dashboard .alertsCard{height:100%!important;padding:22px 26px!important;}
+#dashboard .alertsCard .alerts{margin-top:14px!important;}
+#dashboard .alertsCard .alert{grid-template-columns:minmax(120px,.85fr) minmax(0,1.15fr)!important;padding:12px 0!important;}
+#dashboard .reconciliationCard{display:none!important;}
+@media(max-width:1180px){
+  #dashboard .dashboardDistributionAlerts{grid-template-columns:1fr!important;}
+  #dashboard .dashboardDistributionBlock .distTable{min-width:760px!important;}
+}
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
+
+</style>
+<script>
+(function(){
+  function forceDashboardDistributionAssets(){
+    var h=document.querySelector('#dashboard .dashboardDistributionBlock .cardHeader h3');
+    var p=document.querySelector('#dashboard .dashboardDistributionBlock .cardHeader p');
+    if(h) h.textContent='Distribución operativa';
+    if(p) p.textContent='Peso real, objetivo, desviación y estado por activo.';
+    if(typeof window.renderAllocationScope==='function'){
+      try{ window.renderAllocationScope('activos'); }catch(e){}
+    }
+  }
+  document.addEventListener('DOMContentLoaded', forceDashboardDistributionAssets);
+  var prev=window.updateDashboard;
+  if(prev){
+    window.updateDashboard=function(){
+      var r=prev.apply(this,arguments);
+      setTimeout(forceDashboardDistributionAssets,0);
+      return r;
+    };
+  }
+})();
+</script>
+
+
+<!-- V42 · Amarillo elegante global para todos los botones activos -->
+<style>
+:root{
+  --active-yellow:#f2c94c;
+  --active-yellow-hover:#ffd75e;
+  --active-yellow-soft:rgba(242,201,76,.16);
+  --active-yellow-border:rgba(242,201,76,.62);
+  --active-yellow-shadow:0 10px 28px rgba(242,201,76,.16), inset 0 1px 0 rgba(255,255,255,.30);
+}
+
+/* Botones principales */
+.btn.primary,
+label.btn.primary,
+button.primary,
+.actions .btn.primary{
+  background:linear-gradient(180deg,var(--active-yellow-hover),var(--active-yellow))!important;
+  color:#090909!important;
+  border-color:var(--active-yellow-border)!important;
+  box-shadow:var(--active-yellow-shadow)!important;
+}
+.btn.primary:hover,
+label.btn.primary:hover,
+button.primary:hover{
+  background:linear-gradient(180deg,#ffe071,var(--active-yellow))!important;
+  color:#050505!important;
+}
+
+/* Menú lateral */
+.nav button.active,
+.sidebar .nav button.active{
+  background:linear-gradient(180deg,var(--active-yellow-hover),var(--active-yellow))!important;
+  color:#090909!important;
+  border-color:var(--active-yellow-border)!important;
+  box-shadow:var(--active-yellow-shadow)!important;
+}
+.nav button.active .navStatus{
+  background:#111!important;
+  color:#111!important;
+  box-shadow:0 0 0 3px rgba(0,0,0,.10)!important;
+}
+
+/* Pestañas y filtros */
+.tabs .active,
+.tabs span.active,
+.filterPill.active,
+.movementModePills .filterPill.active,
+.filterPills .filterPill.active,
+.yearPills button.active,
+.yearLine.active,
+.yearCard.active,
+button.active,
+.pill.active{
+  background:linear-gradient(180deg,var(--active-yellow-hover),var(--active-yellow))!important;
+  color:#090909!important;
+  border-color:var(--active-yellow-border)!important;
+  box-shadow:var(--active-yellow-shadow)!important;
+}
+
+/* Evitar subrayados blancos heredados en tabs */
+.tabs .active,
+.tabs span.active{
+  border-bottom-color:var(--active-yellow-border)!important;
+}
+
+/* Estados activos que no deben parecer blancos */
+[aria-selected="true"],
+.selected,
+.is-active{
+  border-color:var(--active-yellow-border)!important;
+}
+button[aria-selected="true"],
+.selected.filterPill,
+.is-active.filterPill{
+  background:linear-gradient(180deg,var(--active-yellow-hover),var(--active-yellow))!important;
+  color:#090909!important;
+  box-shadow:var(--active-yellow-shadow)!important;
+}
+
+/* Botones no activos: mantienen dark premium */
+.btn:not(.primary),
+.filterPill:not(.active),
+.tabs span:not(.active),
+.yearPills button:not(.active),
+.nav button:not(.active){
+  transition:background .16s ease,border-color .16s ease,color .16s ease,box-shadow .16s ease!important;
+}
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
+
+</style>
+
 </body>
 </html>
 <style>
@@ -5431,6 +7801,176 @@ body:before{
 .sideFoot strong{color:var(--text)!important;}
 .navStatus{box-shadow:none!important;}
 .legendDot,.bullet,.dot,.assetDot{box-shadow:none!important;}
+
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
 
 </style>
 
@@ -5962,6 +8502,176 @@ body:before{
 .navStatus{box-shadow:none!important;}
 .legendDot,.bullet,.dot,.assetDot{box-shadow:none!important;}
 
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
+
 </style>
 
 <style>.tabs span{cursor:pointer;}
@@ -6122,4 +8832,870 @@ body:before{
 .navStatus{box-shadow:none!important;}
 .legendDot,.bullet,.dot,.assetDot{box-shadow:none!important;}
 
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
+
+</style>
+
+<style>
+/* v27 · Dashboard: distribución compacta y gráfica protagonista */
+#dashboard > .grid.two.pageBlock:not(.dashboardOps){
+  grid-template-columns:1fr!important;
+}
+#dashboard .hero{
+  min-height:0!important;
+}
+#dashboard .heroBody{
+  padding-bottom:22px!important;
+}
+#dashboardChart.chartClean,
+#dashboard .chartClean{
+  height:390px!important;
+  margin-top:18px!important;
+}
+#dashboard > .grid.two.pageBlock:not(.dashboardOps) > article.card:not(.hero){
+  min-height:0!important;
+  padding-bottom:18px!important;
+}
+#dashboard > .grid.two.pageBlock:not(.dashboardOps) > article.card:not(.hero) .cardHeader{
+  padding:18px 20px 0!important;
+}
+#dashboard > .grid.two.pageBlock:not(.dashboardOps) > article.card:not(.hero) .cardHeader h3{
+  font-size:18px!important;
+  letter-spacing:-.35px!important;
+}
+#dashboard > .grid.two.pageBlock:not(.dashboardOps) > article.card:not(.hero) .cardHeader p{
+  font-size:12px!important;
+  margin-top:5px!important;
+}
+#dashboard > .grid.two.pageBlock:not(.dashboardOps) > article.card:not(.hero) .tabs{
+  padding:14px 20px 0!important;
+  gap:8px!important;
+}
+#dashboard > .grid.two.pageBlock:not(.dashboardOps) > article.card:not(.hero) .tabs span{
+  border:1px solid rgba(244,241,234,.095)!important;
+  background:rgba(244,241,234,.035)!important;
+  border-radius:999px!important;
+  padding:8px 12px!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  border-bottom:1px solid rgba(244,241,234,.095)!important;
+}
+#dashboard > .grid.two.pageBlock:not(.dashboardOps) > article.card:not(.hero) .tabs span.active{
+  background:#f4f1ea!important;
+  border-color:#f4f1ea!important;
+  color:#0b0d0f!important;
+}
+#dashboard .donutWrap{
+  display:none!important;
+}
+#dashboard .legend{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:10px!important;
+  padding:16px 20px 0!important;
+  margin:0!important;
+}
+#dashboard .legendRow{
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:auto 1fr!important;
+  grid-template-rows:auto auto!important;
+  gap:7px 8px!important;
+  align-items:center!important;
+  min-height:58px!important;
+  padding:12px 12px 10px!important;
+  border:1px solid rgba(244,241,234,.075)!important;
+  background:rgba(5,6,7,.58)!important;
+  border-radius:14px!important;
+  overflow:hidden!important;
+}
+#dashboard .legendRow:after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  height:3px;
+  width:var(--w,0%);
+  background:var(--c,var(--green));
+  opacity:.9;
+}
+#dashboard .legendRow .legendDot{
+  grid-column:1!important;
+  width:7px!important;
+  height:7px!important;
+}
+#dashboard .legendRow span:nth-child(2){
+  grid-column:2!important;
+  font-size:12px!important;
+  color:var(--text2)!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+#dashboard .legendRow strong{
+  grid-column:1 / -1!important;
+  justify-self:start!important;
+  font-size:18px!important;
+  font-weight:520!important;
+  color:var(--text)!important;
+  letter-spacing:-.35px!important;
+}
+@media(max-width:1320px){
+  #dashboard .legend{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+}
+@media(max-width:780px){
+  #dashboardChart.chartClean,#dashboard .chartClean{height:300px!important;}
+  #dashboard .legend{grid-template-columns:1fr!important;}
+}
+
+/* Dashboard v28: jerarquía revisada */
+#dashboard .dashboardHeroOnly{grid-template-columns:1fr!important;}
+#dashboard .dashboardHeroOnly .hero{min-height:0!important;}
+#dashboard .dashboardHeroOnly .chartClean{min-height:280px!important;}
+#dashboard .capitalGrid{margin-top:18px!important;margin-bottom:18px!important;}
+#dashboard .dashboardDistributionBlock{grid-template-columns:1fr!important;margin-top:18px!important;}
+#dashboard .dashboardDistributionBlock .card{padding:20px 22px!important;}
+#dashboard .dashboardDistributionBlock .donutWrap{max-width:420px;margin:12px auto 10px!important;}
+#dashboard .dashboardDistributionBlock .donut{width:220px!important;height:220px!important;}
+#dashboard .dashboardDistributionBlock .legend{max-width:560px;margin:12px auto 0!important;}
+@media(max-width:900px){#dashboard .dashboardHeroOnly .chartClean{min-height:220px!important;}}
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
+
+</style>
+<script>
+(function(){
+  function renameDistributionBlock(){
+    const allocationCard = document.querySelector('#dashboard .donutWrap')?.closest('.card');
+    if(!allocationCard) return;
+    const h = allocationCard.querySelector('.cardHeader h3');
+    const p = allocationCard.querySelector('.cardHeader p');
+    if(h) h.textContent = 'Distribución de cartera';
+    if(p) p.textContent = 'Peso actual por activo, tipo o plataforma.';
+    const tabs = allocationCard.querySelectorAll('.tabs span');
+    if(tabs[0] && tabs[0].textContent.trim().toLowerCase()==='assets') tabs[0].textContent = 'Activos';
+  }
+  function styleDistributionLegend(){
+    document.querySelectorAll('#dashboard .legendRow').forEach(row=>{
+      const dot = row.querySelector('.legendDot');
+      const pct = row.querySelector('strong');
+      if(dot){ row.style.setProperty('--c', getComputedStyle(dot).backgroundColor); }
+      if(pct){
+        const n = parseFloat((pct.textContent||'').replace('%','').replace(',','.'));
+        if(!Number.isNaN(n)) row.style.setProperty('--w', Math.max(0, Math.min(100,n)) + '%');
+      }
+    });
+  }
+  function applyDashboardV27(){
+    renameDistributionBlock();
+    styleDistributionLegend();
+  }
+  document.addEventListener('DOMContentLoaded', applyDashboardV27);
+  const previousRenderAllocationScope = window.renderAllocationScope;
+  if(previousRenderAllocationScope){
+    window.renderAllocationScope = function(){
+      const result = previousRenderAllocationScope.apply(this, arguments);
+      applyDashboardV27();
+      return result;
+    };
+  }
+  const previousUpdateDashboard = window.updateDashboard;
+  if(previousUpdateDashboard){
+    window.updateDashboard = function(){
+      const result = previousUpdateDashboard.apply(this, arguments);
+      applyDashboardV27();
+      return result;
+    };
+  }
+})();
+</script>
+
+
+<style>
+/* =========================================================
+   V37 · SOLO 3 CAMBIOS DESDE V33
+   1) Eliminar gráfica del Dashboard
+   2) Homogeneizar pesos/tamaños de títulos
+   3) Alinear Distribución operativa y Alertas principales
+   ========================================================= */
+
+/* 1 · Gráfica Dashboard eliminada visualmente y sin ocupar espacio */
+#dashboardChart,
+#dashboard .heroBody > .chart,
+#dashboard .dashboardHeroOnly .chartClean{
+  display:none!important;
+  height:0!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  overflow:hidden!important;
+}
+#dashboard .dashboardHeroOnly .hero{
+  min-height:0!important;
+}
+#dashboard .heroBody{
+  padding-bottom:18px!important;
+}
+
+/* 2 · Títulos homogéneos en toda la web: mismo peso, tamaño y línea */
+.cardHeader h2,
+.cardHeader h3,
+#dashboard .cardHeader h2,
+#dashboard .cardHeader h3,
+.distributionCard .cardHeader h3,
+.alertsCard .cardHeader h3{
+  font-size:18px!important;
+  line-height:1.16!important;
+  font-weight:640!important;
+  letter-spacing:-.42px!important;
+  margin:0!important;
+  color:var(--text)!important;
+}
+.cardHeader p,
+#dashboard .cardHeader p,
+.distributionCard .cardHeader p,
+.alertsCard .cardHeader p{
+  font-size:12.5px!important;
+  line-height:1.34!important;
+  font-weight:430!important;
+  letter-spacing:-.01em!important;
+  margin:6px 0 0!important;
+  color:var(--muted)!important;
+}
+.capitalCard label,
+.kpi label,
+.heroMetric label,
+.heroTopMetric label,
+.historyKpi label,
+.yearSummarySide span,
+.yearFacts span{
+  font-size:11px!important;
+  line-height:1.2!important;
+  font-weight:640!important;
+  letter-spacing:.045em!important;
+}
+.capitalCard strong,
+.kpi strong,
+.heroMetric strong,
+.heroTopMetric strong,
+.historyKpi strong{
+  font-weight:420!important;
+}
+
+/* 3 · Dashboard: Distribución y Alertas al mismo nivel */
+#dashboard .dashboardDistributionAlerts,
+#dashboard .dashboardOps{
+  display:grid!important;
+  align-items:stretch!important;
+  margin-top:18px!important;
+}
+@media(min-width:1180px){
+  #dashboard .dashboardDistributionAlerts,
+  #dashboard .dashboardOps{
+    grid-template-columns:minmax(0,1.55fr) minmax(380px,.75fr)!important;
+    gap:18px!important;
+  }
+}
+#dashboard .dashboardDistributionBlock{
+  margin-top:0!important;
+  padding-top:0!important;
+  display:flex!important;
+  min-width:0!important;
+}
+#dashboard .dashboardDistributionBlock .distributionCard,
+#dashboard .alertsCard{
+  margin-top:0!important;
+  align-self:stretch!important;
+  height:100%!important;
+  min-height:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+#dashboard .dashboardDistributionBlock .distributionCard{
+  width:100%!important;
+}
+#dashboard .distributionCard .cardHeader,
+#dashboard .alertsCard .cardHeader{
+  min-height:66px!important;
+  padding:18px 20px 0!important;
+  display:flex!important;
+  align-items:flex-start!important;
+}
+#dashboard .distributionCard .legend,
+#dashboard .alertsCard .alerts{
+  margin-top:18px!important;
+}
+
+/* Alineación interna: texto izquierda, valores derecha, sin cambiar lógica */
+#dashboard .distTable th:first-child,
+#dashboard .distTable td:first-child{
+  text-align:left!important;
+}
+#dashboard .distTable th:not(:first-child),
+#dashboard .distTable td:not(:first-child){
+  text-align:right!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#dashboard .distAsset{
+  justify-content:flex-start!important;
+}
+#dashboard .alertsCard .alert{
+  align-items:center!important;
+}
+#dashboard .alertsCard .alertName{
+  text-align:left!important;
+}
+#dashboard .alertsCard .alertStatus{
+  text-align:left!important;
+}
+
+
+/* V43 · Historial: resumen anual útil y compacto */
+#historial .yearSummary{
+  grid-template-columns:minmax(260px,.78fr) minmax(0,1.42fr)!important;
+  align-items:stretch!important;
+}
+#historial .yearSummaryMain,
+#historial .yearSummarySide > div{
+  min-height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#historial .yearSummaryMain p{
+  margin-top:8px!important;
+}
+#historial .yearSummarySide{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#historial .yearSummarySide div{
+  text-align:left!important;
+  align-items:flex-start!important;
+}
+#historial .yearSummarySide span{
+  font-size:10px!important;
+  font-weight:700!important;
+  color:#7b818d!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#historial .yearSummarySide strong{
+  font-size:19px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  margin-top:8px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#historial .yearFacts{
+  display:none!important;
+}
+#historial .historyAssetBlock{
+  margin-top:18px!important;
+}
+@media(max-width:1150px){
+  #historial .yearSummary{grid-template-columns:1fr!important}
+  #historial .yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  #historial .yearSummarySide{grid-template-columns:1fr!important}
+}
+
+
+
+/* V45 · Auditoría web: solo estado de la app, no auditoría del Excel */
+.auditWebHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.auditWebHero h2{
+  margin:0!important;
+  font-size:22px!important;
+  font-weight:570!important;
+  letter-spacing:-.55px!important;
+  line-height:1.08!important;
+}
+.auditWebHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+.auditWebState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.auditWebState span,
+.auditWebCard span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.auditWebState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.auditWebState em,
+.auditWebCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.auditWebCard{
+  min-height:92px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.auditWebCard strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:20px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.auditWebChecks div,
+.auditWebPages div{
+  font-variant-numeric:tabular-nums!important;
+}
+.auditWebPages{
+  padding:14px 17px 17px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.auditWebPages div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+.auditWebPages strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+}
+.auditWebPages span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+}
+@media(max-width:1150px){
+  .auditWebHero{grid-template-columns:1fr!important;align-items:start!important}
+  .auditWebState{text-align:left!important}
+  .auditWebGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .auditWebPages{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
+}
+
+</style>
+<script>
+(function(){
+  function removeDashboardChartOnly(){
+    var chart=document.getElementById('dashboardChart');
+    if(chart) chart.remove();
+  }
+  document.addEventListener('DOMContentLoaded', removeDashboardChartOnly);
+  var previousUpdateDashboard=window.updateDashboard;
+  if(previousUpdateDashboard){
+    window.updateDashboard=function(){
+      var result=previousUpdateDashboard.apply(this, arguments);
+      removeDashboardChartOnly();
+      return result;
+    };
+  }
+  var previousRenderDashboardScope=window.renderDashboardScope;
+  if(previousRenderDashboardScope){
+    window.renderDashboardScope=function(){
+      var result=previousRenderDashboardScope.apply(this, arguments);
+      removeDashboardChartOnly();
+      return result;
+    };
+  }
+})();
+</script>
+
+<!-- V47 · Dashboard sin punto verde en valor principal -->
+<style>
+#dashboard #heroMetricValue .dot,
+#dashboard .heroTopMetric.primary .dot,
+#dashboard .bigValue .dot{
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+#dashboard #heroMetricValue strong,
+#dashboard .heroTopMetric.primary strong{
+  display:block!important;
+  padding-left:0!important;
+  margin-left:0!important;
+}
 </style>
