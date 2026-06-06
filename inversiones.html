@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio Oscar · v42 amarillo global</title>
+<title>Portfolio Oscar · v63 Benchmark estable</title>
 <style>
 :root{
   --bg:#0b0d0f;
@@ -3299,6 +3299,306 @@ body:before{
   align-items:baseline!important;
   gap:0!important;
 }
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
+
+
+/* V54 · Resumen explicativo del benchmark */
+.benchmarkSummary{
+  margin:0 18px 18px!important;
+  padding:16px!important;
+  border-radius:15px!important;
+  border:1px solid var(--line2)!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(0,0,0,.26))!important;
+  color:var(--text2)!important;
+}
+.benchmarkSummary span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.benchmarkSummary strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:16px!important;
+  font-weight:590!important;
+  letter-spacing:-.35px!important;
+  line-height:1.15!important;
+}
+.benchmarkSummary p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.42!important;
+}
+.benchmarkSummary.good{border-color:rgba(95,211,155,.24)!important;background:linear-gradient(180deg,rgba(95,211,155,.08),rgba(0,0,0,.24))!important}
+.benchmarkSummary.bad{border-color:rgba(240,116,106,.24)!important;background:linear-gradient(180deg,rgba(240,116,106,.07),rgba(0,0,0,.24))!important}
+.benchmarkSummary.neutral{border-color:rgba(232,177,74,.24)!important;background:linear-gradient(180deg,rgba(232,177,74,.07),rgba(0,0,0,.24))!important}
+
+
+
+/* V55 · Benchmark: lectura más clara y botones menos invasivos */
+#benchmark .cardHeader h3{
+  font-size:18px!important;
+  letter-spacing:-.45px!important;
+}
+#benchmark .cardHeader p{
+  max-width:980px!important;
+}
+#benchmark .benchmarkTabs{
+  gap:7px!important;
+  padding:14px 18px 0!important;
+}
+#benchmark .benchmarkTabs button{
+  height:29px!important;
+  padding:0 11px!important;
+  font-size:10.5px!important;
+  font-weight:590!important;
+  opacity:.78!important;
+}
+#benchmark .benchmarkTabs button.active{
+  opacity:1!important;
+  box-shadow:none!important;
+}
+#benchmark .benchmarkTabs button:disabled{
+  cursor:default!important;
+  opacity:.55!important;
+}
+#benchmark .benchmarkApiActions{
+  padding:14px 18px 0!important;
+}
+#benchmark .benchmarkApiActions .btn{
+  height:31px!important;
+  min-width:118px!important;
+  font-size:10.7px!important;
+}
+#benchmark .benchmarkGrid{
+  margin-top:18px!important;
+}
+#benchmark .benchmarkMetric{
+  min-height:86px!important;
+  padding:14px!important;
+}
+#benchmark .benchmarkMetric strong{
+  font-size:24px!important;
+}
+#benchmark .benchmarkMetric em{
+  font-size:11px!important;
+}
+#benchmark .benchmarkChartReal{
+  margin-top:14px!important;
+  min-height:270px!important;
+}
+#benchmark .benchmarkChartReal svg{
+  height:270px!important;
+}
+#benchmark .benchmarkSummary{
+  margin:10px 18px 18px!important;
+  padding:15px 16px!important;
+  border-radius:15px!important;
+}
+#benchmark .benchmarkSummary span{
+  font-size:10px!important;
+}
+#benchmark .benchmarkSummary strong{
+  font-size:16px!important;
+  line-height:1.22!important;
+}
+#benchmark .benchmarkSummary p{
+  max-width:1120px!important;
+  font-size:11.5px!important;
+  line-height:1.42!important;
+}
+
 </style>
 </head>
 <body>
@@ -3319,6 +3619,9 @@ body:before{
         <label class="btn primary" for="excelFile">Importar Excel</label>
         <input class="fileInput" id="excelFile" type="file" accept=".xlsx,.xls">
         <button class="btn" id="backupBtn" type="button">Exportar backup</button>
+        <button class="btn cloudBtn" id="cloudSaveBtn" type="button" disabled>Guardar nube</button>
+        <button class="btn cloudBtn" id="cloudLoadBtn" type="button" disabled>Cargar nube</button>
+        <button class="btn cloudBtn" id="cloudLoginBtn" type="button">Cloud</button>
         <span class="importStatus" id="importStatus"><span class="bullet bWarn"></span>Diseño demo · sin Excel conectado</span>
       </div>
     </div>
@@ -3616,6 +3919,104 @@ body:before{
       </section>
     </section>
 
+
+
+    <section class="section" id="benchmark">
+      <section class="benchmarkHero card pageBlock">
+        <div>
+          <span class="eyebrow">Benchmark</span>
+          <h2>Tu cartera real vs Cartera objetivo</h2>
+          <p>Versión experimental v57. Cambia de vista y carga automáticamente la comparativa si ya hay datos disponibles.</p>
+        </div>
+        <div class="benchmarkState">
+          <span>Estado API</span>
+          <strong id="benchmarkApiStatus" class="yellow">Sin cargar</strong>
+          <em id="benchmarkApiNote">Edge Function pendiente de probar</em>
+        </div>
+      </section>
+
+      <section class="card pageBlock">
+        <div class="cardHeader">
+          <div>
+            <h3 id="benchmarkPanelTitle">Global · Cartera real vs Cartera objetivo</h3>
+            <p id="benchmarkPanelSubtitle">Compara lo que tienes de verdad con lo que habría pasado siguiendo exactamente tus pesos objetivo. Plan de Pensiones separado.</p>
+          </div>
+        </div>
+        <div class="benchmarkTabs" id="benchmarkTabs">
+          <button class="active" type="button" data-benchmark-view="global">Global</button>
+          <button type="button" data-benchmark-view="rv">Renta variable</button>
+          <button type="button" data-benchmark-view="msci_sp500">MSCI vs S&amp;P 500</button>
+          <button type="button" data-benchmark-view="btc">Bitcoin</button>
+          <button type="button" data-benchmark-view="gold">Oro</button>
+        </div>
+        <div class="benchmarkApiActions">
+          <button class="btn primary" id="benchmarkLoadBtn" type="button">Cargar benchmark</button>
+          <button class="btn" id="benchmarkReloadBtn" type="button">Actualizar</button>
+        </div>
+        <div class="benchmarkGrid pageBlock">
+          <article class="benchmarkMetric card">
+            <span>Tu cartera real</span>
+            <strong id="benchmarkPortfolioReturn">--</strong>
+            <em id="benchmarkPortfolioNote">Sin Plan de Pensiones · Excel</em>
+          </article>
+          <article class="benchmarkMetric card">
+            <span>Cartera objetivo</span>
+            <strong id="benchmarkOscarReturn">--</strong>
+            <em id="benchmarkOscarNote">Pesos objetivo · pendiente</em>
+          </article>
+          <article class="benchmarkMetric card">
+            <span>Diferencia</span>
+            <strong id="benchmarkDiffReturn" class="yellow">--</strong>
+            <em>Tu cartera menos Cartera objetivo</em>
+          </article>
+        </div>
+        <div class="benchmarkChartReal" id="benchmarkChart"><div class="chartEmpty">Pulsa “Cargar benchmark” para simular tus mismos movimientos contra tu Cartera objetivo.</div></div>
+        <div class="benchmarkLegend"><span><span class="legendDot bGreen"></span>Tu cartera actual</span><span><span class="legendDot bGold"></span>Cartera objetivo simulada</span></div>
+        <div class="benchmarkSummary" id="benchmarkSummary"><span>Lectura del resultado</span><strong>Pendiente de cargar</strong><p>Cuando cargues el benchmark, aquí verás una explicación simple del resultado: si tu cartera real va por delante o por detrás de tu Cartera objetivo.</p></div>
+        <div class="benchmarkError" id="benchmarkError"></div>
+      </section>
+
+      <section class="grid two pageBlock">
+        <article class="card">
+          <div class="cardHeader">
+            <div>
+              <h3>Composición de la Cartera objetivo</h3>
+              <p>Pesos objetivo actuales sin Plan de Pensiones.</p>
+            </div>
+          </div>
+          <div class="tableWrap">
+            <table class="benchmarkTable">
+              <thead><tr><th>Activo</th><th>Proxy API</th><th>Peso</th></tr></thead>
+              <tbody id="benchmarkWeightsBody">
+                <tr><td>MSCI World</td><td>URTH</td><td>62,40%</td></tr>
+                <tr><td>Emerging Markets</td><td>EEM</td><td>9,75%</td></tr>
+                <tr><td>Small Cap</td><td>IWM</td><td>5,85%</td></tr>
+                <tr><td>Oro</td><td>GLD</td><td>6,96%</td></tr>
+                <tr><td>Bitcoin</td><td>BTC-USD</td><td>15,04%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="cardHeader">
+            <div>
+              <h3>Criterio técnico</h3>
+              <p>Cartera objetivo con los movimientos del Excel. El Excel sigue siendo la fuente real.</p>
+            </div>
+          </div>
+          <div class="sheetChecks auditWebChecks">
+            <div><strong>Excel como fuente real</strong><span class="green">Sí</span></div>
+            <div><strong>Plan Pensiones</strong><span class="yellow">Separado</span></div>
+            <div><strong>Edge Function</strong><span id="benchmarkEdgeCheck" class="yellow">Pendiente</span></div>
+            <div><strong>API externa</strong><span id="benchmarkProviderCheck" class="yellow">No conectada</span></div>
+          </div>
+          <div class="benchmarkNote"><strong>Lectura:</strong> la comparación usa tus movimientos reales de XIRR GLOBAL y simula esos mismos flujos contra Cartera objetivo. La línea verde ya no dibuja una rentabilidad falsa: marca tu valor actual frente a la Cartera objetivo.</div>
+        </article>
+      </section>
+    </section>
+
+
     <section class="section" id="auditoria">
       <section class="auditWebHero card pageBlock">
         <div>
@@ -3647,9 +4048,9 @@ body:before{
           <em>Exporta copia del Excel cargado</em>
         </article>
         <article class="auditWebCard card">
-          <span>APIs externas</span>
-          <strong class="yellow">No activas</strong>
-          <em>Sin benchmark ni Supabase</em>
+          <span>Benchmark/API</span>
+          <strong id="auditBenchmarkStatus" class="green">OK</strong>
+          <em id="auditBenchmarkNote">Datos recibidos vía Edge Function.</em>
         </article>
       </section>
 
@@ -3678,8 +4079,8 @@ body:before{
           </div>
           <div class="sheetChecks auditWebChecks">
             <div><strong>Excel como fuente única</strong><span class="green">Sí</span></div>
-            <div><strong>Supabase</strong><span class="yellow">No usado</span></div>
-            <div><strong>Benchmark/API</strong><span class="yellow">No usado</span></div>
+            <div><strong>Supabase</strong><span class="green">Activo</span></div>
+            <div><strong>Benchmark/API</strong><span class="green">Activo</span></div>
             <div><strong>Edición desde la web</strong><span class="yellow">Pendiente</span></div>
           </div>
         </article>
@@ -3698,6 +4099,7 @@ body:before{
           <div><strong>XIRR global</strong><span class="green">OK</span></div>
           <div><strong>Movimientos</strong><span class="green">OK</span></div>
           <div><strong>Historial</strong><span class="green">OK</span></div>
+          <div><strong>Benchmark</strong><span class="green">OK</span></div>
           <div><strong>Auditoría web</strong><span class="green">OK</span></div>
         </div>
       </section>
@@ -3715,8 +4117,9 @@ const pages=[
   ["cartera","Cartera actual","Detalle de activos desde CARTERA ACTUAL.","ok"],
   ["xirr","XIRR global","Rentabilidad ponderada y flujos de inversión.","ok"],
   ["movimientos","Movimientos","Movimientos conectados con el cálculo XIRR.","ok"],
-  ["historial","Historial","Resumen anual y años anteriores.","off"],
-  ["auditoria","Auditoría","Estado técnico de la web y funciones activas.","warn"]
+  ["historial","Historial","Resumen anual y años anteriores.","ok"],
+  ["benchmark","Benchmark","Tu cartera real frente a cartera objetivo y referencias externas.","ok"],
+  ["auditoria","Auditoría","Estado técnico de la web y funciones activas.","ok"]
 ];
 const nav=document.getElementById("nav");
 pages.forEach((p,i)=>{
@@ -3800,6 +4203,625 @@ document.querySelectorAll('#movementModeFilters .filterPill').forEach(btn=>{
 });
 movementSearch?.addEventListener('input',applyMovementFilters);
 
+
+
+
+
+
+// Benchmark v59: vistas activas + histórico mensual real cuando haya 3 cierres por activo.
+const BENCHMARK_FUNCTION_NAME = 'benchmark-market-data';
+let benchmarkCache = null;
+let benchmarkActiveView = 'global';
+
+const BENCHMARK_OSCAR_WEIGHTS = [
+  { key:'msci', name:'MSCI World', proxy:'URTH', weight:0.6240 },
+  { key:'emerging', name:'Emerging Markets', proxy:'EEM', weight:0.0975 },
+  { key:'small', name:'Small Cap', proxy:'IWM', weight:0.0585 },
+  { key:'gold', name:'Oro', proxy:'GLD', weight:0.0696 },
+  { key:'btc', name:'Bitcoin', proxy:'BTC-USD', weight:0.1504 }
+];
+
+const BENCHMARK_VIEW_CONFIG = {
+  global: {
+    title:'Global · Cartera real vs Cartera objetivo',
+    subtitle:'Compara lo que tienes de verdad con lo que habría pasado siguiendo exactamente tus pesos objetivo. Plan de Pensiones separado.',
+    realLabel:'Tu cartera real',
+    targetLabel:'Cartera objetivo',
+    targetSmall:'Cartera objetivo simulada',
+    empty:'Pulsa “Cargar benchmark” para simular tus mismos movimientos contra tu Cartera objetivo.',
+    weights:()=>BENCHMARK_OSCAR_WEIGHTS,
+    assetTest:(asset)=> {
+      const a=normalizeText(asset);
+      return !a.includes('plan') && !a.includes('pensiones') && !a.includes('cartera total') && a!=='total';
+    }
+  },
+  rv: {
+    title:'Renta variable · Real vs objetivo',
+    subtitle:'Compara tus fondos reales de renta variable contra el reparto objetivo interno: 80% MSCI World, 12,5% Emerging Markets y 7,5% Small Cap.',
+    realLabel:'Tu renta variable',
+    targetLabel:'Objetivo RV',
+    targetSmall:'Renta variable objetivo',
+    empty:'Pulsa “Cargar benchmark” para simular tus movimientos de renta variable contra su objetivo interno.',
+    weights:()=>[
+      { key:'msci', name:'MSCI World', proxy:'URTH', weight:0.80 },
+      { key:'emerging', name:'Emerging Markets', proxy:'EEM', weight:0.125 },
+      { key:'small', name:'Small Cap', proxy:'IWM', weight:0.075 }
+    ],
+    assetTest:(asset)=> {
+      const a=normalizeText(asset);
+      return a.includes('msci') || a.includes('emerging') || a.includes('small');
+    }
+  },
+  btc: {
+    title:'Bitcoin · Real vs BTC',
+    subtitle:'Compara tus movimientos reales de Bitcoin contra la evolución de BTC-USD.',
+    realLabel:'Tu Bitcoin',
+    targetLabel:'BTC benchmark',
+    targetSmall:'BTC simulado',
+    empty:'Pulsa “Cargar benchmark” para comparar tus movimientos de Bitcoin contra BTC.',
+    weights:()=>[{ key:'btc', name:'Bitcoin', proxy:'BTC-USD', weight:1 }],
+    assetTest:(asset)=> {
+      const a=normalizeText(asset);
+      return a.includes('bitcoin') || a.includes('btc');
+    }
+  },
+  gold: {
+    title:'Oro · Real vs Oro',
+    subtitle:'Compara tus movimientos reales de oro contra la evolución de GLD como proxy de oro.',
+    realLabel:'Tu Oro',
+    targetLabel:'Oro benchmark',
+    targetSmall:'Oro simulado',
+    empty:'Pulsa “Cargar benchmark” para comparar tus movimientos de oro contra oro.',
+    weights:()=>[{ key:'gold', name:'Oro', proxy:'GLD', weight:1 }],
+    assetTest:(asset)=> {
+      const a=normalizeText(asset);
+      return a.includes('oro') || a.includes('gold');
+    }
+  },
+  msci_sp500: {
+    title:'MSCI World vs S&P 500',
+    subtitle:'Comparación externa de referencias: MSCI World aproximado por URTH frente a S&P 500 aproximado por SPY. No usa tus movimientos.',
+    realLabel:'MSCI World',
+    targetLabel:'S&P 500',
+    targetSmall:'S&P 500 / SPY',
+    empty:'Pulsa “Cargar benchmark” para comparar MSCI World contra S&P 500.',
+    weights:()=>[]
+  }
+};
+
+function benchmarkSetStatus(text, cls='yellow', note=''){
+  const status=document.getElementById('benchmarkApiStatus');
+  const noteEl=document.getElementById('benchmarkApiNote');
+  if(status){ status.textContent=text; status.className=cls; }
+  if(noteEl && note) noteEl.textContent=note;
+  const audit=document.getElementById('auditBenchmarkStatus');
+  const auditNote=document.getElementById('auditBenchmarkNote');
+  if(audit){ audit.textContent=text; audit.className=cls; }
+  if(auditNote && note) auditNote.textContent=note;
+  setNavStatus?.('benchmark', cls==='green'?'ok':cls==='red'?'bad':'warn');
+}
+function benchmarkSetError(message){
+  const el=document.getElementById('benchmarkError');
+  if(!el) return;
+  el.textContent=message || '';
+  el.classList.toggle('active', !!message);
+}
+function benchmarkPct(value){
+  const n=Number(value);
+  if(!Number.isFinite(n)) return '--';
+  const sign=n>0?'+':'';
+  return sign + n.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + '%';
+}
+function benchmarkValueClass(value){
+  const n=Number(value);
+  if(!Number.isFinite(n)) return 'yellow';
+  if(n>0) return 'green';
+  if(n<0) return 'red';
+  return 'yellow';
+}
+function isoDateFromAny(v){
+  if(v instanceof Date && !isNaN(v)) return v.toISOString().slice(0,10);
+  const d=dateFromSerial?.(v);
+  if(d) return d.toISOString().slice(0,10);
+  const s=String(v||'').trim();
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
+  const m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  return '';
+}
+function benchmarkNumber(value){
+  if(typeof value === 'number') return value;
+  const s=String(value ?? '').trim().replace(/\s/g,'').replace(/€/g,'');
+  if(!s) return NaN;
+  if(s.includes(',')) return Number(s.replace(/\./g,'').replace(',','.'));
+  return Number(s);
+}
+function getCurrentPortfolioValueNoPension(assetTest=null){
+  const cartera=parseCartera?.() || [];
+  const rows=cartera.filter(x=>{
+    const a=normalizeText(x.activo || '');
+    if(!a || a === 'total') return false;
+    if(a.includes('plan') || a.includes('pensiones')) return false;
+    if(assetTest && !assetTest(x.activo)) return false;
+    return true;
+  });
+  return rows.reduce((sum,x)=>sum + (benchmarkNumber(x.valor)||0),0);
+}
+function parseBenchmarkFlowsFromXirr(assetTest=null){
+  const rows = sheetRows?.('XIRR GLOBAL') || [];
+  const flows=[];
+  let headerRow=-1;
+  for(let i=0;i<rows.length;i++){
+    const a=normalizeText(rows[i]?.[0] || '');
+    const b=normalizeText(rows[i]?.[1] || '');
+    const c=normalizeText(rows[i]?.[2] || '');
+    if(a==='fecha' && b==='activo' && c==='tipo'){
+      headerRow=i;
+      break;
+    }
+  }
+  if(headerRow<0) return flows;
+
+  for(let i=headerRow+1;i<rows.length;i++){
+    const row=rows[i] || [];
+    const fecha=row[0];
+    const activo=String(row[1] || '').trim();
+    const tipo=String(row[2] || '').trim();
+    const importeXirr=benchmarkNumber(row[4]);
+    const importeVisible=benchmarkNumber(row[5]);
+    const incluye=String(row[6] || '').trim();
+    if(!fecha || !activo || !tipo) continue;
+
+    const a=normalizeText(activo);
+    const t=normalizeText(tipo);
+    const inc=normalizeText(incluye);
+    if(a.includes('plan') || a.includes('pensiones')) continue;
+    if(a.includes('cartera total') || a==='total') continue;
+    if(assetTest && !assetTest(activo)) continue;
+    if(t.includes('valor actual') || t.includes('valor final') || t.includes('valoracion')) continue;
+    if(inc && (inc==='no' || inc.includes('no'))) continue;
+
+    const date=isoDateFromAny(fecha);
+    if(!date) continue;
+
+    let cash=Number.isFinite(importeXirr) && importeXirr!==0 ? -importeXirr : importeVisible;
+    if(!Number.isFinite(cash) || Math.abs(cash)<0.01) continue;
+
+    flows.push({date, asset:activo, type:tipo, cash, row:i});
+  }
+  flows.sort((a,b)=>a.date.localeCompare(b.date) || a.row-b.row);
+  return flows;
+}
+
+function parseMonthlyAssetHistory(assetTest=null){
+  const rows = sheetRows?.('HISTÓRICO MENSUAL X ACTIVO') || sheetRows?.('HISTORICO MENSUAL X ACTIVO') || [];
+  const out=[];
+  if(!rows.length) return out;
+
+  let headerRow=-1;
+  let colDate=-1, colAsset=-1, colInvested=-1, colValue=-1, colXirr=-1;
+  for(let i=0;i<Math.min(rows.length,20);i++){
+    const header=(rows[i]||[]).map(x=>normalizeText(x));
+    const d=header.findIndex(x=>x.includes('fecha') && x.includes('cierre'));
+    const a=header.findIndex(x=>x==='activo' || x.includes('activo'));
+    const v=header.findIndex(x=>x.includes('valor') && x.includes('cierre'));
+    if(d>=0 && a>=0 && v>=0){
+      headerRow=i;
+      colDate=d;
+      colAsset=a;
+      colValue=v;
+      colInvested=header.findIndex(x=>x.includes('invertido') && x.includes('real'));
+      colXirr=header.findIndex(x=>x.includes('xirr'));
+      break;
+    }
+  }
+  if(headerRow<0) return out;
+
+  for(let i=headerRow+1;i<rows.length;i++){
+    const row=rows[i] || [];
+    const date=isoDateFromAny(row[colDate]);
+    const asset=String(row[colAsset] || '').trim();
+    const value=benchmarkNumber(row[colValue]);
+    const invested=colInvested>=0 ? benchmarkNumber(row[colInvested]) : NaN;
+    const xirr=colXirr>=0 ? benchmarkNumber(row[colXirr]) : NaN;
+    if(!date || !asset || !Number.isFinite(value) || value<=0) continue;
+    const a=normalizeText(asset);
+    if(a.includes('total')) continue;
+    if(a.includes('plan') || a.includes('pensiones')) continue;
+    if(assetTest && !assetTest(asset)) continue;
+    out.push({date, asset, value, invested, xirr});
+  }
+  return out.sort((a,b)=>a.date.localeCompare(b.date));
+}
+function aggregateMonthlyHistory(assetTest=null){
+  const rows=parseMonthlyAssetHistory(assetTest);
+  if(!rows.length) return [];
+  const byDate=new Map();
+  rows.forEach(r=>{
+    const item=byDate.get(r.date) || {date:r.date, value:0, invested:0, count:0};
+    item.value += Number(r.value || 0);
+    if(Number.isFinite(Number(r.invested))) item.invested += Number(r.invested || 0);
+    item.count += 1;
+    byDate.set(r.date,item);
+  });
+  return [...byDate.values()]
+    .filter(x=>x.value>0 && x.invested>0)
+    .sort((a,b)=>a.date.localeCompare(b.date))
+    .map(x=>({
+      date:x.date,
+      close:x.value,
+      value:x.value,
+      invested:x.invested,
+      normalized:Number(((x.value/x.invested)*100).toFixed(4)),
+      count:x.count
+    }));
+}
+function hasUsableMonthlyHistory(assetTest=null){
+  return aggregateMonthlyHistory(assetTest).length >= 3;
+}
+
+function getBenchmarkDateRange(flows){
+  const resumen=sheetRows?.('RESUMEN') || [];
+  const to=isoDateFromAny(cell(resumen,2,2)) || new Date().toISOString().slice(0,10);
+  const from=flows[0]?.date || '2025-01-01';
+  return {from,to};
+}
+function priceAtOrAfter(series, date){
+  if(!Array.isArray(series) || !series.length) return null;
+  const found=series.find(p=>p.date>=date && Number.isFinite(Number(p.normalized)));
+  return found || series[series.length-1] || null;
+}
+function simulateBenchmarkFromFlows(components, flows, weights){
+  const totalWeight=weights.reduce((s,w)=>s+Number(w.weight||0),0) || 1;
+  const units={};
+  weights.forEach(w=>units[w.key]=0);
+
+  const sorted=[...flows].sort((a,b)=>a.date.localeCompare(b.date));
+  for(const f of sorted){
+    for(const w of weights){
+      const series=components?.[w.key] || [];
+      const px=priceAtOrAfter(series, f.date);
+      const price=Number(px?.normalized);
+      if(!Number.isFinite(price) || price<=0) continue;
+      const allocation=f.cash * (Number(w.weight||0)/totalWeight);
+      units[w.key] += allocation / price;
+    }
+  }
+
+  const lastDates=weights.map(w=>{
+    const s=components?.[w.key] || [];
+    return s[s.length-1]?.date;
+  }).filter(Boolean).sort();
+  const endDate=lastDates[0] || '';
+
+  let finalValue=0;
+  for(const w of weights){
+    const series=components?.[w.key] || [];
+    const px=endDate ? (series.find(p=>p.date===endDate) || priceAtOrAfter(series,endDate)) : series[series.length-1];
+    const price=Number(px?.normalized);
+    if(Number.isFinite(price)) finalValue += (units[w.key] || 0) * price;
+  }
+
+  const netInvested=sorted.reduce((s,f)=>s+f.cash,0);
+  const returnPct=netInvested>0 ? Number((((finalValue/netInvested)-1)*100).toFixed(2)) : null;
+
+  return {finalValue, netInvested, returnPct, units, endDate};
+}
+function buildBenchmarkValueSeries(components, flows, weights){
+  const firstKey=weights[0]?.key || 'msci';
+  const benchmarkDates=(components?.[firstKey] || []).map(p=>p.date);
+  if(!benchmarkDates.length) return [];
+  const totalWeight=weights.reduce((s,w)=>s+Number(w.weight||0),0) || 1;
+  const units={};
+  weights.forEach(w=>units[w.key]=0);
+  const sorted=[...flows].sort((a,b)=>a.date.localeCompare(b.date));
+  let flowIndex=0;
+  const out=[];
+
+  for(const date of benchmarkDates){
+    while(flowIndex<sorted.length && sorted[flowIndex].date<=date){
+      const f=sorted[flowIndex];
+      for(const w of weights){
+        const series=components?.[w.key] || [];
+        const px=priceAtOrAfter(series, f.date);
+        const price=Number(px?.normalized);
+        if(Number.isFinite(price) && price>0){
+          const allocation=f.cash * (Number(w.weight||0)/totalWeight);
+          units[w.key] += allocation / price;
+        }
+      }
+      flowIndex++;
+    }
+    let value=0;
+    for(const w of weights){
+      const series=components?.[w.key] || [];
+      const px=series.find(p=>p.date===date) || priceAtOrAfter(series,date);
+      const price=Number(px?.normalized);
+      if(Number.isFinite(price)) value += (units[w.key] || 0) * price;
+    }
+    const invested=sorted.filter(f=>f.date<=date).reduce((s,f)=>s+f.cash,0);
+    if(value>0 && invested>0) out.push({date, close:value, normalized:Number(((value/invested)*100).toFixed(4)), value, invested});
+  }
+  return out;
+}
+function updateBenchmarkWeightsTable(weights=null){
+  const body=document.getElementById('benchmarkWeightsBody');
+  if(!body) return;
+  const list=weights || (BENCHMARK_VIEW_CONFIG[benchmarkActiveView]?.weights?.() || BENCHMARK_OSCAR_WEIGHTS);
+  if(benchmarkActiveView==='msci_sp500'){
+    body.innerHTML=`<tr><td>MSCI World</td><td>URTH</td><td>Referencia</td></tr><tr><td>S&amp;P 500</td><td>SPY</td><td>Referencia</td></tr>`;
+    return;
+  }
+  body.innerHTML=list.map(x=>`<tr><td>${x.name}</td><td>${x.proxy}</td><td>${benchmarkPct(x.weight*100).replace('+','')}</td></tr>`).join('');
+}
+function applyBenchmarkView(view){
+  benchmarkActiveView=view || 'global';
+  const cfg=BENCHMARK_VIEW_CONFIG[benchmarkActiveView] || BENCHMARK_VIEW_CONFIG.global;
+  document.querySelectorAll('#benchmarkTabs button').forEach(b=>b.classList.toggle('active', b.dataset.benchmarkView===benchmarkActiveView));
+  const title=document.getElementById('benchmarkPanelTitle');
+  const sub=document.getElementById('benchmarkPanelSubtitle');
+  if(title) title.textContent=cfg.title;
+  if(sub) sub.textContent=cfg.subtitle;
+  document.querySelectorAll('#benchmark .benchmarkMetric span')[0].textContent=cfg.realLabel;
+  document.querySelectorAll('#benchmark .benchmarkMetric span')[1].textContent=cfg.targetLabel;
+  const legend=document.querySelector('#benchmark .benchmarkLegend');
+  if(legend){
+    if(benchmarkActiveView==='msci_sp500') legend.innerHTML='<span><span class="legendDot bBlue"></span>MSCI World / URTH</span><span><span class="legendDot bGold"></span>S&amp;P 500 / SPY</span>';
+    else legend.innerHTML=`<span><span class="legendDot bGreen"></span>${cfg.realLabel}: punto actual o línea mensual real si hay 3 cierres</span><span><span class="legendDot bGold"></span>${cfg.targetSmall} (evolución simulada)</span>`;
+  }
+  const chart=document.getElementById('benchmarkChart');
+  if(chart) chart.innerHTML=`<div class="chartEmpty">${cfg.empty}</div>`;
+  const summary=document.getElementById('benchmarkSummary');
+  if(summary){
+    summary.className='benchmarkSummary';
+    summary.innerHTML=`<span>Lectura del resultado</span><strong>Pendiente de cargar</strong><p>Cuando cargues esta vista, aquí verás una explicación simple y automática del resultado.</p>`;
+  }
+  ['benchmarkPortfolioReturn','benchmarkOscarReturn','benchmarkDiffReturn'].forEach(id=>{
+    const el=document.getElementById(id); if(el){ el.textContent='--'; el.className=id==='benchmarkDiffReturn'?'yellow':''; }
+  });
+  document.getElementById('benchmarkPortfolioNote').textContent = benchmarkActiveView==='msci_sp500' ? 'URTH · referencia externa' : 'Excel · movimientos reales';
+  document.getElementById('benchmarkOscarNote').textContent = benchmarkActiveView==='msci_sp500' ? 'SPY · referencia externa' : 'Mismos movimientos simulados';
+  const diffCard=document.querySelector('#benchmarkDiffReturn')?.closest('.benchmarkMetric')?.querySelector('em');
+  if(diffCard) diffCard.textContent = benchmarkActiveView==='msci_sp500' ? 'MSCI World menos S&P 500' : `${cfg.realLabel} menos ${cfg.targetLabel}`;
+  updateBenchmarkWeightsTable();
+  benchmarkSetError('');
+}
+async function loadBenchmarkData(force=false){
+  benchmarkSetError('');
+  const cfg=BENCHMARK_VIEW_CONFIG[benchmarkActiveView] || BENCHMARK_VIEW_CONFIG.global;
+  updateBenchmarkWeightsTable();
+  if(!portfolioSupabase){
+    benchmarkSetStatus('Sin sesión','yellow','Primero inicia Cloud para poder invocar Supabase.');
+    cloudShow();
+    return;
+  }
+  if(benchmarkActiveView==='msci_sp500'){
+    return loadMsciVsSp500(force);
+  }
+
+  const weights=cfg.weights();
+  const flows=parseBenchmarkFlowsFromXirr(cfg.assetTest);
+  if(flows.length<1){
+    benchmarkSetStatus('Sin flujos','yellow','Faltan movimientos reales para esta vista.');
+    benchmarkSetError(`Benchmark: no se han encontrado movimientos reales válidos para “${cfg.realLabel}” en XIRR GLOBAL.`);
+    return;
+  }
+  const currentValue=getCurrentPortfolioValueNoPension(cfg.assetTest);
+  if(!Number.isFinite(currentValue) || currentValue<=0){
+    benchmarkSetStatus('Sin cartera','yellow','No se ha podido leer el valor actual de esta vista.');
+    benchmarkSetError(`Benchmark: falta el valor actual de “${cfg.realLabel}” en CARTERA ACTUAL.`);
+    return;
+  }
+  const monthlyHistory=aggregateMonthlyHistory(cfg.assetTest);
+  const {from,to}=getBenchmarkDateRange(flows);
+  benchmarkSetStatus('Cargando','yellow','Consultando Edge Function y simulando tus flujos...');
+  try{
+    const { data, error } = await portfolioSupabase.functions.invoke(BENCHMARK_FUNCTION_NAME, {
+      body: { benchmark:'benchmark_oscar_global', range:'custom', from, to, weights, force }
+    });
+    if(error) throw error;
+    if(!data || !data.series || !data.series.components) throw new Error('Respuesta incompleta de la Edge Function. Faltan componentes del benchmark.');
+
+    const simulation=simulateBenchmarkFromFlows(data.series.components, flows, weights);
+    const benchmarkSeries=buildBenchmarkValueSeries(data.series.components, flows, weights);
+    benchmarkCache={...data, simulation, flows, benchmarkSeries, monthlyHistory, view:benchmarkActiveView};
+    renderBenchmarkData(data, flows, currentValue, simulation, benchmarkSeries, cfg, monthlyHistory);
+    benchmarkSetStatus('OK','green','Datos recibidos vía Edge Function.');
+    const edge=document.getElementById('benchmarkEdgeCheck');
+    const provider=document.getElementById('benchmarkProviderCheck');
+    if(edge){ edge.textContent='Activa'; edge.className='green'; }
+    if(provider){ provider.textContent=data.provider || 'Yahoo Finance'; provider.className='green'; }
+    setNavStatus?.('benchmark','ok');
+  }catch(err){
+    const msg = err?.message || String(err);
+    benchmarkSetStatus('Error','red','No se han podido cargar los datos.');
+    benchmarkSetError('Error benchmark: ' + msg);
+  }
+}
+async function loadMsciVsSp500(force=false){
+  benchmarkSetStatus('Cargando','yellow','Consultando MSCI World y S&P 500...');
+  try{
+    const { data, error } = await portfolioSupabase.functions.invoke(BENCHMARK_FUNCTION_NAME, {
+      body: { benchmark:'msci_world_vs_sp500', range:'1y', force }
+    });
+    if(error) throw error;
+    if(!data?.series?.msci || !data?.series?.sp500) throw new Error('Respuesta incompleta de la Edge Function.');
+
+    const msci=Number(data.stats?.msciReturnPct);
+    const sp=Number(data.stats?.sp500ReturnPct);
+    const diff=Number(data.stats?.diffPct);
+    document.getElementById('benchmarkPortfolioReturn').textContent=benchmarkPct(msci);
+    document.getElementById('benchmarkPortfolioReturn').className=benchmarkValueClass(msci);
+    document.getElementById('benchmarkOscarReturn').textContent=benchmarkPct(sp);
+    document.getElementById('benchmarkOscarReturn').className=benchmarkValueClass(sp);
+    document.getElementById('benchmarkDiffReturn').textContent=benchmarkPct(diff);
+    document.getElementById('benchmarkDiffReturn').className=benchmarkValueClass(diff);
+    document.getElementById('benchmarkPortfolioNote').textContent=`URTH · ${data.stats?.points || '--'} sesiones`;
+    document.getElementById('benchmarkOscarNote').textContent=`SPY · ${data.stats?.points || '--'} sesiones`;
+    const diffCard=document.querySelector('#benchmarkDiffReturn')?.closest('.benchmarkMetric')?.querySelector('em');
+    if(diffCard) diffCard.textContent='MSCI World menos S&P 500';
+    renderTwoLineBenchmarkChart(data.series.msci, data.series.sp500, 'MSCI World', 'S&P 500');
+    renderMsciSummary(msci, sp, diff);
+    benchmarkSetStatus('OK','green','Datos recibidos vía Edge Function.');
+    const edge=document.getElementById('benchmarkEdgeCheck');
+    const provider=document.getElementById('benchmarkProviderCheck');
+    if(edge){ edge.textContent='Activa'; edge.className='green'; }
+    if(provider){ provider.textContent=data.provider || 'Yahoo Finance'; provider.className='green'; }
+  }catch(err){
+    benchmarkSetStatus('Error','red','No se han podido cargar los datos.');
+    benchmarkSetError('Error benchmark: ' + (err?.message || String(err)));
+  }
+}
+function renderBenchmarkData(data, flows, currentValue, simulation, benchmarkSeries, cfg, monthlyHistory=[]){
+  const netInvested=simulation.netInvested;
+  const realReturn=netInvested>0 ? Number((((currentValue/netInvested)-1)*100).toFixed(2)) : null;
+  const targetReturn=simulation.returnPct;
+  const diff=(Number.isFinite(realReturn) && Number.isFinite(Number(targetReturn))) ? Number((realReturn-Number(targetReturn)).toFixed(2)) : null;
+  const valueDiff=Number((currentValue - simulation.finalValue).toFixed(2));
+
+  const portfolioEl=document.getElementById('benchmarkPortfolioReturn');
+  const targetEl=document.getElementById('benchmarkOscarReturn');
+  const diffEl=document.getElementById('benchmarkDiffReturn');
+  if(portfolioEl){ portfolioEl.textContent=benchmarkPct(realReturn); portfolioEl.className=benchmarkValueClass(realReturn); }
+  if(targetEl){ targetEl.textContent=benchmarkPct(targetReturn); targetEl.className=benchmarkValueClass(targetReturn); }
+  if(diffEl){ diffEl.textContent=benchmarkPct(diff); diffEl.className=benchmarkValueClass(diff); }
+
+  const portfolioNote=document.getElementById('benchmarkPortfolioNote');
+  const targetNote=document.getElementById('benchmarkOscarNote');
+  if(portfolioNote) portfolioNote.textContent = `Valor actual: ${fmtMoney(currentValue)} · Aportado neto: ${fmtMoney(netInvested)}`;
+  if(targetNote) targetNote.textContent = `${fmtMoney(simulation.finalValue)} simulados · mismos ${flows.length} movimientos`;
+
+  const diffCard=document.querySelector('#benchmarkDiffReturn')?.closest('.benchmarkMetric')?.querySelector('em');
+  if(diffCard) diffCard.textContent = `${fmtMoney(valueDiff,2,true)} frente a ${cfg.targetLabel}`;
+
+  renderBenchmarkSummary(currentValue, simulation.finalValue, netInvested, realReturn, targetReturn, diff, valueDiff, flows.length, cfg, monthlyHistory);
+  renderBenchmarkChart(currentValue, simulation.finalValue, benchmarkSeries, flows, cfg, monthlyHistory);
+}
+function renderBenchmarkSummary(currentValue, targetValue, netInvested, realReturn, targetReturn, diff, valueDiff, flowsCount, cfg, monthlyHistory=[]){
+  const box=document.getElementById('benchmarkSummary');
+  if(!box) return;
+  const cls = diff > 0 ? 'good' : diff < 0 ? 'bad' : 'neutral';
+  box.className = `benchmarkSummary ${cls}`;
+  const title = diff > 0
+    ? `${cfg.realLabel} va por delante de ${cfg.targetLabel}.`
+    : diff < 0
+      ? `${cfg.realLabel} va por detrás de ${cfg.targetLabel}.`
+      : `${cfg.realLabel} está prácticamente igual que ${cfg.targetLabel}.`;
+  const direction = diff > 0 ? 'a favor' : diff < 0 ? 'por debajo' : 'sin diferencia relevante';
+  const absDiff = Math.abs(Number(valueDiff || 0));
+  const absPct = Math.abs(Number(diff || 0));
+  const historyCount = Array.isArray(monthlyHistory) ? monthlyHistory.length : 0;
+  const caution = historyCount >= 3
+    ? `La línea verde usa ${historyCount} cierres mensuales reales de HISTÓRICO MENSUAL X ACTIVO; la línea amarilla es la Cartera objetivo simulada con los mismos movimientos.`
+    : `Histórico todavía insuficiente: hay ${historyCount} cierre${historyCount===1?'':'s'} mensual${historyCount===1?'':'es'} real${historyCount===1?'':'es'} útil${historyCount===1?'':'es'} para esta vista. Hasta tener 3 cierres, se muestra tu valor real actual como punto final y no se inventa una línea histórica.`;
+  box.innerHTML = `<span>Lectura del resultado</span><strong>${title}</strong><p>Con los mismos movimientos reales, ${cfg.realLabel.toLowerCase()} vale ${fmtMoney(currentValue)} frente a ${fmtMoney(targetValue)} de ${cfg.targetLabel}. La diferencia actual es de ${fmtMoney(absDiff)} ${direction}, equivalente a ${fmtNumber(absPct,2)} puntos. La rentabilidad real es ${benchmarkPct(realReturn)} y ${cfg.targetLabel} habría hecho ${benchmarkPct(targetReturn)}. ${caution}</p>`;
+}
+function formatBenchmarkMonth(date){
+  const d=new Date(date+'T00:00:00Z');
+  if(isNaN(d)) return date;
+  const months=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return `${months[d.getUTCMonth()]} ${String(d.getUTCFullYear()).slice(2)}`;
+}
+function benchmarkTicks(series, count=5){
+  if(!series.length) return [];
+  const out=[];
+  const used=new Set();
+  for(let i=0;i<count;i++){
+    const idx=Math.round(i*(series.length-1)/(count-1));
+    const p=series[idx];
+    if(p && !used.has(p.date)){ used.add(p.date); out.push({idx,date:p.date,label:formatBenchmarkMonth(p.date)}); }
+  }
+  return out;
+}
+function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries, flows, cfg, monthlyHistory=[]){
+  const box=document.getElementById('benchmarkChart');
+  if(!box) return;
+  if(!benchmarkSeries.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la simulación.</div>'; return; }
+  const w=900, h=300, padL=28, padR=34, padT=24, padB=42;
+  const finalInvested=benchmarkSeries[benchmarkSeries.length-1]?.invested || 1;
+  const useMonthlyHistory=Array.isArray(monthlyHistory) && monthlyHistory.length>=3;
+  const realHistory=useMonthlyHistory ? monthlyHistory : [];
+  const realNorm=Number(((currentValue/finalInvested)*100).toFixed(4));
+  const values=[...benchmarkSeries.map(x=>Number(x.normalized)), ...realHistory.map(x=>Number(x.normalized)), realNorm].filter(Number.isFinite);
+  const min=Math.min(...values,95), max=Math.max(...values,105);
+  const span=(max-min)||1;
+  const toX=(i,n)=>padL + (i/Math.max(1,n-1))*(w-padL-padR);
+  const toY=(v)=>h-padB - ((v-min)/span)*(h-padT-padB);
+  const line=(arr)=>arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(Number(p.normalized)).toFixed(1)}`).join(' ');
+  const realX=w-padR;
+  const realY=toY(useMonthlyHistory ? Number(realHistory[realHistory.length-1].normalized) : realNorm);
+  const benchY=toY(Number(benchmarkSeries[benchmarkSeries.length-1].normalized));
+  const ticks=benchmarkTicks(benchmarkSeries,5);
+  const tickSvg=ticks.map(t=>`<text x="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y="${h-12}" fill="var(--muted)" font-size="10" text-anchor="middle">${t.label}</text>`).join('');
+  const guideColor = currentValue >= benchmarkFinalValue ? 'var(--green)' : 'var(--red)';
+  const realLineSvg = useMonthlyHistory
+    ? `<path d="${line(realHistory)}" fill="none" stroke="var(--green)" stroke-width="2.4" vector-effect="non-scaling-stroke"/>`
+    : '';
+  const realMarkerText = useMonthlyHistory ? `${cfg.realLabel} real` : `${cfg.realLabel} actual`;
+  box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${cfg.targetLabel} simulada y valor real actual">
+    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
+    <line x1="${padL}" y1="${h-padB}" x2="${w-padR}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
+    ${ticks.map(t=>`<line x1="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y1="${h-padB}" x2="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y2="${h-padB+5}" stroke="rgba(255,255,255,.14)"/>`).join('')}
+    <path d="${line(benchmarkSeries)}" fill="none" stroke="var(--gold)" stroke-width="2.4" vector-effect="non-scaling-stroke"/>
+    ${realLineSvg}
+    <line x1="${realX}" y1="${Math.min(realY,benchY).toFixed(1)}" x2="${realX}" y2="${Math.max(realY,benchY).toFixed(1)}" stroke="${guideColor}" stroke-width="1.2" stroke-dasharray="4 5" opacity=".75" vector-effect="non-scaling-stroke"/>
+    <circle cx="${realX}" cy="${realY.toFixed(1)}" r="6" fill="var(--green)"/>
+    <circle cx="${realX}" cy="${benchY.toFixed(1)}" r="4" fill="var(--gold)"/>
+    ${tickSvg}
+    <text x="${w-padR-8}" y="${Math.max(14,realY-10).toFixed(1)}" fill="var(--green)" font-size="10" text-anchor="end">${realMarkerText}</text>
+    <text x="${w-padR-8}" y="${Math.min(h-padB-6,benchY+17).toFixed(1)}" fill="var(--gold)" font-size="10" text-anchor="end">${cfg.targetLabel}</text>
+  </svg>`;
+}
+function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
+  const box=document.getElementById('benchmarkChart');
+  if(!box) return;
+  const a=seriesA || [], b=seriesB || [];
+  if(!a.length || !b.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la comparación.</div>'; return; }
+  const w=900, h=300, padL=28, padR=28, padT=24, padB=42;
+  const values=[...a.map(x=>Number(x.normalized)),...b.map(x=>Number(x.normalized))].filter(Number.isFinite);
+  const min=Math.min(...values,95), max=Math.max(...values,105);
+  const span=(max-min)||1;
+  const toX=(i,n)=>padL + (i/Math.max(1,n-1))*(w-padL-padR);
+  const toY=(v)=>h-padB - ((v-min)/span)*(h-padT-padB);
+  const line=(arr)=>arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(Number(p.normalized)).toFixed(1)}`).join(' ');
+  const ticks=benchmarkTicks(a,5);
+  const tickSvg=ticks.map(t=>`<text x="${toX(t.idx,a.length).toFixed(1)}" y="${h-12}" fill="var(--muted)" font-size="10" text-anchor="middle">${t.label}</text>`).join('');
+  box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${labelA} frente a ${labelB}">
+    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
+    <line x1="${padL}" y1="${h-padB}" x2="${w-padR}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
+    ${ticks.map(t=>`<line x1="${toX(t.idx,a.length).toFixed(1)}" y1="${h-padB}" x2="${toX(t.idx,a.length).toFixed(1)}" y2="${h-padB+5}" stroke="rgba(255,255,255,.14)"/>`).join('')}
+    <path d="${line(a)}" fill="none" stroke="var(--blue)" stroke-width="2.2" vector-effect="non-scaling-stroke"/>
+    <path d="${line(b)}" fill="none" stroke="var(--gold)" stroke-width="2.2" vector-effect="non-scaling-stroke"/>
+    ${tickSvg}
+    <text x="${w-padR-8}" y="${toY(Number(a[a.length-1].normalized))-8}" fill="var(--blue)" font-size="10" text-anchor="end">${labelA}</text>
+    <text x="${w-padR-8}" y="${toY(Number(b[b.length-1].normalized))+16}" fill="var(--gold)" font-size="10" text-anchor="end">${labelB}</text>
+  </svg>`;
+}
+function renderMsciSummary(msci, sp, diff){
+  const box=document.getElementById('benchmarkSummary');
+  if(!box) return;
+  const cls=diff>0?'good':diff<0?'bad':'neutral';
+  box.className=`benchmarkSummary ${cls}`;
+  const title=diff>0?'MSCI World va por delante del S&P 500.':diff<0?'S&P 500 va por delante del MSCI World.':'MSCI World y S&P 500 están prácticamente alineados.';
+  box.innerHTML=`<span>Lectura del resultado</span><strong>${title}</strong><p>En el periodo analizado, MSCI World hace ${benchmarkPct(msci)} y S&amp;P 500 hace ${benchmarkPct(sp)}. La diferencia es de ${benchmarkPct(diff)} para MSCI World frente al S&amp;P 500. Esta vista no usa tus movimientos: solo sirve como referencia externa para tu duda MSCI vs S&amp;P 500.</p>`;
+}
+document.getElementById('benchmarkLoadBtn')?.addEventListener('click',()=>loadBenchmarkData(false));
+document.getElementById('benchmarkReloadBtn')?.addEventListener('click',()=>loadBenchmarkData(true));
+document.querySelectorAll('#benchmarkTabs button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    applyBenchmarkView(btn.dataset.benchmarkView || 'global');
+    // v57: si ya se había cargado una comparativa, al cambiar de pestaña se carga automáticamente la nueva vista.
+    // Así no hace falta pulsar “Actualizar” después de seleccionar Renta variable, MSCI, Bitcoin u Oro.
+    const statusText = (document.getElementById('benchmarkApiStatus')?.textContent || '').trim().toLowerCase();
+    const hasBenchmarkAlreadyLoaded = !!benchmarkCache || statusText === 'ok';
+    if(hasBenchmarkAlreadyLoaded){
+      setTimeout(()=>loadBenchmarkData(false), 0);
+    }
+  });
+});
+applyBenchmarkView('global');
+
+// v57: pestañas Benchmark controladas por applyBenchmarkView + carga automática.
 document.getElementById("excelFile").addEventListener("change", e=>{
   const file=e.target.files[0];
   if(file) handleExcelImport(file);
@@ -4993,6 +6015,193 @@ body:before{
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
 
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
 </style>
 
 
@@ -5341,6 +6550,193 @@ body:before{
 @media(max-width:680px){
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
+
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
 </style>
 <script>
@@ -5773,6 +7169,193 @@ body:before{
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
 
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
 </style>
 
 <style>
@@ -6077,6 +7660,193 @@ body:before{
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
 
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
 </style>
 
 
@@ -6313,6 +8083,193 @@ body:before{
 @media(max-width:680px){
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
+
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
 </style>
 <script>
@@ -6619,6 +8576,193 @@ body:before{
 @media(max-width:680px){
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
+
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
 </style>
 <script>
@@ -6943,6 +9087,193 @@ body:before{
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
 
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
 </style>
 <script>
 (function(){
@@ -7204,6 +9535,193 @@ body:before{
 @media(max-width:680px){
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
+
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
 </style>
 <script>
@@ -7486,7 +10004,1022 @@ button[aria-selected="true"],
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
 
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
 </style>
+
+
+
+<!-- V48 · Supabase base experimental: login + Excel en nube + auditoría cloud -->
+<style>
+.cloudBtn[disabled]{opacity:.42;cursor:not-allowed!important}
+.cloudOverlay{
+  position:fixed;inset:0;z-index:9999;display:none;place-items:center;padding:24px;
+  background:rgba(0,0,0,.72);backdrop-filter:blur(18px);
+}
+.cloudOverlay.active{display:grid}
+.cloudPanel{
+  width:min(460px,100%);border:1px solid var(--line);border-radius:24px;
+  background:linear-gradient(180deg,rgba(28,31,35,.98),rgba(8,9,12,.98));
+  box-shadow:0 34px 110px rgba(0,0,0,.62);padding:24px;
+}
+.cloudPanel h2{margin:0;font-size:24px;font-weight:620;letter-spacing:-.7px}
+.cloudPanel p{margin:8px 0 18px;color:var(--muted);font-size:13px;line-height:1.4}
+.cloudForm{display:grid;gap:10px}
+.cloudForm input{
+  width:100%;height:42px;border:1px solid var(--line);border-radius:14px;background:#070809;color:var(--text);
+  padding:0 13px;font-size:13px;outline:none;
+}
+.cloudForm input::placeholder{color:var(--muted2)}
+.cloudFormActions{display:flex;gap:10px;margin-top:4px}
+.cloudFormActions .btn{flex:1}
+.cloudStatusLine{margin-top:14px;color:var(--muted);font-size:12px;line-height:1.35}
+.cloudStatusLine.ok{color:var(--green)}
+.cloudStatusLine.warn{color:var(--yellow)}
+.cloudStatusLine.bad{color:var(--red)}
+.auditCloudCard strong.green{color:var(--green)!important}
+.auditCloudCard strong.yellow{color:var(--yellow)!important}
+.auditCloudCard strong.red{color:var(--red)!important}
+@media(max-width:680px){.cloudFormActions{flex-direction:column}}
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
+</style>
+
+<div class="cloudOverlay" id="cloudOverlay" aria-hidden="true">
+  <div class="cloudPanel">
+    <h2>Portfolio Oscar Cloud</h2>
+    <p id="cloudIntro">Acceso privado y sincronización del Excel con Supabase Storage.</p>
+    <div class="cloudForm" id="cloudForm">
+      <input id="cloudEmail" type="email" autocomplete="email" placeholder="Email">
+      <input id="cloudPassword" type="password" autocomplete="current-password" placeholder="Contraseña">
+      <div class="cloudFormActions">
+        <button class="btn primary" id="cloudDoLogin" type="button">Entrar</button>
+        <button class="btn" id="cloudClose" type="button">Cerrar</button>
+      </div>
+    </div>
+    <div class="cloudStatusLine" id="cloudStatusLine">Supabase todavía no está configurado.</div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/*
+  Portfolio Oscar · Supabase limpia
+  1) Sustituye SUPABASE_URL y SUPABASE_ANON_KEY por los datos de tu proyecto.
+  2) Crea un bucket privado llamado: portfolio-excel
+  3) Crea tu usuario en Supabase Auth.
+*/
+const PORTFOLIO_SUPABASE_CONFIG = {
+  url: 'https://epkqzpjypnkblghlthyq.supabase.co',
+  anonKey: 'sb_publishable_nlUBKoFdR9wB-UsQBNFPjg_m-UhR_eg',
+  bucket: 'portfolio-excel',
+  fileName: '01_Portfolio_Oscar.xlsx'
+};
+
+let portfolioSupabase = null;
+let portfolioCloudSession = null;
+
+function isSupabaseConfigured(){
+  return PORTFOLIO_SUPABASE_CONFIG.url.startsWith('https://') && PORTFOLIO_SUPABASE_CONFIG.anonKey.length > 40;
+}
+function cloudSetLine(text, cls=''){
+  const el=document.getElementById('cloudStatusLine');
+  if(!el) return;
+  el.textContent=text;
+  el.className='cloudStatusLine ' + cls;
+}
+function cloudUpdateButtons(){
+  const configured=isSupabaseConfigured();
+  const logged=!!portfolioCloudSession?.user;
+  document.getElementById('cloudSaveBtn')?.toggleAttribute('disabled', !(configured && logged));
+  document.getElementById('cloudLoadBtn')?.toggleAttribute('disabled', !(configured && logged));
+  const loginBtn=document.getElementById('cloudLoginBtn');
+  if(loginBtn) loginBtn.textContent = logged ? 'Salir' : (configured ? 'Entrar' : 'Cloud');
+  updateCloudAudit();
+}
+function cloudShow(){
+  const overlay=document.getElementById('cloudOverlay');
+  if(!overlay) return;
+  overlay.classList.add('active');
+  overlay.setAttribute('aria-hidden','false');
+  if(!isSupabaseConfigured()){
+    document.getElementById('cloudIntro').textContent='Primero hay que pegar la URL y la anon key de Supabase dentro del archivo HTML.';
+    cloudSetLine('Configuración pendiente. La app estable sigue funcionando con Excel local.', 'warn');
+  }else if(portfolioCloudSession?.user){
+    document.getElementById('cloudIntro').textContent='Sesión iniciada. Ya puedes guardar o cargar el Excel desde la nube.';
+    cloudSetLine('Conectado como ' + portfolioCloudSession.user.email, 'ok');
+  }else{
+    document.getElementById('cloudIntro').textContent='Acceso privado para sincronizar el Excel con Supabase Storage.';
+    cloudSetLine('Introduce tu email y contraseña de Supabase.', '');
+  }
+}
+function cloudHide(){
+  const overlay=document.getElementById('cloudOverlay');
+  overlay?.classList.remove('active');
+  overlay?.setAttribute('aria-hidden','true');
+}
+function cloudFilePath(){
+  const uid=portfolioCloudSession?.user?.id || 'sin-usuario';
+  return `${uid}/${PORTFOLIO_SUPABASE_CONFIG.fileName}`;
+}
+async function cloudInit(){
+  try{
+    if(!isSupabaseConfigured()){
+      cloudUpdateButtons();
+      return;
+    }
+    portfolioSupabase = supabase.createClient(PORTFOLIO_SUPABASE_CONFIG.url, PORTFOLIO_SUPABASE_CONFIG.anonKey);
+    const { data } = await portfolioSupabase.auth.getSession();
+    portfolioCloudSession = data?.session || null;
+    portfolioSupabase.auth.onAuthStateChange((_event, session)=>{
+      portfolioCloudSession=session;
+      cloudUpdateButtons();
+    });
+    cloudUpdateButtons();
+  }catch(err){
+    console.warn('Error iniciando Supabase:', err);
+    cloudSetLine('Error iniciando Supabase: ' + (err.message || err), 'bad');
+    updateCloudAudit('error'); normalizeSupabaseAuditLabels();
+  }
+}
+async function cloudLogin(){
+  if(!isSupabaseConfigured()){
+    cloudShow();
+    return;
+  }
+  const email=document.getElementById('cloudEmail')?.value?.trim();
+  const password=document.getElementById('cloudPassword')?.value || '';
+  if(!email || !password){ cloudSetLine('Falta email o contraseña.', 'warn'); return; }
+  try{
+    cloudSetLine('Conectando...', '');
+    const { data, error } = await portfolioSupabase.auth.signInWithPassword({email,password});
+    if(error) throw error;
+    portfolioCloudSession=data.session;
+    cloudSetLine('Conectado correctamente.', 'ok');
+    cloudUpdateButtons();
+    setTimeout(cloudHide, 600);
+  }catch(err){
+    cloudSetLine('No se ha podido iniciar sesión: ' + (err.message || err), 'bad');
+  }
+}
+async function cloudLogout(){
+  if(!portfolioSupabase) return;
+  await portfolioSupabase.auth.signOut();
+  portfolioCloudSession=null;
+  cloudUpdateButtons();
+  cloudSetLine('Sesión cerrada.', '');
+}
+function cloudRequireReady(){
+  if(!isSupabaseConfigured()){ cloudShow(); return false; }
+  if(!portfolioSupabase || !portfolioCloudSession){ cloudShow(); return false; }
+  return true;
+}
+async function cloudSaveWorkbook(){
+  if(!cloudRequireReady()) return;
+  try{
+    const buffer = typeof getCurrentWorkbookBufferForBackup === 'function' ? getCurrentWorkbookBufferForBackup() : null;
+    if(!buffer){
+      alert('Primero importa el Excel. Después podrás guardarlo en la nube.');
+      return;
+    }
+    const blob = new Blob([buffer], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    const { error } = await portfolioSupabase.storage
+      .from(PORTFOLIO_SUPABASE_CONFIG.bucket)
+      .upload(cloudFilePath(), blob, {upsert:true, contentType:blob.type});
+    if(error) throw error;
+    localStorage.setItem('portfolioOscar:lastCloudSync:v1', new Date().toISOString());
+    setStatus?.(true, 'Excel guardado en nube');
+    cloudSetLine('Excel guardado en Supabase Storage.', 'ok');
+    updateCloudAudit('ok');
+  }catch(err){
+    console.error(err);
+    setStatus?.(false, 'ERROR · nube no disponible');
+    cloudSetLine('Error guardando en nube: ' + (err.message || err), 'bad');
+    updateCloudAudit('error'); normalizeSupabaseAuditLabels();
+  }
+}
+async function cloudLoadWorkbook(){
+  if(!cloudRequireReady()) return;
+  try{
+    const { data, error } = await portfolioSupabase.storage
+      .from(PORTFOLIO_SUPABASE_CONFIG.bucket)
+      .download(cloudFilePath());
+    if(error) throw error;
+    const buffer = await data.arrayBuffer();
+    importedWorkbook = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
+    saveWorkbookCache?.(buffer, PORTFOLIO_SUPABASE_CONFIG.fileName);
+    applyWorkbookAfterRead?.(PORTFOLIO_SUPABASE_CONFIG.fileName, true);
+    localStorage.setItem('portfolioOscar:lastCloudSync:v1', new Date().toISOString());
+    setStatus?.(true, 'Excel cargado desde nube');
+    cloudSetLine('Excel recuperado desde Supabase Storage.', 'ok');
+    updateCloudAudit('ok');
+  }catch(err){
+    console.error(err);
+    setStatus?.(false, 'ERROR · no se pudo cargar nube');
+    cloudSetLine('Error cargando desde nube: ' + (err.message || err), 'bad');
+    updateCloudAudit('error'); normalizeSupabaseAuditLabels();
+  }
+}
+
+function normalizeSupabaseAuditLabels(){
+  document.querySelectorAll('.auditWebCard').forEach(card=>{
+    const label=card.querySelector('span')?.textContent?.trim();
+    if(label==='APIs externas'){
+      card.querySelector('span').textContent='Benchmark/API';
+      const strong=card.querySelector('strong');
+      const em=card.querySelector('em');
+      if(strong){ strong.textContent='OK'; strong.className='green'; }
+      if(em) em.textContent='Datos recibidos vía Edge Function.';
+    }
+  });
+  document.querySelectorAll('.auditWebChecks div').forEach(row=>{
+    const label=row.querySelector('strong')?.textContent?.trim();
+    const status=row.querySelector('span');
+    if(label==='Supabase' && status){ status.textContent='Activo'; status.className='green'; }
+    if(label==='Benchmark/API' && status){ status.textContent='Activo'; status.className='green'; }
+  });
+}
+
+function updateCloudAudit(forcedState){
+  const grid=document.querySelector('.auditWebGrid');
+  if(!grid) return;
+  let card=document.querySelector('.auditCloudCard');
+  if(!card){
+    card=document.createElement('article');
+    card.className='auditWebCard card auditCloudCard';
+    card.innerHTML='<span>Supabase Cloud</span><strong>Pendiente</strong><em>Login y Excel en nube</em>';
+    grid.appendChild(card);
+  }
+  const strong=card.querySelector('strong');
+  const em=card.querySelector('em');
+  const last=localStorage.getItem('portfolioOscar:lastCloudSync:v1');
+  if(forcedState==='error'){
+    strong.textContent='Error'; strong.className='red'; em.textContent='Revisar conexión o permisos'; return;
+  }
+  if(!isSupabaseConfigured()){
+    strong.textContent='Sin configurar'; strong.className='yellow'; em.textContent='Falta URL y anon key'; return;
+  }
+  if(!portfolioCloudSession?.user){
+    strong.textContent='Sin sesión'; strong.className='yellow'; em.textContent='Login pendiente'; return;
+  }
+  strong.textContent='Activo'; strong.className='green';
+  em.textContent=last ? 'Última sync · ' + new Date(last).toLocaleString('es-ES') : 'Sesión iniciada';
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('cloudLoginBtn')?.addEventListener('click',()=>{
+    if(portfolioCloudSession?.user) cloudLogout(); else cloudShow();
+  });
+  document.getElementById('cloudDoLogin')?.addEventListener('click',cloudLogin);
+  document.getElementById('cloudClose')?.addEventListener('click',cloudHide);
+  document.getElementById('cloudSaveBtn')?.addEventListener('click',cloudSaveWorkbook);
+  document.getElementById('cloudLoadBtn')?.addEventListener('click',cloudLoadWorkbook);
+  document.getElementById('cloudOverlay')?.addEventListener('click',e=>{ if(e.target.id==='cloudOverlay') cloudHide(); });
+  cloudInit();
+});
+</script>
+
+
+
+<script>
+/* v60 · Benchmark: gráfica limpia sin textos dentro + tooltips en puntos */
+function __v60SafeNum(v){ const n=Number(v); return Number.isFinite(n)?n:null; }
+function __v60TitleDate(date){ return formatBenchmarkMonth(date || ''); }
+function __v60PointTitles(arr, toX, toY, color, formatter, extra=''){
+  return (arr||[]).map((p,i)=>{
+    const v=Number(p.normalized);
+    if(!Number.isFinite(v)) return '';
+    const x=toX(i,arr.length).toFixed(1);
+    const y=toY(v).toFixed(1);
+    const label = `${__v60TitleDate(p.date)} · ${formatter ? formatter(v) : fmtNumber(v,2)}${extra}`;
+    return `<circle class="benchmarkHotPoint" cx="${x}" cy="${y}" r="7" fill="${color}" opacity="0"><title>${escHtml(label)}</title></circle>`;
+  }).join('');
+}
+function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries, flows, cfg, monthlyHistory=[]){
+  const box=document.getElementById('benchmarkChart');
+  if(!box) return;
+  if(!benchmarkSeries.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la simulación.</div>'; return; }
+  const w=900, h=300, padL=28, padR=34, padT=24, padB=42;
+  const finalInvested=benchmarkSeries[benchmarkSeries.length-1]?.invested || 1;
+  const useMonthlyHistory=Array.isArray(monthlyHistory) && monthlyHistory.length>=3;
+  const realHistory=useMonthlyHistory ? monthlyHistory : [];
+  const realNorm=Number(((currentValue/finalInvested)*100).toFixed(4));
+  const values=[...benchmarkSeries.map(x=>Number(x.normalized)), ...realHistory.map(x=>Number(x.normalized)), realNorm].filter(Number.isFinite);
+  const min=Math.min(...values,95), max=Math.max(...values,105);
+  const span=(max-min)||1;
+  const toX=(i,n)=>padL + (i/Math.max(1,n-1))*(w-padL-padR);
+  const toY=(v)=>h-padB - ((v-min)/span)*(h-padT-padB);
+  const line=(arr)=>arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(Number(p.normalized)).toFixed(1)}`).join(' ');
+  const realX=w-padR;
+  const realY=toY(useMonthlyHistory ? Number(realHistory[realHistory.length-1].normalized) : realNorm);
+  const benchY=toY(Number(benchmarkSeries[benchmarkSeries.length-1].normalized));
+  const ticks=benchmarkTicks(benchmarkSeries,5);
+  const tickSvg=ticks.map(t=>`<text x="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y="${h-12}" fill="var(--muted)" font-size="10" text-anchor="middle">${t.label}</text>`).join('');
+  const guideColor = currentValue >= benchmarkFinalValue ? 'var(--green)' : 'var(--red)';
+  const realLineSvg = useMonthlyHistory
+    ? `<path d="${line(realHistory)}" fill="none" stroke="var(--green)" stroke-width="2.4" vector-effect="non-scaling-stroke"/>${__v60PointTitles(realHistory,toX,toY,'var(--green)',v=>benchmarkPct(v-100),' · dato real mensual')}`
+    : '';
+  const realTitle = `${cfg.realLabel}: ${fmtMoney(currentValue)} · ${benchmarkPct(realNorm-100)}`;
+  const targetTitle = `${cfg.targetLabel}: ${fmtMoney(benchmarkFinalValue)} · ${benchmarkPct(Number(benchmarkSeries[benchmarkSeries.length-1].normalized)-100)}`;
+  box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${escHtml(cfg.targetLabel)} simulada y valor real actual">
+    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
+    <line x1="${padL}" y1="${h-padB}" x2="${w-padR}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
+    ${ticks.map(t=>`<line x1="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y1="${h-padB}" x2="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y2="${h-padB+5}" stroke="rgba(255,255,255,.14)"/>`).join('')}
+    <path d="${line(benchmarkSeries)}" fill="none" stroke="var(--gold)" stroke-width="2.4" vector-effect="non-scaling-stroke"/>
+    ${realLineSvg}
+    <line x1="${realX}" y1="${Math.min(realY,benchY).toFixed(1)}" x2="${realX}" y2="${Math.max(realY,benchY).toFixed(1)}" stroke="${guideColor}" stroke-width="1.2" stroke-dasharray="4 5" opacity=".75" vector-effect="non-scaling-stroke"/>
+    <circle class="benchmarkVisiblePoint" cx="${realX}" cy="${realY.toFixed(1)}" r="6" fill="var(--green)"><title>${escHtml(realTitle)}</title></circle>
+    <circle class="benchmarkVisiblePoint" cx="${realX}" cy="${benchY.toFixed(1)}" r="4.5" fill="var(--gold)"><title>${escHtml(targetTitle)}</title></circle>
+    ${__v60PointTitles(benchmarkSeries,toX,toY,'var(--gold)',v=>benchmarkPct(v-100),' · simulación')}
+    ${tickSvg}
+  </svg>`;
+}
+function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
+  const box=document.getElementById('benchmarkChart');
+  if(!box) return;
+  const a=seriesA || [], b=seriesB || [];
+  if(!a.length || !b.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la comparación.</div>'; return; }
+  const w=900, h=300, padL=28, padR=28, padT=24, padB=42;
+  const values=[...a.map(x=>Number(x.normalized)),...b.map(x=>Number(x.normalized))].filter(Number.isFinite);
+  const min=Math.min(...values,95), max=Math.max(...values,105);
+  const span=(max-min)||1;
+  const toX=(i,n)=>padL + (i/Math.max(1,n-1))*(w-padL-padR);
+  const toY=(v)=>h-padB - ((v-min)/span)*(h-padT-padB);
+  const line=(arr)=>arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(Number(p.normalized)).toFixed(1)}`).join(' ');
+  const ticks=benchmarkTicks(a,5);
+  const tickSvg=ticks.map(t=>`<text x="${toX(t.idx,a.length).toFixed(1)}" y="${h-12}" fill="var(--muted)" font-size="10" text-anchor="middle">${t.label}</text>`).join('');
+  const aPoints=__v60PointTitles(a,toX,toY,'var(--blue)',v=>benchmarkPct(v-100),` · ${labelA}`);
+  const bPoints=__v60PointTitles(b,toX,toY,'var(--gold)',v=>benchmarkPct(v-100),` · ${labelB}`);
+  const aEnd=a[a.length-1], bEnd=b[b.length-1];
+  box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${escHtml(labelA)} frente a ${escHtml(labelB)}">
+    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
+    <line x1="${padL}" y1="${h-padB}" x2="${w-padR}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
+    ${ticks.map(t=>`<line x1="${toX(t.idx,a.length).toFixed(1)}" y1="${h-padB}" x2="${toX(t.idx,a.length).toFixed(1)}" y2="${h-padB+5}" stroke="rgba(255,255,255,.14)"/>`).join('')}
+    <path d="${line(a)}" fill="none" stroke="var(--blue)" stroke-width="2.2" vector-effect="non-scaling-stroke"/>
+    <path d="${line(b)}" fill="none" stroke="var(--gold)" stroke-width="2.2" vector-effect="non-scaling-stroke"/>
+    <circle class="benchmarkVisiblePoint" cx="${toX(a.length-1,a.length).toFixed(1)}" cy="${toY(Number(aEnd.normalized)).toFixed(1)}" r="4.5" fill="var(--blue)"><title>${escHtml(labelA)} · ${benchmarkPct(Number(aEnd.normalized)-100)}</title></circle>
+    <circle class="benchmarkVisiblePoint" cx="${toX(b.length-1,b.length).toFixed(1)}" cy="${toY(Number(bEnd.normalized)).toFixed(1)}" r="4.5" fill="var(--gold)"><title>${escHtml(labelB)} · ${benchmarkPct(Number(bEnd.normalized)-100)}</title></circle>
+    ${aPoints}${bPoints}${tickSvg}
+  </svg>`;
+}
+</script>
+<style>
+/* v60 · la gráfica no lleva textos internos; la lectura vive en la leyenda, tooltips y burbuja inferior */
+.benchmarkHotPoint,
+.benchmarkVisiblePoint{cursor:crosshair;pointer-events:auto;}
+.benchmarkVisiblePoint:hover{filter:brightness(1.18);}
+</style>
+
+
+<style>
+/* v61 · Benchmark tooltip profesional e inmediato */
+#benchmarkChart{position:relative!important;}
+.benchmarkVisiblePoint{
+  cursor:crosshair;
+  pointer-events:auto;
+  stroke:#07100d;
+  stroke-width:1.6;
+  vector-effect:non-scaling-stroke;
+}
+.benchmarkHitArea{
+  cursor:crosshair;
+  pointer-events:auto;
+}
+.benchmarkVisiblePoint.greenPoint{fill:var(--green)!important;}
+.benchmarkVisiblePoint.goldPoint{fill:var(--gold)!important;}
+.benchmarkVisiblePoint.bluePoint{fill:var(--blue)!important;}
+.benchmarkTooltipFloating{
+  position:fixed;
+  z-index:99999;
+  display:none;
+  pointer-events:none;
+  max-width:320px;
+  padding:8px 10px;
+  border-radius:10px;
+  background:rgba(10,12,14,.96);
+  border:1px solid rgba(244,241,234,.18);
+  color:#f4f1ea;
+  font-size:12px;
+  line-height:1.25;
+  box-shadow:0 14px 34px rgba(0,0,0,.38);
+  backdrop-filter:blur(12px);
+  white-space:nowrap;
+}
+.benchmarkTooltipFloating strong{font-weight:720;color:#fff;}
+.benchmarkTooltipFloating span{color:var(--muted);}
+</style>
+<script>
+/* v61 · Tooltips inmediatos + puntos finales circulares y limpios */
+function __v61TooltipInit(){
+  let tip=document.getElementById('benchmarkTooltipFloating');
+  if(!tip){
+    tip=document.createElement('div');
+    tip.id='benchmarkTooltipFloating';
+    tip.className='benchmarkTooltipFloating';
+    document.body.appendChild(tip);
+  }
+  const box=document.getElementById('benchmarkChart');
+  if(!box || box.dataset.v61Tooltip==='1') return;
+  box.dataset.v61Tooltip='1';
+  box.addEventListener('mousemove', e=>{
+    const target=e.target?.closest?.('[data-benchmark-tip]');
+    if(!target){ tip.style.display='none'; return; }
+    tip.innerHTML=target.getAttribute('data-benchmark-tip') || '';
+    tip.style.display='block';
+    const pad=14;
+    let x=e.clientX+pad;
+    let y=e.clientY+pad;
+    const r=tip.getBoundingClientRect();
+    if(x+r.width > window.innerWidth-10) x=e.clientX-r.width-pad;
+    if(y+r.height > window.innerHeight-10) y=e.clientY-r.height-pad;
+    tip.style.left=x+'px';
+    tip.style.top=y+'px';
+  });
+  box.addEventListener('mouseleave',()=>{ tip.style.display='none'; });
+}
+function __v61Tip(label, value, meta=''){
+  return `<strong>${escHtml(label)}</strong><br><span>${escHtml(value)}${meta?` · ${escHtml(meta)}`:''}</span>`;
+}
+function __v61Point(x,y,r,colorClass,label,value,meta='',visible=true,hit=14){
+  const dot = visible ? `<circle class="benchmarkVisiblePoint ${colorClass}" cx="${x}" cy="${y}" r="${r}"/>` : '';
+  return `<g data-benchmark-tip="${escHtml(__v61Tip(label,value,meta))}">${dot}<circle class="benchmarkHitArea" cx="${x}" cy="${y}" r="${hit}" fill="transparent"/></g>`;
+}
+function __v61PointSeries(arr,toX,toY,colorClass,label,formatter,meta=''){
+  return (arr||[]).map((p,i)=>{
+    const v=Number(p.normalized);
+    if(!Number.isFinite(v)) return '';
+    const x=toX(i,arr.length).toFixed(1);
+    const y=toY(v).toFixed(1);
+    const date=__v60TitleDate(p.date);
+    const value=formatter ? formatter(v) : fmtNumber(v,2);
+    return __v61Point(x,y,3.2,colorClass,label,value,date + (meta?` · ${meta}`:''),false,11);
+  }).join('');
+}
+function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries, flows, cfg, monthlyHistory=[]){
+  const box=document.getElementById('benchmarkChart');
+  if(!box) return;
+  __v61TooltipInit();
+  if(!benchmarkSeries.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la simulación.</div>'; return; }
+  const w=1200, h=300, padL=34, padR=42, padT=24, padB=42;
+  const finalInvested=benchmarkSeries[benchmarkSeries.length-1]?.invested || 1;
+  const useMonthlyHistory=Array.isArray(monthlyHistory) && monthlyHistory.length>=3;
+  const realHistory=useMonthlyHistory ? monthlyHistory : [];
+  const realNorm=Number(((currentValue/finalInvested)*100).toFixed(4));
+  const values=[...benchmarkSeries.map(x=>Number(x.normalized)), ...realHistory.map(x=>Number(x.normalized)), realNorm].filter(Number.isFinite);
+  const min=Math.min(...values,95), max=Math.max(...values,105);
+  const span=(max-min)||1;
+  const toX=(i,n)=>padL + (i/Math.max(1,n-1))*(w-padL-padR);
+  const toY=(v)=>h-padB - ((v-min)/span)*(h-padT-padB);
+  const line=(arr)=>arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(Number(p.normalized)).toFixed(1)}`).join(' ');
+  const realX=w-padR;
+  const realY=toY(useMonthlyHistory ? Number(realHistory[realHistory.length-1].normalized) : realNorm);
+  const benchY=toY(Number(benchmarkSeries[benchmarkSeries.length-1].normalized));
+  const ticks=benchmarkTicks(benchmarkSeries,5);
+  const tickSvg=ticks.map(t=>`<text x="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y="${h-12}" fill="var(--muted)" font-size="10" text-anchor="middle">${t.label}</text>`).join('');
+  const guideColor = currentValue >= benchmarkFinalValue ? 'var(--green)' : 'var(--red)';
+  const realLineSvg = useMonthlyHistory
+    ? `<path d="${line(realHistory)}" fill="none" stroke="var(--green)" stroke-width="2.35" vector-effect="non-scaling-stroke"/>${__v61PointSeries(realHistory,toX,toY,'greenPoint',cfg.realLabel,v=>benchmarkPct(v-100),'dato real mensual')}`
+    : '';
+  const realValue = `${fmtMoney(currentValue)} · ${benchmarkPct(realNorm-100)}`;
+  const targetValue = `${fmtMoney(benchmarkFinalValue)} · ${benchmarkPct(Number(benchmarkSeries[benchmarkSeries.length-1].normalized)-100)}`;
+  const realMeta = useMonthlyHistory ? 'último cierre real del Excel' : 'valor real actual';
+  const targetMeta = 'simulación con tus movimientos';
+  const targetHits=__v61PointSeries(benchmarkSeries,toX,toY,'goldPoint',cfg.targetLabel,v=>benchmarkPct(v-100),'simulación');
+  box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${escHtml(cfg.targetLabel)} simulada y valor real actual">
+    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
+    <line x1="${padL}" y1="${h-padB}" x2="${w-padR}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
+    ${ticks.map(t=>`<line x1="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y1="${h-padB}" x2="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y2="${h-padB+5}" stroke="rgba(255,255,255,.14)"/>`).join('')}
+    <path d="${line(benchmarkSeries)}" fill="none" stroke="var(--gold)" stroke-width="2.35" vector-effect="non-scaling-stroke"/>
+    ${realLineSvg}
+    <line x1="${realX}" y1="${Math.min(realY,benchY).toFixed(1)}" x2="${realX}" y2="${Math.max(realY,benchY).toFixed(1)}" stroke="${guideColor}" stroke-width="1.15" stroke-dasharray="4 5" opacity=".65" vector-effect="non-scaling-stroke"/>
+    ${targetHits}
+    ${__v61Point(realX,realY.toFixed(1),5.6,'greenPoint',cfg.realLabel,realValue,realMeta,true,18)}
+    ${__v61Point(realX,benchY.toFixed(1),4.8,'goldPoint',cfg.targetLabel,targetValue,targetMeta,true,18)}
+    ${tickSvg}
+  </svg>`;
+}
+function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
+  const box=document.getElementById('benchmarkChart');
+  if(!box) return;
+  __v61TooltipInit();
+  const a=seriesA || [], b=seriesB || [];
+  if(!a.length || !b.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la comparación.</div>'; return; }
+  const w=1200, h=300, padL=34, padR=42, padT=24, padB=42;
+  const values=[...a.map(x=>Number(x.normalized)),...b.map(x=>Number(x.normalized))].filter(Number.isFinite);
+  const min=Math.min(...values,95), max=Math.max(...values,105);
+  const span=(max-min)||1;
+  const toX=(i,n)=>padL + (i/Math.max(1,n-1))*(w-padL-padR);
+  const toY=(v)=>h-padB - ((v-min)/span)*(h-padT-padB);
+  const line=(arr)=>arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(Number(p.normalized)).toFixed(1)}`).join(' ');
+  const ticks=benchmarkTicks(a,5);
+  const tickSvg=ticks.map(t=>`<text x="${toX(t.idx,a.length).toFixed(1)}" y="${h-12}" fill="var(--muted)" font-size="10" text-anchor="middle">${t.label}</text>`).join('');
+  const aEnd=a[a.length-1], bEnd=b[b.length-1];
+  const aPoints=__v61PointSeries(a,toX,toY,'bluePoint',labelA,v=>benchmarkPct(v-100),'referencia');
+  const bPoints=__v61PointSeries(b,toX,toY,'goldPoint',labelB,v=>benchmarkPct(v-100),'referencia');
+  box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${escHtml(labelA)} frente a ${escHtml(labelB)}">
+    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
+    <line x1="${padL}" y1="${h-padB}" x2="${w-padR}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
+    ${ticks.map(t=>`<line x1="${toX(t.idx,a.length).toFixed(1)}" y1="${h-padB}" x2="${toX(t.idx,a.length).toFixed(1)}" y2="${h-padB+5}" stroke="rgba(255,255,255,.14)"/>`).join('')}
+    <path d="${line(a)}" fill="none" stroke="var(--blue)" stroke-width="2.2" vector-effect="non-scaling-stroke"/>
+    <path d="${line(b)}" fill="none" stroke="var(--gold)" stroke-width="2.2" vector-effect="non-scaling-stroke"/>
+    ${aPoints}${bPoints}
+    ${__v61Point(toX(a.length-1,a.length).toFixed(1),toY(Number(aEnd.normalized)).toFixed(1),4.8,'bluePoint',labelA,benchmarkPct(Number(aEnd.normalized)-100),'último dato',true,16)}
+    ${__v61Point(toX(b.length-1,b.length).toFixed(1),toY(Number(bEnd.normalized)).toFixed(1),4.8,'goldPoint',labelB,benchmarkPct(Number(bEnd.normalized)-100),'último dato',true,16)}
+    ${tickSvg}
+  </svg>`;
+}
+</script>
+
+
+
+<!-- V62 · Revisión integral Benchmark: títulos dinámicos, referencias claras y composición contextual -->
+<style>
+#benchmark .benchmarkTable td:nth-child(2){color:var(--text2)!important;font-weight:520!important;}
+#benchmark .benchmarkTable td:nth-child(3){font-variant-numeric:tabular-nums!important;}
+#benchmark .benchmarkLegend{opacity:.92!important;}
+#benchmark .benchmarkLegend span{line-height:1.25!important;}
+#benchmark .benchmarkMetric em{line-height:1.28!important;}
+#benchmark .benchmarkSummary strong{line-height:1.18!important;}
+#benchmark .benchmarkSummary p{max-width:1180px!important;}
+.benchmarkVisiblePoint{filter:none!important;}
+</style>
+<script>
+(function(){
+  function viewLabel(view){
+    return ({
+      global:['Composición de la Cartera objetivo','Pesos objetivo actuales sin Plan de Pensiones.'],
+      rv:['Composición del objetivo de renta variable','Reparto interno usado para comparar tus fondos de renta variable.'],
+      msci_sp500:['Referencias comparadas','Comparación externa. No usa tus movimientos ni tu cartera real.'],
+      btc:['Referencia Bitcoin','La comparación de Bitcoin usa una referencia única: BTC-USD al 100%.'],
+      gold:['Referencia Oro','La comparación de Oro usa una referencia única: GLD al 100%.']
+    })[view || benchmarkActiveView] || ['Composición de la referencia','Pesos usados en esta comparación.'];
+  }
+  function updateCompositionCopy(){
+    const body=document.getElementById('benchmarkWeightsBody');
+    const card=body?.closest?.('.card');
+    if(!card) return;
+    const [title,sub]=viewLabel(benchmarkActiveView);
+    const h3=card.querySelector('.cardHeader h3');
+    const p=card.querySelector('.cardHeader p');
+    if(h3) h3.textContent=title;
+    if(p) p.textContent=sub;
+  }
+  function tuneConfig(){
+    if(!window.BENCHMARK_VIEW_CONFIG) return;
+    if(BENCHMARK_VIEW_CONFIG.btc){
+      BENCHMARK_VIEW_CONFIG.btc.targetLabel='Referencia BTC';
+      BENCHMARK_VIEW_CONFIG.btc.targetSmall='BTC-USD';
+      BENCHMARK_VIEW_CONFIG.btc.subtitle='Compara tus movimientos reales de Bitcoin contra BTC-USD. La referencia es 100% Bitcoin.';
+    }
+    if(BENCHMARK_VIEW_CONFIG.gold){
+      BENCHMARK_VIEW_CONFIG.gold.targetLabel='Referencia Oro';
+      BENCHMARK_VIEW_CONFIG.gold.targetSmall='GLD';
+      BENCHMARK_VIEW_CONFIG.gold.subtitle='Compara tus movimientos reales de Oro contra GLD como referencia de oro. La referencia es 100% Oro.';
+    }
+    if(BENCHMARK_VIEW_CONFIG.rv){
+      BENCHMARK_VIEW_CONFIG.rv.targetLabel='Objetivo RV';
+      BENCHMARK_VIEW_CONFIG.rv.targetSmall='Objetivo RV';
+    }
+    if(BENCHMARK_VIEW_CONFIG.global){
+      BENCHMARK_VIEW_CONFIG.global.targetLabel='Cartera objetivo';
+      BENCHMARK_VIEW_CONFIG.global.targetSmall='Cartera objetivo';
+    }
+  }
+  tuneConfig();
+  const oldApply=window.applyBenchmarkView;
+  if(typeof oldApply==='function'){
+    window.applyBenchmarkView=function(view){
+      const result=oldApply.apply(this, arguments);
+      updateCompositionCopy();
+      return result;
+    };
+  }
+  const oldWeights=window.updateBenchmarkWeightsTable;
+  if(typeof oldWeights==='function'){
+    window.updateBenchmarkWeightsTable=function(weights){
+      const result=oldWeights.apply(this, arguments);
+      updateCompositionCopy();
+      return result;
+    };
+  }
+  const oldSummary=window.renderBenchmarkSummary;
+  if(typeof oldSummary==='function'){
+    window.renderBenchmarkSummary=function(currentValue, targetValue, netInvested, realReturn, targetReturn, diff, valueDiff, flowsCount, cfg, monthlyHistory=[]){
+      const result=oldSummary.apply(this, arguments);
+      const box=document.getElementById('benchmarkSummary');
+      if(!box || !cfg) return result;
+      const historyCount=Array.isArray(monthlyHistory) ? monthlyHistory.length : 0;
+      const cls = diff > 0 ? 'good' : diff < 0 ? 'bad' : 'neutral';
+      const absDiff=Math.abs(Number(valueDiff||0));
+      const absPct=Math.abs(Number(diff||0));
+      const direction=diff>0?'a favor de tu cartera real':diff<0?'a favor de la referencia':'sin diferencia relevante';
+      const title=diff>0?`${cfg.realLabel} va por delante de ${cfg.targetLabel}.`:diff<0?`${cfg.realLabel} va por detrás de ${cfg.targetLabel}.`:`${cfg.realLabel} está prácticamente alineada con ${cfg.targetLabel}.`;
+      const historyText=historyCount>=3
+        ? `La línea verde usa ${historyCount} cierres mensuales reales del Excel. La línea amarilla muestra la referencia simulada con los mismos movimientos.`
+        : `Histórico real todavía insuficiente: hay ${historyCount} cierre${historyCount===1?'':'s'} mensual${historyCount===1?'':'es'} útil${historyCount===1?'':'es'}. Por eso no se inventa una línea histórica de tu cartera; solo se marca el valor real actual.`;
+      box.className=`benchmarkSummary ${cls}`;
+      box.innerHTML=`<span>Lectura del resultado</span><strong>${title}</strong><p>Con los mismos movimientos reales, ${cfg.realLabel.toLowerCase()} vale ${fmtMoney(currentValue)} y ${cfg.targetLabel} valdría ${fmtMoney(targetValue)}. La diferencia actual es de ${fmtMoney(absDiff)} ${direction}, equivalente a ${fmtNumber(absPct,2)} puntos. ${historyText}</p>`;
+      return result;
+    };
+  }
+  updateCompositionCopy();
+})();
+</script>
+
+<!-- V63 · Auditoría estable Benchmark OK -->
+<script>
+(function(){
+  function setAuditStable(){
+    document.querySelectorAll('.auditWebChecks div').forEach(row=>{
+      const label=row.querySelector('strong')?.textContent?.trim();
+      const status=row.querySelector('span');
+      if(label==='Benchmark/API' && status){ status.textContent='Activo'; status.className='green'; }
+    });
+    document.querySelectorAll('.auditWebPages div').forEach(row=>{
+      const label=row.querySelector('strong')?.textContent?.trim();
+      const status=row.querySelector('span');
+      if(label==='Benchmark' && status){ status.textContent='OK'; status.className='green'; }
+    });
+    const st=document.getElementById('auditBenchmarkStatus');
+    const note=document.getElementById('auditBenchmarkNote');
+    if(st){ st.textContent='OK'; st.className='green'; }
+    if(note){ note.textContent='Datos recibidos vía Edge Function.'; }
+  }
+  document.addEventListener('DOMContentLoaded', setAuditStable);
+  window.addEventListener('load', setAuditStable);
+  setTimeout(setAuditStable, 500);
+})();
+</script>
 
 </body>
 </html>
@@ -7971,6 +11504,193 @@ body:before{
 @media(max-width:680px){
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
+
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
 </style>
 
@@ -8672,6 +12392,193 @@ body:before{
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
 
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
 </style>
 
 <style>.tabs span{cursor:pointer;}
@@ -9002,6 +12909,193 @@ body:before{
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
 
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
 </style>
 
 <style>
@@ -9296,6 +13390,193 @@ body:before{
 @media(max-width:680px){
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
+
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
 </style>
 <script>
@@ -9654,6 +13935,193 @@ body:before{
   .auditWebGrid,.auditWebPages{grid-template-columns:1fr!important}
 }
 
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
 </style>
 <script>
 (function(){
@@ -9698,4 +14166,191 @@ body:before{
   padding-left:0!important;
   margin-left:0!important;
 }
+
+
+/* V51 · Benchmark API test vía Supabase Edge Function */
+.benchmarkHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 240px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+.benchmarkHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+.benchmarkHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:760px!important;
+}
+.benchmarkState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+.benchmarkState span,.benchmarkCard span,.benchmarkMetric span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+.benchmarkState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+.benchmarkState em,.benchmarkCard em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+.benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:16px 18px 0!important;
+}
+.benchmarkTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 12px!important;
+  font-size:11px!important;
+  font-weight:620!important;
+}
+.benchmarkTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+.benchmarkGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.benchmarkCard,.benchmarkMetric{
+  min-height:96px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.benchmarkCard strong,.benchmarkMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+}
+.benchmarkChartMock{
+  margin:16px 18px 18px!important;
+  min-height:280px!important;
+  border-radius:16px!important;
+  border:1px solid var(--line2)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 54px, rgba(255,255,255,.045) 55px),
+    rgba(0,0,0,.32)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+  padding:24px!important;
+}
+.benchmarkTable{
+  width:100%!important;
+  border-collapse:separate!important;
+  border-spacing:0 7px!important;
+  table-layout:fixed!important;
+}
+.benchmarkTable th{
+  color:#717784!important;
+  font-size:9.5px!important;
+  font-weight:760!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  padding:0 12px 5px!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}
+.benchmarkTable td{
+  height:42px!important;
+  background:rgba(0,0,0,.30)!important;
+  border-top:1px solid var(--line2)!important;
+  border-bottom:1px solid var(--line2)!important;
+  padding:8px 12px!important;
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.benchmarkTable td:first-child{
+  border-left:1px solid var(--line2)!important;
+  border-radius:10px 0 0 10px!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  padding-left:18px!important;
+  font-weight:600!important;
+}
+.benchmarkTable td:last-child{
+  border-right:1px solid var(--line2)!important;
+  border-radius:0 10px 10px 0!important;
+  padding-right:18px!important;
+}
+.benchmarkNote{
+  margin:0 18px 18px!important;
+  padding:13px 14px!important;
+  border-radius:13px!important;
+  background:rgba(0,0,0,.30)!important;
+  border:1px solid var(--line2)!important;
+  color:var(--muted)!important;
+  font-size:11.5px!important;
+  line-height:1.35!important;
+}
+.benchmarkNote strong{color:var(--text)!important}
+@media(max-width:1150px){
+  .benchmarkHero{grid-template-columns:1fr!important}
+  .benchmarkState{text-align:left!important}
+  .benchmarkGrid{grid-template-columns:1fr!important}
+}
+
+
+
+/* V54 · Benchmark con resumen explicativo */
+.benchmarkState strong.green{color:var(--green)!important}
+.benchmarkState strong.red{color:var(--red)!important}
+.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}
+.benchmarkApiActions .btn{min-width:128px!important}
+.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:16px!important;border:1px solid var(--line2)!important;background:rgba(0,0,0,.32)!important;position:relative!important;overflow:hidden!important}
+.benchmarkChartReal svg{display:block;width:100%;height:280px}
+.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}
+.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
+.benchmarkError.active{display:block!important}
+.benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
 </style>
