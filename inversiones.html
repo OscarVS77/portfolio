@@ -3912,6 +3912,56 @@ body:before{
   }
 }
 
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 
 
@@ -4191,6 +4241,56 @@ body:before{
   .heroMetric strong,.capitalCard strong,.kpi strong{font-size:24px!important;}
   .cloudPanel{max-width:320px!important;padding:20px!important;}
 }
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 
 
@@ -4217,6 +4317,56 @@ body:before{
     -webkit-overflow-scrolling:touch!important;
   }
 }
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 
 </head>
@@ -4268,6 +4418,14 @@ body:before{
         <article class="capitalCard"><label>Rentabilidad simple real</label><strong class="green">6,03%</strong><small>Desde el primer día. Simple, no anualizada.</small></article>
         <article class="capitalCard"><label>XIRR global</label><strong class="green">14,58%</strong><small>Desde el primer día. Rentabilidad anualizada.</small></article>
       </section>
+
+      <section class="dataStatusGrid pageBlock" id="dataStatusGrid">
+        <article class="card dataStatusCard"><label>Excel cargado</label><strong data-data-status="file">Sin Excel</strong><small data-data-status="file-note">Fuente principal pendiente</small></article>
+        <article class="card dataStatusCard"><label>Última carga local</label><strong data-data-status="local">Pendiente</strong><small data-data-status="local-note">Se activa al importar Excel</small></article>
+        <article class="card dataStatusCard"><label>Supabase Cloud</label><strong data-data-status="cloud" class="yellow">Sin sesión</strong><small data-data-status="cloud-note">Guardar/Cargar nube pendiente</small></article>
+        <article class="card dataStatusCard"><label>Benchmark/API</label><strong data-data-status="benchmark" class="yellow">Sin cargar</strong><small data-data-status="benchmark-note">Edge Function disponible</small></article>
+      </section>
+
 
       <div class="grid two pageBlock dashboardOps dashboardDistributionAlerts">
         <div class="dashboardDistributionBlock">
@@ -4912,6 +5070,7 @@ function benchmarkSetStatus(text, cls='yellow', note=''){
   const status=document.getElementById('benchmarkApiStatus');
   const noteEl=document.getElementById('benchmarkApiNote');
   if(status){ status.textContent=text; status.className=cls; }
+  updateDataStatus?.();
   if(noteEl && note) noteEl.textContent=note;
   const audit=document.getElementById('auditBenchmarkStatus');
   const auditNote=document.getElementById('auditBenchmarkNote');
@@ -5838,11 +5997,48 @@ function updateAuditoria(){
   set('[data-web-audit="cache-check"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : 'yellow');
 
   setNavStatus('auditoria', ok ? 'ok' : 'warn');
+  updateDataStatus?.();
 }
 
 
 const CACHE_KEY = 'portfolioOscar:lastWorkbook:v1';
 const CACHE_META_KEY = 'portfolioOscar:lastWorkbookMeta:v1';
+function formatDataStatusDate(value){
+  if(!value) return 'Pendiente';
+  const d=new Date(value);
+  if(Number.isNaN(d.getTime())) return 'Pendiente';
+  return d.toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+function setDataStatus(selector, value, cls){
+  const el=document.querySelector(`[data-data-status="${selector}"]`);
+  if(!el) return;
+  el.textContent=value;
+  if(cls!==undefined) el.className=cls || '';
+}
+function updateDataStatus(){
+  try{
+    const cacheMeta=JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
+    const fileName=importedData?.fileName || cacheMeta.fileName || '';
+    const localSaved=cacheMeta.savedAt || '';
+    const cloudSaved=localStorage.getItem('portfolioOscar:lastCloudSync:v1') || '';
+    const hasExcel=!!fileName;
+    setDataStatus('file', hasExcel ? fileName : 'Sin Excel', hasExcel ? 'green' : 'yellow');
+    setDataStatus('file-note', hasExcel ? 'Excel como fuente única' : 'Importa o carga desde nube');
+    setDataStatus('local', localSaved ? formatDataStatusDate(localSaved) : 'Pendiente', localSaved ? 'green' : 'yellow');
+    setDataStatus('local-note', localSaved ? 'Guardado en este navegador' : 'Se activa al importar Excel');
+    const logged=!!portfolioCloudSession?.user;
+    setDataStatus('cloud', logged ? 'Activo' : 'Sin sesión', logged ? 'green' : 'yellow');
+    setDataStatus('cloud-note', cloudSaved ? 'Última sync · ' + formatDataStatusDate(cloudSaved) : (logged ? 'Sesión iniciada' : 'Login pendiente'));
+    const b=document.getElementById('benchmarkApiStatus');
+    const bText=b?.textContent?.trim() || 'Sin cargar';
+    const bCls=b?.className || 'yellow';
+    setDataStatus('benchmark', bText, bCls);
+    setDataStatus('benchmark-note', bText.toLowerCase().includes('ok') || bCls.includes('green') ? 'Datos recibidos vía Edge Function' : 'Disponible cuando cargues benchmark');
+  }catch(err){
+    console.warn('No se pudo actualizar Estado de datos:', err);
+  }
+}
+
 
 function arrayBufferToBase64(buffer){
   const bytes = new Uint8Array(buffer);
@@ -5863,6 +6059,7 @@ function saveWorkbookCache(buffer, fileName){
   try{
     localStorage.setItem(CACHE_KEY, arrayBufferToBase64(buffer));
     localStorage.setItem(CACHE_META_KEY, JSON.stringify({fileName, savedAt:new Date().toISOString()}));
+    updateDataStatus?.();
     return true;
   }catch(err){
     console.warn('No se han podido guardar los datos localmente:', err);
@@ -5877,7 +6074,7 @@ function applyWorkbookAfterRead(fileName, fromCache=false){
   const missing=validateWorkbook(importedWorkbook);
   if(missing.length){ setStatus(false, `ERROR · faltan hojas: ${missing.join(', ')}`); setNavStatus('auditoria','bad'); return false; }
   importedData = {fileName:fileName || 'Excel importado'};
-  updateDashboard(); updateCartera(); updateXirr(); updateHistorial(); updateAuditoria();
+  updateDashboard(); updateCartera(); updateXirr(); updateHistorial(); updateAuditoria(); updateDataStatus?.();
   setStatus(true, fromCache ? `${fileName || 'Excel'} recuperado` : `${fileName || 'Excel'} importado`);
   setNavStatus('dashboard','ok'); setNavStatus('cartera','ok'); setNavStatus('xirr','ok'); setNavStatus('movimientos','ok'); setNavStatus('historial','ok');
   return true;
@@ -6821,6 +7018,56 @@ body:before{
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 
 
@@ -7356,6 +7603,56 @@ body:before{
 .benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
 
 </style>
 <script>
@@ -7975,6 +8272,56 @@ body:before{
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 
 <style>
@@ -8466,6 +8813,56 @@ body:before{
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 
 
@@ -8889,6 +9286,56 @@ body:before{
 .benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
 
 </style>
 <script>
@@ -9382,6 +9829,56 @@ body:before{
 .benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
 
 </style>
 <script>
@@ -9893,6 +10390,56 @@ body:before{
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 <script>
 (function(){
@@ -10341,6 +10888,56 @@ body:before{
 .benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
 
 </style>
 <script>
@@ -10810,6 +11407,56 @@ button[aria-selected="true"],
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 
 
@@ -11032,6 +11679,56 @@ button[aria-selected="true"],
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 
 <div class="cloudOverlay" id="cloudOverlay" aria-hidden="true">
@@ -11085,6 +11782,7 @@ function cloudUpdateButtons(){
   const loginBtn=document.getElementById('cloudLoginBtn');
   if(loginBtn) loginBtn.textContent = logged ? 'Salir' : (configured ? 'Entrar' : 'Cloud');
   updateCloudAudit();
+  updateDataStatus?.();
 }
 function cloudShow(){
   const overlay=document.getElementById('cloudOverlay');
@@ -11177,6 +11875,7 @@ async function cloudSaveWorkbook(){
       .upload(cloudFilePath(), blob, {upsert:true, contentType:blob.type});
     if(error) throw error;
     localStorage.setItem('portfolioOscar:lastCloudSync:v1', new Date().toISOString());
+    updateDataStatus?.();
     setStatus?.(true, 'Excel guardado en nube');
     cloudSetLine('Excel guardado en Supabase Storage.', 'ok');
     updateCloudAudit('ok');
@@ -11199,6 +11898,7 @@ async function cloudLoadWorkbook(){
     saveWorkbookCache?.(buffer, PORTFOLIO_SUPABASE_CONFIG.fileName);
     applyWorkbookAfterRead?.(PORTFOLIO_SUPABASE_CONFIG.fileName, true);
     localStorage.setItem('portfolioOscar:lastCloudSync:v1', new Date().toISOString());
+    updateDataStatus?.();
     setStatus?.(true, 'Excel cargado desde nube');
     cloudSetLine('Excel recuperado desde Supabase Storage.', 'ok');
     updateCloudAudit('ok');
@@ -11357,6 +12057,56 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
 .benchmarkHotPoint,
 .benchmarkVisiblePoint{cursor:crosshair;pointer-events:auto;}
 .benchmarkVisiblePoint:hover{filter:brightness(1.18);}
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 
 
@@ -11396,6 +12146,56 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
 }
 .benchmarkTooltipFloating strong{font-weight:720;color:#fff;}
 .benchmarkTooltipFloating span{color:var(--muted);}
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 <script>
 /* v61 · Tooltips inmediatos + puntos finales circulares y limpios */
@@ -11531,6 +12331,56 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
 #benchmark .benchmarkSummary strong{line-height:1.18!important;}
 #benchmark .benchmarkSummary p{max-width:1180px!important;}
 .benchmarkVisiblePoint{filter:none!important;}
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 <script>
 (function(){
@@ -12335,6 +13185,56 @@ body:before{
 .benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
 
 </style>
 
@@ -13223,6 +14123,56 @@ body:before{
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 
 <style>.tabs span{cursor:pointer;}
@@ -13740,6 +14690,56 @@ body:before{
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 
 <style>
@@ -14221,6 +15221,56 @@ body:before{
 .benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
 
 </style>
 <script>
@@ -14766,6 +15816,56 @@ body:before{
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
 
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
+
 </style>
 <script>
 (function(){
@@ -14996,5 +16096,55 @@ body:before{
 .benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid rgba(240,116,106,.32)!important;border-radius:13px!important;background:rgba(240,116,106,.06)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}
 .benchmarkError.active{display:block!important}
 .benchmarkTableWrap{padding:0 18px 18px!important;overflow-x:auto!important}
+
+
+/* V66 · Estado de datos operativo */
+.dataStatusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.dataStatusCard{
+  min-height:82px!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.dataStatusCard label{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  margin-bottom:8px!important;
+}
+.dataStatusCard strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:430!important;
+  line-height:1.08!important;
+  letter-spacing:-.35px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.dataStatusCard small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  margin-top:7px!important;
+}
+@media(max-width:1150px){
+  .dataStatusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .dataStatusGrid{grid-template-columns:1fr!important;gap:10px!important}
+  .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
+  .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
+}
 
 </style>
