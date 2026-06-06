@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio Oscar · v64 Mobile test v5</title>
+<title>Portfolio Oscar · v64 Mobile funcional v2</title>
 <style>
 :root{
   --bg:#0b0d0f;
@@ -3599,548 +3599,146 @@ body:before{
   line-height:1.42!important;
 }
 
-</style>
+</style><style>
 
+/* =========================================================
+   V64 MOBILE FUNCIONAL V2 · base limpia desde v63
+   Principio: no rediseñar. En móvil se separa en 3 bloques:
+   1. Navegación de páginas
+   2. Datos y nube
+   3. Contenido de la página
+   ========================================================= */
+@media (max-width: 1150px){
+  html{overflow-x:hidden!important;scrollbar-gutter:auto!important;}
+  body{overflow-x:hidden!important;background:#070809!important;-webkit-text-size-adjust:100%!important;}
 
-<!-- V64 MOBILE TEST v4 · Corrección real: v63 intacta en desktop, móvil compacto -->
-<style>
-@media (max-width: 760px){
-  :root{
-    --appPad:10px!important;
-    --sideW:auto!important;
-    --appGap:0!important;
-    --topGap:12px!important;
-    --grid-x-card:14px!important;
-    --ui-inset:14px!important;
-    --row-inset:14px!important;
-  }
-  html,body{
-    width:100%!important;
-    max-width:100%!important;
-    overflow-x:hidden!important;
-    background:#070809!important;
-    -webkit-text-size-adjust:100%!important;
-  }
-  body{
-    padding:0!important;
-  }
   .app{
-    width:100%!important;
-    max-width:100%!important;
-    padding:10px!important;
-    margin:0!important;
-    display:block!important;
+    width:100%!important;max-width:none!important;margin:0!important;padding:10px!important;display:block!important;min-height:100vh!important;
   }
-  .main{
-    width:100%!important;
-    margin-left:0!important;
-    min-width:0!important;
-  }
+  .main{width:100%!important;margin-left:0!important;min-width:0!important;}
 
-  /* Menú: deja de ser una tarjeta gigante. Pasa a cabecera compacta con scroll horizontal. */
+  /* 1 · Navegación: todas las páginas visibles, sin esconder Inicio/Dashboard */
   .sidebar{
-    position:sticky!important;
-    top:0!important;
-    left:auto!important;
-    width:100%!important;
-    height:auto!important;
-    z-index:70!important;
-    padding:8px 0 8px!important;
-    margin:0 0 10px!important;
-    border:0!important;
-    border-bottom:1px solid rgba(244,241,234,.08)!important;
-    border-radius:0!important;
-    background:linear-gradient(180deg,rgba(7,8,9,.98),rgba(7,8,9,.86))!important;
-    box-shadow:none!important;
-    backdrop-filter:blur(18px)!important;
+    position:relative!important;top:auto!important;left:auto!important;width:100%!important;height:auto!important;z-index:60!important;
+    margin:0 0 12px!important;padding:13px!important;border-radius:18px!important;overflow:visible!important;
+    background:linear-gradient(180deg,rgba(18,20,23,.96),rgba(7,8,10,.98))!important;
+    border:1px solid rgba(244,241,234,.09)!important;box-shadow:0 14px 36px rgba(0,0,0,.34)!important;
   }
-  .brand{
-    padding:0 4px 7px!important;
-    margin:0!important;
-    border:0!important;
-  }
-  .brandName{
-    font-size:15px!important;
-    line-height:1.1!important;
-    font-weight:620!important;
-    letter-spacing:-.35px!important;
-  }
+  .brand{display:block!important;padding:0 2px 11px!important;margin:0 0 10px!important;border-bottom:1px solid rgba(244,241,234,.055)!important;}
+  .brandName{display:block!important;font-size:18px!important;line-height:1.05!important;font-weight:650!important;letter-spacing:-.5px!important;color:var(--text)!important;}
   .nav{
-    display:flex!important;
-    grid-template-columns:none!important;
-    gap:7px!important;
-    overflow-x:auto!important;
-    overflow-y:hidden!important;
-    padding:0 4px 2px!important;
-    scroll-snap-type:x proximity!important;
-    -webkit-overflow-scrolling:touch!important;
-    scrollbar-width:none!important;
+    display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:7px!important;width:100%!important;padding:0!important;overflow:visible!important;
   }
-  .nav::-webkit-scrollbar{display:none!important;}
   .nav button{
-    flex:0 0 auto!important;
-    width:auto!important;
-    min-width:auto!important;
-    min-height:30px!important;
-    height:30px!important;
-    padding:0 12px!important;
-    border:1px solid rgba(244,241,234,.08)!important;
-    border-radius:999px!important;
-    background:rgba(244,241,234,.035)!important;
-    color:var(--text2)!important;
-    font-size:11px!important;
-    font-weight:610!important;
-    gap:7px!important;
-    justify-content:center!important;
-    scroll-snap-align:start!important;
-    box-shadow:none!important;
-    transform:none!important;
+    width:100%!important;min-width:0!important;height:34px!important;min-height:34px!important;padding:0 10px!important;border-radius:999px!important;
+    display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;text-align:left!important;
+    font-size:12px!important;font-weight:620!important;white-space:nowrap!important;overflow:hidden!important;
+    color:var(--text2)!important;background:rgba(244,241,234,.035)!important;border:1px solid rgba(244,241,234,.08)!important;box-shadow:none!important;transform:none!important;
   }
-  .nav button.active{
-    background:#f2c94c!important;
-    border-color:#f2c94c!important;
-    color:#070707!important;
-  }
-  .navStatus{
-    display:none!important;
-  }
-  .sideFoot{
-    display:none!important;
-  }
+  .nav button span:first-child{display:block!important;overflow:hidden!important;text-overflow:ellipsis!important;min-width:0!important;}
+  .nav button.active{background:#f2c94c!important;color:#070707!important;border-color:#f2c94c!important;}
+  .navStatus{display:inline-block!important;flex:0 0 6px!important;width:6px!important;height:6px!important;box-shadow:none!important;}
+  .nav button.active .navStatus{background:#080808!important;color:#080808!important;}
+  .sideFoot,.sideFoot.sideUpdate{position:static!important;display:block!important;width:100%!important;margin:11px 0 0!important;padding:0 2px!important;background:transparent!important;border:0!important;box-shadow:none!important;color:var(--muted)!important;font-size:10.5px!important;}
+  .sideFoot .brandDate,.brandDate{font-size:10.5px!important;color:var(--muted)!important;margin:0!important;}
 
-  /* Topbar: compacta, sin botones gigantes, con carril horizontal. */
+  /* 2 · Datos y nube: bloque global separado del título/contenido */
   .topbar{
-    position:relative!important;
-    top:auto!important;
-    width:100%!important;
-    display:block!important;
-    min-height:0!important;
-    padding:12px!important;
-    margin:0 0 12px!important;
-    border-radius:16px!important;
-    background:linear-gradient(180deg,rgba(22,25,28,.92),rgba(10,11,13,.96))!important;
-    box-shadow:0 10px 28px rgba(0,0,0,.28)!important;
+    position:relative!important;top:auto!important;z-index:30!important;width:100%!important;min-height:0!important;display:block!important;
+    margin:0 0 12px!important;padding:13px!important;border-radius:18px!important;overflow:hidden!important;
+    background:linear-gradient(180deg,rgba(20,22,25,.96),rgba(8,9,11,.98))!important;
+    border:1px solid rgba(244,241,234,.085)!important;box-shadow:0 10px 28px rgba(0,0,0,.30)!important;
   }
-  .pageTitle h1{
-    font-size:20px!important;
-    line-height:1.1!important;
-    margin:0!important;
-    font-weight:640!important;
+  .topbar:before{
+    content:'Datos y nube';display:block!important;margin:0 0 10px!important;color:var(--muted)!important;
+    font-size:10px!important;line-height:1!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.12em!important;
   }
-  .pageTitle p{
-    font-size:11px!important;
-    line-height:1.25!important;
-    margin:4px 0 10px!important;
-    max-width:100%!important;
-  }
+  .pageTitle{display:none!important;}
   .actions{
-    display:flex!important;
-    flex-wrap:nowrap!important;
-    justify-content:flex-start!important;
-    align-items:center!important;
-    gap:7px!important;
-    width:100%!important;
-    overflow-x:auto!important;
-    overflow-y:hidden!important;
-    padding:0 0 2px!important;
-    -webkit-overflow-scrolling:touch!important;
-    scrollbar-width:none!important;
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;width:100%!important;align-items:stretch!important;overflow:visible!important;padding:0!important;
   }
-  .actions::-webkit-scrollbar{display:none!important;}
-  .btn,
-  label.btn,
-  .actions .btn,
-  .actions label.btn{
-    flex:0 0 auto!important;
-    width:auto!important;
-    min-width:auto!important;
-    height:30px!important;
-    min-height:30px!important;
-    padding:0 12px!important;
-    border-radius:999px!important;
-    font-size:10.8px!important;
-    line-height:30px!important;
-    font-weight:650!important;
-    box-shadow:none!important;
+  .actions .btn,.actions label.btn,.actions .importStatus{
+    width:100%!important;min-width:0!important;height:36px!important;padding:0 10px!important;border-radius:999px!important;
+    display:flex!important;align-items:center!important;justify-content:center!important;font-size:11.5px!important;line-height:1!important;font-weight:650!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
   }
-  .importStatus{
-    flex:0 0 auto!important;
-    min-width:auto!important;
-    width:auto!important;
-    max-width:260px!important;
-    height:30px!important;
-    padding:0 11px!important;
-    border-radius:999px!important;
-    font-size:10.5px!important;
-    line-height:1!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-  }
+  .actions #cloudLoginBtn{order:1!important;}
+  .actions label[for="excelFile"]{order:2!important;}
+  .actions #cloudLoadBtn{order:3!important;}
+  .actions #cloudSaveBtn{order:4!important;}
+  .actions #backupBtn{order:5!important;}
+  .actions .importStatus{order:6!important;background:rgba(244,241,234,.025)!important;border-color:rgba(244,241,234,.07)!important;color:var(--muted)!important;}
 
-  /* Tarjetas: mismo look v63 pero escala iPhone, sin sobredimensionar. */
+  /* 3 · Contenido: compacto y estable */
+  .section.active{display:block!important;}
   .pageBlock{margin-top:12px!important;}
-  .grid,
-  .kpiStrip,
-  .capitalGrid,
-  .historyClean,
-  .dashboardOps{
-    gap:12px!important;
-  }
-  .card,
-  .kpi,
-  .capitalCard,
-  .historyKpi,
-  .yearCard,
-  .benchmarkMetric,
-  .auditWebCard{
-    border-radius:16px!important;
-    box-shadow:0 8px 24px rgba(0,0,0,.24)!important;
-  }
-  .cardHeader,
-  .benchmarkHero,
-  .auditWebHero,
-  .historyTop,
-  .yearSummary{
-    padding:16px!important;
-  }
-  .cardHeader h2,
-  .cardHeader h3,
-  .benchmarkHero h2,
-  .auditWebHero h2,
-  .historyTop h2{
-    font-size:18px!important;
-    line-height:1.12!important;
-    letter-spacing:-.45px!important;
-  }
-  .cardHeader p,
-  .benchmarkHero p,
-  .auditWebHero p,
-  .historyTop p{
-    font-size:11.2px!important;
-    line-height:1.35!important;
-    margin-top:5px!important;
-  }
+  .section.active > .pageBlock:first-child,.section.active > .grid.pageBlock:first-child,.section.active > .kpiStrip.pageBlock:first-child{margin-top:0!important;}
+  .grid,.kpiStrip,.capitalGrid,.benchmarkGrid,.auditWebGrid{gap:12px!important;}
+  .two,.three,.four,.dashboardOps,.dashboardDistributionAlerts,.historyLayout,.yearSummary,.auditHeader,.benchmarkHero{grid-template-columns:1fr!important;}
+  .card,.kpi,.capitalCard,.historyKpi,.yearCard,.benchmarkMetric,.auditWebCard{border-radius:17px!important;box-shadow:0 10px 26px rgba(0,0,0,.28)!important;}
+  .cardHeader,.benchmarkHero,.auditWebHero,.historyTop,.yearSummary{padding:16px!important;}
+  .cardHeader h2,.cardHeader h3,.benchmarkHero h2,.auditWebHero h2,.historyTop h2{font-size:20px!important;line-height:1.12!important;letter-spacing:-.55px!important;}
+  .cardHeader p,.benchmarkHero p,.auditWebHero p,.historyTop p{font-size:12px!important;line-height:1.34!important;}
 
-  /* Dashboard: contenido compacto, no “app de botones enormes”. */
   .hero{min-height:auto!important;}
-  .heroBody{
-    padding:14px 16px 16px!important;
-  }
-  .tabs,
-  .benchmarkTabs{
-    display:flex!important;
-    flex-wrap:nowrap!important;
-    gap:7px!important;
-    overflow-x:auto!important;
-    overflow-y:hidden!important;
-    padding:0 16px 12px!important;
-    -webkit-overflow-scrolling:touch!important;
-    scrollbar-width:none!important;
-  }
-  .tabs::-webkit-scrollbar,
-  .benchmarkTabs::-webkit-scrollbar{display:none!important;}
-  .tabs span,
-  .benchmarkTabs button{
-    flex:0 0 auto!important;
-    height:28px!important;
-    padding:0 10px!important;
-    border-radius:999px!important;
-    font-size:10.8px!important;
-    line-height:28px!important;
-    white-space:nowrap!important;
-  }
-  .bigValue strong{
-    font-size:34px!important;
-    line-height:1!important;
-    letter-spacing:-1.4px!important;
-  }
-  .bigValue span{font-size:17px!important;}
-  .gain{font-size:11.5px!important;}
-  .heroMetrics,
-  .capitalGrid,
-  .kpiStrip,
-  .benchmarkGrid,
-  .auditWebGrid,
-  .auditWebPages,
-  .yearSummarySide{
-    grid-template-columns:1fr!important;
-  }
-  .heroMetric,
-  .capitalCard,
-  .kpi,
-  .benchmarkMetric,
-  .auditWebCard{
-    min-height:auto!important;
-    padding:13px 14px!important;
-  }
-  .heroMetric label,
-  .capitalCard label,
-  .kpi label,
-  .benchmarkMetric span,
-  .auditWebCard span{
-    font-size:10px!important;
-    margin-bottom:6px!important;
-  }
-  .heroMetric strong,
-  .capitalCard strong,
-  .kpi strong,
-  .benchmarkMetric strong,
-  .auditWebCard strong{
-    font-size:22px!important;
-    line-height:1.05!important;
-  }
-  .heroMetric small,
-  .capitalCard small,
-  .kpi small,
-  .benchmarkMetric em,
-  .auditWebCard em{
-    font-size:10.5px!important;
-    line-height:1.3!important;
-  }
+  .heroBody{padding:14px 16px 16px!important;}
+  .bigValue strong{font-size:36px!important;letter-spacing:-1.4px!important;}
+  .bigValue span{font-size:18px!important;}
+  .heroMetrics,.kpiStrip,.capitalGrid,.yearSummarySide,.yearFacts,.auditWebGrid,.auditWebPages{grid-template-columns:1fr!important;}
+  .heroMetric,.kpi,.capitalCard,.benchmarkMetric{min-height:auto!important;padding:14px!important;}
+  .kpi strong,.capitalCard strong,.heroMetric strong,.benchmarkMetric strong{font-size:22px!important;}
 
-  /* Tablas: NO convertir en bloques raros. Mantener tabla con scroll horizontal elegante. */
-  .tableWrap,
-  .assetTableWrap,
-  .distTableWrap,
-  .annualTableWrap,
-  .benchmarkTableWrap,
-  .recoTableWrap{
-    width:auto!important;
-    margin:0 16px 16px!important;
-    padding:0!important;
-    overflow-x:auto!important;
-    overflow-y:hidden!important;
-    border-radius:14px!important;
-    -webkit-overflow-scrolling:touch!important;
+  .tabs,.benchmarkTabs{
+    display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:none!important;
+    gap:8px!important;padding:12px 16px 0!important;
   }
-  .tableWrap .table,
-  .assetTable,
-  .distTable,
-  .annualTable,
-  .benchmarkTable,
-  #movementsTable{
-    min-width:720px!important;
-    width:720px!important;
-    table-layout:auto!important;
-  }
-  .assetTable th,
-  .assetTable td,
-  .distTable th,
-  .distTable td,
-  .annualTable th,
-  .annualTable td,
-  .benchmarkTable th,
-  .benchmarkTable td,
-  .tableWrap .table th,
-  .tableWrap .table td{
-    font-size:11px!important;
-    padding:10px 12px!important;
-    height:auto!important;
-    white-space:nowrap!important;
-  }
-  .distAsset strong,
-  .assetNameText,
-  .assetName strong{
-    font-size:12px!important;
-  }
-  .statusPill{
-    height:24px!important;
-    padding:0 9px!important;
-    font-size:10px!important;
-  }
-  .legend{
-    padding:0!important;
-    margin:0!important;
-  }
-  .distributionCard .legend{
-    padding:0!important;
-    margin:0!important;
-  }
-  .distributionCard .sourceBox,
-  .benchmarkNote,
-  .benchmarkSummary{
-    margin:0 16px 16px!important;
-  }
+  .tabs::-webkit-scrollbar,.benchmarkTabs::-webkit-scrollbar{display:none!important;}
+  .tabs span,.benchmarkTabs button{flex:0 0 auto!important;white-space:nowrap!important;height:32px!important;padding:0 12px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:11.5px!important;}
 
-  /* Movimientos: filtros compactos. */
-  #movimientos .movementsToolbar,
-  .movementsToolbar{
-    margin:0 16px 12px!important;
-    padding:10px!important;
+  .tableWrap,.assetTableWrap,.annualTableWrap,.benchmarkTableWrap,.distTableWrap,.recoTableWrap{
+    width:auto!important;max-width:none!important;margin:12px 16px 16px!important;padding:0!important;overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important;border-radius:14px!important;
   }
-  .movementToolbarTop,
-  .movementToolbarBottom{
-    display:block!important;
-    padding:0!important;
-    border:0!important;
-  }
-  .movementToolbarBottom{margin-top:8px!important;}
-  .movementModePills,
-  .filterPills{
-    flex-wrap:nowrap!important;
-    overflow-x:auto!important;
-    gap:7px!important;
-    -webkit-overflow-scrolling:touch!important;
-    scrollbar-width:none!important;
-  }
-  .movementModePills::-webkit-scrollbar,
-  .filterPills::-webkit-scrollbar{display:none!important;}
-  .filterPill{
-    flex:0 0 auto!important;
-    height:28px!important;
-    padding:0 10px!important;
-    font-size:10.5px!important;
-  }
-  #movementsTable{min-width:960px!important;width:960px!important;}
+  .table,.assetTable,.annualTable,.benchmarkTable,.distTable,.recoTable,#movementsTable{min-width:760px!important;}
+  .table th,.table td,.assetTable th,.assetTable td,.annualTable th,.annualTable td,.benchmarkTable th,.benchmarkTable td,.distTable th,.distTable td{font-size:11.5px!important;padding-top:10px!important;padding-bottom:10px!important;white-space:nowrap!important;}
 
-  /* Benchmark: compacto y sin deformar gráfica. */
-  .benchmarkHero{
-    display:block!important;
-  }
-  .benchmarkState{
-    margin-top:12px!important;
-    padding:12px!important;
-    text-align:left!important;
-  }
-  .benchmarkState strong{font-size:22px!important;}
-  .benchmarkApiActions{
-    display:flex!important;
-    flex-wrap:nowrap!important;
-    gap:7px!important;
-    overflow-x:auto!important;
-    padding:0 16px 12px!important;
-    scrollbar-width:none!important;
-  }
+  .benchmarkHero{display:block!important;}
+  .benchmarkState,.auditWebState{margin-top:14px!important;text-align:left!important;}
+  .benchmarkApiActions{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;gap:8px!important;padding:12px 16px 0!important;scrollbar-width:none!important;}
   .benchmarkApiActions::-webkit-scrollbar{display:none!important;}
-  .benchmarkApiActions .btn{
-    flex:0 0 auto!important;
-    height:30px!important;
-    min-width:auto!important;
-  }
-  .benchmarkChartReal{
-    margin:0 16px 14px!important;
-    min-height:220px!important;
-    height:220px!important;
-    border-radius:14px!important;
-  }
-  .benchmarkChartReal svg{
-    height:220px!important;
-  }
-  .benchmarkLegend{
-    margin:0 16px 14px!important;
-    font-size:10.8px!important;
-    gap:10px!important;
-  }
-  .benchmarkSummary{
-    padding:13px!important;
-  }
-  .benchmarkSummary strong{font-size:14px!important;}
-  .benchmarkSummary p{font-size:11px!important;}
+  .benchmarkApiActions .btn{flex:0 0 auto!important;height:34px!important;min-width:auto!important;padding:0 13px!important;}
+  .benchmarkChartReal{margin:14px 16px 16px!important;min-height:230px!important;}
+  .benchmarkChartReal svg{height:230px!important;}
+  .benchmarkLegend,.benchmarkSummary,.benchmarkError,.benchmarkNote{margin-left:16px!important;margin-right:16px!important;}
 
-  /* Historial y auditoría. */
-  .historyTop{
-    display:block!important;
-  }
-  .yearPills{
-    display:flex!important;
-    flex-wrap:nowrap!important;
-    overflow-x:auto!important;
-    gap:7px!important;
-    justify-content:flex-start!important;
-    margin-top:12px!important;
-    scrollbar-width:none!important;
-  }
-  .yearPills::-webkit-scrollbar{display:none!important;}
-  .yearPills button{
-    flex:0 0 auto!important;
-    min-width:74px!important;
-    padding:8px 10px!important;
-  }
-  .yearSummary{
-    display:block!important;
-  }
-  .yearSummaryMain h2{
-    font-size:32px!important;
-    white-space:normal!important;
-  }
-  .yearSummarySide{
-    margin-top:12px!important;
-    gap:8px!important;
-  }
-  .auditWebHero{
-    display:block!important;
-  }
-  .auditWebState{
-    margin-top:12px!important;
-    text-align:left!important;
-    padding:12px!important;
-  }
-  .auditWebPages{
-    padding:0 16px 16px!important;
-  }
+  #movimientos .movementsToolbar,.movementsToolbar{margin:12px 16px 0!important;}
+  .movementToolbarTop,.movementToolbarBottom{display:block!important;}
+  .movementModePills,.filterPills{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;gap:8px!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:none!important;}
+  .movementModePills::-webkit-scrollbar,.filterPills::-webkit-scrollbar{display:none!important;}
+  .filterPill{flex:0 0 auto!important;}
 
-  /* Cloud: corregido de verdad. Botones normales, no óvalos gigantes. */
-  .cloudOverlay{
-    padding:16px!important;
-    align-items:center!important;
-    justify-items:center!important;
-  }
-  .cloudPanel{
-    width:100%!important;
-    max-width:360px!important;
-    border-radius:20px!important;
-    padding:18px!important;
-    box-shadow:0 24px 70px rgba(0,0,0,.62)!important;
-  }
-  .cloudPanel h2{
-    font-size:21px!important;
-    line-height:1.08!important;
-    letter-spacing:-.5px!important;
-  }
-  .cloudPanel p{
-    margin:8px 0 14px!important;
-    font-size:12px!important;
-    line-height:1.35!important;
-  }
+  .cloudOverlay{padding:14px!important;align-items:center!important;justify-items:center!important;}
+  .cloudPanel{width:100%!important;max-width:360px!important;border-radius:18px!important;padding:18px!important;}
+  .cloudPanel h2{font-size:20px!important;line-height:1.1!important;}
+  .cloudPanel p{font-size:12px!important;margin:8px 0 14px!important;}
   .cloudForm{gap:9px!important;}
-  .cloudForm input{
-    height:38px!important;
-    border-radius:12px!important;
-    font-size:13px!important;
-    padding:0 12px!important;
-  }
-  .cloudFormActions{
-    display:flex!important;
-    flex-direction:row!important;
-    gap:8px!important;
-    margin-top:3px!important;
-  }
-  .cloudFormActions .btn,
-  .cloudPanel .btn,
-  .cloudPanel button.btn{
-    flex:1 1 0!important;
-    width:auto!important;
-    min-width:0!important;
-    height:34px!important;
-    min-height:34px!important;
-    padding:0 10px!important;
-    border-radius:999px!important;
-    font-size:11.5px!important;
-    line-height:34px!important;
-  }
-  .cloudStatusLine{
-    margin-top:12px!important;
-    font-size:11px!important;
-    line-height:1.3!important;
-  }
+  .cloudForm input{height:40px!important;border-radius:12px!important;font-size:13px!important;}
+  .cloudFormActions{display:flex!important;flex-direction:row!important;gap:8px!important;margin-top:2px!important;}
+  .cloudFormActions .btn{flex:1 1 0!important;height:38px!important;min-width:0!important;border-radius:999px!important;font-size:12px!important;}
 
-  /* Evita que Safari tape el final con su barra inferior. */
-  .section.active{
-    padding-bottom:88px!important;
-  }
+  .section:last-child{padding-bottom:22px!important;}
+}
+
+@media (max-width: 560px){
+  .nav{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+}
+@media (max-width: 390px){
+  .app{padding:8px!important;}
+  .sidebar,.topbar{border-radius:16px!important;}
+  .nav button{height:32px!important;padding:0 10px!important;font-size:11.4px!important;}
+  .actions .btn,.actions label.btn,.actions .importStatus{height:34px!important;font-size:11px!important;}
+  .cardHeader h2,.cardHeader h3,.benchmarkHero h2{font-size:19px!important;}
+  .bigValue strong{font-size:32px!important;}
 }
 </style>
-
 </head>
 <body>
 <div class="app">
@@ -4162,7 +3760,7 @@ body:before{
         <button class="btn" id="backupBtn" type="button">Exportar backup</button>
         <button class="btn cloudBtn" id="cloudSaveBtn" type="button" disabled>Guardar nube</button>
         <button class="btn cloudBtn" id="cloudLoadBtn" type="button" disabled>Cargar nube</button>
-        <button class="btn cloudBtn cloudLoginVisible" id="cloudLoginBtn" type="button">Cloud / Login</button>
+        <button class="btn cloudBtn" id="cloudLoginBtn" type="button">Cloud</button>
         <span class="importStatus" id="importStatus"><span class="bullet bWarn"></span>Diseño demo · sin Excel conectado</span>
       </div>
     </div>
@@ -11005,7 +10603,7 @@ function cloudUpdateButtons(){
   document.getElementById('cloudSaveBtn')?.toggleAttribute('disabled', !(configured && logged));
   document.getElementById('cloudLoadBtn')?.toggleAttribute('disabled', !(configured && logged));
   const loginBtn=document.getElementById('cloudLoginBtn');
-  if(loginBtn) loginBtn.textContent = logged ? 'Salir' : 'Cloud / Login';
+  if(loginBtn) loginBtn.textContent = logged ? 'Salir' : (configured ? 'Entrar' : 'Cloud');
   updateCloudAudit();
 }
 function cloudShow(){
@@ -11563,84 +11161,20 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
 </script>
 
 
-
-<!-- V64 Mobile v5 · Cloud/Login siempre visible en iPhone -->
-<style>
-@media(max-width:680px){
-  .actions{
-    display:grid!important;
-    grid-template-columns:1fr 1fr!important;
-    gap:8px!important;
-    overflow:visible!important;
-    padding:0!important;
+<script>
+(function(){
+  function isMobileLayout(){ return window.matchMedia && window.matchMedia('(max-width: 1150px)').matches; }
+  function mobilePolish(){
+    if(!isMobileLayout()) return;
+    const cloud=document.getElementById('cloudLoginBtn');
+    if(cloud){ cloud.textContent='Cloud'; }
   }
-  .actions .btn,
-  .actions label.btn,
-  .actions .importStatus{
-    width:100%!important;
-    min-width:0!important;
-    max-width:none!important;
-    height:34px!important;
-    min-height:34px!important;
-    padding:0 10px!important;
-    font-size:11px!important;
-    line-height:34px!important;
-    text-align:center!important;
-    justify-content:center!important;
-  }
-  #cloudLoginBtn{
-    display:inline-flex!important;
-    order:2!important;
-    background:linear-gradient(180deg,#ffe071,#f2c94c)!important;
-    color:#070707!important;
-    border-color:rgba(242,201,76,.70)!important;
-    font-weight:720!important;
-  }
-  label[for="excelFile"]{order:1!important;}
-  #cloudLoadBtn{order:3!important;}
-  #cloudSaveBtn{order:4!important;}
-  #backupBtn{order:5!important;}
-  #importStatus{
-    order:6!important;
-    grid-column:1 / -1!important;
-    justify-content:center!important;
-    white-space:nowrap!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-  }
-  .cloudOverlay{
-    padding:18px!important;
-    align-items:center!important;
-    justify-content:center!important;
-  }
-  .cloudPanel{
-    width:min(100%,340px)!important;
-    max-width:340px!important;
-    padding:18px!important;
-    border-radius:18px!important;
-    transform:none!important;
-  }
-  .cloudPanel h2{font-size:20px!important;margin-bottom:6px!important;}
-  .cloudPanel p{font-size:12px!important;margin:0 0 14px!important;}
-  .cloudForm input{
-    height:38px!important;
-    border-radius:11px!important;
-    font-size:13px!important;
-  }
-  .cloudFormActions{
-    display:grid!important;
-    grid-template-columns:1fr 1fr!important;
-    gap:8px!important;
-  }
-  .cloudFormActions .btn{
-    height:34px!important;
-    min-height:34px!important;
-    border-radius:999px!important;
-    font-size:11.5px!important;
-  }
-}
-</style>
-
+  document.addEventListener('DOMContentLoaded', mobilePolish);
+  window.addEventListener('load', mobilePolish);
+  window.addEventListener('resize', mobilePolish);
+  setInterval(mobilePolish, 1200);
+})();
+</script>
 </body>
 </html>
 <style>
