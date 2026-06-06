@@ -4193,6 +4193,32 @@ body:before{
 }
 </style>
 
+
+<style>
+/* V64 mobile dashboard v3 · scroll fix iPhone */
+@media (max-width:760px){
+  html,body{
+    min-height:100%!important;
+    height:auto!important;
+    overflow-y:auto!important;
+    overscroll-behavior-y:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  .app,.main,#dashboard{
+    min-height:auto!important;
+    height:auto!important;
+    overflow:visible!important;
+  }
+  .topbar,.sidebar{
+    position:relative!important;
+  }
+  .cloudOverlay.active{
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -11620,16 +11646,22 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
   function isMobileDashboard(){ return window.matchMedia('(max-width: 760px)').matches; }
   function forceMobileDashboard(){
     if(!isMobileDashboard()) return;
-    try{
-      if(typeof show === 'function') show('dashboard');
-    }catch(e){}
+    /* iPhone: no usamos show('dashboard') porque esa función hace window.scrollTo(0)
+       y Safari dispara resize al ocultar/mostrar la barra del navegador.
+       Resultado anterior: al intentar bajar, la página volvía arriba. */
+    document.querySelectorAll('.section').forEach(function(section){
+      section.classList.toggle('active', section.id === 'dashboard');
+    });
+    document.querySelectorAll('.nav button').forEach(function(button){
+      button.classList.toggle('active', button.dataset.page === 'dashboard');
+    });
     var title=document.getElementById('title');
     var subtitle=document.getElementById('subtitle');
     if(title) title.textContent='Dashboard móvil';
     if(subtitle) subtitle.textContent='Resumen principal de la cartera';
   }
-  window.addEventListener('DOMContentLoaded', forceMobileDashboard);
-  window.addEventListener('resize', forceMobileDashboard);
+  window.addEventListener('DOMContentLoaded', forceMobileDashboard, {once:true});
+  window.addEventListener('orientationchange', function(){ setTimeout(forceMobileDashboard, 250); });
 })();
 </script>
 
