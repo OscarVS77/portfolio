@@ -4421,7 +4421,7 @@ body:before{
 
       <section class="dataStatusGrid pageBlock" id="dataStatusGrid">
         <article class="card dataStatusCard"><label>Excel cargado</label><strong data-data-status="file">Sin Excel</strong><small data-data-status="file-note">Fuente principal pendiente</small></article>
-        <article class="card dataStatusCard"><label>Última carga local</label><strong data-data-status="local">Pendiente</strong><small data-data-status="local-note">Se activa al importar Excel</small></article>
+        <article class="card dataStatusCard"><label>Excel importado</label><strong data-data-status="local">Pendiente</strong><small data-data-status="local-note">Día y hora de importación/carga</small></article>
         <article class="card dataStatusCard"><label>Supabase Cloud</label><strong data-data-status="cloud" class="yellow">Sin sesión</strong><small data-data-status="cloud-note">Guardar/Cargar nube pendiente</small></article>
         <article class="card dataStatusCard"><label>Benchmark/API</label><strong data-data-status="benchmark" class="yellow">Sin cargar</strong><small data-data-status="benchmark-note">Edge Function disponible</small></article>
       </section>
@@ -6021,14 +6021,24 @@ function updateDataStatus(){
     const fileName=importedData?.fileName || cacheMeta.fileName || '';
     const localSaved=cacheMeta.savedAt || '';
     const cloudSaved=localStorage.getItem('portfolioOscar:lastCloudSync:v1') || '';
+    const cloudUploaded=localStorage.getItem('portfolioOscar:lastCloudUpload:v1') || '';
+    const cloudDownloaded=localStorage.getItem('portfolioOscar:lastCloudDownload:v1') || '';
     const hasExcel=!!fileName;
     setDataStatus('file', hasExcel ? fileName : 'Sin Excel', hasExcel ? 'green' : 'yellow');
     setDataStatus('file-note', hasExcel ? 'Excel como fuente única' : 'Importa o carga desde nube');
     setDataStatus('local', localSaved ? formatDataStatusDate(localSaved) : 'Pendiente', localSaved ? 'green' : 'yellow');
-    setDataStatus('local-note', localSaved ? 'Guardado en este navegador' : 'Se activa al importar Excel');
+    setDataStatus('local-note', localSaved ? 'Importado/cargado en este navegador' : 'Se activa al importar Excel');
     const logged=!!portfolioCloudSession?.user;
     setDataStatus('cloud', logged ? 'Activo' : 'Sin sesión', logged ? 'green' : 'yellow');
-    setDataStatus('cloud-note', cloudSaved ? 'Última sync · ' + formatDataStatusDate(cloudSaved) : (logged ? 'Sesión iniciada' : 'Login pendiente'));
+    let cloudNote = logged ? 'Sesión iniciada' : 'Login pendiente';
+    if(cloudUploaded){
+      cloudNote = 'Excel subido · ' + formatDataStatusDate(cloudUploaded);
+    }else if(cloudDownloaded){
+      cloudNote = 'Cargado desde nube · ' + formatDataStatusDate(cloudDownloaded);
+    }else if(cloudSaved){
+      cloudNote = 'Última actividad · ' + formatDataStatusDate(cloudSaved);
+    }
+    setDataStatus('cloud-note', cloudNote);
     const b=document.getElementById('benchmarkApiStatus');
     const bText=b?.textContent?.trim() || 'Sin cargar';
     const bCls=b?.className || 'yellow';
@@ -11874,7 +11884,9 @@ async function cloudSaveWorkbook(){
       .from(PORTFOLIO_SUPABASE_CONFIG.bucket)
       .upload(cloudFilePath(), blob, {upsert:true, contentType:blob.type});
     if(error) throw error;
-    localStorage.setItem('portfolioOscar:lastCloudSync:v1', new Date().toISOString());
+    const nowIso = new Date().toISOString();
+    localStorage.setItem('portfolioOscar:lastCloudSync:v1', nowIso);
+    localStorage.setItem('portfolioOscar:lastCloudUpload:v1', nowIso);
     updateDataStatus?.();
     setStatus?.(true, 'Excel guardado en nube');
     cloudSetLine('Excel guardado en Supabase Storage.', 'ok');
@@ -11897,7 +11909,9 @@ async function cloudLoadWorkbook(){
     importedWorkbook = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
     saveWorkbookCache?.(buffer, PORTFOLIO_SUPABASE_CONFIG.fileName);
     applyWorkbookAfterRead?.(PORTFOLIO_SUPABASE_CONFIG.fileName, true);
-    localStorage.setItem('portfolioOscar:lastCloudSync:v1', new Date().toISOString());
+    const nowIso = new Date().toISOString();
+    localStorage.setItem('portfolioOscar:lastCloudSync:v1', nowIso);
+    localStorage.setItem('portfolioOscar:lastCloudDownload:v1', nowIso);
     updateDataStatus?.();
     setStatus?.(true, 'Excel cargado desde nube');
     cloudSetLine('Excel recuperado desde Supabase Storage.', 'ok');
