@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio Oscar · v64 Mobile funcional v2</title>
+<title>Portfolio Oscar · v64 Mobile Dashboard</title>
 <style>
 :root{
   --bg:#0b0d0f;
@@ -3599,146 +3599,600 @@ body:before{
   line-height:1.42!important;
 }
 
-</style><style>
+
 
 /* =========================================================
-   V64 MOBILE FUNCIONAL V2 · base limpia desde v63
-   Principio: no rediseñar. En móvil se separa en 3 bloques:
-   1. Navegación de páginas
-   2. Datos y nube
-   3. Contenido de la página
+   V64 MOBILE DASHBOARD · enfoque correcto
+   Desktop: se mantiene la v63 completa.
+   Mobile/iPhone: solo Dashboard informativo, sin páginas extra.
    ========================================================= */
-@media (max-width: 1150px){
-  html{overflow-x:hidden!important;scrollbar-gutter:auto!important;}
-  body{overflow-x:hidden!important;background:#070809!important;-webkit-text-size-adjust:100%!important;}
-
+@media (max-width: 760px){
+  html,body{
+    background:#070809!important;
+    overflow-x:hidden!important;
+    -webkit-text-size-adjust:100%!important;
+  }
+  body:before{
+    opacity:.55!important;
+  }
   .app{
-    width:100%!important;max-width:none!important;margin:0!important;padding:10px!important;display:block!important;min-height:100vh!important;
+    width:100%!important;
+    max-width:none!important;
+    padding:10px!important;
+    display:block!important;
   }
-  .main{width:100%!important;margin-left:0!important;min-width:0!important;}
-
-  /* 1 · Navegación: todas las páginas visibles, sin esconder Inicio/Dashboard */
   .sidebar{
-    position:relative!important;top:auto!important;left:auto!important;width:100%!important;height:auto!important;z-index:60!important;
-    margin:0 0 12px!important;padding:13px!important;border-radius:18px!important;overflow:visible!important;
-    background:linear-gradient(180deg,rgba(18,20,23,.96),rgba(7,8,10,.98))!important;
-    border:1px solid rgba(244,241,234,.09)!important;box-shadow:0 14px 36px rgba(0,0,0,.34)!important;
+    position:relative!important;
+    top:auto!important;
+    left:auto!important;
+    width:100%!important;
+    height:auto!important;
+    margin:0 0 10px!important;
+    padding:16px!important;
+    border-radius:20px!important;
+    background:linear-gradient(180deg,rgba(20,22,25,.94),rgba(8,9,11,.96))!important;
+    box-shadow:0 12px 34px rgba(0,0,0,.32)!important;
   }
-  .brand{display:block!important;padding:0 2px 11px!important;margin:0 0 10px!important;border-bottom:1px solid rgba(244,241,234,.055)!important;}
-  .brandName{display:block!important;font-size:18px!important;line-height:1.05!important;font-weight:650!important;letter-spacing:-.5px!important;color:var(--text)!important;}
+  .brand{
+    padding:0!important;
+    margin:0!important;
+    border:0!important;
+  }
+  .brandName{
+    font-size:23px!important;
+    font-weight:690!important;
+    letter-spacing:-.7px!important;
+    line-height:1.05!important;
+  }
   .nav{
-    display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:7px!important;width:100%!important;padding:0!important;overflow:visible!important;
+    display:none!important;
   }
-  .nav button{
-    width:100%!important;min-width:0!important;height:34px!important;min-height:34px!important;padding:0 10px!important;border-radius:999px!important;
-    display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;text-align:left!important;
-    font-size:12px!important;font-weight:620!important;white-space:nowrap!important;overflow:hidden!important;
-    color:var(--text2)!important;background:rgba(244,241,234,.035)!important;border:1px solid rgba(244,241,234,.08)!important;box-shadow:none!important;transform:none!important;
+  .sideFoot.sideUpdate{
+    position:static!important;
+    display:block!important;
+    margin:10px 0 0!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
   }
-  .nav button span:first-child{display:block!important;overflow:hidden!important;text-overflow:ellipsis!important;min-width:0!important;}
-  .nav button.active{background:#f2c94c!important;color:#070707!important;border-color:#f2c94c!important;}
-  .navStatus{display:inline-block!important;flex:0 0 6px!important;width:6px!important;height:6px!important;box-shadow:none!important;}
-  .nav button.active .navStatus{background:#080808!important;color:#080808!important;}
-  .sideFoot,.sideFoot.sideUpdate{position:static!important;display:block!important;width:100%!important;margin:11px 0 0!important;padding:0 2px!important;background:transparent!important;border:0!important;box-shadow:none!important;color:var(--muted)!important;font-size:10.5px!important;}
-  .sideFoot .brandDate,.brandDate{font-size:10.5px!important;color:var(--muted)!important;margin:0!important;}
-
-  /* 2 · Datos y nube: bloque global separado del título/contenido */
+  .sideFoot.sideUpdate .brandDate{
+    font-size:11.5px!important;
+    color:var(--muted)!important;
+  }
+  .main{
+    margin-left:0!important;
+    width:100%!important;
+  }
   .topbar{
-    position:relative!important;top:auto!important;z-index:30!important;width:100%!important;min-height:0!important;display:block!important;
-    margin:0 0 12px!important;padding:13px!important;border-radius:18px!important;overflow:hidden!important;
-    background:linear-gradient(180deg,rgba(20,22,25,.96),rgba(8,9,11,.98))!important;
-    border:1px solid rgba(244,241,234,.085)!important;box-shadow:0 10px 28px rgba(0,0,0,.30)!important;
+    position:relative!important;
+    top:auto!important;
+    z-index:1!important;
+    display:block!important;
+    min-height:0!important;
+    margin:0 0 10px!important;
+    padding:16px!important;
+    border-radius:20px!important;
+    background:linear-gradient(180deg,rgba(20,22,25,.94),rgba(8,9,11,.96))!important;
+    box-shadow:0 12px 34px rgba(0,0,0,.28)!important;
   }
-  .topbar:before{
-    content:'Datos y nube';display:block!important;margin:0 0 10px!important;color:var(--muted)!important;
-    font-size:10px!important;line-height:1!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.12em!important;
+  .pageTitle h1{
+    font-size:22px!important;
+    font-weight:680!important;
+    letter-spacing:-.65px!important;
   }
-  .pageTitle{display:none!important;}
+  .pageTitle p{
+    font-size:12px!important;
+    color:var(--muted)!important;
+    margin-top:5px!important;
+  }
+  .pageTitle p:after{
+    content:' · Vista móvil solo lectura';
+  }
   .actions{
-    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;width:100%!important;align-items:stretch!important;overflow:visible!important;padding:0!important;
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+    margin-top:14px!important;
+    width:100%!important;
+    overflow:visible!important;
   }
-  .actions .btn,.actions label.btn,.actions .importStatus{
-    width:100%!important;min-width:0!important;height:36px!important;padding:0 10px!important;border-radius:999px!important;
-    display:flex!important;align-items:center!important;justify-content:center!important;font-size:11.5px!important;line-height:1!important;font-weight:650!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+  .btn,label.btn,.importStatus{
+    width:100%!important;
+    min-width:0!important;
+    height:38px!important;
+    padding:0 12px!important;
+    border-radius:999px!important;
+    font-size:12px!important;
+    font-weight:650!important;
+    white-space:nowrap!important;
   }
-  .actions #cloudLoginBtn{order:1!important;}
-  .actions label[for="excelFile"]{order:2!important;}
-  .actions #cloudLoadBtn{order:3!important;}
-  .actions #cloudSaveBtn{order:4!important;}
-  .actions #backupBtn{order:5!important;}
-  .actions .importStatus{order:6!important;background:rgba(244,241,234,.025)!important;border-color:rgba(244,241,234,.07)!important;color:var(--muted)!important;}
-
-  /* 3 · Contenido: compacto y estable */
-  .section.active{display:block!important;}
-  .pageBlock{margin-top:12px!important;}
-  .section.active > .pageBlock:first-child,.section.active > .grid.pageBlock:first-child,.section.active > .kpiStrip.pageBlock:first-child{margin-top:0!important;}
-  .grid,.kpiStrip,.capitalGrid,.benchmarkGrid,.auditWebGrid{gap:12px!important;}
-  .two,.three,.four,.dashboardOps,.dashboardDistributionAlerts,.historyLayout,.yearSummary,.auditHeader,.benchmarkHero{grid-template-columns:1fr!important;}
-  .card,.kpi,.capitalCard,.historyKpi,.yearCard,.benchmarkMetric,.auditWebCard{border-radius:17px!important;box-shadow:0 10px 26px rgba(0,0,0,.28)!important;}
-  .cardHeader,.benchmarkHero,.auditWebHero,.historyTop,.yearSummary{padding:16px!important;}
-  .cardHeader h2,.cardHeader h3,.benchmarkHero h2,.auditWebHero h2,.historyTop h2{font-size:20px!important;line-height:1.12!important;letter-spacing:-.55px!important;}
-  .cardHeader p,.benchmarkHero p,.auditWebHero p,.historyTop p{font-size:12px!important;line-height:1.34!important;}
-
-  .hero{min-height:auto!important;}
-  .heroBody{padding:14px 16px 16px!important;}
-  .bigValue strong{font-size:36px!important;letter-spacing:-1.4px!important;}
-  .bigValue span{font-size:18px!important;}
-  .heroMetrics,.kpiStrip,.capitalGrid,.yearSummarySide,.yearFacts,.auditWebGrid,.auditWebPages{grid-template-columns:1fr!important;}
-  .heroMetric,.kpi,.capitalCard,.benchmarkMetric{min-height:auto!important;padding:14px!important;}
-  .kpi strong,.capitalCard strong,.heroMetric strong,.benchmarkMetric strong{font-size:22px!important;}
-
-  .tabs,.benchmarkTabs{
-    display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:none!important;
-    gap:8px!important;padding:12px 16px 0!important;
+  .importStatus{
+    grid-column:1 / -1!important;
+    justify-content:center!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    color:var(--text2)!important;
   }
-  .tabs::-webkit-scrollbar,.benchmarkTabs::-webkit-scrollbar{display:none!important;}
-  .tabs span,.benchmarkTabs button{flex:0 0 auto!important;white-space:nowrap!important;height:32px!important;padding:0 12px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:11.5px!important;}
-
-  .tableWrap,.assetTableWrap,.annualTableWrap,.benchmarkTableWrap,.distTableWrap,.recoTableWrap{
-    width:auto!important;max-width:none!important;margin:12px 16px 16px!important;padding:0!important;overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important;border-radius:14px!important;
+  #backupBtn{display:none!important;}
+  .section:not(#dashboard){display:none!important;}
+  #dashboard{display:block!important;}
+  .pageBlock{margin-top:10px!important;}
+  .grid,.kpiStrip,.capitalGrid,.dashboardOps{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:10px!important;
   }
-  .table,.assetTable,.annualTable,.benchmarkTable,.distTable,.recoTable,#movementsTable{min-width:760px!important;}
-  .table th,.table td,.assetTable th,.assetTable td,.annualTable th,.annualTable td,.benchmarkTable th,.benchmarkTable td,.distTable th,.distTable td{font-size:11.5px!important;padding-top:10px!important;padding-bottom:10px!important;white-space:nowrap!important;}
-
-  .benchmarkHero{display:block!important;}
-  .benchmarkState,.auditWebState{margin-top:14px!important;text-align:left!important;}
-  .benchmarkApiActions{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;gap:8px!important;padding:12px 16px 0!important;scrollbar-width:none!important;}
-  .benchmarkApiActions::-webkit-scrollbar{display:none!important;}
-  .benchmarkApiActions .btn{flex:0 0 auto!important;height:34px!important;min-width:auto!important;padding:0 13px!important;}
-  .benchmarkChartReal{margin:14px 16px 16px!important;min-height:230px!important;}
-  .benchmarkChartReal svg{height:230px!important;}
-  .benchmarkLegend,.benchmarkSummary,.benchmarkError,.benchmarkNote{margin-left:16px!important;margin-right:16px!important;}
-
-  #movimientos .movementsToolbar,.movementsToolbar{margin:12px 16px 0!important;}
-  .movementToolbarTop,.movementToolbarBottom{display:block!important;}
-  .movementModePills,.filterPills{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;gap:8px!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:none!important;}
-  .movementModePills::-webkit-scrollbar,.filterPills::-webkit-scrollbar{display:none!important;}
-  .filterPill{flex:0 0 auto!important;}
-
-  .cloudOverlay{padding:14px!important;align-items:center!important;justify-items:center!important;}
-  .cloudPanel{width:100%!important;max-width:360px!important;border-radius:18px!important;padding:18px!important;}
-  .cloudPanel h2{font-size:20px!important;line-height:1.1!important;}
-  .cloudPanel p{font-size:12px!important;margin:8px 0 14px!important;}
-  .cloudForm{gap:9px!important;}
-  .cloudForm input{height:40px!important;border-radius:12px!important;font-size:13px!important;}
-  .cloudFormActions{display:flex!important;flex-direction:row!important;gap:8px!important;margin-top:2px!important;}
-  .cloudFormActions .btn{flex:1 1 0!important;height:38px!important;min-width:0!important;border-radius:999px!important;font-size:12px!important;}
-
-  .section:last-child{padding-bottom:22px!important;}
+  .card,.kpi,.capitalCard{
+    border-radius:20px!important;
+    border-color:rgba(244,241,234,.08)!important;
+    background:linear-gradient(180deg,rgba(25,28,31,.96),rgba(9,10,12,.98))!important;
+    box-shadow:0 12px 28px rgba(0,0,0,.28)!important;
+  }
+  .cardHeader{
+    padding:18px 18px 0!important;
+  }
+  .cardHeader h2,.cardHeader h3{
+    font-size:22px!important;
+    line-height:1.05!important;
+    font-weight:700!important;
+    letter-spacing:-.7px!important;
+  }
+  .cardHeader p{
+    font-size:13px!important;
+    line-height:1.32!important;
+    margin-top:7px!important;
+    color:var(--muted)!important;
+  }
+  .hero{
+    min-height:0!important;
+  }
+  .heroBody{
+    padding:16px 18px 18px!important;
+  }
+  .tabs{
+    display:flex!important;
+    gap:8px!important;
+    overflow-x:auto!important;
+    padding:14px 18px 0!important;
+    scrollbar-width:none!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  .tabs::-webkit-scrollbar{display:none!important;}
+  .tabs span{
+    flex:0 0 auto!important;
+    height:34px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    padding:0 13px!important;
+    border-radius:999px!important;
+    border:1px solid rgba(244,241,234,.11)!important;
+    background:rgba(244,241,234,.035)!important;
+    color:var(--text2)!important;
+    font-size:12px!important;
+    font-weight:650!important;
+  }
+  .tabs .active{
+    background:#f2c94c!important;
+    border-color:#f2c94c!important;
+    color:#070707!important;
+  }
+  .heroBody > div:first-child{
+    display:none!important;
+  }
+  .bigValue{
+    background:rgba(0,0,0,.40)!important;
+    border:1px solid rgba(244,241,234,.07)!important;
+    border-radius:18px!important;
+    padding:18px!important;
+  }
+  .bigValue strong{
+    font-size:42px!important;
+    font-weight:390!important;
+    letter-spacing:-1.8px!important;
+  }
+  .bigValue span{
+    font-size:21px!important;
+  }
+  .gain{
+    font-size:13px!important;
+    margin-top:7px!important;
+  }
+  .heroMetrics{
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+    margin-top:10px!important;
+  }
+  .heroMetric{
+    min-height:82px!important;
+    border-radius:17px!important;
+    padding:15px!important;
+  }
+  .heroMetric label,.kpi label,.capitalCard label{
+    font-size:11px!important;
+    letter-spacing:.07em!important;
+    color:#858b97!important;
+  }
+  .heroMetric strong,.kpi strong,.capitalCard strong{
+    font-size:24px!important;
+    font-weight:430!important;
+    letter-spacing:-.75px!important;
+  }
+  .heroMetric small,.kpi small,.capitalCard small{
+    font-size:11.5px!important;
+    color:var(--muted)!important;
+  }
+  .capitalGrid{
+    margin-top:10px!important;
+  }
+  .capitalCard{
+    min-height:88px!important;
+    padding:16px!important;
+  }
+  .kpiStrip{
+    margin-top:10px!important;
+  }
+  .kpi{
+    min-height:82px!important;
+    padding:16px!important;
+  }
+  .dashboardDistributionBlock,.alertsCard{
+    display:block!important;
+  }
+  .distributionCard .legend{
+    padding:14px 18px 18px!important;
+    overflow-x:auto!important;
+  }
+  .distTableWrap,
+  .assetTableWrap,
+  .tableWrap,
+  .benchmarkTableWrap,
+  .annualTableWrap{
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  .distTable,
+  .assetTable,
+  .table,
+  .benchmarkTable,
+  .annualTable{
+    min-width:720px!important;
+  }
+  .alerts{
+    padding:10px 18px 18px!important;
+  }
+  .alert{
+    grid-template-columns:1fr!important;
+    gap:5px!important;
+    padding:11px 0!important;
+    min-height:auto!important;
+  }
+  .alertName{
+    font-size:13px!important;
+    color:var(--text)!important;
+  }
+  .alertStatus{
+    font-size:13px!important;
+    line-height:1.3!important;
+  }
+  /* Cloud modal mobile: botones normales, nada gigante */
+  .cloudModal,
+  #cloudModal,
+  .modal,
+  .cloudLoginModal{
+    align-items:center!important;
+    justify-content:center!important;
+    padding:18px!important;
+  }
+  .cloudBox,
+  .modalBox,
+  .cloudPanel,
+  .loginPanel{
+    width:min(100%,360px)!important;
+    max-width:360px!important;
+    padding:22px!important;
+    border-radius:22px!important;
+  }
+  .cloudBox h2,.modalBox h2,.cloudPanel h2,.loginPanel h2{
+    font-size:24px!important;
+    line-height:1.08!important;
+  }
+  .cloudBox input,.modalBox input,.cloudPanel input,.loginPanel input{
+    height:44px!important;
+    border-radius:13px!important;
+    font-size:14px!important;
+  }
+  .cloudBox .btn,.modalBox .btn,.cloudPanel .btn,.loginPanel .btn,
+  .cloudBox button,.modalBox button,.cloudPanel button,.loginPanel button{
+    height:42px!important;
+    min-height:42px!important;
+    border-radius:999px!important;
+    font-size:13px!important;
+    padding:0 14px!important;
+  }
 }
 
-@media (max-width: 560px){
-  .nav{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+</style>
+
+
+<style>
+/* =========================================================
+   V64 MOBILE DASHBOARD v2 · lectura vertical iPhone
+   - Dashboard informativo simple.
+   - Valores centrados en tarjetas.
+   - Cloud login compacto.
+   ========================================================= */
+@media (max-width: 760px){
+  html,body{
+    width:100%!important;
+    overflow-x:hidden!important;
+    background:#070809!important;
+  }
+  .app{
+    padding:10px!important;
+    width:100%!important;
+    max-width:100%!important;
+  }
+
+  /* Cabecera simple */
+  .sidebar{
+    padding:18px 18px 20px!important;
+    margin-bottom:12px!important;
+    border-radius:22px!important;
+  }
+  .brandName{
+    text-align:center!important;
+    font-size:25px!important;
+    font-weight:700!important;
+  }
+  .sideFoot.sideUpdate .brandDate{
+    display:block!important;
+    text-align:center!important;
+    margin-top:10px!important;
+    font-size:12px!important;
+  }
+
+  /* Bloque datos/nube: compacto, sin sensación de menú */
+  .topbar{
+    padding:18px!important;
+    border-radius:22px!important;
+    margin-bottom:12px!important;
+  }
+  .pageTitle{
+    text-align:center!important;
+  }
+  .pageTitle h1{
+    font-size:24px!important;
+    font-weight:720!important;
+  }
+  .pageTitle p{
+    font-size:12.5px!important;
+    line-height:1.35!important;
+  }
+  .actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+    margin-top:16px!important;
+  }
+  .actions .btn,
+  .actions label.btn,
+  .actions .importStatus{
+    height:36px!important;
+    min-height:36px!important;
+    border-radius:999px!important;
+    font-size:11.5px!important;
+    font-weight:680!important;
+    padding:0 10px!important;
+    text-align:center!important;
+  }
+  .actions .importStatus{
+    grid-column:1 / -1!important;
+    justify-content:center!important;
+  }
+  #backupBtn{display:none!important;}
+
+  /* Solo Dashboard */
+  .section:not(#dashboard){display:none!important;}
+  #dashboard{display:block!important;}
+
+  /* Tarjetas y contenido centrado */
+  .cardHeader,
+  .heroBody,
+  .capitalCard,
+  .kpi,
+  .heroMetric,
+  .bigValue{
+    text-align:center!important;
+  }
+  .cardHeader{
+    padding:20px 18px 0!important;
+    justify-content:center!important;
+  }
+  .cardHeader h2,
+  .cardHeader h3{
+    font-size:25px!important;
+    line-height:1.05!important;
+    text-align:center!important;
+  }
+  .cardHeader p{
+    max-width:100%!important;
+    text-align:center!important;
+    font-size:13px!important;
+    line-height:1.35!important;
+  }
+  .heroBody{
+    padding:18px!important;
+  }
+  .tabs{
+    justify-content:flex-start!important;
+    padding:16px 18px 0!important;
+  }
+  .tabs span{
+    height:34px!important;
+    font-size:12px!important;
+  }
+  .bigValue{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-height:150px!important;
+    padding:20px!important;
+  }
+  .bigValue > div:first-child{
+    justify-content:center!important;
+    align-items:baseline!important;
+    width:100%!important;
+  }
+  .bigValue strong{
+    font-size:42px!important;
+    line-height:1!important;
+  }
+  .bigValue span{
+    font-size:21px!important;
+  }
+  .gain{
+    text-align:center!important;
+    font-size:13px!important;
+    line-height:1.35!important;
+  }
+  .heroMetrics{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+  }
+  .heroMetric,
+  .capitalCard,
+  .kpi{
+    align-items:center!important;
+    justify-content:center!important;
+    min-height:108px!important;
+    padding:18px 16px!important;
+  }
+  .heroMetric label,
+  .capitalCard label,
+  .kpi label{
+    width:100%!important;
+    text-align:center!important;
+    font-size:11px!important;
+    letter-spacing:.08em!important;
+  }
+  .heroMetric strong,
+  .capitalCard strong,
+  .kpi strong{
+    width:100%!important;
+    text-align:center!important;
+    font-size:28px!important;
+    line-height:1.08!important;
+    margin-top:4px!important;
+  }
+  .heroMetric small,
+  .capitalCard small,
+  .kpi small{
+    width:100%!important;
+    text-align:center!important;
+    font-size:11.5px!important;
+    line-height:1.35!important;
+    max-width:270px!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+
+  /* Distribución: lectura vertical, no tabla comprimida */
+  .distributionCard .legend{
+    padding:18px!important;
+    overflow-x:auto!important;
+  }
+  .distTable{
+    min-width:680px!important;
+  }
+  .distributionCard .cardHeader h3,
+  .alertsCard .cardHeader h3{
+    text-align:center!important;
+  }
+  .distributionCard .cardHeader p,
+  .alertsCard .cardHeader p{
+    text-align:center!important;
+  }
+  .alerts .alert{
+    text-align:center!important;
+    border-bottom:1px solid rgba(244,241,234,.055)!important;
+  }
+  .alertName,
+  .alertStatus{
+    justify-content:center!important;
+    text-align:center!important;
+  }
+
+  /* Cloud modal final: sobrescribe estilos posteriores de v48 */
+  .cloudOverlay.active{
+    display:flex!important;
+  }
+  .cloudOverlay{
+    align-items:center!important;
+    justify-content:center!important;
+    padding:18px!important;
+  }
+  .cloudPanel{
+    width:100%!important;
+    max-width:340px!important;
+    padding:22px!important;
+    border-radius:24px!important;
+    text-align:center!important;
+  }
+  .cloudPanel h2{
+    font-size:24px!important;
+    line-height:1.08!important;
+    text-align:center!important;
+  }
+  .cloudPanel p{
+    font-size:12.5px!important;
+    line-height:1.35!important;
+    text-align:center!important;
+    margin:8px 0 16px!important;
+  }
+  .cloudForm{
+    gap:9px!important;
+  }
+  .cloudForm input{
+    height:42px!important;
+    border-radius:14px!important;
+    font-size:14px!important;
+    text-align:left!important;
+  }
+  .cloudFormActions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+    margin-top:4px!important;
+  }
+  .cloudFormActions .btn,
+  .cloudFormActions button{
+    width:100%!important;
+    min-width:0!important;
+    height:40px!important;
+    min-height:40px!important;
+    border-radius:999px!important;
+    padding:0 12px!important;
+    font-size:12.5px!important;
+    font-weight:700!important;
+  }
+  .cloudStatusLine{
+    text-align:center!important;
+    font-size:11.5px!important;
+    line-height:1.35!important;
+    margin-top:12px!important;
+  }
 }
-@media (max-width: 390px){
-  .app{padding:8px!important;}
-  .sidebar,.topbar{border-radius:16px!important;}
-  .nav button{height:32px!important;padding:0 10px!important;font-size:11.4px!important;}
-  .actions .btn,.actions label.btn,.actions .importStatus{height:34px!important;font-size:11px!important;}
-  .cardHeader h2,.cardHeader h3,.benchmarkHero h2{font-size:19px!important;}
-  .bigValue strong{font-size:32px!important;}
+
+@media (max-width: 380px){
+  .bigValue strong{font-size:36px!important;}
+  .heroMetric strong,.capitalCard strong,.kpi strong{font-size:24px!important;}
+  .cloudPanel{max-width:320px!important;padding:20px!important;}
 }
 </style>
+
 </head>
 <body>
 <div class="app">
@@ -11163,18 +11617,22 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
 
 <script>
 (function(){
-  function isMobileLayout(){ return window.matchMedia && window.matchMedia('(max-width: 1150px)').matches; }
-  function mobilePolish(){
-    if(!isMobileLayout()) return;
-    const cloud=document.getElementById('cloudLoginBtn');
-    if(cloud){ cloud.textContent='Cloud'; }
+  function isMobileDashboard(){ return window.matchMedia('(max-width: 760px)').matches; }
+  function forceMobileDashboard(){
+    if(!isMobileDashboard()) return;
+    try{
+      if(typeof show === 'function') show('dashboard');
+    }catch(e){}
+    var title=document.getElementById('title');
+    var subtitle=document.getElementById('subtitle');
+    if(title) title.textContent='Dashboard móvil';
+    if(subtitle) subtitle.textContent='Resumen principal de la cartera';
   }
-  document.addEventListener('DOMContentLoaded', mobilePolish);
-  window.addEventListener('load', mobilePolish);
-  window.addEventListener('resize', mobilePolish);
-  setInterval(mobilePolish, 1200);
+  window.addEventListener('DOMContentLoaded', forceMobileDashboard);
+  window.addEventListener('resize', forceMobileDashboard);
 })();
 </script>
+
 </body>
 </html>
 <style>
