@@ -2871,6 +2871,35 @@ html{
 .chartRange strong{color:var(--text2);font-weight:650;}
 .chartBadge{box-shadow:none!important;}
 
+/* Bloque evolución de la cartera (Dashboard) */
+.evolutionBlock{margin-top:20px;}
+.evolutionCard{padding:24px 26px 30px;position:relative;}
+.evolutionHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;}
+.evoHeadline{display:flex;align-items:baseline;gap:14px;margin:14px 0 2px;flex-wrap:wrap;}
+.evoHeadValue{font-size:30px;font-weight:560;letter-spacing:-.8px;color:var(--text);}
+.evoHeadGp{font-size:14px;font-weight:650;}
+.evoHeadGp.green{color:var(--green);}
+.evoHeadGp.red{color:var(--red,#ff6b6b);}
+.chartHost{position:relative;margin-top:18px;min-height:270px;}
+.chartHost svg{width:100%;height:270px;display:block;}
+.evoLegend{display:flex;gap:18px;align-items:center;margin-bottom:6px;flex-wrap:wrap;}
+.evoLegendItem{display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-size:11.5px;font-weight:600;}
+.evoDotReal{width:14px;height:3px;border-radius:999px;background:var(--green);display:inline-block;}
+.evoDotMuted{width:14px;height:0;border-top:2px dashed var(--muted);display:inline-block;opacity:.8;}
+.evoPointMuted{cursor:crosshair;}
+.evoRealPoint{cursor:crosshair;transition:r .12s;stroke:rgba(0,0,0,.35);stroke-width:1.5;}
+.evoRealPoint:hover{r:7;}
+.evoHitArea{cursor:crosshair;pointer-events:auto;}
+.evoTooltipFloating .tipGreen{color:var(--green)!important;font-weight:700;}
+.evoTooltipFloating .tipRed{color:var(--red,#ff6b6b)!important;font-weight:700;}
+@media(max-width:680px){
+  .evolutionCard{padding:18px 16px 26px;}
+  .evolutionHeader{gap:12px;}
+  .evoHeadValue{font-size:24px;}
+  .chartHost,.chartHost svg{min-height:210px;height:210px;}
+}
+
+
 
 
 /* v24 · Contraste fondo / paneles estilo Getquin */
@@ -4874,6 +4903,15 @@ body:before{
         </article>
       </div>
 
+      <section class="pageBlock evolutionBlock" id="evolutionBlock">
+        <article class="card evolutionCard">
+          <div class="cardHeader evolutionHeader">
+            <div><h3>Evolución de la cartera</h3><p>Valor real de mercado frente a capital aportado. La distancia entre ambas líneas es tu ganancia o pérdida real. Gana detalle con cada cierre mensual.</p></div>
+          </div>
+          <div class="chartHost" id="dashboardEvolutionChart"><div class="chartEmpty">Importa el Excel para ver la evolución real de la cartera.</div></div>
+        </article>
+      </section>
+
       <section class="capitalGrid">
         <article class="capitalCard"><label>Total aportado histórico bruto</label><strong>13.652,35 €</strong><small>Todo el dinero aportado desde el inicio, antes de retiradas.</small></article>
         <article class="capitalCard"><label>Capital invertido neto actual</label><strong>12.313,44 €</strong><small>Aportado histórico menos retiradas.</small></article>
@@ -5484,7 +5522,6 @@ document.querySelectorAll('.tabs').forEach(group=>{
     });
   });
 });
-
 
 // Buscador y filtros de Movimientos.
 let activeMovementFilter='all';
@@ -6099,7 +6136,7 @@ let importedData = null;
 function fmtNumber(value, decimals=2){
   const n = Number(value);
   if(!Number.isFinite(n)) return value ?? '';
-  return n.toLocaleString('es-ES', {minimumFractionDigits:decimals, maximumFractionDigits:decimals});
+  return n.toLocaleString('es-ES', {minimumFractionDigits:decimals, maximumFractionDigits:decimals, useGrouping:true});
 }
 function fmtMoney(value, decimals=2, plus=false){
   const n = Number(value);
@@ -6219,7 +6256,159 @@ function updateDashboard(){
   renderMobileCartera(cartera);
   updateAlerts();
   updateReconciliation(cartera, resumen);
+  renderEvolutionChart();
 }
+
+function parseMonthlyEvolution(){
+  const rows = sheetRows('HISTÓRICO MENSUAL');
+  if(!rows.length) return [];
+  let hdr = -1;
+  for(let i=0;i<rows.length;i++){
+    if(String(rows[i]?.[0]||'').trim()==='Fecha cierre'){ hdr=i; break; }
+  }
+  if(hdr<0) return [];
+  const out=[];
+  for(let i=hdr+1;i<rows.length;i++){
+    const r=rows[i];
+    if(!r) continue;
+    const fechaRaw=r[0], anio=r[1], mes=r[2];
+    if((anio===''||anio==null) && (mes===''||mes==null)) continue;
+    const valor=Number(r[3]);
+    const invertido=Number(r[4]);
+    const aportado=Number(r[5]);
+    if(!Number.isFinite(invertido) && !Number.isFinite(aportado)) continue;
+    out.push({
+      fecha: fmtDate(fechaRaw),
+      anio, mes,
+      valor: Number.isFinite(valor) && valor>0 ? valor : null,
+      invertido: Number.isFinite(invertido) ? invertido : null,
+      aportado: Number.isFinite(aportado) ? aportado : null
+    });
+  }
+  return out;
+}
+
+function renderEvolutionChart(){
+  const host=document.getElementById('dashboardEvolutionChart');
+  if(!host) return;
+  const series=parseMonthlyEvolution();
+  // Línea de referencia: capital invertido neto (coherente con G/P real del Excel).
+  const invertido=series.filter(p=>Number.isFinite(Number(p.invertido)) && Number(p.invertido)>0)
+                        .map(p=>({...p, v:Number(p.invertido)}));
+  // Línea de valor real de mercado: solo meses con cierre real (crece con el tiempo).
+  const valor=series.filter(p=>p.valor!=null && Number.isFinite(Number(p.valor)) && Number(p.valor)>0)
+                    .map(p=>({...p, v:Number(p.valor)}));
+  if(invertido.length<2){
+    host.innerHTML='<div class="chartEmpty">No hay suficientes cierres reales para dibujar la evolución.</div>';
+    return;
+  }
+  renderEvolutionLine(host, invertido, valor, series);
+}
+
+function renderEvolutionLine(el, aportado, valor, fullSeries){
+  // Escala común a ambas series sobre el eje temporal completo (fullSeries).
+  const idxByKey=new Map();
+  fullSeries.forEach((p,i)=>idxByKey.set((p.anio)+'-'+(p.mes), i));
+  const n=fullSeries.length;
+  const allV=[...aportado.map(p=>p.v), ...valor.map(p=>p.v)].filter(Number.isFinite);
+  const min=Math.min(...allV), max=Math.max(...allV);
+  const span=max-min || Math.max(Math.abs(max),1);
+  const yMin=Math.max(0, min-span*.12), yMax=max+span*.16;
+  const W=880,H=270,L=8,R=18,T=30,B=46;
+  const plotW=W-L-R, plotH=H-T-B;
+  const xFor=p=>{ const i=idxByKey.get((p.anio)+'-'+(p.mes)) ?? 0; return L+(n<=1?plotW:plotW*i/(n-1)); };
+  const yFor=v=>T+(yMax-v)/(yMax-yMin)*plotH;
+  // Aportado (línea de referencia, tenue).
+  const apXY=aportado.map(p=>({x:xFor(p),y:yFor(p.v),v:p.v,p}));
+  const apD=apXY.map((p,i)=>`${i?'L':'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+  // Valor real (línea principal, verde, con área).
+  const vlXY=valor.map(p=>({x:xFor(p),y:yFor(p.v),v:p.v,p}));
+  const vlD=vlXY.map((p,i)=>`${i?'L':'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+  const vlArea=vlXY.length>=2 ? `${vlD} L ${vlXY[vlXY.length-1].x.toFixed(1)} ${H-B} L ${vlXY[0].x.toFixed(1)} ${H-B} Z` : '';
+  const yTicks=[yMin+(yMax-yMin)*.25,yMin+(yMax-yMin)*.5,yMin+(yMax-yMin)*.75];
+  const tickLines=yTicks.map(v=>`<line x1="${L}" y1="${yFor(v).toFixed(1)}" x2="${W-R}" y2="${yFor(v).toFixed(1)}" stroke="rgba(255,255,255,.05)"/>`).join('');
+  // mapa de invertido por mes para enriquecer el tooltip del punto de valor real
+  const invByKey=new Map();
+  apXY.forEach(a=>invByKey.set((a.p.anio)+'-'+(a.p.mes), a.v));
+  const apPoints=apXY.map(pt=>{
+    const tip=`<strong>${escHtml(chartFullLabel(pt.p))}</strong><br><span>Capital invertido · ${escHtml(fmtMoney(pt.v))}</span>`;
+    return `<g data-evo-tip="${escHtml(tip)}"><circle class="evoPointMuted" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="2.6" fill="var(--muted)"/><circle class="evoHitArea" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="14" fill="transparent"/></g>`;
+  }).join('');
+  const vlPoints=vlXY.map(pt=>{
+    const inv=invByKey.get((pt.p.anio)+'-'+(pt.p.mes));
+    let gpLine='';
+    if(Number.isFinite(inv)){
+      const gp=pt.v-inv;
+      const pct=inv>0?(gp/inv*100):0;
+      const cls=gp>=0?'tipGreen':'tipRed';
+      gpLine=`<br><span class="${cls}">${gp>=0?'+':''}${escHtml(fmtMoney(gp))} · ${gp>=0?'+':''}${pct.toFixed(2).replace('.',',')}% G/P</span>`;
+    }
+    const tip=`<strong>${escHtml(chartFullLabel(pt.p))}</strong><br><span>Valor real · ${escHtml(fmtMoney(pt.v))}</span>${gpLine}`;
+    return `<g data-evo-tip="${escHtml(tip)}"><circle class="evoRealPoint" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="5" fill="var(--green)"/><circle class="evoHitArea" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="18" fill="transparent"/></g>`;
+  }).join('');
+  // Lectura de cabecera: si hay 2+ valores reales, mostrar G/P entre primer y último cierre real.
+  let headline='';
+  if(vlXY.length>=1){
+    const last=vlXY[vlXY.length-1];
+    // aportado correspondiente al mismo mes del último cierre real
+    const apSame=apXY.find(a=>(a.p.anio===last.p.anio)&&(a.p.mes===last.p.mes));
+    if(apSame){
+      const gp=last.v-apSame.v;
+      const cls=gp>=0?'green':'red';
+      headline=`<div class="evoHeadline"><span class="evoHeadValue">${escHtml(fmtMoney(last.v))}</span><span class="evoHeadGp ${cls}">${gp>=0?'+':''}${escHtml(fmtMoney(gp))} G/P real</span></div>`;
+    }
+  }
+  const ap0=apXY[0], apN=apXY[apXY.length-1];
+  el.innerHTML=`
+    ${headline}
+    <div class="evoLegend">
+      <span class="evoLegendItem"><span class="evoDotReal"></span>Valor real de mercado${vlXY.length<2?' · 1 cierre por ahora':''}</span>
+      <span class="evoLegendItem"><span class="evoDotMuted"></span>Capital invertido neto</span>
+    </div>
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Evolución de la cartera">
+      <defs>
+        <linearGradient id="evoGrad" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="rgba(95,211,155,.20)"/>
+          <stop offset="1" stop-color="rgba(95,211,155,0)"/>
+        </linearGradient>
+      </defs>
+      ${tickLines}
+      ${vlArea?`<path d="${vlArea}" fill="url(#evoGrad)"/>`:''}
+      <path d="${apD}" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-dasharray="4 4" opacity=".7" stroke-linecap="round"/>
+      ${vlD?`<path d="${vlD}" fill="none" stroke="var(--green)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>`:''}
+      ${apPoints}
+      ${vlPoints}
+    </svg>
+    <div class="chartRange"><span><strong>Inicio</strong> · ${escHtml(chartFullLabel(ap0.p))} · ${escHtml(fmtMoney(ap0.v))}</span><span><strong>Último</strong> · ${escHtml(chartFullLabel(apN.p))} · ${escHtml(fmtMoney(apN.v))}</span></div>`;
+  __evoTooltipInit(el);
+}
+
+function __evoTooltipInit(host){
+  let tip=document.getElementById('evoTooltipFloating');
+  if(!tip){
+    tip=document.createElement('div');
+    tip.id='evoTooltipFloating';
+    tip.className='benchmarkTooltipFloating evoTooltipFloating';
+    document.body.appendChild(tip);
+  }
+  if(!host || host.dataset.evoTooltip==='1') return;
+  host.dataset.evoTooltip='1';
+  host.addEventListener('mousemove', e=>{
+    const target=e.target?.closest?.('[data-evo-tip]');
+    if(!target){ tip.style.display='none'; return; }
+    tip.innerHTML=target.getAttribute('data-evo-tip') || '';
+    tip.style.display='block';
+    const pad=14;
+    let x=e.clientX+pad, y=e.clientY+pad;
+    const r=tip.getBoundingClientRect();
+    if(x+r.width > window.innerWidth-10) x=e.clientX-r.width-pad;
+    if(y+r.height > window.innerHeight-10) y=e.clientY-r.height-pad;
+    tip.style.left=x+'px';
+    tip.style.top=y+'px';
+  });
+  host.addEventListener('mouseleave',()=>{ tip.style.display='none'; });
+}
+
 
 function parseCartera(){
   const rows = sheetRows('CARTERA ACTUAL');
@@ -10365,7 +10554,7 @@ body:before{
   function polishDashboardTexts(){
     const heroP=document.querySelector('#dashboard .hero .cardHeader p');
     if(heroP) heroP.textContent='Valor de mercado, lectura por fuente y evolución con cierres reales.';
-    const allocationP=document.querySelector('#dashboard article.card:not(.hero) .cardHeader p');
+    const allocationP=document.querySelector('#dashboard article.card:not(.hero):not(.evolutionCard) .cardHeader p');
     if(allocationP) allocationP.textContent='Distribución actual de la cartera.';
     document.querySelectorAll('#dashboard .donutCenter span').forEach(el=>{el.textContent='Valor cartera';});
     document.querySelectorAll('#dashboard .heroTopMetric label').forEach(el=>{
@@ -13517,43 +13706,63 @@ function __v61PointSeries(arr,toX,toY,colorClass,label,formatter,meta=''){
     return __v61Point(x,y,3.2,colorClass,label,value,date + (meta?` · ${meta}`:''),false,11);
   }).join('');
 }
+function __benchAreaPath(arr, toX, toY, n, h, padB){
+  if(!arr || arr.length<2) return '';
+  const d=arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(Number(p.normalized)).toFixed(1)}`).join(' ');
+  return `${d} L ${toX(arr.length-1,arr.length).toFixed(1)},${(h-padB).toFixed(1)} L ${toX(0,arr.length).toFixed(1)},${(h-padB).toFixed(1)} Z`;
+}
 function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries, flows, cfg, monthlyHistory=[]){
   const box=document.getElementById('benchmarkChart');
   if(!box) return;
   __v61TooltipInit();
   if(!benchmarkSeries.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la simulación.</div>'; return; }
-  const w=1200, h=300, padL=34, padR=42, padT=24, padB=42;
+  const w=1200, h=320, padL=14, padR=20, padT=26, padB=44;
+  const plotH=h-padT-padB;
   const finalInvested=benchmarkSeries[benchmarkSeries.length-1]?.invested || 1;
   const useMonthlyHistory=Array.isArray(monthlyHistory) && monthlyHistory.length>=3;
   const realHistory=useMonthlyHistory ? monthlyHistory : [];
   const realNorm=Number(((currentValue/finalInvested)*100).toFixed(4));
   const values=[...benchmarkSeries.map(x=>Number(x.normalized)), ...realHistory.map(x=>Number(x.normalized)), realNorm].filter(Number.isFinite);
-  const min=Math.min(...values,95), max=Math.max(...values,105);
+  const rawMin=Math.min(...values), rawMax=Math.max(...values);
+  const pad=(rawMax-rawMin)*.14 || 4;
+  const min=Math.min(rawMin-pad,98), max=Math.max(rawMax+pad,102);
   const span=(max-min)||1;
   const toX=(i,n)=>padL + (i/Math.max(1,n-1))*(w-padL-padR);
-  const toY=(v)=>h-padB - ((v-min)/span)*(h-padT-padB);
+  const toY=(v)=>padT + (max-v)/span*plotH;
   const line=(arr)=>arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(Number(p.normalized)).toFixed(1)}`).join(' ');
   const realX=w-padR;
   const realY=toY(useMonthlyHistory ? Number(realHistory[realHistory.length-1].normalized) : realNorm);
   const benchY=toY(Number(benchmarkSeries[benchmarkSeries.length-1].normalized));
   const ticks=benchmarkTicks(benchmarkSeries,5);
-  const tickSvg=ticks.map(t=>`<text x="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y="${h-12}" fill="var(--muted)" font-size="10" text-anchor="middle">${t.label}</text>`).join('');
-  const guideColor = currentValue >= benchmarkFinalValue ? 'var(--green)' : 'var(--red)';
+  const tickSvg=ticks.map(t=>`<text x="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y="${h-14}" fill="var(--muted)" font-size="11" text-anchor="middle">${t.label}</text>`).join('');
+  // grid horizontal suave (4 líneas) con etiqueta de rentabilidad
+  const gridN=4;
+  const grid=[...Array(gridN+1)].map((_,k)=>{
+    const v=min+(span)*(k/gridN);
+    const y=toY(v);
+    return `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${w-padR}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.05)"/><text x="${padL}" y="${(y-5).toFixed(1)}" fill="rgba(255,255,255,.28)" font-size="10">${benchmarkPct(v-100)}</text>`;
+  }).join('');
+  const benchArea=__benchAreaPath(benchmarkSeries,toX,toY,benchmarkSeries.length,h,padB);
+  const realArea=useMonthlyHistory?__benchAreaPath(realHistory,toX,toY,realHistory.length,h,padB):'';
   const realLineSvg = useMonthlyHistory
-    ? `<path d="${line(realHistory)}" fill="none" stroke="var(--green)" stroke-width="2.35" vector-effect="non-scaling-stroke"/>${__v61PointSeries(realHistory,toX,toY,'greenPoint',cfg.realLabel,v=>benchmarkPct(v-100),'dato real mensual')}`
+    ? `<path d="${realArea}" fill="url(#benchRealGrad)"/><path d="${line(realHistory)}" fill="none" stroke="var(--green)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>${__v61PointSeries(realHistory,toX,toY,'greenPoint',cfg.realLabel,v=>benchmarkPct(v-100),'dato real mensual')}`
     : '';
   const realValue = `${fmtMoney(currentValue)} · ${benchmarkPct(realNorm-100)}`;
   const targetValue = `${fmtMoney(benchmarkFinalValue)} · ${benchmarkPct(Number(benchmarkSeries[benchmarkSeries.length-1].normalized)-100)}`;
   const realMeta = useMonthlyHistory ? 'último cierre real del Excel' : 'valor real actual';
   const targetMeta = 'simulación con tus movimientos';
   const targetHits=__v61PointSeries(benchmarkSeries,toX,toY,'goldPoint',cfg.targetLabel,v=>benchmarkPct(v-100),'simulación');
-  box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${escHtml(cfg.targetLabel)} simulada y valor real actual">
-    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
-    <line x1="${padL}" y1="${h-padB}" x2="${w-padR}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
-    ${ticks.map(t=>`<line x1="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y1="${h-padB}" x2="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y2="${h-padB+5}" stroke="rgba(255,255,255,.14)"/>`).join('')}
-    <path d="${line(benchmarkSeries)}" fill="none" stroke="var(--gold)" stroke-width="2.35" vector-effect="non-scaling-stroke"/>
+  const guideColor = currentValue >= benchmarkFinalValue ? 'var(--green)' : 'var(--red)';
+  box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${escHtml(cfg.targetLabel)} simulada y valor real actual">
+    <defs>
+      <linearGradient id="benchTargetGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="rgba(255,211,77,.16)"/><stop offset="1" stop-color="rgba(255,211,77,0)"/></linearGradient>
+      <linearGradient id="benchRealGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="rgba(95,211,155,.20)"/><stop offset="1" stop-color="rgba(95,211,155,0)"/></linearGradient>
+    </defs>
+    ${grid}
+    <path d="${benchArea}" fill="url(#benchTargetGrad)"/>
+    <path d="${line(benchmarkSeries)}" fill="none" stroke="var(--gold)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
     ${realLineSvg}
-    <line x1="${realX}" y1="${Math.min(realY,benchY).toFixed(1)}" x2="${realX}" y2="${Math.max(realY,benchY).toFixed(1)}" stroke="${guideColor}" stroke-width="1.15" stroke-dasharray="4 5" opacity=".65" vector-effect="non-scaling-stroke"/>
+    <line x1="${realX}" y1="${Math.min(realY,benchY).toFixed(1)}" x2="${realX}" y2="${Math.max(realY,benchY).toFixed(1)}" stroke="${guideColor}" stroke-width="1.4" stroke-dasharray="4 5" opacity=".6" vector-effect="non-scaling-stroke"/>
     ${targetHits}
     ${__v61Point(realX,realY.toFixed(1),5.6,'greenPoint',cfg.realLabel,realValue,realMeta,true,18)}
     ${__v61Point(realX,benchY.toFixed(1),4.8,'goldPoint',cfg.targetLabel,targetValue,targetMeta,true,18)}
@@ -13566,30 +13775,41 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
   __v61TooltipInit();
   const a=seriesA || [], b=seriesB || [];
   if(!a.length || !b.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la comparación.</div>'; return; }
-  const w=1200, h=300, padL=34, padR=42, padT=24, padB=42;
+  const w=1200, h=320, padL=14, padR=20, padT=26, padB=44;
+  const plotH=h-padT-padB;
   const values=[...a.map(x=>Number(x.normalized)),...b.map(x=>Number(x.normalized))].filter(Number.isFinite);
-  const min=Math.min(...values,95), max=Math.max(...values,105);
+  const rawMin=Math.min(...values), rawMax=Math.max(...values);
+  const pad=(rawMax-rawMin)*.14 || 4;
+  const min=Math.min(rawMin-pad,98), max=Math.max(rawMax+pad,102);
   const span=(max-min)||1;
   const toX=(i,n)=>padL + (i/Math.max(1,n-1))*(w-padL-padR);
-  const toY=(v)=>h-padB - ((v-min)/span)*(h-padT-padB);
+  const toY=(v)=>padT + (max-v)/span*plotH;
   const line=(arr)=>arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(Number(p.normalized)).toFixed(1)}`).join(' ');
   const ticks=benchmarkTicks(a,5);
-  const tickSvg=ticks.map(t=>`<text x="${toX(t.idx,a.length).toFixed(1)}" y="${h-12}" fill="var(--muted)" font-size="10" text-anchor="middle">${t.label}</text>`).join('');
+  const tickSvg=ticks.map(t=>`<text x="${toX(t.idx,a.length).toFixed(1)}" y="${h-14}" fill="var(--muted)" font-size="11" text-anchor="middle">${t.label}</text>`).join('');
+  const gridN=4;
+  const grid=[...Array(gridN+1)].map((_,k)=>{
+    const v=min+(span)*(k/gridN);
+    const y=toY(v);
+    return `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${w-padR}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.05)"/><text x="${padL}" y="${(y-5).toFixed(1)}" fill="rgba(255,255,255,.28)" font-size="10">${benchmarkPct(v-100)}</text>`;
+  }).join('');
   const aEnd=a[a.length-1], bEnd=b[b.length-1];
   const aPoints=__v61PointSeries(a,toX,toY,'bluePoint',labelA,v=>benchmarkPct(v-100),'referencia');
   const bPoints=__v61PointSeries(b,toX,toY,'goldPoint',labelB,v=>benchmarkPct(v-100),'referencia');
-  box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${escHtml(labelA)} frente a ${escHtml(labelB)}">
-    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
-    <line x1="${padL}" y1="${h-padB}" x2="${w-padR}" y2="${h-padB}" stroke="rgba(255,255,255,.08)"/>
-    ${ticks.map(t=>`<line x1="${toX(t.idx,a.length).toFixed(1)}" y1="${h-padB}" x2="${toX(t.idx,a.length).toFixed(1)}" y2="${h-padB+5}" stroke="rgba(255,255,255,.14)"/>`).join('')}
-    <path d="${line(a)}" fill="none" stroke="var(--blue)" stroke-width="2.2" vector-effect="non-scaling-stroke"/>
-    <path d="${line(b)}" fill="none" stroke="var(--gold)" stroke-width="2.2" vector-effect="non-scaling-stroke"/>
+  const aArea=__benchAreaPath(a,toX,toY,a.length,h,padB);
+  box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${escHtml(labelA)} frente a ${escHtml(labelB)}">
+    <defs><linearGradient id="benchAGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="rgba(91,160,255,.16)"/><stop offset="1" stop-color="rgba(91,160,255,0)"/></linearGradient></defs>
+    ${grid}
+    <path d="${aArea}" fill="url(#benchAGrad)"/>
+    <path d="${line(a)}" fill="none" stroke="var(--blue)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+    <path d="${line(b)}" fill="none" stroke="var(--gold)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
     ${aPoints}${bPoints}
     ${__v61Point(toX(a.length-1,a.length).toFixed(1),toY(Number(aEnd.normalized)).toFixed(1),4.8,'bluePoint',labelA,benchmarkPct(Number(aEnd.normalized)-100),'último dato',true,16)}
     ${__v61Point(toX(b.length-1,b.length).toFixed(1),toY(Number(bEnd.normalized)).toFixed(1),4.8,'goldPoint',labelB,benchmarkPct(Number(bEnd.normalized)-100),'último dato',true,16)}
     ${tickSvg}
   </svg>`;
 }
+
 </script>
 
 
