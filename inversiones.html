@@ -4792,6 +4792,46 @@ body:before{
 }
 </style>
 
+
+
+<style>
+/* V98 · Mobile fix: Distribución operativa con scroll lateral real */
+@media (max-width:760px){
+  #dashboard .dashboardDistributionBlock,
+  #dashboard .distributionCard{
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+  #dashboard .distributionCard .legend{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    overflow:visible!important;
+    padding:18px!important;
+    margin:0!important;
+  }
+  #dashboard .distTableWrap{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    touch-action:pan-x!important;
+    overscroll-behavior-x:contain!important;
+  }
+  #dashboard .distTable{
+    width:max-content!important;
+    min-width:780px!important;
+    table-layout:auto!important;
+  }
+  #dashboard .distTable th,
+  #dashboard .distTable td{
+    white-space:nowrap!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -6859,7 +6899,7 @@ function updateAsesoria(){
     if(firstWatch){
       reco.textContent = firstWatch.reason==='Bajo objetivo'
         ? `Priorizar nuevas aportaciones hacia ${firstWatch.name} hasta acercarlo a su objetivo. No hace falta vender otros activos si la desviación puede corregirse aportando.`
-        : `Mantener ${firstWatch.name} bajo vigilancia y corregir solo con nuevas aportaciones si el Excel lo recomienda.`;
+        : `Mantener ${firstWatch.name} bajo vigilancia y evitar reforzarlo mientras siga por encima de objetivo.`;
     }else{
       reco.textContent='Mantener la estrategia actual. No hay una señal clara que justifique cambios estructurales hoy.';
     }
