@@ -7176,7 +7176,7 @@ body:before{
 #dashboard .heroBody{padding-top:12px!important;}
 #dashboard .heroTopMetrics{
   display:grid!important;
-  grid-template-columns:minmax(0,1.18fr) minmax(0,.91fr) minmax(0,.91fr)!important;
+  grid-template-columns:minmax(0,1.18fr) repeat(3,minmax(0,.91fr))!important;
   gap:14px!important;
   margin:14px 0 16px!important;
 }
@@ -7771,7 +7771,8 @@ body:before{
       box.innerHTML=`
         <div class="heroTopMetric primary" id="heroMetricValue"><label>Valor de mercado real</label><strong><span class="dot"></span>--</strong><small>Valor total actual de la cartera</small></div>
         <div class="heroTopMetric" id="heroMetricPL"><label>P&amp;L plataforma</label><strong>--</strong><small>Resultado filtrado según la pestaña seleccionada.</small></div>
-        <div class="heroTopMetric" id="heroMetricRent"><label>Rentabilidad plataforma</label><strong>--</strong><small>Rentabilidad simple de los activos mostrados.</small></div>`;
+        <div class="heroTopMetric" id="heroMetricRent"><label>Rentabilidad plataforma</label><strong>--</strong><small>Rentabilidad simple de los activos mostrados.</small></div>
+        <div class="heroTopMetric" id="heroMetricBtcLive"><label>Bitcoin en directo</label><strong>--</strong><small><span class="btcLivePulse warn"></span>Conectando · BTC/EUR</small></div>`;
       const chart=document.getElementById('dashboardChart');
       if(chart) heroBody.insertBefore(box, chart); else heroBody.appendChild(box);
     }
@@ -8973,7 +8974,7 @@ body:before{
 #dashboard .hero .cardHeader p,
 #dashboard .cardHeader p{max-width:680px;}
 #dashboard .heroTopMetrics{
-  grid-template-columns:1.18fr .91fr .91fr!important;
+  grid-template-columns:1.18fr repeat(3,.91fr)!important;
   gap:14px!important;
   margin-top:18px!important;
 }
@@ -9026,10 +9027,30 @@ body:before{
 #dashboard .legendRow{grid-template-columns:auto 1fr auto!important;gap:10px!important;}
 #dashboard .donutCenter span{font-size:9.5px!important;letter-spacing:.08em!important;}
 #dashboard .donutCenter strong{font-size:16px!important;font-weight:430!important;}
+@media(max-width:1500px){
+  #dashboard .heroTopMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+}
 @media(max-width:1180px){
   #dashboard .heroTopMetrics{grid-template-columns:1fr!important;}
   #dashboard .heroTopMetric.primary strong{font-size:34px!important;}
 }
+#dashboard #heroMetricBtcLive strong{
+  color:var(--btc)!important;
+}
+#dashboard #heroMetricBtcLive small{
+  max-width:none!important;
+}
+.btcLivePulse{
+  display:inline-block!important;
+  width:7px!important;
+  height:7px!important;
+  border-radius:50%!important;
+  background:var(--green)!important;
+  margin-right:7px!important;
+  vertical-align:middle!important;
+}
+.btcLivePulse.warn{background:var(--yellow)!important;}
+.btcLivePulse.bad{background:var(--red)!important;}
 
 
 /* V43 · Historial: resumen anual útil y compacto */
@@ -12616,6 +12637,136 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
   }
   window.addEventListener('DOMContentLoaded', forceMobileDashboard, {once:true});
   window.addEventListener('orientationchange', function(){ setTimeout(forceMobileDashboard, 250); });
+})();
+</script>
+
+
+<script>
+/* V70 · Bitcoin en directo en Dashboard
+   Fuente principal: Coinbase Exchange WebSocket ticker BTC-EUR.
+   Fallback: Coinbase REST spot price si el WebSocket no conecta. */
+(function(){
+  const BTC_PRODUCT='BTC-EUR';
+  const WS_URL='wss://ws-feed.exchange.coinbase.com';
+  const REST_URL='https://api.coinbase.com/v2/prices/BTC-EUR/spot';
+  let ws=null;
+  let reconnectTimer=null;
+  let fallbackTimer=null;
+  let lastPrice=null;
+  let lastUpdate=null;
+  let reconnectAttempts=0;
+
+  function formatEur(value){
+    const n=Number(value);
+    if(!Number.isFinite(n)) return '--';
+    return n.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
+  }
+  function formatTime(d){
+    try{return d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}catch(e){return '';}
+  }
+  function ensureBtcCard(){
+    let card=document.getElementById('heroMetricBtcLive');
+    const box=document.getElementById('heroTopMetrics');
+    if(!card && box){
+      card=document.createElement('div');
+      card.className='heroTopMetric';
+      card.id='heroMetricBtcLive';
+      card.innerHTML='<label>Bitcoin en directo</label><strong>--</strong><small><span class="btcLivePulse warn"></span>Conectando · BTC/EUR</small>';
+      box.appendChild(card);
+    }
+    return card;
+  }
+  function setStatus(text, type='warn'){
+    const card=ensureBtcCard();
+    if(!card) return;
+    const small=card.querySelector('small');
+    if(!small) return;
+    const cls=type==='ok'?'':type;
+    small.innerHTML='<span class="btcLivePulse '+cls+'"></span>'+text;
+  }
+  function setPrice(price, source){
+    const n=Number(price);
+    if(!Number.isFinite(n) || n<=0) return;
+    lastPrice=n;
+    lastUpdate=new Date();
+    const card=ensureBtcCard();
+    if(!card) return;
+    const strong=card.querySelector('strong');
+    if(strong) strong.textContent=formatEur(n);
+    setStatus((source||'Directo')+' · '+formatTime(lastUpdate), 'ok');
+  }
+  async function fetchFallback(){
+    try{
+      const res=await fetch(REST_URL,{cache:'no-store'});
+      if(!res.ok) throw new Error('REST '+res.status);
+      const json=await res.json();
+      const amount=json && json.data && json.data.amount;
+      setPrice(amount,'Coinbase');
+    }catch(e){
+      if(!lastPrice) setStatus('Sin conexión · BTC/EUR','bad');
+    }
+  }
+  function startFallback(){
+    if(fallbackTimer) return;
+    fetchFallback();
+    fallbackTimer=setInterval(fetchFallback,60000);
+  }
+  function stopFallback(){
+    if(fallbackTimer){clearInterval(fallbackTimer); fallbackTimer=null;}
+  }
+  function connectWebSocket(){
+    if(!('WebSocket' in window)){
+      setStatus('WebSocket no disponible · usando fallback','warn');
+      startFallback();
+      return;
+    }
+    try{
+      if(ws && (ws.readyState===WebSocket.OPEN || ws.readyState===WebSocket.CONNECTING)) return;
+      setStatus('Conectando · BTC/EUR','warn');
+      ws=new WebSocket(WS_URL);
+      ws.onopen=function(){
+        reconnectAttempts=0;
+        ws.send(JSON.stringify({type:'subscribe',product_ids:[BTC_PRODUCT],channels:['ticker']}));
+        setStatus('Conectado · esperando precio','warn');
+        stopFallback();
+      };
+      ws.onmessage=function(ev){
+        try{
+          const msg=JSON.parse(ev.data);
+          if(msg.type==='ticker' && msg.product_id===BTC_PRODUCT && msg.price){
+            setPrice(msg.price,'Coinbase live');
+          }
+        }catch(e){}
+      };
+      ws.onerror=function(){
+        setStatus('Reconectando · BTC/EUR','warn');
+        startFallback();
+      };
+      ws.onclose=function(){
+        startFallback();
+        if(reconnectTimer) clearTimeout(reconnectTimer);
+        const delay=Math.min(30000,3000*Math.pow(1.6,reconnectAttempts++));
+        reconnectTimer=setTimeout(connectWebSocket,delay);
+      };
+    }catch(e){
+      setStatus('Sin conexión directa · usando fallback','warn');
+      startFallback();
+    }
+  }
+  function boot(){
+    ensureBtcCard();
+    connectWebSocket();
+  }
+  document.addEventListener('visibilitychange',function(){
+    if(document.hidden){
+      try{ if(ws) ws.close(); }catch(e){}
+    }else{
+      connectWebSocket();
+    }
+  });
+  window.startBtcLivePrice=connectWebSocket;
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+  else boot();
 })();
 </script>
 
