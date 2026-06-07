@@ -6182,7 +6182,7 @@ function renderCarteraFocus(cartera){
   const note=row ? 'Lectura individual de posición, rentabilidad, peso y XIRR.' : 'Lectura agregada de la cartera completa.';
   const fmtWeight=v=>Number.isFinite(Number(v)) ? fmtPct(v) : (v || '-');
   panel.innerHTML=`<article class="carteraFocusHero">
-    <div class="carteraFocusTop"><div class="carteraFocusName"><span class="bullet ${assetClass(target.activo || '')}"></span><div><h3>${title}</h3><p>${meta}</p></div></div><span class="carteraFocusStatus ${status.cls}">${status.label}</span></div>
+    <div class="carteraFocusTop"><div class="carteraFocusName"><span class="bullet ${assetClass(target.activo || '')}"></span><div><h3>${title}${row && carteraKeyFromName(row.activo)==='btc' ? ` <span class="carteraBtcLiveBadge"><span class="btcLivePulse warn"></span><span data-btc-live-price>${window.__btcLiveEurFormatted || '--'}</span></span>` : ''}</h3><p>${meta}</p></div></div><span class="carteraFocusStatus ${status.cls}">${status.label}</span></div>
     <div class="carteraFocusMain"><span>${mainLabel}</span><strong>${mainValue}</strong><small>${note}</small></div>
   </article>
   <article class="carteraFocusMetrics">
@@ -13595,6 +13595,10 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
     if(!small) return;
     const cls=type==='ok'?'':type;
     small.innerHTML='<span class="btcLivePulse '+cls+'"></span>'+text;
+    document.querySelectorAll('#cartera .carteraBtcLiveBadge .btcLivePulse').forEach(el=>{
+      el.classList.remove('warn','bad');
+      if(cls) el.classList.add(cls);
+    });
   }
   function setPrice(price, source){
     const n=Number(price);
@@ -13604,7 +13608,11 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
     const card=ensureBtcCard();
     if(!card) return;
     const strong=card.querySelector('strong');
-    if(strong) strong.textContent=formatEur(n);
+    const formatted=formatEur(n);
+    window.__btcLiveEurFormatted=formatted;
+    if(strong) strong.textContent=formatted;
+    document.querySelectorAll('[data-btc-live-price]').forEach(el=>{ el.textContent=formatted; });
+    document.querySelectorAll('#cartera .carteraBtcLiveBadge .btcLivePulse').forEach(el=>{ el.classList.remove('warn','bad'); });
     setStatus((source||'Directo')+' · '+formatTime(lastUpdate), 'ok');
   }
   async function fetchFallback(){
