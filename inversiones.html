@@ -4591,6 +4591,48 @@ body:before{
 }
 </style>
 
+
+
+<!-- V74 · BTC live en Cartera actual más discreto y naranja -->
+<style>
+#cartera .carteraBtcLiveBadge{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  margin-left:8px!important;
+  padding:4px 8px!important;
+  border-radius:999px!important;
+  border:1px solid rgba(232,154,82,.30)!important;
+  background:rgba(232,154,82,.075)!important;
+  color:var(--btc)!important;
+  font-size:13px!important;
+  font-weight:660!important;
+  letter-spacing:-.25px!important;
+  line-height:1!important;
+  vertical-align:middle!important;
+  transform:translateY(-2px)!important;
+}
+#cartera .carteraBtcLiveBadge [data-btc-live-price]{
+  color:var(--btc)!important;
+  font-size:13px!important;
+  font-weight:660!important;
+  line-height:1!important;
+}
+#cartera .carteraBtcLiveBadge .btcLivePulse{
+  width:6px!important;
+  height:6px!important;
+  flex:0 0 6px!important;
+  margin:0!important;
+  background:var(--btc)!important;
+}
+#cartera .carteraBtcLiveBadge .btcLivePulse.warn{background:var(--yellow)!important;}
+#cartera .carteraBtcLiveBadge .btcLivePulse.bad{background:var(--red)!important;}
+@media(max-width:1180px){
+  #cartera .carteraBtcLiveBadge{font-size:12px!important;padding:3px 7px!important;}
+  #cartera .carteraBtcLiveBadge [data-btc-live-price]{font-size:12px!important;}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
