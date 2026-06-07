@@ -4633,6 +4633,165 @@ body:before{
 }
 </style>
 
+
+
+<!-- V97 · Asesoría ejecutiva desktop -->
+<style>
+#asesoria .advisorHero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 230px!important;
+  gap:18px!important;
+  align-items:end!important;
+  padding:20px 22px!important;
+}
+#asesoria .advisorHero h2{
+  margin:0!important;
+  font-size:24px!important;
+  font-weight:570!important;
+  letter-spacing:-.65px!important;
+  line-height:1.08!important;
+}
+#asesoria .advisorHero p{
+  margin:8px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  max-width:820px!important;
+}
+#asesoria .advisorState{
+  background:rgba(0,0,0,.32)!important;
+  border:1px solid var(--line2)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  text-align:right!important;
+}
+#asesoria .advisorState span,
+#asesoria .advisorMetric span,
+#asesoria .advisorBlock span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+}
+#asesoria .advisorState strong{
+  display:block!important;
+  margin-top:7px!important;
+  font-size:28px!important;
+  font-weight:360!important;
+  letter-spacing:-.9px!important;
+}
+#asesoria .advisorState em{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  font-style:normal!important;
+  line-height:1.25!important;
+}
+#asesoria .advisorMetrics{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+#asesoria .advisorMetric{
+  min-height:88px!important;
+  padding:16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#asesoria .advisorMetric strong{
+  display:block!important;
+  margin-top:8px!important;
+  font-size:22px!important;
+  font-weight:390!important;
+  letter-spacing:-.55px!important;
+  line-height:1.05!important;
+  font-variant-numeric:tabular-nums!important;
+}
+#asesoria .advisorMetric small{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted)!important;
+  font-size:10.5px!important;
+  line-height:1.3!important;
+}
+#asesoria .advisorLayout{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.2fr) minmax(360px,.8fr)!important;
+  gap:18px!important;
+}
+#asesoria .advisorBlock{
+  padding:18px 20px!important;
+}
+#asesoria .advisorBlock strong{
+  display:block!important;
+  margin-top:9px!important;
+  color:var(--text)!important;
+  font-size:18px!important;
+  font-weight:560!important;
+  letter-spacing:-.42px!important;
+  line-height:1.22!important;
+}
+#asesoria .advisorBlock p{
+  margin:9px 0 0!important;
+  color:var(--text2)!important;
+  font-size:12px!important;
+  line-height:1.45!important;
+}
+#asesoria .advisorList{
+  display:grid!important;
+  gap:8px!important;
+  padding:14px 17px 17px!important;
+}
+#asesoria .advisorList div{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  border:1px solid var(--line2)!important;
+  border-radius:12px!important;
+  background:rgba(0,0,0,.30)!important;
+  padding:10px 12px!important;
+}
+#asesoria .advisorList strong{
+  color:var(--text)!important;
+  font-size:11.5px!important;
+  font-weight:560!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+#asesoria .advisorList span{
+  font-size:10.8px!important;
+  font-weight:700!important;
+  white-space:nowrap!important;
+}
+#asesoria .advisorConfidence{
+  margin:0 17px 17px!important;
+  padding:11px 13px!important;
+  border-radius:12px!important;
+  border:1px solid var(--line2)!important;
+  background:rgba(0,0,0,.24)!important;
+  color:var(--muted)!important;
+  font-size:10.8px!important;
+  line-height:1.35!important;
+}
+#asesoria .advisorConfidence strong{color:var(--text)!important;font-weight:560!important}
+@media(max-width:1150px){
+  #asesoria .advisorHero{grid-template-columns:1fr!important;align-items:start!important}
+  #asesoria .advisorState{text-align:left!important}
+  #asesoria .advisorMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #asesoria .advisorLayout{grid-template-columns:1fr!important}
+}
+@media(max-width:760px){
+  #asesoria{display:none!important}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -5073,6 +5232,78 @@ body:before{
     </section>
 
 
+
+
+    <section class="section" id="asesoria">
+      <section class="advisorHero card pageBlock">
+        <div>
+          <span class="eyebrow">Asesoría</span>
+          <h2>Oscar, esto es lo importante hoy de tu cartera.</h2>
+          <p>Lectura ejecutiva basada en el Excel importado. Sin controles técnicos, sin auditoría y sin repetir el funcionamiento interno de la web.</p>
+        </div>
+        <div class="advisorState">
+          <span>Estado general</span>
+          <strong id="advisorState" class="green">Correcto</strong>
+          <em id="advisorStateNote">Cartera alineada con seguimiento normal.</em>
+        </div>
+      </section>
+
+      <section class="advisorMetrics pageBlock">
+        <article class="card advisorMetric">
+          <span>Valor actual</span>
+          <strong id="advisorValue">13.136,12 €</strong>
+          <small>Cartera total actual.</small>
+        </article>
+        <article class="card advisorMetric">
+          <span>G/P real</span>
+          <strong id="advisorGain" class="green">+822,68 €</strong>
+          <small>Valor actual menos capital neto invertido.</small>
+        </article>
+        <article class="card advisorMetric">
+          <span>XIRR global</span>
+          <strong id="advisorXirr" class="green">14,58%</strong>
+          <small>Rentabilidad anualizada desde el inicio.</small>
+        </article>
+        <article class="card advisorMetric">
+          <span>Recomendación</span>
+          <strong id="advisorRecommendationShort" class="yellow">Vigilar Oro</strong>
+          <small>Lectura práctica desde el Excel.</small>
+        </article>
+      </section>
+
+      <section class="advisorLayout pageBlock">
+        <article class="card">
+          <div class="advisorBlock">
+            <span>Lectura principal</span>
+            <strong id="advisorMainReading">La cartera va bien: rentabilidad real positiva, XIRR positivo y sin señales críticas.</strong>
+            <p id="advisorToday">Lo importante hoy es mantener la disciplina de aportaciones y vigilar los activos con mayor desviación frente al objetivo.</p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="cardHeader">
+            <div>
+              <h3>Activos a vigilar</h3>
+              <p>Solo aparecen los puntos relevantes hoy.</p>
+            </div>
+          </div>
+          <div class="advisorList" id="advisorWatchList">
+            <div><strong>Oro</strong><span class="yellow">Bajo objetivo</span></div>
+            <div><strong>MSCI World</strong><span class="yellow">Sobre objetivo</span></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="card pageBlock">
+        <div class="advisorBlock">
+          <span>Recomendación del Excel</span>
+          <strong id="advisorExcelRecommendation">Seguir aportando con normalidad y reforzar los activos por debajo de objetivo con nuevas aportaciones, sin vender de forma innecesaria.</strong>
+          <p id="advisorExcelNote">La lectura se basa en valor actual, G/P real, XIRR global, desviaciones frente a objetivo y alertas principales del Excel.</p>
+        </div>
+        <div class="advisorConfidence" id="advisorConfidence"><strong>Confianza de datos:</strong> demo pendiente de Excel real cargado.</div>
+      </section>
+    </section>
+
     <section class="section" id="auditoria">
       <section class="auditWebHero card pageBlock">
         <div>
@@ -5175,6 +5406,7 @@ const pages=[
   ["movimientos","Movimientos","Movimientos conectados con el cálculo XIRR.","ok"],
   ["historial","Historial","Resumen anual y años anteriores.","ok"],
   ["benchmark","Benchmark","Tu cartera real frente a cartera objetivo y referencias externas.","ok"],
+  ["asesoria","Asesoría","Lectura ejecutiva de lo importante hoy de la cartera.","ok"],
   ["auditoria","Auditoría","Estado técnico de la web y funciones activas.","ok"]
 ];
 const nav=document.getElementById("nav");
@@ -6552,13 +6784,104 @@ function clearWorkbookCache(){
   localStorage.removeItem(CACHE_KEY);
   localStorage.removeItem(CACHE_META_KEY);
 }
+
+function advisorStatusFromData(gpReal, xirr, watchCount){
+  const gp=Number(gpReal), xr=Number(xirr);
+  if((Number.isFinite(gp) && gp<0) || (Number.isFinite(xr) && xr<0)) return {label:'Revisar', cls:'red', note:'Rentabilidad negativa o XIRR negativo.'};
+  if(watchCount>=3) return {label:'Vigilar', cls:'yellow', note:'Hay varios activos fuera de rango.'};
+  if(watchCount>0) return {label:'Correcto', cls:'green', note:'Cartera sana, con ajustes menores a vigilar.'};
+  return {label:'Correcto', cls:'green', note:'Cartera alineada con seguimiento normal.'};
+}
+function updateAsesoria(){
+  const resumen = sheetRows('RESUMEN');
+  const cartera = parseCartera();
+  const valueTotal = cell(resumen,5,2);
+  const gpReal = cell(resumen,6,6);
+  const xirr = cell(resumen,7,2);
+  const simple = cell(resumen,7,4);
+  const date = fmtDate(cell(resumen,2,2));
+  const rows = (cartera||[]).filter(x=>{
+    const a=String(x.activo||'').trim().toUpperCase();
+    const p=String(x.peso||'').toLowerCase();
+    return a && a!=='TOTAL' && p!=='separado';
+  });
+  const watch = rows.map(x=>{
+    const desv=Number(x.desv);
+    const pl=Number(x.pl);
+    const rent=Number(x.rent);
+    let reason='';
+    let cls='yellow';
+    if(Number.isFinite(desv) && Math.abs(desv)>=2){
+      reason = desv<0 ? 'Bajo objetivo' : 'Sobre objetivo';
+    }else if((Number.isFinite(pl)&&pl<0) || (Number.isFinite(rent)&&rent<0)){
+      reason = 'Rentabilidad negativa'; cls='red';
+    }
+    return reason ? {name:shortAssetName(x.activo), reason, cls, abs:Number.isFinite(desv)?Math.abs(desv):0} : null;
+  }).filter(Boolean).sort((a,b)=>b.abs-a.abs).slice(0,4);
+
+  const st=advisorStatusFromData(gpReal, xirr, watch.length);
+  const set=(id,val,cls)=>{ const el=document.getElementById(id); if(el){ el.textContent=val; if(cls!==undefined) el.className=cls||''; } };
+  set('advisorState', st.label, st.cls);
+  set('advisorStateNote', st.note);
+  set('advisorValue', fmtMoney(valueTotal));
+  set('advisorGain', fmtMoney(gpReal,2,true), clsByValue(gpReal));
+  set('advisorXirr', fmtPct(xirr,2,true), clsByValue(xirr));
+
+  const firstWatch = watch[0];
+  const recommendationShort = firstWatch ? `Vigilar ${firstWatch.name}` : 'Mantener rumbo';
+  set('advisorRecommendationShort', recommendationShort, firstWatch ? firstWatch.cls : 'green');
+
+  const main = document.getElementById('advisorMainReading');
+  if(main){
+    main.className = clsByValue(gpReal);
+    if(Number(gpReal)<0 || Number(xirr)<0){
+      main.textContent='La cartera necesita revisión: la lectura de rentabilidad no es suficientemente sólida hoy.';
+    }else if(watch.length){
+      main.textContent=`La cartera va bien: valor positivo, XIRR positivo y ${watch.length} punto${watch.length>1?'s':''} de vigilancia sin urgencia crítica.`;
+    }else{
+      main.textContent='La cartera va bien: rentabilidad real positiva, XIRR positivo y sin señales críticas.';
+    }
+  }
+  const today=document.getElementById('advisorToday');
+  if(today){
+    today.textContent = watch.length
+      ? `Lo importante hoy es no tocar la estructura general y usar nuevas aportaciones para corregir desviaciones: ${watch.map(x=>`${x.name} (${x.reason.toLowerCase()})`).join(', ')}.`
+      : `Lo importante hoy es mantener la disciplina de aportaciones. No hay desviaciones relevantes frente al objetivo.`;
+  }
+  const list=document.getElementById('advisorWatchList');
+  if(list){
+    list.innerHTML = watch.length
+      ? watch.map(x=>`<div><strong>${x.name}</strong><span class="${x.cls}">${x.reason}</span></div>`).join('')
+      : '<div><strong>Cartera global</strong><span class="green">Sin alertas relevantes</span></div>';
+  }
+  const reco=document.getElementById('advisorExcelRecommendation');
+  if(reco){
+    if(firstWatch){
+      reco.textContent = firstWatch.reason==='Bajo objetivo'
+        ? `Priorizar nuevas aportaciones hacia ${firstWatch.name} hasta acercarlo a su objetivo. No hace falta vender otros activos si la desviación puede corregirse aportando.`
+        : `Mantener ${firstWatch.name} bajo vigilancia y corregir solo con nuevas aportaciones si el Excel lo recomienda.`;
+    }else{
+      reco.textContent='Mantener la estrategia actual. No hay una señal clara que justifique cambios estructurales hoy.';
+    }
+  }
+  const note=document.getElementById('advisorExcelNote');
+  if(note){
+    note.textContent = `Rentabilidad simple real ${fmtPct(simple,2,true)}, XIRR global ${fmtPct(xirr,2,true)} y G/P real ${fmtMoney(gpReal,2,true)}.`;
+  }
+  const conf=document.getElementById('advisorConfidence');
+  if(conf){
+    conf.innerHTML = `<strong>Confianza de datos:</strong> ${importedData?.fileName ? `Excel cargado · ${importedData.fileName}${date ? ` · actualización ${date}` : ''}.` : 'demo pendiente de Excel real cargado.'}`;
+  }
+  setNavStatus('asesoria', st.cls==='red' ? 'bad' : st.cls==='yellow' ? 'warn' : 'ok');
+}
+
 function applyWorkbookAfterRead(fileName, fromCache=false){
   const missing=validateWorkbook(importedWorkbook);
   if(missing.length){ setStatus(false, `ERROR · faltan hojas: ${missing.join(', ')}`); setNavStatus('auditoria','bad'); return false; }
   importedData = {fileName:fileName || 'Excel importado'};
-  updateDashboard(); updateCartera(); updateXirr(); updateHistorial(); updateAuditoria(); updateDataStatus?.();
+  updateDashboard(); updateCartera(); updateXirr(); updateHistorial(); updateAsesoria(); updateAuditoria(); updateDataStatus?.();
   setStatus(true, fromCache ? `${fileName || 'Excel'} recuperado` : `${fileName || 'Excel'} importado`);
-  setNavStatus('dashboard','ok'); setNavStatus('cartera','ok'); setNavStatus('xirr','ok'); setNavStatus('movimientos','ok'); setNavStatus('historial','ok');
+  setNavStatus('dashboard','ok'); setNavStatus('cartera','ok'); setNavStatus('xirr','ok'); setNavStatus('movimientos','ok'); setNavStatus('historial','ok'); setNavStatus('asesoria','ok');
   return true;
 }
 function loadWorkbookCache(){
@@ -13732,6 +14055,18 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
 })();
 </script>
 
+
+<script>
+/* V97 · mantener Asesoría sincronizada sin alterar páginas existentes */
+try{
+  const __portfolioV97UpdateDashboard = updateDashboard;
+  updateDashboard = function(){
+    __portfolioV97UpdateDashboard();
+    if(typeof updateAsesoria === 'function') updateAsesoria();
+  };
+}catch(e){ console.warn('Asesoría no pudo engancharse al dashboard:', e); }
+</script>
+
 </body>
 </html>
 <style>
@@ -17628,4 +17963,314 @@ body:before{
 @media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
 
+</style>
+
+<style>
+/* ============================================================
+   CAPA DE ARMONIZACIÓN FINAL · v75
+   Reordena el caos visual acumulado sin tocar lógica ni tipografía.
+   Carga la última: prevalece sobre todas las capas previas.
+   ============================================================ */
+
+/* --- Tokens unificados (define lo que faltaba y calma el acento) --- */
+:root{
+  --bg:#0a0c0e;
+  --surface:#15171c;
+  --surface-2:#101216;
+  --line:rgba(244,241,234,.085);
+  --line-strong:rgba(244,241,234,.14);
+  --text:#f4f1ea;
+  --text2:#b4b7b1;
+  --muted:#7e837c;
+  --muted2:#565a53;
+  --green:#5fd39b;
+  --red:#f0746a;
+  --yellow:#e8b14a;
+  --warn:#e8b14a;             /* faltaba: usado por .statusPill.warn */
+  --blue:#6e93e8;
+  --accent:#f4f1ea;           /* acento neutro hueso, NO amarillo */
+  /* neutraliza el sistema "active-yellow" heredado en un solo punto */
+  --active-yellow:#f4f1ea;
+  --active-yellow-hover:#ffffff;
+  --active-yellow-soft:rgba(244,241,234,.14);
+  --active-yellow-border:#f4f1ea;
+  --active-yellow-shadow:0 10px 26px rgba(244,241,234,.10), inset 0 1px 0 rgba(255,255,255,.20);
+  --radius:18px;
+  --pad-card:20px;
+  --gap:16px;
+  --shadow:0 26px 80px rgba(0,0,0,.5);
+  --soft:0 16px 44px rgba(0,0,0,.32);
+}
+
+/* --- Ritmo vertical único entre bloques --- */
+.section .pageBlock,
+.section > .grid,
+.section > .card,
+.section > section{ margin-top:var(--gap)!important; }
+.section > .pageBlock:first-child,
+.section > .grid:first-child,
+.section > .card:first-child{ margin-top:0!important; }
+
+/* --- Superficie de tarjeta consistente en toda la app --- */
+.card,.kpi,.capitalCard,.historyKpi,.yearCard,
+.dataStatusCard,.xirrAssetCard{
+  background:linear-gradient(180deg,rgba(26,28,34,.94),rgba(14,15,19,.96))!important;
+  border:1px solid var(--line)!important;
+  box-shadow:var(--soft)!important;
+  border-radius:var(--radius)!important;
+}
+
+/* --- ACENTO: sustituye todo el amarillo de estado-activo por hueso --- */
+.nav button.active{
+  background:var(--accent)!important;
+  background-image:none!important;
+  color:#0a0c0e!important;
+  box-shadow:0 10px 26px rgba(244,241,234,.08)!important;
+}
+.nav button.active span{ color:#0a0c0e!important; }
+.btn.primary,label.btn.primary{
+  background:var(--accent)!important;
+  background-image:none!important;
+  color:#0a0c0e!important;
+  border-color:var(--accent)!important;
+  box-shadow:0 8px 22px rgba(244,241,234,.10)!important;
+}
+.filterPill.active,
+.tabs span.active,
+.movementModePills .filterPill.active,
+#cartera .carteraProTabs button.active{
+  background:var(--accent)!important;
+  background-image:none!important;
+  color:#0a0c0e!important;
+  border-color:var(--accent)!important;
+}
+/* selectores con ID: necesarios para ganar a #seccion .pill.active */
+#movimientos .filterPill.active,
+#movimientos .filterPill.active:hover,
+#movimientos .movementModePills .filterPill.active{
+  background:var(--accent)!important;
+  background-image:none!important;
+  border-color:var(--accent)!important;
+  color:#0a0c0e!important;
+  box-shadow:0 0 0 1px rgba(244,241,234,.16),0 8px 22px rgba(244,241,234,.08)!important;
+}
+#cartera .carteraProTabs button.active{
+  background:var(--accent)!important;
+  background-image:none!important;
+  border-color:var(--accent)!important;
+  color:#0a0c0e!important;
+}
+#benchmark .benchmarkTabs button.active,
+.benchmarkTabs button.active{
+  background:var(--accent)!important;
+  background-image:none!important;
+  border-color:var(--accent)!important;
+  color:#0a0c0e!important;
+}
+/* gráfica de benchmark vacía: deja de ser un hueco enorme */
+#benchmark .benchmarkChartReal:has(.chartEmpty){
+  min-height:150px!important;
+}
+#benchmark .benchmarkChartReal .chartEmpty{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  min-height:150px!important;padding:24px!important;color:var(--muted)!important;
+  text-align:center!important;font-size:13px!important;
+}
+.yearCard.active{
+  border-color:rgba(95,211,155,.55)!important;
+  box-shadow:0 0 0 1px rgba(95,211,155,.14) inset!important;
+}
+
+/* --- FIX CRÍTICO: tabla de Distribución operativa volvía vacía ---
+   Una regla tardía forzaba .legend a grid de 5 columnas y colapsaba la tabla. */
+#dashboard .dashboardDistributionBlock .legend,
+#dashboard .distributionCard .legend{
+  display:block!important;
+  grid-template-columns:none!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:0 var(--pad-card) var(--pad-card)!important;
+  gap:0!important;
+}
+#dashboard .distTableWrap{
+  display:block!important;
+  width:100%!important;
+  margin-top:14px!important;
+  border:1px solid var(--line)!important;
+  border-radius:14px!important;
+  overflow:hidden!important;
+  background:rgba(0,0,0,.22)!important;
+}
+#dashboard .distTable{
+  width:100%!important;
+  min-width:0!important;
+  border-collapse:collapse!important;
+  table-layout:auto!important;
+}
+#dashboard .distTable th{
+  background:rgba(244,241,234,.045)!important;
+  color:var(--muted)!important;
+  font-size:11px!important;
+  font-weight:740!important;
+  letter-spacing:.05em!important;
+  text-transform:uppercase!important;
+  padding:12px 14px!important;
+  border-bottom:1px solid var(--line)!important;
+  white-space:nowrap!important;
+}
+#dashboard .distTable td{
+  padding:13px 14px!important;
+  border-bottom:1px solid var(--line)!important;
+  font-size:13.5px!important;
+  color:var(--text2)!important;
+  font-variant-numeric:tabular-nums!important;
+  white-space:nowrap!important;
+}
+#dashboard .distTable tbody tr:last-child td{ border-bottom:0!important; }
+#dashboard .distTable th:first-child,
+#dashboard .distTable td:first-child{ text-align:left!important; }
+#dashboard .distTable th:nth-child(2),#dashboard .distTable td:nth-child(2),
+#dashboard .distTable th:nth-child(3),#dashboard .distTable td:nth-child(3),
+#dashboard .distTable th:nth-child(4),#dashboard .distTable td:nth-child(4),
+#dashboard .distTable th:nth-child(5),#dashboard .distTable td:nth-child(5){ text-align:right!important; }
+#dashboard .distTable th:last-child,#dashboard .distTable td:last-child{ text-align:left!important; padding-left:20px!important; }
+#dashboard .distTable .distAsset{ display:inline-flex!important; align-items:center!important; gap:10px!important; }
+#dashboard .distTable .distAsset strong{ color:var(--text)!important; font-weight:640!important; }
+#dashboard .distTable .legendDot{ width:9px!important; height:9px!important; border-radius:50%!important; box-shadow:none!important; }
+/* la tabla no usa .legendRow; si alguna capa lo inyecta, que no estorbe */
+#dashboard .dashboardDistributionBlock .distTable tr.legendRow:before,
+#dashboard .dashboardDistributionBlock .distTable tr.legendRow:after{ display:none!important; }
+
+/* placeholder cuando aún no hay Excel: el JS deja el tbody sin filas */
+#dashboard .dashboardDistributionBlock .distTable tbody:empty::after{
+  content:"Importa o carga el Excel para ver la distribución por activo.";
+  display:block;padding:18px 14px;color:var(--muted);font-size:13px;white-space:normal;
+}
+
+/* Pastillas de estado coherentes */
+.statusPill{
+  display:inline-flex!important;align-items:center!important;
+  padding:4px 10px!important;border-radius:999px!important;
+  font-size:11px!important;font-weight:720!important;
+  border:1px solid var(--line)!important;letter-spacing:.02em!important;
+}
+.statusPill.ok{ color:var(--green)!important;border-color:rgba(95,211,155,.30)!important;background:rgba(95,211,155,.08)!important; }
+.statusPill.warn{ color:var(--warn)!important;border-color:rgba(232,177,74,.32)!important;background:rgba(232,177,74,.08)!important; }
+.statusPill.neutral{ color:var(--muted)!important;background:rgba(244,241,234,.04)!important; }
+
+/* --- Hero del Dashboard: menos aire muerto, métricas compactas --- */
+#dashboard .hero .heroBody{ padding:16px 20px 20px!important; }
+#dashboard .hero .bigValue strong{ font-size:48px!important; letter-spacing:-2px!important; }
+#dashboard .heroMetrics{ gap:12px!important; margin-top:14px!important; }
+#dashboard .heroMetric{
+  background:rgba(0,0,0,.28)!important;border:1px solid var(--line)!important;
+  border-radius:14px!important;padding:14px!important;
+}
+#dashboard .heroMetric strong{ font-size:21px!important; }
+
+/* --- Dos columnas Distribución / Alertas: equilibrio real --- */
+@media(min-width:1180px){
+  #dashboard .dashboardOps{
+    grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)!important;
+    gap:var(--gap)!important;
+    align-items:stretch!important;
+  }
+  #dashboard .dashboardOps > *{ height:100%!important; }
+  #dashboard .dashboardOps .card{ display:flex!important; flex-direction:column!important; }
+}
+
+/* --- Cartera: elimina la barra de filtro huérfana vacía sobre la tabla --- */
+#cartera .movementsToolbar:empty,
+#cartera .searchBox:placeholder-shown:only-child{ display:none!important; }
+#cartera .carteraProTabs:empty{ display:none!important; }
+/* .carteraDiagnosis se rellena por JS; vacío en demo deja una caja con borde */
+#cartera .carteraDiagnosis:empty{ display:none!important; }
+
+/* --- Benchmark: caja de gráfica vacía deja de ser un hueco gigante --- */
+#benchmark .chart,
+#benchmark [class*="chart"]:empty{ min-height:200px!important; max-height:260px!important; }
+
+/* --- Cabeceras de tarjeta: tamaño y aire uniformes --- */
+.cardHeader{ padding:18px var(--pad-card) 0!important; }
+.cardHeader h2{ font-size:21px!important; font-weight:700!important; letter-spacing:-.5px!important; }
+.cardHeader h3{ font-size:18px!important; font-weight:700!important; letter-spacing:-.4px!important; }
+.cardHeader p{ font-size:12.5px!important; color:var(--muted)!important; margin-top:6px!important; line-height:1.4!important; }
+
+/* --- KPIs / capital cards: alineación y peso numérico uniformes --- */
+.capitalCard strong,.kpi strong,.historyKpi strong{
+  font-weight:480!important;font-variant-numeric:tabular-nums!important;letter-spacing:-.5px!important;
+}
+.capitalCard label,.kpi label,.dataStatusCard label{
+  font-size:11px!important;text-transform:uppercase!important;letter-spacing:.05em!important;
+  color:var(--muted)!important;font-weight:680!important;
+}
+
+/* --- Topbar: respiración y altura coherente --- */
+.topbar{ padding:14px 18px!important; border-radius:20px!important; }
+.pageTitle h1{ font-size:25px!important; font-weight:720!important; letter-spacing:-.7px!important; }
+
+/* --- Tablas generales: misma línea divisoria suave --- */
+.assetTable td,.summaryTable td,.table td{ border-color:var(--line)!important; }
+
+/* --- Tablas generales: misma línea divisoria suave --- */
+.assetTable td,.summaryTable td,.table td{ border-color:var(--line)!important; }
+
+/* ============================================================
+   AJUSTE v76 · Botón activo en color plano + Auditoría en una fila
+   ============================================================ */
+
+/* Acento sólido dorado elegante (sin degradado) para estados activos */
+:root{
+  --active-solid:#e8b14a;       /* ámbar dorado uniforme */
+  --active-solid-ink:#1a1407;   /* tinta oscura para contraste */
+  /* anula el sistema de degradado heredado: ambos extremos al mismo tono */
+  --active-yellow:#e8b14a;
+  --active-yellow-hover:#e8b14a;
+  --active-yellow-soft:rgba(232,177,74,.16);
+  --active-yellow-border:#e8b14a;
+  --active-yellow-shadow:0 8px 22px rgba(232,177,74,.16);
+}
+
+/* Cualquier estado activo: fondo plano, sin gradiente */
+.nav button.active,
+.btn.primary, label.btn.primary,
+.tabs span.active, .tabs .active,
+.filterPill.active,
+.filterPills .filterPill.active,
+.movementModePills .filterPill.active,
+.yearCard.active, .yearPills button.active, .yearLine.active,
+.pill.active,
+#movimientos .filterPill.active,
+#movimientos .filterPill.active:hover,
+#cartera .carteraProTabs button.active,
+#benchmark .benchmarkTabs button.active,
+.benchmarkTabs button.active{
+  background:var(--active-solid)!important;
+  background-image:none!important;
+  border-color:var(--active-solid)!important;
+  color:var(--active-solid-ink)!important;
+  box-shadow:0 8px 22px rgba(232,177,74,.14)!important;
+}
+.nav button.active span{ color:var(--active-solid-ink)!important; }
+
+/* Auditoría: las 5 tarjetas de estado en una sola fila */
+#auditoria .auditWebGrid{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:12px!important;
+}
+@media(max-width:1200px){
+  #auditoria .auditWebGrid{ grid-template-columns:repeat(3,minmax(0,1fr))!important; }
+}
+@media(max-width:760px){
+  #auditoria .auditWebGrid{ grid-template-columns:repeat(2,minmax(0,1fr))!important; }
+}
+@media(max-width:520px){
+  #auditoria .auditWebGrid{ grid-template-columns:1fr!important; }
+}
+
+/* --- Scrollbar discreta y coherente --- */
+::-webkit-scrollbar{ width:10px;height:10px; }
+::-webkit-scrollbar-thumb{ background:rgba(244,241,234,.14);border-radius:999px;border:2px solid var(--bg); }
+::-webkit-scrollbar-track{ background:transparent; }
 </style>
