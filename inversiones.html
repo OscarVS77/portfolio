@@ -18314,3 +18314,70 @@ body:before{
 ::-webkit-scrollbar-thumb{ background:rgba(244,241,234,.14);border-radius:999px;border:2px solid var(--bg); }
 ::-webkit-scrollbar-track{ background:transparent; }
 </style>
+
+<style>
+/* V100 · FIX REAL MOBILE: Distribución operativa con scroll lateral
+   El scroll queda en .legend, no en un contenedor interno anidado. */
+@media (max-width:760px){
+  #dashboard .dashboardDistributionBlock,
+  #dashboard .distributionCard{
+    max-width:100%!important;
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+
+  #dashboard .dashboardDistributionBlock .legend,
+  #dashboard .distributionCard .legend{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin:0!important;
+    padding:18px 18px 22px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-x:contain!important;
+    scrollbar-width:thin!important;
+  }
+
+  #dashboard .dashboardDistributionBlock .distTableWrap,
+  #dashboard .distributionCard .distTableWrap{
+    display:block!important;
+    width:max-content!important;
+    min-width:920px!important;
+    max-width:none!important;
+    margin:14px 0 0!important;
+    overflow:visible!important;
+    border-radius:14px!important;
+  }
+
+  #dashboard .dashboardDistributionBlock .distTable,
+  #dashboard .distributionCard .distTable{
+    width:920px!important;
+    min-width:920px!important;
+    max-width:none!important;
+    table-layout:fixed!important;
+    border-collapse:collapse!important;
+  }
+
+  #dashboard .dashboardDistributionBlock .distTable th,
+  #dashboard .dashboardDistributionBlock .distTable td,
+  #dashboard .distributionCard .distTable th,
+  #dashboard .distributionCard .distTable td{
+    white-space:nowrap!important;
+  }
+
+  #dashboard .dashboardDistributionBlock .distTable th:nth-child(1),
+  #dashboard .dashboardDistributionBlock .distTable td:nth-child(1){width:230px!important;}
+  #dashboard .dashboardDistributionBlock .distTable th:nth-child(2),
+  #dashboard .dashboardDistributionBlock .distTable td:nth-child(2){width:160px!important;}
+  #dashboard .dashboardDistributionBlock .distTable th:nth-child(3),
+  #dashboard .dashboardDistributionBlock .distTable td:nth-child(3){width:150px!important;}
+  #dashboard .dashboardDistributionBlock .distTable th:nth-child(4),
+  #dashboard .dashboardDistributionBlock .distTable td:nth-child(4){width:140px!important;}
+  #dashboard .dashboardDistributionBlock .distTable th:nth-child(5),
+  #dashboard .dashboardDistributionBlock .distTable td:nth-child(5){width:140px!important;}
+  #dashboard .dashboardDistributionBlock .distTable th:nth-child(6),
+  #dashboard .dashboardDistributionBlock .distTable td:nth-child(6){width:100px!important;}
+}
+</style>
