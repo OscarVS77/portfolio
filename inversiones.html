@@ -3962,6 +3962,50 @@ body:before{
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
 
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
+
 </style>
 
 
@@ -4291,6 +4335,50 @@ body:before{
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
 
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
+
 </style>
 
 
@@ -4404,6 +4492,103 @@ body:before{
   .mobileAssetValues{grid-template-columns:1fr!important;}
   .mobileAssetMetric strong{font-size:15px!important;}
 }
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
+
+</style>
+
+
+<style>
+/* V72 · Cartera actual PRO pulida · desktop only */
+@media (min-width:681px){
+  #cartera .card.pageBlock{
+    padding-bottom:18px!important;
+  }
+  #cartera .carteraFocusPanel{
+    grid-template-columns:minmax(0,.74fr) minmax(640px,1.26fr)!important;
+    align-items:stretch!important;
+  }
+  #cartera .carteraFocusHero{
+    min-height:178px!important;
+  }
+  #cartera .carteraFocusMetrics{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:9px!important;
+  }
+  #cartera .carteraMetric{
+    min-width:0!important;
+    overflow:hidden!important;
+    padding:12px!important;
+  }
+  #cartera .carteraMetric strong{
+    max-width:100%!important;
+    min-width:0!important;
+    font-size:clamp(15px,1.04vw,20px)!important;
+    line-height:1.12!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+    word-break:normal!important;
+  }
+  #cartera .carteraMetricPlatform strong{
+    font-size:clamp(14px,.95vw,18px)!important;
+    white-space:normal!important;
+  }
+  #cartera .carteraDiagnosis{
+    font-size:12.4px!important;
+    line-height:1.48!important;
+  }
+  #cartera .carteraTableTitle{
+    margin-top:16px!important;
+  }
+  #cartera .assetTableWrap{
+    margin-top:10px!important;
+  }
+}
+@media (min-width:681px) and (max-width:1280px){
+  #cartera .carteraFocusPanel{grid-template-columns:1fr!important}
+  #cartera .carteraFocusMetrics{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
 </style>
 
 </head>
@@ -4515,6 +4700,10 @@ body:before{
             <p>Vista compacta tipo posiciones: menos separación horizontal y lectura más rápida por activo.</p>
           </div>
         </div>
+        <div class="carteraProTabs" id="carteraProTabs"></div>
+        <div class="carteraFocusPanel" id="carteraFocusPanel"></div>
+        <div class="carteraDiagnosis" id="carteraDiagnosis"></div>
+        <div class="carteraTableTitle" id="carteraTableTitle">Tabla completa de posiciones</div>
         <div class="assetTableWrap">
           <table class="assetTable">
             <thead>
@@ -5865,11 +6054,161 @@ function updateReconciliation(cartera, resumen){
   tbody.innerHTML = rows.map(r=>`<tr class="${r[5]||''}"><td><span class="platformName"><span class="bullet ${r[1]}"></span>${r[0]}</span></td><td><strong>${fmtMoney(r[2])}</strong></td><td>${fmtMoney(r[3])}</td><td><strong class="${clsByValue(r[4])}">${fmtMoney(r[4])}</strong></td></tr>`).join('');
 }
 
+let carteraActiveKey = 'all';
+function carteraKeyFromName(value){
+  const a=normalizeText(value||'');
+  if(a.includes('bitcoin') || a.includes('btc')) return 'btc';
+  if(a.includes('oro') || a.includes('gold')) return 'gold';
+  if(a.includes('msci')) return 'msci';
+  if(a.includes('emerging')) return 'emerging';
+  if(a.includes('small')) return 'small';
+  if(a.includes('plan') || a.includes('pensiones')) return 'pension';
+  if(a.includes('total')) return 'all';
+  return a.replace(/[^a-z0-9]+/g,'_') || 'asset';
+}
+function getAssetXirrMap(){
+  const map={};
+  try{
+    parseXirrRows().forEach(x=>{ map[carteraKeyFromName(x.activo)] = x; });
+  }catch(e){}
+  return map;
+}
+function carteraStatusFor(row){
+  if(!row) return {label:'OK', cls:'ok'};
+  const key=carteraKeyFromName(row.activo);
+  const desv=Number(row.desv);
+  const rent=Number(row.rent);
+  const pl=Number(row.pl);
+  if(key==='pension') return {label:'Separado', cls:'ok'};
+  if(Number.isFinite(desv) && Math.abs(desv)>=2) return {label:'Vigilar', cls:'warn'};
+  if((Number.isFinite(rent)&&rent<0) || (Number.isFinite(pl)&&pl<0)) return {label:'Revisar', cls:'bad'};
+  return {label:'OK', cls:'ok'};
+}
+function carteraDiagnosisText(row, xirrRow){
+  if(!row){
+    return '<strong>Lectura general</strong>La cartera completa muestra la foto actual de posiciones, capital invertido, rentabilidad, XIRR, peso objetivo y desviación. Usa las pestañas para entrar en cada activo sin perder la tabla completa.';
+  }
+  const name=shortAssetName(row.activo);
+  const key=carteraKeyFromName(row.activo);
+  const desv=Number(row.desv);
+  const peso=Number(row.peso);
+  const objetivo=Number(row.objetivo);
+  const xirr=Number(xirrRow?.xirr);
+  const rent=Number(row.rent);
+  const pl=Number(row.pl);
+  const desvAbs=Number.isFinite(desv) ? Math.abs(desv) : null;
+  const pesoTxt=(Number.isFinite(peso)&&Number.isFinite(objetivo)) ? ` Peso real ${fmtPct(peso)} frente a objetivo ${fmtPct(objetivo)}.` : '';
+  const xirrTxt=Number.isFinite(xirr) ? ` XIRR del activo: <span class="${clsByValue(xirr)}">${fmtPct(xirr)}</span>.` : '';
+  let text='';
+
+  if(key==='pension'){
+    text='Plan Pensiones queda separado de la allocation operativa. Sirve como bloque de largo plazo y no debe mezclarse con los pesos objetivo de la cartera invertible.';
+  }else if(key==='btc'){
+    if(Number.isFinite(desv) && desv < -2) text='Bitcoin está por debajo del objetivo. Conviene reforzarlo con aportaciones controladas, sin forzar ventas de otros activos.';
+    else if(Number.isFinite(desv) && desv > 2) text='Bitcoin está por encima del objetivo. Conviene vigilar el peso para que no domine la cartera.';
+    else text='Bitcoin está razonablemente alineado con su objetivo. No requiere rebalanceo urgente, pero conviene vigilar su XIRR y mantener aportaciones controladas.';
+  }else if(key==='gold'){
+    if(Number.isFinite(desv) && desv < -2) text='Oro está por debajo del objetivo. Puede reforzarse con nuevas aportaciones para recuperar su función defensiva dentro de la cartera.';
+    else if(Number.isFinite(desv) && desv > 2) text='Oro está por encima del objetivo. Mantener sin reforzar hasta que vuelva a rango sería lo más prudente.';
+    else text='Oro está dentro de un rango razonable frente al objetivo y mantiene su papel defensivo.';
+  }else if(key==='msci'){
+    if(Number.isFinite(desv) && desv > 2) text='MSCI World está por encima de objetivo. Sigue siendo el núcleo de la cartera, pero no necesita sobreponderarse más por ahora.';
+    else if(Number.isFinite(desv) && desv < -2) text='MSCI World está por debajo de objetivo. Puede reforzarse con aportaciones nuevas, al ser el bloque principal de renta variable global.';
+    else text='MSCI World está razonablemente alineado con su objetivo y sigue actuando como núcleo principal de la cartera.';
+  }else if(key==='emerging'){
+    if(Number.isFinite(desv) && desv > 2) text='Emerging Markets está por encima de objetivo. Mantener sin reforzar evitaría aumentar demasiado el riesgo específico.';
+    else if(Number.isFinite(desv) && desv < -2) text='Emerging Markets está por debajo de objetivo. Puede reforzarse con aportaciones, manteniendo su peso controlado.';
+    else text='Emerging Markets está dentro de un rango razonable frente al objetivo.';
+  }else if(key==='small'){
+    if(Number.isFinite(desv) && desv > 2) text='Small Cap está por encima de objetivo. Conviene mantener sin reforzar hasta que vuelva a rango.';
+    else if(Number.isFinite(desv) && desv < -2) text='Small Cap está por debajo de objetivo. Puede reforzarse con aportaciones, sin perder de vista su volatilidad.';
+    else text='Small Cap está razonablemente alineado con su objetivo.';
+  }else{
+    text=`${name} está razonablemente alineado con la cartera.`;
+  }
+
+  if((Number.isFinite(rent) && rent<0) || (Number.isFinite(pl) && pl<0)){
+    text += ' La rentabilidad mostrada es negativa, por lo que debe revisarse con perspectiva y sin tomar decisiones precipitadas.';
+  }
+
+  return `<strong>Diagnóstico ${name}</strong>${text}${pesoTxt}${xirrTxt}`;
+}
+function renderCarteraTabs(cartera){
+  const tabs=document.getElementById('carteraProTabs');
+  if(!tabs) return;
+  const rows=(cartera||[]).filter(x=>String(x.activo||'').trim() && String(x.activo).toUpperCase()!=='TOTAL');
+  const base=[{key:'all',label:'Todos',cls:'bOk'}].concat(rows.map(x=>({key:carteraKeyFromName(x.activo),label:shortAssetName(x.activo),cls:assetClass(x.activo)})));
+  tabs.innerHTML=base.map(x=>`<button type="button" data-cartera-filter="${x.key}" class="${carteraActiveKey===x.key?'active':''}">${x.key!=='all'?`<span class="bullet ${x.cls}"></span>`:''}<span>${x.label}</span></button>`).join('');
+  tabs.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
+    carteraActiveKey=btn.dataset.carteraFilter || 'all';
+    updateCartera();
+  }));
+}
+function cleanCarteraPlatform(row){
+  if(!row) return 'Global';
+  const key=carteraKeyFromName(row.activo);
+  if(key==='btc') return 'Bitcoin';
+  const p=String(row.plataforma || '').trim();
+  if(p.toLowerCase().includes('trade')) return 'Trade Republic';
+  if(p.toLowerCase().includes('myinvestor')) return 'MyInvestor';
+  return p || '-';
+}
+function carteraAssetMeta(row){
+  if(!row) return 'Vista general';
+  const key=carteraKeyFromName(row.activo);
+  if(key==='btc') return 'Revolut X · Tangem · Cripto';
+  if(key==='pension') return 'MyInvestor · separado de allocation';
+  if(key==='gold') return 'Trade Republic · Oro';
+  return `${cleanCarteraPlatform(row)}${row.tipo ? ' · '+row.tipo : ''}`;
+}
+function renderCarteraFocus(cartera){
+  const panel=document.getElementById('carteraFocusPanel');
+  const diagnosis=document.getElementById('carteraDiagnosis');
+  const tableTitle=document.getElementById('carteraTableTitle');
+  if(!panel) return;
+  const rows=(cartera||[]).filter(x=>String(x.activo||'').trim() && String(x.activo).toUpperCase()!=='TOTAL');
+  const total=(cartera||[]).find(x=>String(x.activo).toUpperCase()==='TOTAL');
+  const xirrMap=getAssetXirrMap();
+  let row=null;
+  if(carteraActiveKey!=='all') row=rows.find(x=>carteraKeyFromName(x.activo)===carteraActiveKey) || null;
+  const target=row || total || {};
+  const xirrRow=row ? xirrMap[carteraKeyFromName(row.activo)] : xirrMap.all;
+  const status=carteraStatusFor(row || total);
+  const title=row ? shortAssetName(row.activo) : 'Cartera completa';
+  const platformClean = row ? cleanCarteraPlatform(row) : 'Global';
+  const meta=row ? carteraAssetMeta(row) : 'Vista general de todos los activos';
+  const mainValue=fmtMoney(target.valor);
+  const mainLabel=row ? 'Valor actual del activo' : 'Valor actual total';
+  const note=row ? 'Lectura individual de posición, rentabilidad, peso y XIRR.' : 'Lectura agregada de la cartera completa.';
+  const fmtWeight=v=>Number.isFinite(Number(v)) ? fmtPct(v) : (v || '-');
+  panel.innerHTML=`<article class="carteraFocusHero">
+    <div class="carteraFocusTop"><div class="carteraFocusName"><span class="bullet ${assetClass(target.activo || '')}"></span><div><h3>${title}</h3><p>${meta}</p></div></div><span class="carteraFocusStatus ${status.cls}">${status.label}</span></div>
+    <div class="carteraFocusMain"><span>${mainLabel}</span><strong>${mainValue}</strong><small>${note}</small></div>
+  </article>
+  <article class="carteraFocusMetrics">
+    <div class="carteraMetric"><span>Invertido</span><strong>${fmtMoney(target.invertido)}</strong></div>
+    <div class="carteraMetric"><span>P&amp;L</span><strong class="${clsByValue(target.pl)}">${fmtMoney(target.pl,2,true)}</strong></div>
+    <div class="carteraMetric"><span>Rent.</span><strong class="${clsByValue(target.rent)}">${fmtPct(target.rent,2,true)}</strong></div>
+    <div class="carteraMetric"><span>XIRR</span><strong class="${clsByValue(xirrRow?.xirr)}">${Number.isFinite(Number(xirrRow?.xirr)) ? fmtPct(xirrRow.xirr,2,true) : '-'}</strong></div>
+    <div class="carteraMetric"><span>Peso real</span><strong>${fmtWeight(target.peso)}</strong></div>
+    <div class="carteraMetric"><span>Objetivo</span><strong>${fmtWeight(target.objetivo)}</strong></div>
+    <div class="carteraMetric"><span>Desviación</span><strong class="${clsByValue(target.desv)}">${Number.isFinite(Number(target.desv))?fmtPct(target.desv,2,true):(target.desv||'-')}</strong></div>
+    <div class="carteraMetric carteraMetricPlatform"><span>Plataforma</span><strong>${platformClean}</strong></div>
+  </article>`;
+  if(diagnosis) diagnosis.innerHTML=carteraDiagnosisText(row, xirrRow);
+  if(tableTitle) tableTitle.textContent=row ? `Detalle de ${title}` : 'Tabla completa de posiciones';
+}
 function updateCartera(){
   const cartera = parseCartera();
+  renderCarteraTabs(cartera);
+  renderCarteraFocus(cartera);
   const tbody = document.querySelector('#cartera .assetTable tbody');
   if(!tbody) return;
-  tbody.innerHTML = cartera.map(x=>{
+  let tableRows = cartera;
+  if(carteraActiveKey!=='all'){
+    tableRows = cartera.filter(x=>String(x.activo).toUpperCase()!=='TOTAL' && carteraKeyFromName(x.activo)===carteraActiveKey);
+  }
+  tbody.innerHTML = tableRows.map(x=>{
     const total = String(x.activo).toUpperCase()==='TOTAL';
     const name = total ? 'TOTAL' : x.activo;
     const meta = total ? 'Cartera completa' : `${shortAssetName(x.activo)} · ${x.plataforma}`;
@@ -5877,6 +6216,7 @@ function updateCartera(){
     return `<tr class="${total?'totalRow':''}"><td><div class="assetName"><span class="bullet ${assetClass(x.activo)}"></span><div><span class="assetNameText">${name}</span><span class="assetMeta">${meta}</span></div></div></td><td>${fmtMoney(x.valor)}</td><td>${fmtMoney(x.invertido)}</td><td class="${clsByValue(x.pl)}">${fmtMoney(x.pl)}</td><td class="${clsByValue(x.rent)}">${fmtPct(x.rent)}</td><td>${fmtWeight(x.peso)}</td><td>${fmtWeight(x.objetivo)}</td><td class="${clsByValue(x.desv)}">${Number.isFinite(Number(x.desv))?fmtPct(x.desv):x.desv}</td></tr>`;
   }).join('');
 }
+
 
 function parseXirrRows(){
   const rows = sheetRows('XIRR GLOBAL');
@@ -7168,6 +7508,50 @@ body:before{
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
 
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
+
 </style>
 
 
@@ -7753,6 +8137,50 @@ body:before{
   .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
+
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
 
 </style>
 <script>
@@ -8423,6 +8851,50 @@ body:before{
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
 
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
+
 </style>
 
 <style>
@@ -8964,6 +9436,50 @@ body:before{
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
 
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
+
 </style>
 
 
@@ -9457,6 +9973,50 @@ body:before{
   .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
+
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
 
 </style>
 <script>
@@ -10000,6 +10560,50 @@ body:before{
   .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
+
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
 
 </style>
 <script>
@@ -10561,6 +11165,50 @@ body:before{
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
 
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
+
 </style>
 <script>
 (function(){
@@ -11059,6 +11707,50 @@ body:before{
   .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
+
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
 
 </style>
 <script>
@@ -11578,6 +12270,50 @@ button[aria-selected="true"],
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
 
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
+
 </style>
 
 
@@ -11849,6 +12585,50 @@ button[aria-selected="true"],
   .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
+
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
 
 </style>
 
@@ -12232,6 +13012,50 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
 
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
+
 </style>
 
 
@@ -12320,6 +13144,50 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
   .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
+
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
 
 </style>
 <script>
@@ -12505,6 +13373,50 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
   .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
+
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
 
 </style>
 <script>
@@ -13491,6 +14403,50 @@ body:before{
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
 
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
+
 </style>
 
 <style>
@@ -14428,6 +15384,50 @@ body:before{
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
 
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
+
 </style>
 
 <style>.tabs span{cursor:pointer;}
@@ -14995,6 +15995,50 @@ body:before{
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
 
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
+
 </style>
 
 <style>
@@ -15526,6 +16570,50 @@ body:before{
   .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
+
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
 
 </style>
 <script>
@@ -16121,6 +17209,50 @@ body:before{
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
 
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
+
 </style>
 <script>
 (function(){
@@ -16401,5 +17533,49 @@ body:before{
   .dataStatusCard{text-align:center!important;align-items:center!important;min-height:74px!important}
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
+
+
+
+/* V71 · Cartera actual PRO desktop */
+#cartera .carteraProTabs{
+  display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:14px 17px 0!important;
+}
+#cartera .carteraProTabs button{
+  height:32px!important;border:1px solid var(--line)!important;border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;color:var(--text2)!important;padding:0 13px!important;
+  font-size:11px!important;font-weight:650!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+}
+#cartera .carteraProTabs button.active{background:#f2c94c!important;color:#050505!important;border-color:#f2c94c!important}
+#cartera .carteraProTabs .bullet{width:7px!important;height:7px!important}
+#cartera .carteraFocusPanel{
+  display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(540px,1.18fr)!important;gap:14px!important;margin:16px 17px 0!important;
+}
+#cartera .carteraFocusHero,#cartera .carteraFocusMetrics{
+  border:1px solid var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.28)!important;
+}
+#cartera .carteraFocusHero{padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;min-height:194px!important;position:relative!important;overflow:hidden!important}
+#cartera .carteraFocusHero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 32%);pointer-events:none}
+#cartera .carteraFocusTop{position:relative;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+#cartera .carteraFocusName{display:flex!important;align-items:center!important;gap:12px!important;min-width:0!important}
+#cartera .carteraFocusName .bullet{width:10px!important;height:10px!important;flex:0 0 10px!important}
+#cartera .carteraFocusName h3{margin:0!important;font-size:24px!important;font-weight:620!important;letter-spacing:-.7px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#cartera .carteraFocusName p{margin:6px 0 0!important;color:var(--muted)!important;font-size:12px!important}
+#cartera .carteraFocusStatus{white-space:nowrap!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.035)!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:750!important}
+#cartera .carteraFocusStatus.ok{color:var(--green)!important;border-color:rgba(95,211,155,.24)!important;background:rgba(95,211,155,.06)!important}
+#cartera .carteraFocusStatus.warn{color:var(--yellow)!important;border-color:rgba(232,177,74,.28)!important;background:rgba(232,177,74,.06)!important}
+#cartera .carteraFocusStatus.bad{color:var(--red)!important;border-color:rgba(240,116,106,.28)!important;background:rgba(240,116,106,.06)!important}
+#cartera .carteraFocusMain{position:relative;margin-top:22px!important}
+#cartera .carteraFocusMain span{display:block!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin-bottom:8px!important}
+#cartera .carteraFocusMain strong{display:block!important;font-size:38px!important;font-weight:360!important;letter-spacing:-1.4px!important;line-height:1!important}
+#cartera .carteraFocusMain small{display:block!important;color:var(--muted)!important;font-size:12px!important;margin-top:10px!important;line-height:1.35!important}
+#cartera .carteraFocusMetrics{padding:14px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+#cartera .carteraMetric{background:rgba(0,0,0,.32)!important;border:1px solid var(--line2)!important;border-radius:13px!important;padding:13px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#cartera .carteraMetric span{color:var(--muted)!important;font-size:9.5px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.07em!important;white-space:nowrap!important}
+#cartera .carteraMetric strong{margin-top:7px!important;font-size:20px!important;font-weight:380!important;letter-spacing:-.6px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums!important}
+#cartera .carteraDiagnosis{margin:14px 17px 0!important;padding:14px 16px!important;border-radius:15px!important;border:1px solid var(--line)!important;background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(0,0,0,.25))!important;color:var(--text2)!important;font-size:12px!important;line-height:1.42!important}
+#cartera .carteraDiagnosis strong{display:block!important;color:var(--text)!important;font-size:14px!important;font-weight:620!important;margin-bottom:6px!important}
+#cartera .carteraTableTitle{margin:18px 17px 0!important;color:var(--muted)!important;font-size:10px!important;font-weight:760!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+@media(max-width:1150px){#cartera .carteraFocusPanel{grid-template-columns:1fr!important}#cartera .carteraFocusMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){#cartera .carteraProTabs,#cartera .carteraFocusPanel,#cartera .carteraDiagnosis,#cartera .carteraTableTitle{display:none!important}}
 
 </style>
