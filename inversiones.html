@@ -4367,6 +4367,43 @@ body:before{
   .dataStatusCard strong{white-space:normal!important;font-size:16px!important}
 }
 
+
+
+/* V69 · Mobile dashboard limpio: sin tarjetas técnicas y cartera actual simplificada */
+.mobileCarteraActual{display:none!important;}
+.mobileAssetList{display:grid!important;gap:10px!important;padding:16px 18px 18px!important;}
+.mobileAssetCard{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:10px!important;
+  padding:15px!important;
+  border:1px solid var(--line2)!important;
+  border-radius:16px!important;
+  background:rgba(0,0,0,.30)!important;
+}
+.mobileAssetTop{display:flex!important;align-items:center!important;justify-content:center!important;gap:9px!important;text-align:center!important;}
+.mobileAssetTop .bullet{width:8px!important;height:8px!important;flex:0 0 8px!important;}
+.mobileAssetTop strong{font-size:15px!important;font-weight:700!important;color:var(--text)!important;line-height:1.1!important;}
+.mobileAssetTop small{display:block!important;color:var(--muted)!important;font-size:10.5px!important;margin-top:3px!important;}
+.mobileAssetValues{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;}
+.mobileAssetMetric{padding:10px 8px!important;border-radius:13px!important;background:rgba(255,255,255,.025)!important;border:1px solid rgba(255,255,255,.045)!important;text-align:center!important;}
+.mobileAssetMetric span{display:block!important;color:var(--muted)!important;font-size:9.5px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.055em!important;margin-bottom:5px!important;}
+.mobileAssetMetric strong{display:block!important;color:var(--text)!important;font-size:13.5px!important;font-weight:560!important;line-height:1.05!important;white-space:nowrap!important;}
+.mobileAssetEmpty{padding:18px!important;text-align:center!important;color:var(--muted)!important;border:1px dashed var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.22)!important;}
+@media(max-width:760px){
+  #dashboard .dataStatusGrid{display:none!important;}
+  #dashboard .dashboardDistributionBlock{display:none!important;}
+  #dashboard .dashboardDistributionAlerts{grid-template-columns:1fr!important;}
+  #dashboard .mobileCarteraActual{display:block!important;}
+  #dashboard .mobileCarteraActual .cardHeader h3,
+  #dashboard .mobileCarteraActual .cardHeader p{ text-align:center!important; }
+  .mobileAssetList{padding:16px!important;}
+  .alertsCard{margin-top:0!important;}
+}
+@media(max-width:390px){
+  .mobileAssetValues{grid-template-columns:1fr!important;}
+  .mobileAssetMetric strong{font-size:15px!important;}
+}
 </style>
 
 </head>
@@ -4426,6 +4463,17 @@ body:before{
         <article class="card dataStatusCard"><label>Benchmark/API</label><strong data-data-status="benchmark" class="yellow">Sin cargar</strong><small data-data-status="benchmark-note">Edge Function disponible</small></article>
       </section>
 
+      <section class="card mobileCarteraActual pageBlock" id="mobileCarteraActual">
+        <div class="cardHeader">
+          <div>
+            <h3>Cartera actual</h3>
+            <p>Vista móvil simplificada por activo. Valor actual, P&amp;L y rentabilidad.</p>
+          </div>
+        </div>
+        <div class="mobileAssetList" id="mobileAssetList">
+          <div class="mobileAssetEmpty">Importa o carga el Excel para ver la cartera actual.</div>
+        </div>
+      </section>
 
       <div class="grid two pageBlock dashboardOps dashboardDistributionAlerts">
         <div class="dashboardDistributionBlock">
@@ -5729,6 +5777,7 @@ function updateDashboard(){
   const center = document.querySelector('.donutCenter strong');
   if(center) center.textContent = fmtMoney(valueTotal);
   updateAllocation(cartera);
+  renderMobileCartera(cartera);
   updateAlerts();
   updateReconciliation(cartera, resumen);
 }
@@ -5762,6 +5811,32 @@ function updateAllocation(cartera){
     legend.innerHTML=assets.map(x=>`<div class="legendRow"><span class="legendDot ${assetClass(x.activo)}"></span><span>${shortAssetName(x.activo)}</span><strong>${fmtPct(x.peso)}</strong></div>`).join('');
   }
 }
+function renderMobileCartera(cartera){
+  const list=document.getElementById('mobileAssetList');
+  if(!list) return;
+  const rows=(cartera||[]).filter(x=>{
+    const a=String(x.activo||'').trim();
+    if(!a) return false;
+    return a.toUpperCase()!=='TOTAL';
+  });
+  if(!rows.length){
+    list.innerHTML='<div class="mobileAssetEmpty">Importa o carga el Excel para ver la cartera actual.</div>';
+    return;
+  }
+  list.innerHTML=rows.map(x=>{
+    const name=shortAssetName(x.activo);
+    const platform=x.plataforma || '';
+    return `<article class="mobileAssetCard">
+      <div class="mobileAssetTop"><span class="bullet ${assetClass(x.activo)}"></span><div><strong>${name}</strong><small>${platform}</small></div></div>
+      <div class="mobileAssetValues">
+        <div class="mobileAssetMetric"><span>Valor</span><strong>${fmtMoney(x.valor)}</strong></div>
+        <div class="mobileAssetMetric"><span>P&amp;L</span><strong class="${clsByValue(x.pl)}">${fmtMoney(x.pl,2,true)}</strong></div>
+        <div class="mobileAssetMetric"><span>Rent.</span><strong class="${clsByValue(x.rent)}">${fmtPct(x.rent,2,true)}</strong></div>
+      </div>
+    </article>`;
+  }).join('');
+}
+
 function updateAlerts(){
   const resumen = sheetRows('RESUMEN');
   const container = document.querySelector('#dashboard .alerts');
@@ -6003,6 +6078,7 @@ function updateAuditoria(){
 
 const CACHE_KEY = 'portfolioOscar:lastWorkbook:v1';
 const CACHE_META_KEY = 'portfolioOscar:lastWorkbookMeta:v1';
+const LAST_MANUAL_IMPORT_KEY = 'portfolioOscar:lastManualImport:v1';
 function formatDataStatusDate(value){
   if(!value) return 'Pendiente';
   const d=new Date(value);
@@ -6020,14 +6096,22 @@ function updateDataStatus(){
     const cacheMeta=JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
     const fileName=importedData?.fileName || cacheMeta.fileName || '';
     const localSaved=cacheMeta.savedAt || '';
+    const manualImport=localStorage.getItem(LAST_MANUAL_IMPORT_KEY) || cacheMeta.importedAt || '';
     const cloudSaved=localStorage.getItem('portfolioOscar:lastCloudSync:v1') || '';
     const cloudUploaded=localStorage.getItem('portfolioOscar:lastCloudUpload:v1') || '';
     const cloudDownloaded=localStorage.getItem('portfolioOscar:lastCloudDownload:v1') || '';
     const hasExcel=!!fileName;
+    const realImportDate = manualImport || cloudUploaded || '';
     setDataStatus('file', hasExcel ? fileName : 'Sin Excel', hasExcel ? 'green' : 'yellow');
     setDataStatus('file-note', hasExcel ? 'Excel como fuente única' : 'Importa o carga desde nube');
-    setDataStatus('local', localSaved ? formatDataStatusDate(localSaved) : 'Pendiente', localSaved ? 'green' : 'yellow');
-    setDataStatus('local-note', localSaved ? 'Importado/cargado en este navegador' : 'Se activa al importar Excel');
+    setDataStatus('local', realImportDate ? formatDataStatusDate(realImportDate) : 'Pendiente', realImportDate ? 'green' : 'yellow');
+    if(manualImport){
+      setDataStatus('local-note', 'Última importación manual del Excel');
+    }else if(cloudUploaded){
+      setDataStatus('local-note', 'Última subida del Excel a la nube');
+    }else{
+      setDataStatus('local-note', 'Se activa al importar Excel');
+    }
     const logged=!!portfolioCloudSession?.user;
     setDataStatus('cloud', logged ? 'Activo' : 'Sin sesión', logged ? 'green' : 'yellow');
     let cloudNote = logged ? 'Sesión iniciada' : 'Login pendiente';
@@ -6065,10 +6149,16 @@ function base64ToArrayBuffer(base64){
   for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
   return bytes.buffer;
 }
-function saveWorkbookCache(buffer, fileName){
+function saveWorkbookCache(buffer, fileName, options={}){
   try{
+    const nowIso = new Date().toISOString();
+    const previousMeta = JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
+    const importedAt = options.manualImport ? nowIso : (previousMeta.importedAt || localStorage.getItem(LAST_MANUAL_IMPORT_KEY) || '');
     localStorage.setItem(CACHE_KEY, arrayBufferToBase64(buffer));
-    localStorage.setItem(CACHE_META_KEY, JSON.stringify({fileName, savedAt:new Date().toISOString()}));
+    localStorage.setItem(CACHE_META_KEY, JSON.stringify({fileName, savedAt:nowIso, importedAt}));
+    if(options.manualImport){
+      localStorage.setItem(LAST_MANUAL_IMPORT_KEY, nowIso);
+    }
     updateDataStatus?.();
     return true;
   }catch(err){
@@ -6160,7 +6250,7 @@ async function handleExcelImport(file){
     const buffer=await file.arrayBuffer();
     importedWorkbook = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
     const ok = applyWorkbookAfterRead(file.name, false);
-    if(ok) saveWorkbookCache(buffer, file.name);
+    if(ok) saveWorkbookCache(buffer, file.name, {manualImport:true});
   }catch(err){ console.error(err); setStatus(false, `ERROR · ${err.message}`); setNavStatus('auditoria','bad'); }
 }
 
