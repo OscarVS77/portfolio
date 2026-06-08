@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- APP_VERSION: 2026-06-08-V26-SYNC-FIX -->
+<!-- APP_VERSION: 2026-06-08-V27-APPLE-REDESIGN -->
 
 <html lang="es">
 <head>
@@ -23,28 +23,31 @@
   --border:#26313D;--border2:rgba(38,49,61,0.72);
   --text:#F2F5F7;--text2:#E6EBEF;--text3:#C8D0D8;
   --accent:#2F80A8;--accent-h:#3A92BD;--accent-s:rgba(47,128,168,0.18);
+  --accent-rgb:47,128,168;
   --red:#FC8181;--red-bg:rgba(197,48,48,0.16);
   --green:#68D391;--green-bg:rgba(56,161,105,0.16);
   --amber:#E0B15A;--amber-bg:rgba(214,158,46,0.16);
   --neutral:#CBD5E0;--neutral-bg:rgba(160,174,192,0.14);
   --font:-apple-system,'SF Pro Text','Inter',system-ui,sans-serif;--mono:-apple-system,'SF Mono','Inter',system-ui,sans-serif;
-  --r:20px;--r-sm:12px;
+  --r:22px;--r-sm:14px;--r-lg:26px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--font);background:radial-gradient(circle at top,#13202B 0%,#0B0F14 42%,#070A0E 100%);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:160px}
 html{background:#0B0F14;color-scheme:dark}
-/* NAV */
-.nav{position:fixed;bottom:0;left:0;right:0;background:#090D12;border-top:1px solid var(--border);display:none;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px 10px;background:none;border:none;color:var(--text3);font-family:var(--font);font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:0}
-.nav-btn.active{color:var(--text);background:var(--accent-s);border-top:2px solid var(--accent)}
-.nav-btn svg{width:22px;height:22px}
+/* NAV - estilo iOS tab bar */
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(9,13,18,0.82);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--border2);display:none;z-index:100;padding:6px 6px env(safe-area-inset-bottom)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 8px;background:none;border:none;color:var(--text3);font-family:var(--font);font-size:10px;font-weight:500;letter-spacing:.02em;text-transform:none;cursor:pointer;transition:color .2s,background .2s;border-radius:16px;margin:2px}
+.nav-btn.active{color:var(--accent);background:var(--accent-s);border-top:none}
+.nav-btn svg{width:24px;height:24px;transition:transform .2s}
+.nav-btn.active svg{transform:translateY(-1px)}
 /* HEADER */
-.header{padding:calc(56px + env(safe-area-inset-top)) 20px 20px;background:linear-gradient(180deg,#121A24 0%,#0B0F14 100%);border-bottom:1px solid var(--border)}
+.header{padding:calc(56px + env(safe-area-inset-top)) 20px 18px;background:transparent;border-bottom:none}
 .header-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:600}
-.header-title{font-size:30px;font-weight:300;letter-spacing:-.03em;color:var(--text)}
+.header-title{font-size:34px;font-weight:600;letter-spacing:-.02em;color:var(--text)}
 .header-title span{color:var(--text2)}
 .header-sub{display:inline-block;margin-top:8px;padding:6px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--text2);letter-spacing:.02em}
-.back-vehicles{display:inline-flex;align-items:center;gap:6px;background:transparent;border:none;color:var(--accent);font-family:var(--font);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-bottom:14px;padding:0}
+.back-vehicles{display:inline-flex;align-items:center;gap:5px;background:transparent;border:none;color:var(--accent);font-family:var(--font);font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:none;cursor:pointer;margin-bottom:12px;padding:0}
+.back-vehicles svg{width:16px;height:16px}
 .back-vehicles:active{opacity:.65}
 .header .back-vehicles + .header-label,.header .back-vehicles + .header-title{margin-top:0}
 
@@ -58,63 +61,68 @@ html{background:#0B0F14;color-scheme:dark}
 .page{display:none}.page.active{display:block}
 .content{padding:20px}
 /* CARDS */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;box-shadow:0 14px 40px rgba(0,0,0,0.22)}
-.total-bubble{border:1px solid var(--border);box-shadow:0 14px 40px rgba(0,0,0,0.22)}
-.total-general{border:1.5px solid var(--accent);box-shadow:0 14px 40px rgba(0,0,0,0.22),0 0 0 1px var(--accent-s)}
-.card-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600}
-.card-value{font-size:24px;font-weight:400;font-family:var(--mono);color:var(--text)}
+.card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:16px;margin-bottom:10px;box-shadow:0 8px 28px rgba(0,0,0,0.18)}
+.total-bubble{border:1px solid var(--border2);box-shadow:0 8px 28px rgba(0,0,0,0.18)}
+.total-general{border:1px solid rgba(var(--accent-rgb),0.5);background:linear-gradient(135deg,rgba(var(--accent-rgb),0.20),rgba(var(--accent-rgb),0.04));box-shadow:0 10px 34px rgba(0,0,0,0.22)}
+.card-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;display:flex;align-items:center;gap:6px}
+.card-label svg{width:13px;height:13px;opacity:.85;flex:0 0 auto}
+.card-value{font-size:24px;font-weight:500;font-family:var(--mono);color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .card-value.accent{color:var(--accent)}
-.metric-card{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:66px}
+.metric-card{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:8px;min-height:72px;cursor:pointer;transition:transform .15s,border-color .2s}
+.metric-card:active{transform:scale(.975)}
 .metric-card .card-label{margin-bottom:0;font-size:10px;line-height:1.15}
-.metric-card .card-value{font-size:18px;line-height:1;white-space:nowrap}
-.metric-card.total-general{min-height:78px}
-.metric-card.total-general .card-value{font-size:20px}
+.metric-card .card-value{font-size:19px;line-height:1;white-space:nowrap}
+.metric-card.total-general{min-height:84px;align-items:flex-start;cursor:default}
+.metric-card.total-general:active{transform:none}
+.metric-card.total-general .card-value{font-size:22px}
 .home-totals .metric-card{padding:14px 16px}
 .last-summary{display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:84px}
 .last-summary-left{min-width:0}
 .last-summary .card-label{margin-bottom:7px;font-size:10px;line-height:1.15}
 .last-summary-title{font-size:15px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.last-summary-value{font-size:18px;font-family:var(--mono);color:var(--text);white-space:nowrap;text-align:right}
-.home-totals .total-general{padding:16px 18px}
+.last-summary-value{font-size:18px;font-family:var(--mono);color:var(--text);white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+.home-totals .total-general{padding:18px 18px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.home-totals{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-bottom:10px;width:100%;max-width:100%;overflow:hidden}
+.home-totals{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-bottom:10px;width:100%;max-width:100%;overflow:hidden}
 .home-totals .card{margin-bottom:0;min-width:0}
 .home-totals .total-general{grid-column:1 / -1}
 .metric-card{min-width:0;max-width:100%}
-.metric-card .card-label{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.metric-card .card-label{min-width:0;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .metric-card .card-value{min-width:0;flex-shrink:0}
 @media (max-width:430px){
   .content{padding-left:18px;padding-right:18px;overflow-x:hidden}
   .home-totals{gap:10px}
-  .home-totals .metric-card{padding:13px 12px;gap:8px}
-  .home-totals .metric-card .card-label{font-size:9px;letter-spacing:.12em}
-  .home-totals .metric-card .card-value{font-size:17px;letter-spacing:-.04em}
-  .home-totals .metric-card.total-general{padding:15px 14px}
-  .home-totals .metric-card.total-general .card-value{font-size:19px}
+  .home-totals .metric-card{padding:13px 14px;gap:7px}
+  .home-totals .metric-card .card-label{font-size:9px;letter-spacing:.1em}
+  .home-totals .metric-card .card-value{font-size:18px;letter-spacing:-.03em}
+  .home-totals .metric-card.total-general{padding:16px 16px}
+  .home-totals .metric-card.total-general .card-value{font-size:21px}
 }
 @media (max-width:370px){
   .home-totals{grid-template-columns:1fr}
   .home-totals .total-general{grid-column:auto}
 }
 /* CYCLE */
-.cycle-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;box-shadow:0 14px 40px rgba(0,0,0,0.22)}
-.cycle-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;font-weight:500}
-.cycle-steps{display:flex;gap:8px}
-.cycle-step{flex:1;height:40px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--border);color:var(--text3);background:var(--surface2);transition:all .25s}
-.cycle-step.done{background:var(--surface3);border-color:var(--border);color:var(--text2)}
-.cycle-step.current{background:var(--accent);border-color:var(--accent);color:#fff;font-size:12px}
-.cycle-step.prem.done{background:rgba(214,158,46,0.12);border-color:rgba(214,158,46,0.3);color:var(--amber)}
-.cycle-step.prem.current{background:var(--amber);border-color:var(--amber);color:#000}
-.cycle-next{margin-top:10px;font-size:15px;color:var(--text2)}
-.cycle-next strong{color:var(--text)}
+.cycle-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:16px;margin-bottom:10px;box-shadow:0 8px 28px rgba(0,0,0,0.18)}
+.cycle-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.cycle-label .cycle-next-inline{color:var(--text3);font-weight:500;text-transform:none;letter-spacing:0}
+.cycle-steps{display:flex;gap:7px}
+.cycle-step{flex:1;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;letter-spacing:.04em;border:1px solid var(--border);color:var(--text3);background:var(--surface2);transition:all .25s}
+.cycle-step.done{background:rgba(var(--accent-rgb),0.5);border-color:transparent;color:#fff}
+.cycle-step.current{background:var(--accent);border-color:var(--accent);color:#fff}
+.cycle-step.prem{border-style:dashed;border-color:var(--amber);color:var(--amber);background:transparent}
+.cycle-step.prem.done{background:rgba(214,158,46,0.5);border-style:solid;border-color:transparent;color:#000}
+.cycle-step.prem.current{background:var(--amber);border-style:solid;border-color:var(--amber);color:#000}
+.cycle-next{margin-top:10px;font-size:14px;color:var(--text3)}
+.cycle-next strong{color:var(--text2);font-weight:600}
 /* LIST */
-.list-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;box-shadow:0 14px 40px rgba(0,0,0,0.22)}
+.list-item{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-sm);padding:14px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;box-shadow:0 6px 22px rgba(0,0,0,0.16)}
 .li-left{flex:1;min-width:0}
-.li-date{font-size:12px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
-.li-title{font-size:15px;font-weight:400;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li-date{font-size:12px;color:var(--text3);letter-spacing:.02em;text-transform:none;margin-bottom:4px}
+.li-title{font-size:15px;font-weight:500;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .li-sub{font-size:14px;color:var(--text2);margin-top:2px}
 .li-right{text-align:right;flex-shrink:0}
-.li-price{font-size:16px;font-family:var(--mono);font-weight:500;color:var(--text)}
+.li-price{font-size:16px;font-family:var(--mono);font-weight:500;color:var(--text);font-variant-numeric:tabular-nums}
 .li-actions{display:flex;gap:8px;margin-top:5px;justify-content:flex-end}
 .btn-act{background:none;border:none;cursor:pointer;padding:3px 6px;color:var(--text3);font-size:13px;font-family:var(--font);border-radius:4px;transition:all .15s}
 .btn-act:active{color:var(--text2);background:var(--surface2)}
@@ -124,9 +132,10 @@ html{background:#0B0F14;color-scheme:dark}
 .record-row{display:grid;grid-template-columns:1fr 54px;gap:10px;align-items:stretch;margin-bottom:10px}
 .record-row .list-item{margin-bottom:0;height:100%;min-height:92px}
 .record-actions{display:grid;grid-template-rows:1fr 1fr;gap:10px}
-.action-bubble{border:1px solid var(--border);background:var(--surface2);border-radius:16px;color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 14px 40px rgba(0,0,0,0.20);min-height:41px}
+.action-bubble{border:1px solid var(--border2);background:var(--surface2);border-radius:16px;color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,0.16);min-height:41px;transition:transform .12s}
+.action-bubble:active{transform:scale(.93)}
 .action-bubble svg{width:21px;height:21px}
-.action-bubble.edit{color:var(--accent);border-color:rgba(47,128,168,0.42)}
+.action-bubble.edit{color:var(--accent);border-color:rgba(var(--accent-rgb),0.42)}
 .action-bubble.delete{color:var(--red);border-color:rgba(252,129,129,0.34)}
 body.honda .action-bubble.edit{border-color:rgba(216,162,27,0.42)}
 @media (max-width:360px){.record-row{grid-template-columns:1fr 48px;gap:8px}.action-bubble svg{width:19px;height:19px}}
@@ -139,9 +148,9 @@ body.honda .action-bubble.edit{border-color:rgba(216,162,27,0.42)}
 .fuel-type-text{display:inline-block;font-size:15px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text2);margin-top:2px}
 .fuel-type-text.premium{color:var(--amber)}
 /* MISC */
-.totals-row{background:var(--surface);border:1.5px solid var(--accent);border-radius:var(--r);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;box-shadow:0 14px 40px rgba(0,0,0,0.22),0 0 0 1px var(--accent-s)}
+.totals-row{background:linear-gradient(135deg,rgba(var(--accent-rgb),0.16),rgba(var(--accent-rgb),0.03));border:1px solid rgba(var(--accent-rgb),0.5);border-radius:var(--r);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;box-shadow:0 8px 28px rgba(0,0,0,0.18)}
 .tr-label{font-size:13px;color:var(--text2)}
-.tr-value{font-size:18px;font-family:var(--mono);font-weight:500;color:var(--text)}
+.tr-value{font-size:18px;font-family:var(--mono);font-weight:500;color:var(--text);font-variant-numeric:tabular-nums}
 .last-rec{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
 .km-since{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
 .km-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:500}
@@ -202,24 +211,39 @@ body.honda .action-bubble.edit{border-color:rgba(216,162,27,0.42)}
 /* VEHICLE SELECTOR */
 .selector-screen{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(64px + env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom));background:radial-gradient(circle at top,rgba(47,128,168,.16) 0%,rgba(11,15,20,.94) 40%,#070A0E 100%)}
 .selector-inner{width:100%;max-width:430px;margin:0 auto}
-.selector-title{text-align:center;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:34px;font-weight:700}
+.selector-title{text-align:left;font-size:13px;letter-spacing:.02em;text-transform:none;color:var(--text3);margin-bottom:4px;font-weight:500;padding:0 4px}
+.selector-bigtitle{text-align:left;font-size:30px;font-weight:600;letter-spacing:-.02em;color:var(--text);margin-bottom:24px;padding:0 4px}
 .selector-heading{display:none}
-.vehicle-card{width:100%;min-height:112px;max-width:none;background:rgba(18,24,33,.82);border:2px solid var(--border);border-radius:24px;padding:22px 18px;margin-bottom:14px;cursor:pointer;transition:all .2s;box-shadow:0 18px 50px rgba(0,0,0,.28);text-align:center;display:flex;align-items:center;justify-content:center}
-.vehicle-card.jaguar-card{border-color:rgba(47,128,168,.92)}
-.vehicle-card.honda-card{border-color:rgba(216,162,27,.92)}
+.vehicle-card{width:100%;min-height:auto;max-width:none;border:1px solid var(--border2);border-radius:var(--r-lg);padding:20px;margin-bottom:14px;cursor:pointer;transition:transform .18s,filter .2s;box-shadow:0 14px 44px rgba(0,0,0,.30);text-align:left;display:block}
+.vehicle-card.jaguar-card{background:linear-gradient(135deg,rgba(47,128,168,.22),rgba(47,128,168,.05));border-color:rgba(47,128,168,.55)}
+.vehicle-card.honda-card{background:linear-gradient(135deg,rgba(216,162,27,.20),rgba(216,162,27,.05));border-color:rgba(216,162,27,.55)}
 .vehicle-card:active{transform:scale(.98)}
-.vehicle-card:hover{filter:brightness(1.08)}
-.vc-name{font-size:25px;line-height:1.12;font-weight:650;color:var(--text);letter-spacing:.01em;text-transform:none;margin-bottom:6px}
-.vc-year{font-size:14px;color:var(--text3);letter-spacing:.12em}
+.vehicle-card:hover{filter:brightness(1.06)}
+.vc-top{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.vc-icon{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.vc-icon svg{width:26px;height:26px}
+.jaguar-card .vc-icon{background:rgba(47,128,168,.22);color:#5DA8CF}
+.honda-card .vc-icon{background:rgba(216,162,27,.20);color:#E0B15A}
+.vc-name{font-size:20px;line-height:1.12;font-weight:600;color:var(--text);letter-spacing:-.01em;text-transform:none;margin-bottom:3px}
+.vc-year{font-size:12px;color:var(--text3);letter-spacing:.02em}
+.jaguar-card .vc-year{color:#9FB6C4}
+.honda-card .vc-year{color:#D8C49A}
+.vc-total{display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-top:16px}
+.vc-total-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.jaguar-card .vc-total-label{color:#9FB6C4}
+.honda-card .vc-total-label{color:#D8C49A}
+.vc-total-value{font-size:22px;font-weight:600;font-family:var(--mono);font-variant-numeric:tabular-nums;margin-left:auto;letter-spacing:-.02em}
+.jaguar-card .vc-total-value{color:#5DA8CF}
+.honda-card .vc-total-value{color:#E0B15A}
 .vc-type{font-size:13px;color:var(--text3);margin-bottom:8px}
 .vc-sub{display:inline-block;padding:4px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:999px;font-size:11px;color:var(--text2)}
 .vc-accent{width:40px;height:4px;border-radius:2px;margin-bottom:12px}
 .change-vehicle{background:var(--surface2);border:1px solid var(--border);border-radius:999px;color:var(--text2);font-size:12px;cursor:pointer;padding:7px 12px;font-family:var(--font);letter-spacing:.04em}
 .change-vehicle:active{color:var(--text2)}
-@media (max-width:360px){.vehicle-card{min-height:104px}.vc-name{font-size:22px}}
+@media (max-width:360px){.vc-name{font-size:18px}.vc-total-value{font-size:20px}}
 /* Honda accent override */
-body.honda{--accent:#D8A21B;--accent-h:#F0B429;--accent-s:rgba(216,162,27,0.18)}
-body.honda .fab{box-shadow:0 4px 20px rgba(216,162,27,.4)}
+body.honda{--accent:#D8A21B;--accent-h:#F0B429;--accent-s:rgba(216,162,27,0.18);--accent-rgb:216,162,27}
+body.honda .fab{box-shadow:0 8px 26px rgba(216,162,27,.4)}
 body.honda .fi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(216,162,27,0.18)}
 body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 /* UTILIDADES / BACKUP */
@@ -228,7 +252,6 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 .tool-btn:active{border-color:var(--accent);color:var(--text)}
 .sync-line{font-size:11px;color:var(--text3);text-align:center;margin-top:14px;line-height:1.4}
 .update-line{font-size:11px;color:var(--text3);text-align:center;margin-top:16px;line-height:1.4}
-.total-general,.totals-row{border-color:var(--accent);box-shadow:0 14px 40px rgba(0,0,0,0.22),0 0 0 1px var(--accent-s)}
 
 
 /* Valores de combustible coherentes */
@@ -301,21 +324,6 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
   font-weight:600;
   color:var(--text);
 }
-.nav-btn{
-  min-width:0;
-}
-@media(max-width:430px){
-  .nav-btn{
-    font-size:9px;
-    letter-spacing:.045em;
-    padding-left:2px;
-    padding-right:2px;
-  }
-  .nav-btn svg{
-    width:20px;
-    height:20px;
-  }
-}
 
 </style>
 </head>
@@ -323,17 +331,32 @@ body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
 
 <div id="vehicle-selector" class="selector-screen">
   <div class="selector-inner">
-    <div class="selector-title">Control vehículos</div>
+    <div class="selector-title">Mis vehículos</div>
+    <div class="selector-bigtitle">Elige uno</div>
     <div class="vehicle-card jaguar-card" onclick="selectVehicle('jaguar')">
-      <div>
-        <div class="vc-name">Jaguar F-Pace</div>
-        <div class="vc-year">2016</div>
+      <div class="vc-top">
+        <div>
+          <div class="vc-name">Jaguar F-Pace</div>
+          <div class="vc-year">2016 · Diésel</div>
+        </div>
+        <div class="vc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.5-4.5A2 2 0 0 1 8.4 7h7.2a2 2 0 0 1 1.9 1.5L19 13"/><path d="M5 13h14a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1z"/><circle cx="7.5" cy="16" r="1"/><circle cx="16.5" cy="16" r="1"/></svg></div>
+      </div>
+      <div class="vc-total">
+        <span class="vc-total-label">Total</span>
+        <span class="vc-total-value" id="sel-total-jaguar">—</span>
       </div>
     </div>
     <div class="vehicle-card honda-card" onclick="selectVehicle('honda')">
-      <div>
-        <div class="vc-name">Honda ADV-350</div>
-        <div class="vc-year">2024</div>
+      <div class="vc-top">
+        <div>
+          <div class="vc-name">Honda ADV-350</div>
+          <div class="vc-year">2024 · Gasolina</div>
+        </div>
+        <div class="vc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17" r="2.5"/><circle cx="18.5" cy="17" r="2.5"/><path d="M8 17h6l3-5h-4l-2-3H7"/><path d="M14 9l2 0"/></svg></div>
+      </div>
+      <div class="vc-total">
+        <span class="vc-total-label">Total</span>
+        <span class="vc-total-value" id="sel-total-honda">—</span>
       </div>
     </div>
     <div class="selector-tools">
@@ -468,6 +491,15 @@ function buildNav() {
       <button class="nav-btn" onclick="go('aditivos')" id="n-aditivos">${aditIcon}Aditivos</button>`;
   }
 }
+
+// Micro-iconos reutilizables para las tarjetas de inicio
+const MI = {
+  rev:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
+  fuel:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 22V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14"/><path d="M3 22h10"/><path d="M17 14v4a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-7l-2-3"/><line x1="3" y1="14" x2="13" y2="14"/></svg>`,
+  fixed:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M8 11h8"/><path d="M8 15h5"/></svg>`,
+  adblue:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s5 5.5 5 9.5a5 5 0 0 1-10 0C7 8.5 12 3 12 3z"/></svg>`,
+  adit:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l2 4H7L9 3z"/><rect x="7" y="7" width="10" height="13" rx="2"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="9.5" y1="13.5" x2="14.5" y2="13.5"/></svg>`
+};
 
 // Devuelve el timestamp (ms) de una fecha ISO, o 0 si no es válida.
 function tsMs(iso){ if(!iso) return 0; const t=Date.parse(iso); return isNaN(t)?0:t; }
@@ -684,7 +716,25 @@ function getVehicleLastUpdated(v){
   const key = (v==='honda') ? 'honda_v1_updated' : 'fpace_v2_updated';
   return localStorage.getItem(key) || getLastUpdated();
 }
-function updateSelectorSync(){const el=document.getElementById('selector-sync');if(el)el.textContent=fmtDateTime(getLastUpdated());}
+function vehicleTotal(v){
+  if(v==='honda'){
+    return (DH.combustible||[]).reduce((s,x)=>s+(x.importe||0),0)
+      + (DH.revisiones||[]).reduce((s,x)=>s+(x.precio||0),0)
+      + (DH.fijos||[]).reduce((s,x)=>s+(x.importe||0),0);
+  }
+  return (D.revisiones||[]).reduce((s,x)=>s+(x.precio||0),0)
+    + (D.combustible||[]).reduce((s,x)=>s+(x.importe||0),0)
+    + (D.adblue||[]).reduce((s,x)=>s+(x.precio||0),0)
+    + (D.aditivos||[]).reduce((s,x)=>s+(x.precioProducto||0),0)
+    + (D.fijos||[]).reduce((s,x)=>s+(x.importe||0),0);
+}
+function updateSelectorTotals(){
+  const j=document.getElementById('sel-total-jaguar');
+  const h=document.getElementById('sel-total-honda');
+  if(j) j.textContent=fe(vehicleTotal('jaguar'));
+  if(h) h.textContent=fe(vehicleTotal('honda'));
+}
+function updateSelectorSync(){const el=document.getElementById('selector-sync');if(el)el.textContent=fmtDateTime(getLastUpdated());updateSelectorTotals();}
 function lastUpdateHtml(){return `<div class="update-line">Última actualización: ${fmtDateTime(getVehicleLastUpdated(activeVehicle))}</div>`;}
 
 function getYearFromDate(d){
@@ -791,9 +841,8 @@ function cycleWidget(c) {
     s+=`<div class="${cls}">${labels[i]}</div>`;
   }
   return `<div class="cycle-card">
-    <div class="cycle-label">Ciclo gasolina · Depósito ${c.done+1} de 4</div>
+    <div class="cycle-label"><span>Ciclo gasolina · Depósito ${c.done+1} de 4</span><span class="cycle-next-inline">Próximo: ${c.nextType==='premium'?'Premium':'Normal'}</span></div>
     <div class="cycle-steps">${s}</div>
-    <div class="cycle-next">Próximo: <strong>${fuelLabel(c.nextType)}</strong></div>
   </div>`;
 }
 
@@ -816,11 +865,11 @@ function rInicio() {
     <div class="section-title">Gastos totales</div>
     <div class="home-totals">
       <div class="card metric-card total-general"><div class="card-label">Total general</div><div class="card-value accent">${fe(tRev+tComb+tAdbl+tAdit+tFijos)}</div></div>
-      <div class="card metric-card total-bubble"><div class="card-label">Revisiones</div><div class="card-value">${fe(tRev)}</div></div>
-      <div class="card metric-card total-bubble"><div class="card-label">Gasolina</div><div class="card-value">${fe(tComb)}</div></div>
-      <div class="card metric-card total-bubble"><div class="card-label">Fijos</div><div class="card-value">${fe(tFijos)}</div></div>
-      <div class="card metric-card total-bubble"><div class="card-label">AdBlue</div><div class="card-value">${fe(tAdbl)}</div></div>
-      <div class="card metric-card total-bubble"><div class="card-label">Aditivos</div><div class="card-value">${fe(tAdit)}</div></div>
+      <div class="card metric-card total-bubble" onclick="go('revisiones')"><div class="card-label">${MI.rev}Revisiones</div><div class="card-value">${fe(tRev)}</div></div>
+      <div class="card metric-card total-bubble" onclick="go('combustible')"><div class="card-label">${MI.fuel}Gasolina</div><div class="card-value">${fe(tComb)}</div></div>
+      <div class="card metric-card total-bubble" onclick="go('fijos')"><div class="card-label">${MI.fixed}Fijos</div><div class="card-value">${fe(tFijos)}</div></div>
+      <div class="card metric-card total-bubble" onclick="go('combustible')"><div class="card-label">${MI.adblue}AdBlue</div><div class="card-value">${fe(tAdbl)}</div></div>
+      <div class="card metric-card total-bubble" onclick="go('aditivos')"><div class="card-label">${MI.adit}Aditivos</div><div class="card-value">${fe(tAdit)}</div></div>
     </div>
     ${la?`<div class="section-title">Último registro</div>
     <div class="card last-summary">
@@ -1257,9 +1306,9 @@ function rHondaInicio() {
     <div class="section-title">Gastos totales</div>
     <div class="home-totals">
       <div class="card metric-card total-general"><div class="card-label">Total general</div><div class="card-value accent">${fe(tComb+tRev+tFijos)}</div></div>
-      <div class="card metric-card total-bubble"><div class="card-label">Gasolina</div><div class="card-value">${fe(tComb)}</div></div>
-      <div class="card metric-card total-bubble"><div class="card-label">Revisiones</div><div class="card-value">${fe(tRev)}</div></div>
-      <div class="card metric-card total-bubble"><div class="card-label">Fijos</div><div class="card-value">${fe(tFijos)}</div></div>
+      <div class="card metric-card total-bubble" onclick="go('combustible')"><div class="card-label">${MI.fuel}Gasolina</div><div class="card-value">${fe(tComb)}</div></div>
+      <div class="card metric-card total-bubble" onclick="go('revisiones')"><div class="card-label">${MI.rev}Revisiones</div><div class="card-value">${fe(tRev)}</div></div>
+      <div class="card metric-card total-bubble" onclick="go('fijos')"><div class="card-label">${MI.fixed}Fijos</div><div class="card-value">${fe(tFijos)}</div></div>
     </div>
     ${la?`<div class="section-title">Último registro</div>
     <div class="card last-summary">
