@@ -13328,11 +13328,14 @@ async function cloudSaveWorkbook(){
 async function cloudLoadWorkbook(){
   if(!cloudRequireReady()) return;
   try{
-    const { data, error } = await portfolioSupabase.storage
+    const { data: signed, error: signErr } = await portfolioSupabase.storage
       .from(PORTFOLIO_SUPABASE_CONFIG.bucket)
-      .download(cloudFilePath());
-    if(error) throw error;
-    const buffer = await data.arrayBuffer();
+      .createSignedUrl(cloudFilePath(), 120);
+    if(signErr) throw signErr;
+    const bustUrl = signed.signedUrl + (signed.signedUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+    const resp = await fetch(bustUrl, {cache:'no-store'});
+    if(!resp.ok) throw new Error('Descarga nube HTTP ' + resp.status);
+    const buffer = await resp.arrayBuffer();
     importedWorkbook = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
     saveWorkbookCache?.(buffer, PORTFOLIO_SUPABASE_CONFIG.fileName);
     applyWorkbookAfterRead?.(PORTFOLIO_SUPABASE_CONFIG.fileName, true);
