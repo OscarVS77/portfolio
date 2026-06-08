@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- APP_VERSION: 2026-05-06-FINAL-V25-FIJOS-ITV -->
+<!-- APP_VERSION: 2026-06-08-V26-SYNC-FIX -->
 
 <html lang="es">
 <head>
@@ -469,69 +469,130 @@ function buildNav() {
   }
 }
 
+// Devuelve el timestamp (ms) de una fecha ISO, o 0 si no es válida.
+function tsMs(iso){ if(!iso) return 0; const t=Date.parse(iso); return isNaN(t)?0:t; }
+
 async function dbLoad() {
-  // Jaguar
+  // ── JAGUAR ──────────────────────────────────────────────────────────────────
+  // Punto de partida: lo que haya en localStorage de este dispositivo.
+  let localJ=null, localJ_ts=0;
+  const sJ = localStorage.getItem('fpace_v2');
+  if (sJ) { try { const p=JSON.parse(sJ); if(p&&p.revisiones){ localJ=p; } } catch(e) {} }
+  localJ_ts = tsMs(localStorage.getItem('fpace_v2_updated'));
+
+  let remoteJ=null, remoteJ_ts=0;
   try {
-    const r = await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.oscar&select=data`, {
+    const r = await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.oscar&select=data,updated_at`, {
       headers: {'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`}
     });
     if (r.ok) {
       const rows = await r.json();
       if (rows.length && rows[0].data && rows[0].data.revisiones) {
-        D = rows[0].data;
-        if(!D.aditivos) D.aditivos=[]; if(!D.fijos) D.fijos=[];
-        localStorage.setItem('fpace_v2', JSON.stringify(D));
+        remoteJ = rows[0].data;
+        remoteJ_ts = tsMs(rows[0].updated_at);
       }
     }
   } catch(e) {}
-  const sJ = localStorage.getItem('fpace_v2');
-  if (sJ) { try { const p=JSON.parse(sJ); if(p.revisiones){D=p;if(!D.aditivos)D.aditivos=[]; if(!D.fijos)D.fijos=[];} } catch(e) {} }
 
-  // Honda
+  // Last-write-wins: gana la versión con updated_at más reciente.
+  if (remoteJ && remoteJ_ts >= localJ_ts) {
+    D = remoteJ;
+    if(!D.aditivos) D.aditivos=[]; if(!D.fijos) D.fijos=[];
+    localStorage.setItem('fpace_v2', JSON.stringify(D));
+    if(remoteJ_ts) localStorage.setItem('fpace_v2_updated', new Date(remoteJ_ts).toISOString());
+  } else if (localJ) {
+    D = localJ;
+    if(!D.aditivos) D.aditivos=[]; if(!D.fijos) D.fijos=[];
+    // El local es más nuevo que el servidor: reenviar al servidor para reconciliar.
+    if (localJ_ts > remoteJ_ts) { pushVehicle('oscar', D, localJ_ts); }
+  }
+
+  // ── HONDA ───────────────────────────────────────────────────────────────────
+  let localH=null, localH_ts=0;
+  const sH = localStorage.getItem('honda_v1');
+  if (sH) { try { const p2=JSON.parse(sH); if(p2&&p2.combustible){ localH=p2; } } catch(e) {} }
+  localH_ts = tsMs(localStorage.getItem('honda_v1_updated'));
+
+  let remoteH=null, remoteH_ts=0;
   try {
-    const r2 = await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.honda&select=data`, {
+    const r2 = await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.honda&select=data,updated_at`, {
       headers: {'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`}
     });
     if (r2.ok) {
       const rows2 = await r2.json();
-      if (rows2.length && rows2[0].data) {
-        DH = rows2[0].data; if(!DH.fijos) DH.fijos=[];
-        localStorage.setItem('honda_v1', JSON.stringify(DH));
+      if (rows2.length && rows2[0].data && rows2[0].data.combustible) {
+        remoteH = rows2[0].data;
+        remoteH_ts = tsMs(rows2[0].updated_at);
       }
     }
   } catch(e) {}
-  const sH = localStorage.getItem('honda_v1');
-  if (sH) { try { const p2=JSON.parse(sH); if(p2.combustible){DH=p2;if(!DH.fijos)DH.fijos=[];} } catch(e) {} }
 
+  if (remoteH && remoteH_ts >= localH_ts) {
+    DH = remoteH;
+    if(!DH.fijos) DH.fijos=[];
+    localStorage.setItem('honda_v1', JSON.stringify(DH));
+    if(remoteH_ts) localStorage.setItem('honda_v1_updated', new Date(remoteH_ts).toISOString());
+  } else if (localH) {
+    DH = localH;
+    if(!DH.fijos) DH.fijos=[];
+    if (localH_ts > remoteH_ts) { pushVehicle('honda', DH, localH_ts); }
+  }
+
+  // El timestamp global mostrado es el más reciente de ambos vehículos.
+  syncGlobalLastUpdated();
+  normalizeData();
   updateSelectorSync();
   if(activeVehicle) {
     selectVehicle(activeVehicle);
   }
 }
 
+// Reenvía una versión local al servidor sin tocar el timestamp (reconciliación silenciosa).
+async function pushVehicle(id, data, ts){
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal'},
+      body: JSON.stringify({ data: data, updated_at: new Date(ts||Date.now()).toISOString() })
+    });
+  } catch(e) {}
+}
+
+// Recalcula vehiculos_last_update como el máximo de los timestamps por vehículo.
+function syncGlobalLastUpdated(){
+  const j = tsMs(localStorage.getItem('fpace_v2_updated'));
+  const h = tsMs(localStorage.getItem('honda_v1_updated'));
+  const max = Math.max(j, h);
+  if(max > 0) localStorage.setItem('vehiculos_last_update', new Date(max).toISOString());
+}
+
 async function dbSave() {
   normalizeData();
+  const now = new Date().toISOString();
   markUpdated();
-  updateSelectorSync();
   if(activeVehicle === 'honda') {
     localStorage.setItem('honda_v1', JSON.stringify(DH));
+    localStorage.setItem('honda_v1_updated', now);
     try {
       await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.honda`, {
         method: 'PATCH',
         headers: {'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal'},
-        body: JSON.stringify({ data: DH, updated_at: new Date().toISOString() })
+        body: JSON.stringify({ data: DH, updated_at: now })
       });
     } catch(e) {}
   } else {
     localStorage.setItem('fpace_v2', JSON.stringify(D));
+    localStorage.setItem('fpace_v2_updated', now);
     try {
       await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.oscar`, {
         method: 'PATCH',
         headers: {'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal'},
-        body: JSON.stringify({ data: D, updated_at: new Date().toISOString() })
+        body: JSON.stringify({ data: D, updated_at: now })
       });
     } catch(e) {}
   }
+  syncGlobalLastUpdated();
+  updateSelectorSync();
 }
 
 function loadData() {
@@ -619,8 +680,12 @@ function actionBubbles(editCall, delCall){
 }
 function recordRow(cardHtml, editCall, delCall){return `<div class="record-row">${cardHtml}${actionBubbles(editCall,delCall)}</div>`;}
 
+function getVehicleLastUpdated(v){
+  const key = (v==='honda') ? 'honda_v1_updated' : 'fpace_v2_updated';
+  return localStorage.getItem(key) || getLastUpdated();
+}
 function updateSelectorSync(){const el=document.getElementById('selector-sync');if(el)el.textContent=fmtDateTime(getLastUpdated());}
-function lastUpdateHtml(){return `<div class="update-line">Última actualización: ${fmtDateTime(getLastUpdated())}</div>`;}
+function lastUpdateHtml(){return `<div class="update-line">Última actualización: ${fmtDateTime(getVehicleLastUpdated(activeVehicle))}</div>`;}
 
 function getYearFromDate(d){
   if(!d || typeof d !== 'string' || d.length < 4) return 'Sin fecha';
@@ -673,12 +738,15 @@ async function importData(event){
     D=payload.jaguar; DH=payload.honda;
     if(!D.aditivos)D.aditivos=[]; if(!D.adblue)D.adblue=[]; if(!D.fijos)D.fijos=[]; if(!DH.fijos)DH.fijos=[];
     normalizeData();
+    const nowImp = new Date().toISOString();
     localStorage.setItem('fpace_v2',JSON.stringify(D));
     localStorage.setItem('honda_v1',JSON.stringify(DH));
+    localStorage.setItem('fpace_v2_updated',nowImp);
+    localStorage.setItem('honda_v1_updated',nowImp);
     markUpdated();
     try{
-      await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.oscar`,{method:'PATCH',headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({data:D,updated_at:new Date().toISOString()})});
-      await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.honda`,{method:'PATCH',headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({data:DH,updated_at:new Date().toISOString()})});
+      await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.oscar`,{method:'PATCH',headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({data:D,updated_at:nowImp})});
+      await fetch(`${SUPA_URL}/rest/v1/coche_state?id=eq.honda`,{method:'PATCH',headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({data:DH,updated_at:nowImp})});
     }catch(e){}
     updateSelectorSync();
     if(activeVehicle)render(curPage);
