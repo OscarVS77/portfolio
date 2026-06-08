@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- APP_VERSION: 2026-06-08-V27-APPLE-REDESIGN -->
+<!-- APP_VERSION: 2026-06-08-V28-BRAND-COLORS -->
 
 <html lang="es">
 <head>
@@ -22,8 +22,15 @@
   --surface:#121821;--surface2:#18202B;--surface3:#1E2836;
   --border:#26313D;--border2:rgba(38,49,61,0.72);
   --text:#F2F5F7;--text2:#E6EBEF;--text3:#C8D0D8;
-  --accent:#2F80A8;--accent-h:#3A92BD;--accent-s:rgba(47,128,168,0.18);
-  --accent-rgb:47,128,168;
+  /* Jaguar: verde británico luminoso como acento operativo */
+  --accent:#1F7A52;--accent-h:#26925F;--accent-s:rgba(31,122,82,0.18);
+  --accent-rgb:31,122,82;
+  /* Tono de marca para el degradado de la tarjeta de total (verde oscuro Jaguar) */
+  --brand-deep:11,42,29;
+  /* Color de iconos de categoría (plata Jaguar) */
+  --cat-icon:#A7A9AC;
+  /* Cifra del total sobre el fondo de marca oscuro: versión luminosa */
+  --accent-bright:#3CA877;
   --red:#FC8181;--red-bg:rgba(197,48,48,0.16);
   --green:#68D391;--green-bg:rgba(56,161,105,0.16);
   --amber:#E0B15A;--amber-bg:rgba(214,158,46,0.16);
@@ -63,11 +70,12 @@ html{background:#0B0F14;color-scheme:dark}
 /* CARDS */
 .card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:16px;margin-bottom:10px;box-shadow:0 8px 28px rgba(0,0,0,0.18)}
 .total-bubble{border:1px solid var(--border2);box-shadow:0 8px 28px rgba(0,0,0,0.18)}
-.total-general{border:1px solid rgba(var(--accent-rgb),0.5);background:linear-gradient(135deg,rgba(var(--accent-rgb),0.20),rgba(var(--accent-rgb),0.04));box-shadow:0 10px 34px rgba(0,0,0,0.22)}
+.total-general{border:1px solid rgba(var(--accent-rgb),0.5);background:linear-gradient(135deg,rgba(var(--brand-deep),0.92),rgba(var(--accent-rgb),0.08));box-shadow:0 10px 34px rgba(0,0,0,0.22)}
 .card-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;display:flex;align-items:center;gap:6px}
-.card-label svg{width:13px;height:13px;opacity:.85;flex:0 0 auto}
+.card-label svg{width:13px;height:13px;opacity:.95;flex:0 0 auto;color:var(--cat-icon)}
 .card-value{font-size:24px;font-weight:500;font-family:var(--mono);color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .card-value.accent{color:var(--accent)}
+.total-general .card-value.accent{color:var(--accent-bright)}
 .metric-card{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:8px;min-height:72px;cursor:pointer;transition:transform .15s,border-color .2s}
 .metric-card:active{transform:scale(.975)}
 .metric-card .card-label{margin-bottom:0;font-size:10px;line-height:1.15}
@@ -137,7 +145,7 @@ html{background:#0B0F14;color-scheme:dark}
 .action-bubble svg{width:21px;height:21px}
 .action-bubble.edit{color:var(--accent);border-color:rgba(var(--accent-rgb),0.42)}
 .action-bubble.delete{color:var(--red);border-color:rgba(252,129,129,0.34)}
-body.honda .action-bubble.edit{border-color:rgba(216,162,27,0.42)}
+body.honda .action-bubble.edit{border-color:rgba(227,6,19,0.42)}
 @media (max-width:360px){.record-row{grid-template-columns:1fr 48px;gap:8px}.action-bubble svg{width:19px;height:19px}}
 
 /* BADGE */
@@ -158,7 +166,7 @@ body.honda .action-bubble.edit{border-color:rgba(216,162,27,0.42)}
 .km-sub{font-size:13px;color:var(--text3);margin-top:2px}
 .empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:15px}
 /* FAB */
-.fab{position:fixed;bottom:calc(108px + env(safe-area-inset-bottom));right:22px;width:58px;height:58px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 8px 26px rgba(47,128,168,.44);z-index:130;transition:transform .2s}
+.fab{position:fixed;bottom:calc(108px + env(safe-area-inset-bottom));right:22px;width:58px;height:58px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 8px 26px rgba(var(--accent-rgb),.44);z-index:130;transition:transform .2s}
 .fab:active{transform:scale(.93)}
 .fab svg{width:26px;height:26px;color:#fff}
 /* MODAL */
@@ -172,7 +180,7 @@ body.honda .action-bubble.edit{border-color:rgba(216,162,27,0.42)}
 .fg{margin-bottom:14px}
 .fl{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:500;margin-bottom:6px;display:block}
 .fi{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:13px 14px;color:var(--text);font-family:var(--font);font-size:17px;outline:none;transition:border-color .2s;-webkit-appearance:none}
-.fi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(47,128,168,0.18)}
+.fi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.18)}
 .fi::placeholder{color:var(--text3)}
 /* TYPE SELECTOR */
 .type-sel{display:flex;gap:8px;margin-bottom:14px}
@@ -180,7 +188,7 @@ body.honda .action-bubble.edit{border-color:rgba(216,162,27,0.42)}
 .type-btn.sel-n{background:var(--surface3);border-color:var(--text2);color:var(--text)}
 .type-btn.sel-p{background:var(--amber-bg);border-color:var(--amber);color:var(--amber)}
 /* SAVE BTN */
-.btn-save{width:100%;padding:14px;background:var(--accent);border:1px solid rgba(47,128,168,0.4);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:6px;transition:all .2s}
+.btn-save{width:100%;padding:14px;background:var(--accent);border:1px solid rgba(var(--accent-rgb),0.4);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:6px;transition:all .2s}
 .btn-save:hover{background:var(--accent-h)}
 .btn-save:active{opacity:.7}
 /* PICKER */
@@ -188,7 +196,7 @@ body.honda .action-bubble.edit{border-color:rgba(216,162,27,0.42)}
 .picker-btn:active{border-color:var(--accent)}
 /* ADITIVOS */
 .badge-adv{background:var(--neutral-bg);color:var(--neutral);border:1px solid rgba(160,174,192,0.2)}
-.badge-dpf{background:var(--accent-s);color:var(--accent);border:1px solid rgba(47,128,168,0.3)}
+.badge-dpf{background:var(--accent-s);color:var(--accent);border:1px solid rgba(var(--accent-rgb),0.3)}
 .badge-st{display:inline-flex;align-items:center;justify-content:center;min-width:92px;flex:0 0 92px;padding:4px 10px;border-radius:8px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;line-height:1}
 .badge-pendiente{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(214,158,46,0.25)}
 .badge-aplicado{background:var(--green-bg);color:var(--green);border:1px solid rgba(56,161,105,0.25)}
@@ -209,43 +217,44 @@ body.honda .action-bubble.edit{border-color:rgba(216,162,27,0.42)}
 .adit-rules strong{color:var(--text2);font-weight:500}
 
 /* VEHICLE SELECTOR */
-.selector-screen{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(64px + env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom));background:radial-gradient(circle at top,rgba(47,128,168,.16) 0%,rgba(11,15,20,.94) 40%,#070A0E 100%)}
+.selector-screen{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(64px + env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom));background:radial-gradient(circle at top,rgba(40,52,64,.30) 0%,rgba(11,15,20,.94) 42%,#070A0E 100%)}
 .selector-inner{width:100%;max-width:430px;margin:0 auto}
 .selector-title{text-align:left;font-size:13px;letter-spacing:.02em;text-transform:none;color:var(--text3);margin-bottom:4px;font-weight:500;padding:0 4px}
 .selector-bigtitle{text-align:left;font-size:30px;font-weight:600;letter-spacing:-.02em;color:var(--text);margin-bottom:24px;padding:0 4px}
 .selector-heading{display:none}
 .vehicle-card{width:100%;min-height:auto;max-width:none;border:1px solid var(--border2);border-radius:var(--r-lg);padding:20px;margin-bottom:14px;cursor:pointer;transition:transform .18s,filter .2s;box-shadow:0 14px 44px rgba(0,0,0,.30);text-align:left;display:block}
-.vehicle-card.jaguar-card{background:linear-gradient(135deg,rgba(47,128,168,.22),rgba(47,128,168,.05));border-color:rgba(47,128,168,.55)}
-.vehicle-card.honda-card{background:linear-gradient(135deg,rgba(216,162,27,.20),rgba(216,162,27,.05));border-color:rgba(216,162,27,.55)}
+.vehicle-card.jaguar-card{background:linear-gradient(135deg,rgba(11,42,29,.9),rgba(31,122,82,.10));border-color:rgba(31,122,82,.55)}
+.vehicle-card.honda-card{background:linear-gradient(135deg,rgba(17,17,17,.92),rgba(227,6,19,.10));border-color:rgba(227,6,19,.5)}
 .vehicle-card:active{transform:scale(.98)}
 .vehicle-card:hover{filter:brightness(1.06)}
 .vc-top{display:flex;align-items:center;justify-content:space-between;gap:14px}
 .vc-icon{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
 .vc-icon svg{width:26px;height:26px}
-.jaguar-card .vc-icon{background:rgba(47,128,168,.22);color:#5DA8CF}
-.honda-card .vc-icon{background:rgba(216,162,27,.20);color:#E0B15A}
+.jaguar-card .vc-icon{background:rgba(31,122,82,.22);color:#3CA877}
+.honda-card .vc-icon{background:rgba(227,6,19,.18);color:#F04453}
 .vc-name{font-size:20px;line-height:1.12;font-weight:600;color:var(--text);letter-spacing:-.01em;text-transform:none;margin-bottom:3px}
 .vc-year{font-size:12px;color:var(--text3);letter-spacing:.02em}
-.jaguar-card .vc-year{color:#9FB6C4}
-.honda-card .vc-year{color:#D8C49A}
+.jaguar-card .vc-year{color:#7FB89A}
+.honda-card .vc-year{color:#8A8F93}
 .vc-total{display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-top:16px}
 .vc-total-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:600}
-.jaguar-card .vc-total-label{color:#9FB6C4}
-.honda-card .vc-total-label{color:#D8C49A}
+.jaguar-card .vc-total-label{color:#7FB89A}
+.honda-card .vc-total-label{color:#8A8F93}
 .vc-total-value{font-size:22px;font-weight:600;font-family:var(--mono);font-variant-numeric:tabular-nums;margin-left:auto;letter-spacing:-.02em}
-.jaguar-card .vc-total-value{color:#5DA8CF}
-.honda-card .vc-total-value{color:#E0B15A}
+.jaguar-card .vc-total-value{color:#3CA877}
+.honda-card .vc-total-value{color:#F04453}
 .vc-type{font-size:13px;color:var(--text3);margin-bottom:8px}
 .vc-sub{display:inline-block;padding:4px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:999px;font-size:11px;color:var(--text2)}
 .vc-accent{width:40px;height:4px;border-radius:2px;margin-bottom:12px}
 .change-vehicle{background:var(--surface2);border:1px solid var(--border);border-radius:999px;color:var(--text2);font-size:12px;cursor:pointer;padding:7px 12px;font-family:var(--font);letter-spacing:.04em}
 .change-vehicle:active{color:var(--text2)}
 @media (max-width:360px){.vc-name{font-size:18px}.vc-total-value{font-size:20px}}
-/* Honda accent override */
-body.honda{--accent:#D8A21B;--accent-h:#F0B429;--accent-s:rgba(216,162,27,0.18);--accent-rgb:216,162,27}
-body.honda .fab{box-shadow:0 8px 26px rgba(216,162,27,.4)}
-body.honda .fi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(216,162,27,0.18)}
-body.honda .btn-save{background:var(--accent);border-color:rgba(216,162,27,0.4)}
+/* Honda accent override - paleta HRC repartida */
+body.honda{--accent:#E30613;--accent-h:#F0202E;--accent-s:rgba(227,6,19,0.16);--accent-rgb:227,6,19;--brand-deep:17,17,17;--cat-icon:#3A86D4;--accent-bright:#F04453}
+body.honda .fab{background:#0057B8;box-shadow:0 8px 26px rgba(0,87,184,.42)}
+body.honda .fi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(227,6,19,0.18)}
+body.honda .btn-save{background:var(--accent);border-color:rgba(227,6,19,0.4)}
+body.honda .section-title{color:#8A8F93}
 /* UTILIDADES / BACKUP */
 .selector-tools{width:100%;max-width:360px;margin:18px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tool-btn{background:var(--surface2);border:1px solid var(--border);border-radius:999px;color:var(--text2);font-family:var(--font);font-size:12px;padding:10px 12px;cursor:pointer;letter-spacing:.03em}
