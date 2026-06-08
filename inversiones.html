@@ -10565,13 +10565,13 @@ body:before{
     if(allocationP) allocationP.textContent='Distribución actual de la cartera.';
     document.querySelectorAll('#dashboard .donutCenter span').forEach(el=>{el.textContent='Valor cartera';});
     document.querySelectorAll('#dashboard .heroTopMetric label').forEach(el=>{
-      if(el.textContent.trim()==='P&L plataforma') el.textContent='P&L mostrado';
-      if(el.textContent.trim()==='Rentabilidad plataforma') el.textContent='Rentabilidad mostrada';
+      if(el.textContent.trim()==='P&L plataforma'||el.textContent.trim()==='P&L mostrado') el.textContent='Plusvalía latente';
+      if(el.textContent.trim()==='Rentabilidad plataforma'||el.textContent.trim()==='Rentabilidad mostrada') el.textContent='Rentabilidad latente';
     });
     document.querySelectorAll('#dashboard .heroTopMetric small').forEach(el=>{
       const t=el.textContent.trim();
-      if(t.includes('Resultado filtrado')) el.textContent='Resultado de los activos mostrados.';
-      if(t.includes('Rentabilidad simple')) el.textContent='Rentabilidad simple de los activos mostrados.';
+      if(t.includes('Resultado filtrado')||t.includes('Resultado de los activos')) el.textContent='Ganancia si vendieras hoy. Tu rentabilidad real es el XIRR.';
+      if(t.includes('Rentabilidad simple')) el.textContent='Sobre coste fiscal (con traspasos). No es tu XIRR.';
     });
   }
   document.addEventListener('DOMContentLoaded', polishDashboardTexts);
