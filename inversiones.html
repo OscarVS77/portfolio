@@ -10558,7 +10558,12 @@ body:before{
 </style>
 <script>
 (function(){
-  function polishDashboardTexts(){
+  function rentSubtitleForScope(scope){
+    return scope==='myinvestor'
+      ? 'Sobre coste fiscal (con traspasos). No es tu XIRR.'
+      : 'Rentabilidad simple no realizada. No es tu XIRR.';
+  }
+  function polishDashboardTexts(scope){
     const heroP=document.querySelector('#dashboard .hero .cardHeader p');
     if(heroP) heroP.textContent='Valor de mercado, lectura por fuente y evolución con cierres reales.';
     const allocationP=document.querySelector('#dashboard article.card:not(.hero):not(.evolutionCard) .cardHeader p');
@@ -10568,18 +10573,19 @@ body:before{
       if(el.textContent.trim()==='P&L plataforma'||el.textContent.trim()==='P&L mostrado') el.textContent='Plusvalía latente';
       if(el.textContent.trim()==='Rentabilidad plataforma'||el.textContent.trim()==='Rentabilidad mostrada') el.textContent='Rentabilidad latente';
     });
+    const sc = scope || (typeof currentDashboardScope!=='undefined' ? currentDashboardScope : 'global');
     document.querySelectorAll('#dashboard .heroTopMetric small').forEach(el=>{
       const t=el.textContent.trim();
       if(t.includes('Resultado filtrado')||t.includes('Resultado de los activos')) el.textContent='Ganancia si vendieras hoy. Tu rentabilidad real es el XIRR.';
-      if(t.includes('Rentabilidad simple')) el.textContent='Sobre coste fiscal (con traspasos). No es tu XIRR.';
+      if(t.includes('Rentabilidad simple')||t.includes('Sobre coste fiscal')) el.textContent=rentSubtitleForScope(sc);
     });
   }
-  document.addEventListener('DOMContentLoaded', polishDashboardTexts);
+  document.addEventListener('DOMContentLoaded', function(){ polishDashboardTexts(); });
   const oldRender = window.renderDashboardScope;
   if(oldRender){
     window.renderDashboardScope=function(scope){
       const out=oldRender.apply(this,arguments);
-      polishDashboardTexts();
+      polishDashboardTexts(scope);
       return out;
     };
   }
