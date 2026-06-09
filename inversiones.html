@@ -137,6 +137,19 @@ html,body{
 .kpi label{display:block;color:var(--muted);font-size:13px;margin-bottom:12px;font-weight:520}
 .kpi strong{display:block;font-size:26px;letter-spacing:-.8px;font-weight:480}
 .kpi small{display:block;margin-top:8px;color:var(--muted2);font-size:12px}
+.xirrHeroWrap{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.kpiHero{
+  background:linear-gradient(180deg,rgba(27,28,34,.96),rgba(17,18,23,.96));
+  border:1px solid rgba(54,179,126,.45);border-radius:20px;padding:22px 24px;
+  box-shadow:0 0 0 1px rgba(54,179,126,.06),0 14px 40px -28px rgba(54,179,126,.5);
+}
+.kpiHero label{display:block;color:var(--muted);font-size:14px;margin-bottom:8px;font-weight:560}
+.kpiHero strong{display:block;font-size:46px;letter-spacing:-1.4px;font-weight:520;line-height:1}
+.kpiHero small{display:block;margin-top:10px;color:var(--muted2);font-size:13px}
+.kpiHeroNote{margin:2px 2px 0;color:var(--muted);font-size:12.5px;line-height:1.5}
+.kpiHeroNote strong{color:var(--green);font-weight:600}
+.kpiStripContext{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media(max-width:680px){.kpiHero strong{font-size:38px}.kpiStripContext{grid-template-columns:1fr}}
 .good strong,.green{color:var(--green)!important}
 .warn strong,.yellow{color:var(--yellow)!important}
 .bad strong,.red{color:var(--red)!important}
@@ -5040,12 +5053,15 @@ body:before{
     </section>
 
     <section class="section" id="xirr">
-      <section class="kpiStrip pageBlock">
-        <article class="kpi"><label>XIRR global</label><strong class="green">14,58%</strong><small>leído de XIRR GLOBAL</small></article>
-        <article class="kpi"><label>Rentabilidad simple real</label><strong class="green">6,03%</strong><small>dato complementario</small></article>
-        <article class="kpi"><label>Valor actual total</label><strong>13.136,12 €</strong><small>último valor</small></article>
-        <article class="kpi"><label>Cierres reales</label><strong>Activo</strong><small>base para gráficas</small></article>
-      </section>
+      <div class="xirrHeroWrap pageBlock">
+        <article class="kpi kpiHero"><label>XIRR global</label><strong class="green">14,58%</strong><small>Tu rentabilidad real anualizada, desde el primer día.</small></article>
+        <p class="kpiHeroNote"><strong>El XIRR es tu indicador principal:</strong> mide cómo crece tu dinero teniendo en cuenta cuándo lo invertiste. El resto de cifras de esta página son contexto.</p>
+        <section class="kpiStripContext">
+          <article class="kpi"><label>Rentabilidad simple real</label><strong class="green">6,03%</strong><small>dato complementario</small></article>
+          <article class="kpi"><label>Valor actual total</label><strong>13.136,12 €</strong><small>último valor</small></article>
+          <article class="kpi"><label>Cierres reales</label><strong>Activo</strong><small>base para gráficas</small></article>
+        </section>
+      </div>
       
       <div class="card pageBlock">
         <div class="cardHeader">
