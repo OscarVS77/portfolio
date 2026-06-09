@@ -387,6 +387,15 @@ label.btn.primary{
 .heroMetric strong{display:block;font-size:24px;line-height:1.05;font-weight:560;letter-spacing:-.6px}
 .heroMetric small{display:block;margin-top:7px;color:var(--muted);font-size:12px;line-height:1.3}
 .capitalGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-top:14px}
+.assetSummaryGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.assetSummaryItem{background:linear-gradient(180deg,rgba(27,28,34,.96),rgba(17,18,23,.96));border:1px solid var(--line);border-radius:16px;padding:15px 16px}
+.assetSummaryItem .asName{display:flex;align-items:center;gap:8px;font-weight:560;font-size:14px;margin-bottom:12px}
+.assetSummaryItem .asRow{display:flex;justify-content:space-between;align-items:baseline;margin-top:7px;font-size:13px}
+.assetSummaryItem .asRow span{color:var(--muted)}
+.assetSummaryItem .asRow strong{font-weight:560;font-size:14px}
+.assetSummaryItem .asXirr{font-size:20px;font-weight:540;letter-spacing:-.5px}
+@media(max-width:980px){.assetSummaryGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.assetSummaryGrid{grid-template-columns:1fr}}
 .capitalCard{background:linear-gradient(180deg,rgba(27,28,34,.96),rgba(17,18,23,.96));border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--soft)}
 .capitalCard label{display:block;color:var(--muted);font-size:13px;margin-bottom:10px;font-weight:620;min-height:2.6em;line-height:1.3}
 .capitalCard strong{display:block;font-size:28px;font-weight:520;letter-spacing:-.8px;line-height:1.05}
@@ -4940,11 +4949,9 @@ body:before{
         <article class="capitalCard"><label>XIRR global</label><strong class="green">14,58%</strong><small>Desde el primer día. Rentabilidad anualizada.</small></article>
       </section>
 
-      <section class="dataStatusGrid pageBlock" id="dataStatusGrid">
-        <article class="card dataStatusCard"><label>Excel cargado</label><strong data-data-status="file">Sin Excel</strong><small data-data-status="file-note">Fuente principal pendiente</small></article>
-        <article class="card dataStatusCard"><label>Excel importado</label><strong data-data-status="local">Pendiente</strong><small data-data-status="local-note">Día y hora de importación/carga</small></article>
-        <article class="card dataStatusCard"><label>Supabase Cloud</label><strong data-data-status="cloud" class="yellow">Sin sesión</strong><small data-data-status="cloud-note">Guardar/Cargar nube pendiente</small></article>
-        <article class="card dataStatusCard"><label>Benchmark/API</label><strong data-data-status="benchmark" class="yellow">Sin cargar</strong><small data-data-status="benchmark-note">Edge Function disponible</small></article>
+      <section class="card pageBlock assetSummaryCard" id="assetSummaryDash">
+        <div class="cardHeader"><div><h3>Resumen por activo</h3><p>Valor actual, peso real y XIRR individual de cada activo.</p></div></div>
+        <div class="assetSummaryGrid" id="assetSummaryGrid"></div>
       </section>
 
       <section class="card mobileCarteraActual pageBlock" id="mobileCarteraActual">
@@ -5490,6 +5497,16 @@ body:before{
           <div><strong>Benchmark</strong><span class="green">OK</span></div>
           <div><strong>Auditoría web</strong><span class="green">OK</span></div>
         </div>
+      </section>
+
+      <section class="card pageBlock" id="infoOtros">
+        <div class="cardHeader"><div><h3>Info / Otros</h3><p>Estado de carga del Excel y servicios. Última fuente importada y sincronización.</p></div></div>
+        <section class="dataStatusGrid" id="dataStatusGrid">
+          <article class="card dataStatusCard"><label>Excel cargado</label><strong data-data-status="file">Sin Excel</strong><small data-data-status="file-note">Fuente principal pendiente</small></article>
+          <article class="card dataStatusCard"><label>Excel importado</label><strong data-data-status="local">Pendiente</strong><small data-data-status="local-note">Día y hora de importación/carga</small></article>
+          <article class="card dataStatusCard"><label>Supabase Cloud</label><strong data-data-status="cloud" class="yellow">Sin sesión</strong><small data-data-status="cloud-note">Guardar/Cargar nube pendiente</small></article>
+          <article class="card dataStatusCard"><label>Benchmark/API</label><strong data-data-status="benchmark" class="yellow">Sin cargar</strong><small data-data-status="benchmark-note">Edge Function disponible</small></article>
+        </section>
       </section>
     </section>
 
@@ -6277,9 +6294,31 @@ function updateDashboard(){
   if(center) center.textContent = fmtMoney(valueTotal);
   updateAllocation(cartera);
   renderMobileCartera(cartera);
+  renderAssetSummary(cartera);
   updateAlerts();
   updateReconciliation(cartera, resumen);
   renderEvolutionChart();
+}
+
+function renderAssetSummary(cartera){
+  const grid = document.getElementById('assetSummaryGrid');
+  if(!grid) return;
+  const xmap = (typeof getAssetXirrMap === 'function') ? getAssetXirrMap() : {};
+  const assets = (cartera||[]).filter(x=>String(x.activo).toUpperCase()!=='TOTAL');
+  grid.innerHTML = assets.map(x=>{
+    const key = carteraKeyFromName(x.activo);
+    const xi = xmap[key];
+    const xirrVal = xi ? xi.xirr : null;
+    const pesoNum = Number(x.peso);
+    const pesoTxt = Number.isFinite(pesoNum) ? fmtPct(x.peso) : 'Separado';
+    const xirrTxt = (xirrVal!==null && xirrVal!==undefined && xirrVal!=='') ? fmtPct(xirrVal) : '—';
+    return `<article class="assetSummaryItem">
+      <div class="asName"><span class="bullet ${assetClass(x.activo)}"></span><span>${shortAssetName(x.activo)}</span></div>
+      <div class="asXirr ${clsByValue(xirrVal)}">${xirrTxt}</div>
+      <div class="asRow"><span>Valor actual</span><strong>${fmtMoney(x.valor)}</strong></div>
+      <div class="asRow"><span>Peso real</span><strong>${pesoTxt}</strong></div>
+    </article>`;
+  }).join('');
 }
 
 function parseMonthlyEvolution(){
