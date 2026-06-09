@@ -6354,6 +6354,27 @@ function renderEvolutionChart(){
   const host=document.getElementById('dashboardEvolutionChart');
   if(!host) return;
   const series=parseMonthlyEvolution();
+  // Punto "Hoy": estado vivo desde RESUMEN, para que la gráfica termine en el valor actual
+  // (coherente con las tarjetas) y no en el último cierre mensual.
+  try{
+    const resumen=sheetRows('RESUMEN');
+    const valorHoy=Number(cell(resumen,5,2));
+    const netoHoy=Number(cell(resumen,6,4));
+    const aportadoHoy=Number(cell(resumen,6,2));
+    if(Number.isFinite(valorHoy) && valorHoy>0){
+      const last=series[series.length-1];
+      const mismoDia = last && fmtDate(new Date())===last.fecha;
+      const puntoHoy={
+        fecha: fmtDate(new Date()),
+        anio: 'Hoy', mes: '',
+        valor: valorHoy,
+        invertido: Number.isFinite(netoHoy)?netoHoy:(last?last.invertido:null),
+        aportado: Number.isFinite(aportadoHoy)?aportadoHoy:(last?last.aportado:null),
+        esHoy: true
+      };
+      if(mismoDia){ series[series.length-1]=puntoHoy; } else { series.push(puntoHoy); }
+    }
+  }catch(e){}
   // Línea de referencia: capital invertido neto (coherente con G/P real del Excel).
   const invertido=series.filter(p=>Number.isFinite(Number(p.invertido)) && Number(p.invertido)>0)
                         .map(p=>({...p, v:Number(p.invertido)}));
@@ -7236,6 +7257,7 @@ function shortMonthLabel(x){
   return fmtDate(x.fecha);
 }
 function chartFullLabel(x){
+  if(x && x.esHoy) return `Hoy · ${fmtDate(x.fecha)}`;
   const m = String(x.mes || '').trim();
   const y = String(x.anio || '').trim();
   if(m && y) return `${m} ${y}`;
