@@ -32,6 +32,7 @@
   --small:#c25a73;
   --gold:#ffd34d;
   --btc:#e89a52;
+  --plan:#a78bfa;
   --accent:#d9c9a8;
   --radius:20px;
   --shadow:0 24px 70px rgba(0,0,0,.46);
@@ -167,7 +168,7 @@ html,body{
 .legendRow{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:center;color:var(--text2);font-size:13px}
 .legendDot{width:9px;height:9px;border-radius:50%}
 .legendRow strong{color:var(--text);font-weight:560}
-.bBlue{background:var(--blue)}.bGreen{background:var(--em)}.bSmall{background:var(--small)}.bGold{background:var(--gold)}.bBtc{background:var(--btc)}.bOk{background:var(--green)}.bWarn{background:var(--yellow)}.bBad{background:var(--red)}
+.bBlue{background:var(--blue)}.bGreen{background:var(--em)}.bSmall{background:var(--small)}.bGold{background:var(--gold)}.bBtc{background:var(--btc)}.bPlan{background:var(--plan)}.bOk{background:var(--green)}.bWarn{background:var(--yellow)}.bBad{background:var(--red)}
 .pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:6px 10px;background:var(--bg);border:1px solid var(--line);font-size:12px;font-weight:650}
 .bullet{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
 .tableWrap{
@@ -397,6 +398,7 @@ label.btn.primary{
 @media(max-width:980px){.assetSummaryGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.assetSummaryGrid{grid-template-columns:1fr}}
 .capitalCard{background:linear-gradient(180deg,rgba(27,28,34,.96),rgba(17,18,23,.96));border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--soft)}
+.capitalCardKey{border:1.5px solid var(--gold)!important;box-shadow:0 0 0 1px rgba(255,211,77,.18),0 14px 34px rgba(0,0,0,.24)!important}
 .capitalCard label{display:block;color:var(--muted);font-size:13px;margin-bottom:10px;font-weight:620;min-height:2.6em;line-height:1.3}
 .capitalCard strong{display:block;font-size:28px;font-weight:520;letter-spacing:-.8px;line-height:1.05}
 .capitalCard small{display:block;color:var(--muted2);font-size:12px;margin-top:9px;line-height:1.35}
@@ -531,6 +533,7 @@ label.btn.primary{
   --small:#c25a73;
   --gold:#ffd34d;
   --btc:#e89a52;
+  --plan:#a78bfa;
   --accent:#d9c9a8;
   --radius:18px;
   --shadow:0 28px 90px rgba(0,0,0,.58);
@@ -4945,8 +4948,8 @@ body:before{
         <article class="capitalCard"><label>Total aportado histórico bruto</label><strong>13.652,35 €</strong><small>Todo el dinero aportado desde el inicio, antes de retiradas.</small></article>
         <article class="capitalCard"><label>Capital invertido neto actual</label><strong>12.313,44 €</strong><small>Aportado histórico menos retiradas.</small></article>
         <article class="capitalCard"><label>Ganancia / pérdida real</label><strong class="green">822,68 €</strong><small>Valor actual menos capital invertido neto.</small></article>
-        <article class="capitalCard"><label>Rentabilidad simple real</label><strong class="green">6,03%</strong><small>Desde el primer día. Simple, no anualizada.</small></article>
-        <article class="capitalCard"><label>XIRR global</label><strong class="green">14,58%</strong><small>Desde el primer día. Rentabilidad anualizada.</small></article>
+        <article class="capitalCard capitalCardKey"><label>Rentabilidad simple real</label><strong class="green">6,03%</strong><small>Desde el primer día. Simple, no anualizada.</small></article>
+        <article class="capitalCard capitalCardKey"><label>XIRR global</label><strong class="green">14,58%</strong><small>Desde el primer día. Rentabilidad anualizada.</small></article>
       </section>
 
       <section class="card pageBlock assetSummaryCard" id="assetSummaryDash">
@@ -4977,7 +4980,7 @@ body:before{
                 <tr><td><div class="distAsset"><span class="legendDot bBlue"></span><strong>MSCI World</strong></div></td><td>7.345,78 €</td><td>64,77%</td><td>62,40%</td><td class="yellow">2,37%</td><td><span class="statusPill warn">Vigilar</span></td></tr>
                 <tr><td><div class="distAsset"><span class="legendDot bGreen"></span><strong>Emerging Markets</strong></div></td><td>1.185,43 €</td><td>10,45%</td><td>9,75%</td><td class="green">0,70%</td><td><span class="statusPill ok">OK</span></td></tr>
                 <tr><td><div class="distAsset"><span class="legendDot bSmall"></span><strong>Small Cap</strong></div></td><td>697,16 €</td><td>6,15%</td><td>5,85%</td><td class="green">0,30%</td><td><span class="statusPill ok">OK</span></td></tr>
-                <tr><td><div class="distAsset"><span class="legendDot bOk"></span><strong>Plan Pensiones</strong></div></td><td>1.818,14 €</td><td>Separado</td><td>Separado</td><td>-</td><td><span class="statusPill neutral">Separado</span></td></tr>
+                <tr><td><div class="distAsset"><span class="legendDot bPlan"></span><strong>Plan Pensiones</strong></div></td><td>1.818,14 €</td><td>Separado</td><td>Separado</td><td>-</td><td><span class="statusPill neutral">Separado</span></td></tr>
               </tbody></table></div>
             </div>
           </article>
@@ -5046,7 +5049,7 @@ body:before{
                 <td>695,27 €</td><td>608,87 €</td><td class="green">86,40 €</td><td class="green">14,19%</td><td>6,15%</td><td>5,85%</td><td class="green">0,30%</td>
               </tr>
               <tr>
-                <td><div class="assetName"><span class="bullet bOk"></span><div><span class="assetNameText">Plan Pensiones</span><span class="assetMeta">Separado de allocation</span></div></div></td>
+                <td><div class="assetName"><span class="bullet bPlan"></span><div><span class="assetNameText">Plan Pensiones</span><span class="assetMeta">Separado de allocation</span></div></div></td>
                 <td>1.825,25 €</td><td>1.580,99 €</td><td class="green">244,26 €</td><td class="green">15,45%</td><td>Separado</td><td>Separado</td><td>-</td>
               </tr>
               <tr class="totalRow">
@@ -5104,7 +5107,7 @@ body:before{
             <div class="xirrSub"><span>Rent. simple real</span><strong class="green">15,29%</strong><span>G/P real</span><strong class="green">92,21 €</strong></div>
           </article>
           <article class="xirrAssetCard">
-            <div class="xirrAssetTop"><div class="xirrAssetName"><span class="bullet bOk"></span><span>Plan Pensiones</span></div><span class="pill green">OK</span></div>
+            <div class="xirrAssetTop"><div class="xirrAssetName"><span class="bullet bPlan"></span><span>Plan Pensiones</span></div><span class="pill green">OK</span></div>
             <div class="xirrValue green">31,44%</div>
             <div class="xirrSub"><span>Rent. simple real</span><strong class="green">15,52%</strong><span>G/P real</span><strong class="green">245,25 €</strong></div>
           </article>
@@ -5223,7 +5226,7 @@ body:before{
                 <tbody>
                   <tr><td><span class="assetNameLine"><span class="bullet bGold"></span><span><strong>Oro</strong><small>Trade Republic</small></span></span></td><td>469,16 €</td><td>552,48 €</td><td class="green">83,32 €</td><td>8,01%</td></tr>
                   <tr><td><span class="assetNameLine"><span class="bullet bBtc"></span><span><strong>Bitcoin</strong><small>Bitcoin</small></span></span></td><td>1.213,57 €</td><td>1.007,26 €</td><td class="red">-206,31 €</td><td>14,60%</td></tr>
-                  <tr><td><span class="assetNameLine"><span class="bullet bOk"></span><span><strong>Plan Pensiones</strong><small>MyInvestor</small></span></span></td><td>1.500,99 €</td><td>1.539,57 €</td><td class="green">38,58 €</td><td>Separado</td></tr>
+                  <tr><td><span class="assetNameLine"><span class="bullet bPlan"></span><span><strong>Plan Pensiones</strong><small>MyInvestor</small></span></span></td><td>1.500,99 €</td><td>1.539,57 €</td><td class="green">38,58 €</td><td>Separado</td></tr>
                   <tr><td><span class="assetNameLine"><span class="bullet bBlue"></span><span><strong>MSCI World</strong><small>MyInvestor</small></span></span></td><td>3.689,21 €</td><td>3.731,64 €</td><td class="green">42,43 €</td><td>54,09%</td></tr>
                   <tr><td><span class="assetNameLine"><span class="bullet bGreen"></span><span><strong>Emerging Markets</strong><small>MyInvestor</small></span></span></td><td>987,17 €</td><td>1.046,60 €</td><td class="green">59,43 €</td><td>15,17%</td></tr>
                   <tr><td><span class="assetNameLine"><span class="bullet bSmall"></span><span><strong>Small Cap</strong><small>MyInvestor</small></span></span></td><td>547,07 €</td><td>560,47 €</td><td class="green">13,40 €</td><td>8,12%</td></tr>
@@ -18216,6 +18219,7 @@ body:before{
   --yellow:#e8b14a;
   --warn:#e8b14a;             /* faltaba: usado por .statusPill.warn */
   --blue:#6e93e8;
+  --plan:#a78bfa;
   --accent:#f4f1ea;           /* acento neutro hueso, NO amarillo */
   /* neutraliza el sistema "active-yellow" heredado en un solo punto */
   --active-yellow:#f4f1ea;
@@ -18569,5 +18573,10 @@ body:before{
   #dashboard .dashboardDistributionBlock .distTable td:nth-child(5){width:140px!important;}
   #dashboard .dashboardDistributionBlock .distTable th:nth-child(6),
   #dashboard .dashboardDistributionBlock .distTable td:nth-child(6){width:100px!important;}
+}
+#dashboard .capitalCard.capitalCardKey{
+  border:1.5px solid var(--gold)!important;
+  border-color:var(--gold)!important;
+  box-shadow:0 0 0 1px rgba(255,211,77,.18),0 14px 34px rgba(0,0,0,.26)!important;
 }
 </style>
