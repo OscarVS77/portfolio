@@ -6222,6 +6222,7 @@ function assetClass(name){
   if(s.includes('emerging')) return 'bGreen';
   if(s.includes('small')) return 'bSmall';
   if(s.includes('msci')) return 'bBlue';
+  if(s.includes('pension') || s.includes('pensión') || s.includes('plan')) return 'bPlan';
   return 'bOk';
 }
 function shortAssetName(name){
@@ -7408,6 +7409,7 @@ function colorForGroup(name){
   if(n.includes('small')) return 'var(--small)';
   if(n.includes('oro') || n.includes('gold')) return 'var(--gold)';
   if(n.includes('bitcoin') || n.includes('btc') || n.includes('cripto')) return 'var(--btc)';
+  if(n.includes('pension') || n.includes('pensión') || n.includes('plan')) return 'var(--plan)';
   if(n.includes('myinvestor') || n.includes('fondo')) return 'var(--blue)';
   if(n.includes('trade')) return 'var(--gold)';
   return 'var(--green)';
