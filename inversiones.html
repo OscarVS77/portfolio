@@ -4518,6 +4518,13 @@ body:before{
 
 
 
+/* v114 · Desktop: ocultar Resumen por activo y Distribución operativa (info duplicada en Cartera actual y XIRR global). Se conservan en mobile. */
+@media(min-width:761px){
+  #dashboard #assetSummaryDash{display:none!important;}
+  #dashboard .dashboardDistributionBlock{display:none!important;}
+  #dashboard .dashboardDistributionAlerts{grid-template-columns:1fr!important;}
+}
+
 /* V69 · Mobile dashboard limpio: sin tarjetas técnicas y cartera actual simplificada */
 .mobileCarteraActual{display:none!important;}
 .mobileAssetList{display:grid!important;gap:10px!important;padding:16px 18px 18px!important;}
