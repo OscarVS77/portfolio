@@ -2919,8 +2919,7 @@ html{
 .evoDotReal{width:14px;height:3px;border-radius:999px;background:var(--green);display:inline-block;}
 .evoDotMuted{width:14px;height:0;border-top:2px dashed var(--blue);display:inline-block;opacity:.95;}
 .evoPointMuted{cursor:crosshair;}
-.evoRealPoint{cursor:crosshair;transition:r .12s;stroke:rgba(0,0,0,.35);stroke-width:1.5;}
-.evoRealPoint:hover{r:7;}
+.evoRealPoint{cursor:crosshair;stroke:rgba(0,0,0,.35);stroke-width:1.5;}
 .evoHitArea{cursor:crosshair;pointer-events:auto;}
 .evoTooltipFloating .tipGreen{color:var(--green)!important;font-weight:700;}
 .evoTooltipFloating .tipRed{color:var(--red,#ff6b6b)!important;font-weight:700;}
@@ -6438,9 +6437,15 @@ function renderEvolutionLine(el, aportado, valor, fullSeries){
   // mapa de invertido por mes para enriquecer el tooltip del punto de valor real
   const invByKey=new Map();
   apXY.forEach(a=>invByKey.set((a.p.anio)+'-'+(a.p.mes), a.v));
+  // El SVG usa preserveAspectRatio="none": se estira en X para llenar el ancho del host.
+  // Compensamos ese estiramiento dibujando los puntos como elipses con rx reducido,
+  // para que tras el estirado se vean circulares. ry queda como radio nominal.
+  const hostW = (el.getBoundingClientRect && el.getBoundingClientRect().width) || W;
+  const stretchX = hostW>0 ? (hostW / W) : 1;
+  const exFor = r => (r / stretchX).toFixed(2);
   const apPoints=apXY.map(pt=>{
     const tip=`<strong>${escHtml(chartFullLabel(pt.p))}</strong><br><span>Capital invertido · ${escHtml(fmtMoney(pt.v))}</span>`;
-    return `<g data-evo-tip="${escHtml(tip)}"><circle class="evoPointMuted" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="2.6" fill="var(--blue)"/><circle class="evoHitArea" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="14" fill="transparent"/></g>`;
+    return `<g data-evo-tip="${escHtml(tip)}"><ellipse class="evoPointMuted" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" rx="${exFor(2.6)}" ry="2.6" fill="var(--blue)"/><circle class="evoHitArea" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="14" fill="transparent"/></g>`;
   }).join('');
   const vlPoints=vlXY.map(pt=>{
     const inv=invByKey.get((pt.p.anio)+'-'+(pt.p.mes));
@@ -6452,7 +6457,7 @@ function renderEvolutionLine(el, aportado, valor, fullSeries){
       gpLine=`<br><span class="${cls}">${gp>=0?'+':''}${escHtml(fmtMoney(gp))} · ${gp>=0?'+':''}${pct.toFixed(2).replace('.',',')}% G/P</span>`;
     }
     const tip=`<strong>${escHtml(chartFullLabel(pt.p))}</strong><br><span>Valor real · ${escHtml(fmtMoney(pt.v))}</span>${gpLine}`;
-    return `<g data-evo-tip="${escHtml(tip)}"><circle class="evoRealPoint" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="5" fill="var(--green)"/><circle class="evoHitArea" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="18" fill="transparent"/></g>`;
+    return `<g data-evo-tip="${escHtml(tip)}"><ellipse class="evoRealPoint" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" rx="${exFor(5)}" ry="5" fill="var(--green)"/><circle class="evoHitArea" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="18" fill="transparent"/></g>`;
   }).join('');
   // Lectura de cabecera: si hay 2+ valores reales, mostrar G/P entre primer y último cierre real.
   let headline='';
