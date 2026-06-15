@@ -6728,6 +6728,10 @@ function renderCarteraFocus(cartera){
   const mainLabel=row ? 'Valor actual del activo' : 'Valor actual total';
   const note=row ? 'Lectura individual de posición, rentabilidad, peso y XIRR.' : 'Lectura agregada de la cartera completa.';
   const fmtWeight=v=>Number.isFinite(Number(v)) ? fmtPct(v) : (v || '-');
+  const pesoTxt = row ? fmtWeight(target.peso) : '100,00%';
+  const objetivoTxt = row ? fmtWeight(target.objetivo) : '100,00%';
+  const desvTxt = row ? (Number.isFinite(Number(target.desv))?fmtPct(target.desv,2,true):(target.desv||'-')) : '0,00%';
+  const desvCls = row ? clsByValue(target.desv) : '';
   panel.innerHTML=`<article class="carteraFocusHero">
     <div class="carteraFocusTop"><div class="carteraFocusName"><span class="bullet ${assetClass(target.activo || '')}"></span><div><h3>${title}${row && carteraKeyFromName(row.activo)==='btc' ? ` <span class="carteraBtcLiveBadge"><span class="btcLivePulse warn"></span><span data-btc-live-price>${window.__btcLiveEurFormatted || '--'}</span></span>` : ''}</h3><p>${meta}</p></div></div><span class="carteraFocusStatus ${status.cls}">${status.label}</span></div>
     <div class="carteraFocusMain"><span>${mainLabel}</span><strong>${mainValue}</strong><small>${note}</small></div>
@@ -6737,9 +6741,9 @@ function renderCarteraFocus(cartera){
     <div class="carteraMetric"><span>P&amp;L</span><strong class="${clsByValue(target.pl)}">${fmtMoney(target.pl,2,true)}</strong></div>
     <div class="carteraMetric"><span>Rent.</span><strong class="${clsByValue(target.rent)}">${fmtPct(target.rent,2,true)}</strong></div>
     <div class="carteraMetric"><span>XIRR</span><strong class="${clsByValue(xirrRow?.xirr)}">${Number.isFinite(Number(xirrRow?.xirr)) ? fmtPct(xirrRow.xirr,2,true) : '-'}</strong></div>
-    <div class="carteraMetric"><span>Peso real</span><strong>${fmtWeight(target.peso)}</strong></div>
-    <div class="carteraMetric"><span>Objetivo</span><strong>${fmtWeight(target.objetivo)}</strong></div>
-    <div class="carteraMetric"><span>Desviación</span><strong class="${clsByValue(target.desv)}">${Number.isFinite(Number(target.desv))?fmtPct(target.desv,2,true):(target.desv||'-')}</strong></div>
+    <div class="carteraMetric"><span>Peso real</span><strong>${pesoTxt}</strong></div>
+    <div class="carteraMetric"><span>Objetivo</span><strong>${objetivoTxt}</strong></div>
+    <div class="carteraMetric"><span>Desviación</span><strong class="${desvCls}">${desvTxt}</strong></div>
     <div class="carteraMetric carteraMetricPlatform"><span>Plataforma</span><strong>${platformClean}</strong></div>
   </article>`;
   if(diagnosis) diagnosis.innerHTML=carteraDiagnosisText(row, xirrRow);
