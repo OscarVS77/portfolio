@@ -4555,6 +4555,19 @@ body:before{
   #dashboard .mobileCarteraActual .cardHeader p{ text-align:center!important; }
   .mobileAssetList{padding:16px!important;}
   .alertsCard{margin-top:0!important;}
+  /* v115 · Resumen por activo: contenido centrado en mobile para legibilidad */
+  #dashboard #assetSummaryDash .cardHeader h3,
+  #dashboard #assetSummaryDash .cardHeader p{ text-align:center!important; }
+  #dashboard #assetSummaryDash .assetSummaryItem{ text-align:center!important; }
+  #dashboard #assetSummaryDash .assetSummaryItem .asName{ justify-content:center!important; }
+  #dashboard #assetSummaryDash .assetSummaryItem .asXirr{ text-align:center!important; }
+  #dashboard #assetSummaryDash .assetSummaryItem .asRow{
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:2px!important;
+    margin-top:10px!important;
+  }
 }
 @media(max-width:390px){
   .mobileAssetValues{grid-template-columns:1fr!important;}
