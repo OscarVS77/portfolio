@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.sheetjs.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.coinbase.com wss://ws-feed.exchange.coinbase.com; manifest-src 'self' data:; worker-src 'self' blob:; child-src 'self' blob:; object-src 'none'; base-uri 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portfolio Oscar · v64 Mobile Dashboard</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJiZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzEwMTIxNCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzA3MDcwNyIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjEiIHgyPSIwIiB5Mj0iMCI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZThiMTRhIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZmZkMzRkIi8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9InYiIHgxPSIwIiB5MT0iMSIgeDI9IjAiIHkyPSIwIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMzZmFlN2YiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM1ZmQzOWIiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0idXJsKCNiZykiLz48cmVjdCB4PSIxMTgiIHk9IjMwMCIgd2lkdGg9IjU2IiBoZWlnaHQ9IjExOCIgcng9IjE0IiBmaWxsPSJ1cmwoI2cpIi8+PHJlY3QgeD0iMjAwIiB5PSIyMzIiIHdpZHRoPSI1NiIgaGVpZ2h0PSIxODYiIHJ4PSIxNCIgZmlsbD0idXJsKCNnKSIvPjxyZWN0IHg9IjI4MiIgeT0iMTcwIiB3aWR0aD0iNTYiIGhlaWdodD0iMjQ4IiByeD0iMTQiIGZpbGw9InVybCgjdikiLz48cmVjdCB4PSIzNjQiIHk9IjEwOCIgd2lkdGg9IjU2IiBoZWlnaHQ9IjMxMCIgcng9IjE0IiBmaWxsPSJ1cmwoI3YpIi8+PGNpcmNsZSBjeD0iMTQ2IiBjeT0iMzAwIiByPSIxMSIgZmlsbD0iI2Y0ZjFlYSIvPjxjaXJjbGUgY3g9IjIyOCIgY3k9IjIzMiIgcj0iMTEiIGZpbGw9IiNmNGYxZWEiLz48Y2lyY2xlIGN4PSIzMTAiIGN5PSIxNzAiIHI9IjExIiBmaWxsPSIjZjRmMWVhIi8+PGNpcmNsZSBjeD0iMzkyIiBjeT0iMTA4IiByPSIxMSIgZmlsbD0iI2Y0ZjFlYSIvPjxwYXRoIGQ9Ik0xNDYgMzAwIEwyMjggMjMyIEwzMTAgMTcwIEwzOTIgMTA4IiBmaWxsPSJub25lIiBzdHJva2U9IiNmNGYxZWEiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBvcGFjaXR5PSIwLjg1Ii8+PC9zdmc+Cg==">
@@ -5536,9 +5537,8 @@ body:before{
   </main>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js">
-window.addEventListener('DOMContentLoaded', loadWorkbookCache);
-</script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous"></script>
+<script>window.addEventListener('DOMContentLoaded', loadWorkbookCache);</script>
 <script>
 const pages=[
   ["dashboard","Dashboard","Resumen principal desde la hoja RESUMEN del Excel.","ok"],
@@ -6192,7 +6192,13 @@ document.getElementById("excelFile").addEventListener("change", e=>{
   if(file) handleExcelImport(file);
 });
 // Portfolio Oscar · importación Excel v2
-const REQUIRED_SHEETS = ['RESUMEN','CARTERA ACTUAL','XIRR GLOBAL','HISTÓRICO MENSUAL','AUDITORÍA','2025'];
+const REQUIRED_SHEETS = ['RESUMEN','CARTERA ACTUAL','XIRR GLOBAL','HISTÓRICO MENSUAL','AUDITORÍA'];
+// Devuelve la última hoja con nombre de año (AAAA) presente en el Excel, p.ej. '2025' o '2026'.
+function latestYearSheet(){
+  const sheets = importedWorkbook?.Sheets || {};
+  const years = Object.keys(sheets).filter(n=>/^\d{4}$/.test(n)).map(Number).sort((a,b)=>a-b);
+  return years.length ? String(years[years.length-1]) : null;
+}
 let importedWorkbook = null;
 let importedData = null;
 
@@ -6210,7 +6216,7 @@ function fmtMoney(value, decimals=2, plus=false){
 function fmtPct(value, decimals=2, plus=false){
   const n = Number(value);
   if(!Number.isFinite(n)) return value ?? '';
-  const pct = Math.abs(n) <= 1 ? n * 100 : n;
+  const pct = n * 100; // El Excel guarda los % como fracción (0,1431 = 14,31%). Multiplicar siempre evita el fallo con retornos > 100%.
   const sign = plus && pct > 0 ? '+' : '';
   return `${sign}${fmtNumber(pct, decimals)}%`;
 }
@@ -6337,7 +6343,7 @@ function renderAssetSummary(cartera){
     const pesoTxt = Number.isFinite(pesoNum) ? fmtPct(x.peso) : 'Separado';
     const xirrTxt = (xirrVal!==null && xirrVal!==undefined && xirrVal!=='') ? fmtPct(xirrVal) : '—';
     return `<article class="assetSummaryItem">
-      <div class="asName"><span class="bullet ${assetClass(x.activo)}"></span><span>${shortAssetName(x.activo)}</span></div>
+      <div class="asName"><span class="bullet ${assetClass(x.activo)}"></span><span>${escHtml(shortAssetName(x.activo))}</span></div>
       <div class="asXirr ${clsByValue(xirrVal)}">${xirrTxt}</div>
       <div class="asRow"><span>Valor actual</span><strong>${fmtMoney(x.valor)}</strong></div>
       <div class="asRow"><span>Peso real</span><strong>${pesoTxt}</strong></div>
@@ -6568,7 +6574,7 @@ function renderMobileCartera(cartera){
     const name=shortAssetName(x.activo);
     const platform=x.plataforma || '';
     return `<article class="mobileAssetCard">
-      <div class="mobileAssetTop"><span class="bullet ${assetClass(x.activo)}"></span><div><strong>${name}</strong><small>${platform}</small></div></div>
+      <div class="mobileAssetTop"><span class="bullet ${assetClass(x.activo)}"></span><div><strong>${escHtml(name)}</strong><small>${escHtml(platform)}</small></div></div>
       <div class="mobileAssetValues">
         <div class="mobileAssetMetric"><span>Valor</span><strong>${fmtMoney(x.valor)}</strong></div>
         <div class="mobileAssetMetric"><span>P&amp;L</span><strong class="${clsByValue(x.pl)}">${fmtMoney(x.pl,2,true)}</strong></div>
@@ -6587,7 +6593,7 @@ function updateAlerts(){
     const name=cell(resumen,r,1), status=cell(resumen,r,2);
     if(name && status) alerts.push({name, text:cleanText(status), st:statusFromText(status)});
   }
-  container.innerHTML = alerts.map(a=>`<div class="alert"><div class="alertName">${a.name}</div><div class="alertStatus ${a.st}"><span class="bullet ${bulletForStatus(a.st)}"></span>${a.text}</div></div>`).join('');
+  container.innerHTML = alerts.map(a=>`<div class="alert"><div class="alertName">${escHtml(a.name)}</div><div class="alertStatus ${a.st}"><span class="bullet ${bulletForStatus(a.st)}"></span>${escHtml(a.text)}</div></div>`).join('');
 }
 function updateReconciliation(cartera, resumen){
   const tbody = document.querySelector('.reconciliationCard .recoTable tbody');
@@ -6690,7 +6696,7 @@ function renderCarteraTabs(cartera){
   if(!tabs) return;
   const rows=(cartera||[]).filter(x=>String(x.activo||'').trim() && String(x.activo).toUpperCase()!=='TOTAL');
   const base=[{key:'all',label:'Todos',cls:'bOk'}].concat(rows.map(x=>({key:carteraKeyFromName(x.activo),label:shortAssetName(x.activo),cls:assetClass(x.activo)})));
-  tabs.innerHTML=base.map(x=>`<button type="button" data-cartera-filter="${x.key}" class="${carteraActiveKey===x.key?'active':''}">${x.key!=='all'?`<span class="bullet ${x.cls}"></span>`:''}<span>${x.label}</span></button>`).join('');
+  tabs.innerHTML=base.map(x=>`<button type="button" data-cartera-filter="${x.key}" class="${carteraActiveKey===x.key?'active':''}">${x.key!=='all'?`<span class="bullet ${x.cls}"></span>`:''}<span>${escHtml(x.label)}</span></button>`).join('');
   tabs.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
     carteraActiveKey=btn.dataset.carteraFilter || 'all';
     updateCartera();
@@ -6738,7 +6744,7 @@ function renderCarteraFocus(cartera){
   const desvTxt = row ? (Number.isFinite(Number(target.desv))?fmtPct(target.desv,2,true):(target.desv||'-')) : '0,00%';
   const desvCls = row ? clsByValue(target.desv) : '';
   panel.innerHTML=`<article class="carteraFocusHero">
-    <div class="carteraFocusTop"><div class="carteraFocusName"><span class="bullet ${assetClass(target.activo || '')}"></span><div><h3>${title}${row && carteraKeyFromName(row.activo)==='btc' ? ` <span class="carteraBtcLiveBadge"><span class="btcLivePulse warn"></span><span data-btc-live-price>${window.__btcLiveEurFormatted || '--'}</span></span>` : ''}</h3><p>${meta}</p></div></div><span class="carteraFocusStatus ${status.cls}">${status.label}</span></div>
+    <div class="carteraFocusTop"><div class="carteraFocusName"><span class="bullet ${assetClass(target.activo || '')}"></span><div><h3>${escHtml(title)}${row && carteraKeyFromName(row.activo)==='btc' ? ` <span class="carteraBtcLiveBadge"><span class="btcLivePulse warn"></span><span data-btc-live-price>${window.__btcLiveEurFormatted || '--'}</span></span>` : ''}</h3><p>${escHtml(meta)}</p></div></div><span class="carteraFocusStatus ${status.cls}">${status.label}</span></div>
     <div class="carteraFocusMain"><span>${mainLabel}</span><strong>${mainValue}</strong><small>${note}</small></div>
   </article>
   <article class="carteraFocusMetrics">
@@ -6749,7 +6755,7 @@ function renderCarteraFocus(cartera){
     <div class="carteraMetric"><span>Peso real</span><strong>${pesoTxt}</strong></div>
     <div class="carteraMetric"><span>Objetivo</span><strong>${objetivoTxt}</strong></div>
     <div class="carteraMetric"><span>Desviación</span><strong class="${desvCls}">${desvTxt}</strong></div>
-    <div class="carteraMetric carteraMetricPlatform"><span>Plataforma</span><strong>${platformClean}</strong></div>
+    <div class="carteraMetric carteraMetricPlatform"><span>Plataforma</span><strong>${escHtml(platformClean)}</strong></div>
   </article>`;
   if(diagnosis) diagnosis.innerHTML=carteraDiagnosisText(row, xirrRow);
   if(tableTitle) tableTitle.textContent=row ? `Detalle de ${title}` : 'Tabla completa de posiciones';
@@ -6769,7 +6775,7 @@ function updateCartera(){
     const name = total ? 'TOTAL' : x.activo;
     const meta = total ? 'Cartera completa' : `${shortAssetName(x.activo)} · ${x.plataforma}`;
     const fmtWeight = v => Number.isFinite(Number(v)) ? fmtPct(v) : (v || '-');
-    return `<tr class="${total?'totalRow':''}"><td><div class="assetName"><span class="bullet ${assetClass(x.activo)}"></span><div><span class="assetNameText">${name}</span><span class="assetMeta">${meta}</span></div></div></td><td>${fmtMoney(x.valor)}</td><td>${fmtMoney(x.invertido)}</td><td class="${clsByValue(x.pl)}">${fmtMoney(x.pl)}</td><td class="${clsByValue(x.rent)}">${fmtPct(x.rent)}</td><td>${fmtWeight(x.peso)}</td><td>${fmtWeight(x.objetivo)}</td><td class="${clsByValue(x.desv)}">${Number.isFinite(Number(x.desv))?fmtPct(x.desv):x.desv}</td></tr>`;
+    return `<tr class="${total?'totalRow':''}"><td><div class="assetName"><span class="bullet ${assetClass(x.activo)}"></span><div><span class="assetNameText">${escHtml(name)}</span><span class="assetMeta">${escHtml(meta)}</span></div></div></td><td>${fmtMoney(x.valor)}</td><td>${fmtMoney(x.invertido)}</td><td class="${clsByValue(x.pl)}">${fmtMoney(x.pl)}</td><td class="${clsByValue(x.rent)}">${fmtPct(x.rent)}</td><td>${fmtWeight(x.peso)}</td><td>${fmtWeight(x.objetivo)}</td><td class="${clsByValue(x.desv)}">${Number.isFinite(Number(x.desv))?fmtPct(x.desv):x.desv}</td></tr>`;
   }).join('');
 }
 
@@ -6804,7 +6810,7 @@ function updateXirr(){
     grid.innerHTML = parseXirrRows().filter(x=>String(x.activo).toUpperCase()!=='TOTAL').map(x=>{
       const st = String(x.estado).toLowerCase()==='ok' && Number(x.xirr)>=0 ? 'OK' : (Number(x.xirr)<0?'revisar':x.estado);
       const pillClass = st.toLowerCase().includes('revis') ? 'red' : 'green';
-      return `<article class="xirrAssetCard"><div class="xirrAssetTop"><div class="xirrAssetName"><span class="bullet ${assetClass(x.activo)}"></span><span>${shortAssetName(x.activo)}</span></div><span class="pill ${pillClass}">${st}</span></div><div class="xirrValue ${clsByValue(x.xirr)}">${fmtPct(x.xirr)}</div><div class="xirrSub"><span>Rent. simple real</span><strong class="${clsByValue(x.simple)}">${fmtPct(x.simple)}</strong><span>G/P real</span><strong class="${clsByValue(x.gp)}">${fmtMoney(x.gp)}</strong></div></article>`;
+      return `<article class="xirrAssetCard"><div class="xirrAssetTop"><div class="xirrAssetName"><span class="bullet ${assetClass(x.activo)}"></span><span>${escHtml(shortAssetName(x.activo))}</span></div><span class="pill ${pillClass}">${escHtml(st)}</span></div><div class="xirrValue ${clsByValue(x.xirr)}">${fmtPct(x.xirr)}</div><div class="xirrSub"><span>Rent. simple real</span><strong class="${clsByValue(x.simple)}">${fmtPct(x.simple)}</strong><span>G/P real</span><strong class="${clsByValue(x.gp)}">${fmtMoney(x.gp)}</strong></div></article>`;
     }).join('');
   }
   updateHistoricoMensual();
@@ -6927,20 +6933,28 @@ function applyMovementFiltersDynamic(){
 }
 
 function updateHistorial(){
-  const rows=sheetRows('2025');
+  const yearName = latestYearSheet();
+  const year = yearName || '—';
+  const rows = yearName ? sheetRows(yearName) : [];
+  // Sincroniza el número de la pestaña de año activa con el último cierre disponible.
+  const activePillYear = document.querySelector('#historial .yearPills button.active strong');
+  if(activePillYear && yearName) activePillYear.textContent = yearName;
   const summary = {};
   for(let r=14;r<=21;r++) summary[cell(rows,r,1)] = cell(rows,r,2);
+  // La clave de XIRR del cierre anual incluye el año (p.ej. "XIRR 2025"): la buscamos sin fijar el año.
+  const xirrKey = Object.keys(summary).find(k=>/^xirr/i.test(String(k)));
+  const xirrVal = xirrKey ? summary[xirrKey] : '';
   const main=document.querySelector('#historial .yearSummaryMain');
-  if(main) main.innerHTML=`<span class="eyebrow">Cierre 2025</span><h2>${fmtMoney(summary['Valor total'])}</h2><p>Valor total de cierre anual</p>`;
+  if(main) main.innerHTML=`<span class="eyebrow">Cierre ${year}</span><h2>${fmtMoney(summary['Valor total'])}</h2><p>Valor total de cierre anual</p>`;
   const side=document.querySelector('#historial .yearSummarySide');
-  if(side) side.innerHTML=`<div><span>Invertido</span><strong>${fmtMoney(summary['Invertido total'])}</strong></div><div><span>P&L</span><strong class="${clsByValue(summary['P&L total'])}">${fmtMoney(summary['P&L total'])}</strong></div><div><span>Rentabilidad</span><strong class="${clsByValue(summary['Rentabilidad total'])}">${fmtPct(summary['Rentabilidad total'])}</strong></div><div><span>XIRR</span><strong class="${clsByValue(summary['XIRR 2025'])}">${fmtPct(summary['XIRR 2025'])}</strong></div>`;
+  if(side) side.innerHTML=`<div><span>Invertido</span><strong>${fmtMoney(summary['Invertido total'])}</strong></div><div><span>P&L</span><strong class="${clsByValue(summary['P&L total'])}">${fmtMoney(summary['P&L total'])}</strong></div><div><span>Rentabilidad</span><strong class="${clsByValue(summary['Rentabilidad total'])}">${fmtPct(summary['Rentabilidad total'])}</strong></div><div><span>XIRR</span><strong class="${clsByValue(xirrVal)}">${fmtPct(xirrVal)}</strong></div>`;
   const tbody=document.querySelector('#historial .annualTable tbody');
   if(tbody){
     const out=[]; for(let r=5;r<=11;r++){ const activo=cell(rows,r,1); if(activo) out.push({activo, plataforma:cell(rows,r,2), inv:cell(rows,r,3), rent:cell(rows,r,4), valor:cell(rows,r,5), pl:cell(rows,r,6), peso:cell(rows,r,7)}); }
-    tbody.innerHTML=out.map(x=>`<tr class="${String(x.activo).toUpperCase()==='TOTAL'?'total':''}"><td><span class="assetNameLine"><span class="bullet ${assetClass(x.activo)}"></span><span><strong>${shortAssetName(x.activo)}</strong><small>${x.plataforma||'Cierre 2025'}</small></span></span></td><td>${fmtMoney(x.inv)}</td><td>${fmtMoney(x.valor)}</td><td class="${clsByValue(x.pl)}">${fmtMoney(x.pl)}</td><td>${Number.isFinite(Number(x.peso))?fmtPct(x.peso):x.peso}</td></tr>`).join('');
+    tbody.innerHTML=out.map(x=>`<tr class="${String(x.activo).toUpperCase()==='TOTAL'?'total':''}"><td><span class="assetNameLine"><span class="bullet ${assetClass(x.activo)}"></span><span><strong>${escHtml(shortAssetName(x.activo))}</strong><small>${escHtml(x.plataforma||('Cierre '+year))}</small></span></span></td><td>${fmtMoney(x.inv)}</td><td>${fmtMoney(x.valor)}</td><td class="${clsByValue(x.pl)}">${fmtMoney(x.pl)}</td><td>${Number.isFinite(Number(x.peso))?fmtPct(x.peso):escHtml(x.peso)}</td></tr>`).join('');
   }
   const diag=document.querySelector('#historial .diagnosisClean');
-  if(diag) diag.innerHTML=`<span class="eyebrow">Diagnóstico 2025</span><strong>${cell(rows,24,1) || 'Sin diagnóstico'}</strong>`;
+  if(diag) diag.innerHTML=`<span class="eyebrow">Diagnóstico ${year}</span><strong>${escHtml(cell(rows,24,1) || 'Sin diagnóstico')}</strong>`;
 }
 
 function updateAuditoria(){
@@ -7059,6 +7073,7 @@ function saveWorkbookCache(buffer, fileName, options={}){
     return true;
   }catch(err){
     console.warn('No se han podido guardar los datos localmente:', err);
+    try{ setStatus?.(true, 'Excel cargado · copia local no guardada (memoria del navegador llena)'); }catch(_){}
     return false;
   }
 }
@@ -7229,7 +7244,10 @@ if(backupButton){
 }
 
 function validateWorkbook(wb){
-  return REQUIRED_SHEETS.filter(s=>!wb.Sheets[s]);
+  const missing = REQUIRED_SHEETS.filter(s=>!wb.Sheets[s]);
+  const hasYear = Object.keys(wb.Sheets || {}).some(n=>/^\d{4}$/.test(n));
+  if(!hasYear) missing.push('hoja de año (AAAA)');
+  return missing;
 }
 async function handleExcelImport(file){
   try{
@@ -13309,7 +13327,7 @@ button[aria-selected="true"],
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js" integrity="sha384-rwykjmWNwVxboyFmvK9OXN0wj9hnMHA2aAHtits54DuACyCq0M2PrSNxhRb+hvXT" crossorigin="anonymous"></script>
 <script>
 /*
   Portfolio Oscar · Supabase limpia
