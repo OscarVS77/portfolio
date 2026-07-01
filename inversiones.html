@@ -6396,7 +6396,14 @@ function renderEvolutionChart(){
     const aportadoHoy=Number(cell(resumen,6,2));
     if(Number.isFinite(valorHoy) && valorHoy>0){
       const last=series[series.length-1];
-      const mismoDia = last && fmtDate(new Date())===last.fecha;
+      const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+      const hoy=new Date();
+      const mesHoy=MESES[hoy.getMonth()];
+      const anioHoy=hoy.getFullYear();
+      const mismoMes = last &&
+        String(last.anio).trim()===String(anioHoy) &&
+        String(last.mes||'').trim().toLowerCase()===mesHoy;
+      const mismoDia = mismoMes || (last && fmtDate(new Date())===last.fecha);
       const puntoHoy={
         fecha: fmtDate(new Date()),
         anio: 'Hoy', mes: '',
