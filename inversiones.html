@@ -5825,13 +5825,19 @@ function parseBenchmarkFlowsFromXirr(assetTest=null){
   return flows;
 }
 
+// v126: descarta filas plantilla de HISTÓRICO MENSUAL X ACTIVO.
+// Solo son cierres reales las filas cuyo comentario NO empieza por "Plantilla".
+function isTemplateAssetRow(comment){
+  return normalizeText(comment).trim().startsWith('plantilla');
+}
+
 function parseMonthlyAssetHistory(assetTest=null){
   const rows = sheetRows?.('HISTÓRICO MENSUAL X ACTIVO') || sheetRows?.('HISTORICO MENSUAL X ACTIVO') || [];
   const out=[];
   if(!rows.length) return out;
 
   let headerRow=-1;
-  let colDate=-1, colAsset=-1, colInvested=-1, colValue=-1, colXirr=-1;
+  let colDate=-1, colAsset=-1, colInvested=-1, colValue=-1, colXirr=-1, colComment=-1;
   for(let i=0;i<Math.min(rows.length,20);i++){
     const header=(rows[i]||[]).map(x=>normalizeText(x));
     const d=header.findIndex(x=>x.includes('fecha') && x.includes('cierre'));
@@ -5844,6 +5850,7 @@ function parseMonthlyAssetHistory(assetTest=null){
       colValue=v;
       colInvested=header.findIndex(x=>x.includes('invertido') && x.includes('real'));
       colXirr=header.findIndex(x=>x.includes('xirr'));
+      colComment=header.findIndex(x=>x.includes('comentario'));
       break;
     }
   }
@@ -5856,6 +5863,7 @@ function parseMonthlyAssetHistory(assetTest=null){
     const value=benchmarkNumber(row[colValue]);
     const invested=colInvested>=0 ? benchmarkNumber(row[colInvested]) : NaN;
     const xirr=colXirr>=0 ? benchmarkNumber(row[colXirr]) : NaN;
+    if(colComment>=0 && isTemplateAssetRow(row[colComment])) continue;
     if(!date || !asset || !Number.isFinite(value) || value<=0) continue;
     const a=normalizeText(asset);
     if(a.includes('total')) continue;
@@ -7522,6 +7530,7 @@ function parseMonthlyAssetClosures(){
     const valor = cell(rows,r,9);
     const xirr = cell(rows,r,12);
     const estado = String(cell(rows,r,14) || '').trim().toUpperCase();
+    if(isTemplateAssetRow(cell(rows,r,15))) continue;
     if(!activo || !Number.isFinite(Number(valor))) continue;
     if(estado && estado !== 'OK') continue;
     out.push({fecha, anio, mes, activo, valor:Number(valor), xirr:Number(xirr)});
@@ -14168,27 +14177,13 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
 </script>
 
 <!-- V63 · Auditoría estable Benchmark OK -->
+<!-- v126: setAuditStable neutralizado. Forzaba Benchmark/API a verde de forma
+     incondicional (incluso antes de invocar la Edge Function), pisando el estado
+     real. Ahora el estado del benchmark lo controla benchmarkSetStatus() según la
+     respuesta real de la Edge Function (verde si OK, rojo si falla). -->
 <script>
 (function(){
-  function setAuditStable(){
-    document.querySelectorAll('.auditWebChecks div').forEach(row=>{
-      const label=row.querySelector('strong')?.textContent?.trim();
-      const status=row.querySelector('span');
-      if(label==='Benchmark/API' && status){ status.textContent='Activo'; status.className='green'; }
-    });
-    document.querySelectorAll('.auditWebPages div').forEach(row=>{
-      const label=row.querySelector('strong')?.textContent?.trim();
-      const status=row.querySelector('span');
-      if(label==='Benchmark' && status){ status.textContent='OK'; status.className='green'; }
-    });
-    const st=document.getElementById('auditBenchmarkStatus');
-    const note=document.getElementById('auditBenchmarkNote');
-    if(st){ st.textContent='OK'; st.className='green'; }
-    if(note){ note.textContent='Datos recibidos vía Edge Function.'; }
-  }
-  document.addEventListener('DOMContentLoaded', setAuditStable);
-  window.addEventListener('load', setAuditStable);
-  setTimeout(setAuditStable, 500);
+  function setAuditStable(){ /* v126: desactivado a propósito */ }
 })();
 </script>
 
