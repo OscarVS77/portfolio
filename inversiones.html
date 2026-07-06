@@ -15379,10 +15379,11 @@ body:before{
   --leftRail:calc((100vw - min(100vw, var(--appMax))) / 2 + var(--appPad))!important;
 }
 html,body{
-  overflow-x:hidden!important;
+  overflow-x:clip!important;
   scrollbar-gutter:stable!important;
 }
 .app{
+  overflow-x:clip!important;
   width:min(100%, var(--appMax))!important;
   max-width:var(--appMax)!important;
   margin:0 auto!important;
