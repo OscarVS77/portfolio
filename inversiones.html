@@ -4914,6 +4914,26 @@ body:before{
     white-space:nowrap!important;
   }
 }
+
+/* v127 · Topbar anclado en desktop (mobile sin cambios) */
+@media(min-width:761px){
+  .topbar{
+    position:sticky!important;
+    top:10px!important;
+    z-index:60!important;
+  }
+  /* Tapa el hueco superior para que el contenido no asome por encima del header al hacer scroll */
+  .main::before{
+    content:"";
+    position:sticky;
+    top:0;
+    display:block;
+    height:10px;
+    margin:0 0 -10px 0;
+    background:var(--bg);
+    z-index:59;
+  }
+}
 </style>
 
 </head>
