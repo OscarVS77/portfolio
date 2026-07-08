@@ -4540,14 +4540,14 @@ body:before{
   border-radius:16px!important;
   background:rgba(0,0,0,.30)!important;
 }
-.mobileAssetTop{display:flex!important;align-items:center!important;justify-content:center!important;gap:9px!important;text-align:center!important;}
-.mobileAssetTop .bullet{width:8px!important;height:8px!important;flex:0 0 8px!important;}
-.mobileAssetTop strong{font-size:15px!important;font-weight:700!important;color:var(--text)!important;line-height:1.1!important;}
-.mobileAssetTop small{display:block!important;color:var(--muted)!important;font-size:10.5px!important;margin-top:3px!important;}
+.mobileAssetTop{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:11px!important;text-align:left!important;}
+.mobileAssetTop .bullet{width:9px!important;height:9px!important;flex:0 0 9px!important;}
+.mobileAssetTop strong{font-size:16px!important;font-weight:700!important;color:var(--text)!important;line-height:1.1!important;letter-spacing:-.02em!important;}
+.mobileAssetTop small{display:block!important;color:var(--muted)!important;font-size:11.5px!important;margin-top:2px!important;}
 .mobileAssetValues{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;}
 .mobileAssetMetric{padding:10px 8px!important;border-radius:13px!important;background:rgba(255,255,255,.025)!important;border:1px solid rgba(255,255,255,.045)!important;text-align:center!important;}
-.mobileAssetMetric span{display:block!important;color:var(--muted)!important;font-size:9.5px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.055em!important;margin-bottom:5px!important;}
-.mobileAssetMetric strong{display:block!important;color:var(--text)!important;font-size:13.5px!important;font-weight:560!important;line-height:1.05!important;white-space:nowrap!important;}
+.mobileAssetMetric span{display:block!important;color:var(--muted)!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.055em!important;margin-bottom:5px!important;}
+.mobileAssetMetric strong{display:block!important;color:var(--text)!important;font-size:15px!important;font-weight:600!important;line-height:1.05!important;white-space:nowrap!important;}
 .mobileAssetEmpty{padding:18px!important;text-align:center!important;color:var(--muted)!important;border:1px dashed var(--line)!important;border-radius:16px!important;background:rgba(0,0,0,.22)!important;}
 @media(max-width:760px){
   #dashboard .dataStatusGrid{display:none!important;}
@@ -4558,52 +4558,25 @@ body:before{
   #dashboard .mobileCarteraActual .cardHeader p{ text-align:center!important; }
   .mobileAssetList{padding:16px!important;}
   .alertsCard{margin-top:0!important;}
-  /* v130 · Resumen por activo: fila densa en mobile (antes v115 centrado/apilado) */
+  /* v115 · Resumen por activo: contenido centrado en mobile para legibilidad */
   #dashboard #assetSummaryDash .cardHeader h3,
   #dashboard #assetSummaryDash .cardHeader p{ text-align:center!important; }
-  #dashboard #assetSummaryDash .assetSummaryItem{
-    display:flex!important;
-    flex-direction:column!important;
-    text-align:left!important;
-    padding:14px 16px!important;
-  }
-  #dashboard #assetSummaryDash .assetSummaryItem .asName{
-    display:flex!important;
-    align-items:center!important;
-    justify-content:flex-start!important;
-    margin-bottom:0!important;
-    font-size:16px!important;font-weight:640!important;
-    letter-spacing:-.02em!important;
-    padding-right:88px!important;
-    min-height:26px!important;
-  }
-  #dashboard #assetSummaryDash .assetSummaryItem .asXirr{
-    position:absolute!important;
-    top:14px!important;right:16px!important;
-    text-align:right!important;
-    font-size:22px!important;font-weight:600!important;
-    letter-spacing:-.03em!important;
-    white-space:nowrap!important;
-  }
-  #dashboard #assetSummaryDash .assetSummaryItem{ position:relative!important; }
+  #dashboard #assetSummaryDash .assetSummaryItem{ text-align:center!important; }
+  #dashboard #assetSummaryDash .assetSummaryItem .asName{ justify-content:center!important; }
+  #dashboard #assetSummaryDash .assetSummaryItem .asXirr{ text-align:center!important; }
   #dashboard #assetSummaryDash .assetSummaryItem .asRow{
-    flex-direction:row!important;
-    align-items:baseline!important;
-    justify-content:space-between!important;
-    gap:8px!important;
-    font-size:13.5px!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:2px!important;
+    margin-top:10px!important;
   }
-  #dashboard #assetSummaryDash .assetSummaryItem .asRow:first-of-type{
-    margin-top:11px!important;
-    padding-top:11px!important;
-    border-top:1px solid var(--line)!important;
-  }
-  #dashboard #assetSummaryDash .assetSummaryItem .asRow span{ font-size:13px!important; }
-  #dashboard #assetSummaryDash .assetSummaryItem .asRow strong{ font-size:14.5px!important;font-weight:600!important; }
 }
 @media(max-width:390px){
-  .mobileAssetValues{grid-template-columns:1fr!important;}
-  .mobileAssetMetric strong{font-size:15px!important;}
+  .mobileAssetValues{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+  .mobileAssetMetric{padding:9px 5px!important;}
+  .mobileAssetMetric strong{font-size:13.5px!important;}
+  .mobileAssetMetric span{font-size:10px!important;}
 }
 
 
