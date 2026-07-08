@@ -99,12 +99,6 @@ html,body{
 .pageTitle h1{margin:0;font-size:26px;letter-spacing:-.7px}
 .pageTitle p{margin:5px 0 0;color:var(--muted);font-size:13px}
 .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-/* Control de tamaño de fuente (A-/A+) — v130 */
-.fontZoom{display:inline-flex;align-items:center;gap:2px;background:rgba(255,255,255,.065);border:1px solid var(--line);border-radius:12px;padding:3px;flex-shrink:0}
-.fontZoom button{border:0;background:transparent;color:var(--text2);width:30px;height:30px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;line-height:1;display:inline-flex;align-items:center;justify-content:center;transition:background .12s}
-.fontZoom button:hover{background:rgba(255,255,255,.1);color:var(--text)}
-.fontZoom button:active{background:rgba(255,255,255,.16)}
-.fontZoom .fzLabel{color:var(--muted);font-size:11px;font-weight:650;min-width:38px;text-align:center;letter-spacing:-.02em}
 .btn{
   background:rgba(255,255,255,.065);border:1px solid var(--line);color:var(--text2);
   height:38px;padding:0 14px;border-radius:12px;font-size:13px;font-weight:620;cursor:pointer;
@@ -4564,19 +4558,48 @@ body:before{
   #dashboard .mobileCarteraActual .cardHeader p{ text-align:center!important; }
   .mobileAssetList{padding:16px!important;}
   .alertsCard{margin-top:0!important;}
-  /* v115 · Resumen por activo: contenido centrado en mobile para legibilidad */
+  /* v130 · Resumen por activo: fila densa en mobile (antes v115 centrado/apilado) */
   #dashboard #assetSummaryDash .cardHeader h3,
   #dashboard #assetSummaryDash .cardHeader p{ text-align:center!important; }
-  #dashboard #assetSummaryDash .assetSummaryItem{ text-align:center!important; }
-  #dashboard #assetSummaryDash .assetSummaryItem .asName{ justify-content:center!important; }
-  #dashboard #assetSummaryDash .assetSummaryItem .asXirr{ text-align:center!important; }
-  #dashboard #assetSummaryDash .assetSummaryItem .asRow{
+  #dashboard #assetSummaryDash .assetSummaryItem{
+    display:flex!important;
     flex-direction:column!important;
-    align-items:center!important;
-    justify-content:center!important;
-    gap:2px!important;
-    margin-top:10px!important;
+    text-align:left!important;
+    padding:14px 16px!important;
   }
+  #dashboard #assetSummaryDash .assetSummaryItem .asName{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    margin-bottom:0!important;
+    font-size:16px!important;font-weight:640!important;
+    letter-spacing:-.02em!important;
+    padding-right:88px!important;
+    min-height:26px!important;
+  }
+  #dashboard #assetSummaryDash .assetSummaryItem .asXirr{
+    position:absolute!important;
+    top:14px!important;right:16px!important;
+    text-align:right!important;
+    font-size:22px!important;font-weight:600!important;
+    letter-spacing:-.03em!important;
+    white-space:nowrap!important;
+  }
+  #dashboard #assetSummaryDash .assetSummaryItem{ position:relative!important; }
+  #dashboard #assetSummaryDash .assetSummaryItem .asRow{
+    flex-direction:row!important;
+    align-items:baseline!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+    font-size:13.5px!important;
+  }
+  #dashboard #assetSummaryDash .assetSummaryItem .asRow:first-of-type{
+    margin-top:11px!important;
+    padding-top:11px!important;
+    border-top:1px solid var(--line)!important;
+  }
+  #dashboard #assetSummaryDash .assetSummaryItem .asRow span{ font-size:13px!important; }
+  #dashboard #assetSummaryDash .assetSummaryItem .asRow strong{ font-size:14.5px!important;font-weight:600!important; }
 }
 @media(max-width:390px){
   .mobileAssetValues{grid-template-columns:1fr!important;}
@@ -4958,11 +4981,6 @@ body:before{
         <p id="subtitle">Resumen principal desde la hoja RESUMEN del Excel.</p>
       </div>
       <div class="actions">
-        <div class="fontZoom" role="group" aria-label="Tamaño de texto">
-          <button type="button" id="fontZoomOut" aria-label="Reducir tamaño de texto">A−</button>
-          <span class="fzLabel" id="fontZoomLabel">100%</span>
-          <button type="button" id="fontZoomIn" aria-label="Aumentar tamaño de texto">A+</button>
-        </div>
         <label class="btn primary" for="excelFile">Importar Excel</label>
         <input class="fileInput" id="excelFile" type="file" accept=".xlsx,.xls">
         <button class="btn" id="backupBtn" type="button">Exportar backup</button>
@@ -18029,36 +18047,6 @@ body:before{
       return result;
     };
   }
-})();
-</script>
-
-<!-- V130 · Control de tamaño de texto (A-/A+) con persistencia -->
-<script>
-(function(){
-  var MIN=1.0, MAX=1.6, STEP=0.1, KEY='portfolioFontZoom';
-  var app=document.querySelector('.app');
-  var label=document.getElementById('fontZoomLabel');
-  var btnIn=document.getElementById('fontZoomIn');
-  var btnOut=document.getElementById('fontZoomOut');
-  if(!app||!label||!btnIn||!btnOut) return;
-  function clamp(v){ return Math.min(MAX, Math.max(MIN, Math.round(v*10)/10)); }
-  function read(){
-    var v=parseFloat(localStorage.getItem(KEY));
-    return isNaN(v)?1.0:clamp(v);
-  }
-  function apply(v){
-    app.style.zoom=v;
-    label.textContent=Math.round(v*100)+'%';
-    btnOut.disabled=(v<=MIN);
-    btnIn.disabled=(v>=MAX);
-    btnOut.style.opacity=btnOut.disabled?'.35':'1';
-    btnIn.style.opacity=btnIn.disabled?'.35':'1';
-  }
-  function save(v){ try{ localStorage.setItem(KEY,v); }catch(e){} }
-  var cur=read();
-  apply(cur);
-  btnIn.addEventListener('click',function(){ cur=clamp(cur+STEP); apply(cur); save(cur); });
-  btnOut.addEventListener('click',function(){ cur=clamp(cur-STEP); apply(cur); save(cur); });
 })();
 </script>
 
