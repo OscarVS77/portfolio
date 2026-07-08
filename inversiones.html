@@ -6828,6 +6828,34 @@ function parseXirrRows(){
   }
   return out;
 }
+// v129 · Antigüedad de la cartera para contextualizar el XIRR.
+// Localiza la primera fecha de la tabla MOVIMIENTOS (misma que ya lee la web)
+// y devuelve texto de antigüedad + aviso de fiabilidad si el histórico es corto.
+function xirrAntiguedadInfo(rows){
+  let headerRow=-1;
+  for(let i=0;i<rows.length;i++){
+    if(normalizeText(rows[i]?.[0]||'')==='fecha' && normalizeText(rows[i]?.[1]||'')==='activo' && normalizeText(rows[i]?.[2]||'')==='tipo'){ headerRow=i; break; }
+  }
+  if(headerRow<0) return null;
+  let first=null;
+  for(let i=headerRow+1;i<rows.length;i++){
+    const raw=rows[i]?.[0];
+    if(raw===''||raw==null) continue;
+    const d=(raw instanceof Date && !isNaN(raw)) ? raw : dateFromSerial(raw);
+    if(d && !isNaN(d) && (!first || d<first)) first=d;
+  }
+  if(!first) return null;
+  const hoy=new Date();
+  let meses=(hoy.getFullYear()-first.getFullYear())*12 + (hoy.getMonth()-first.getMonth());
+  if(hoy.getDate()<first.getDate()) meses--;
+  if(meses<0) meses=0;
+  const anios=Math.floor(meses/12), rem=meses%12;
+  let dur;
+  if(meses<12) dur=`${meses} ${meses===1?'mes':'meses'}`;
+  else if(rem===0) dur=`${anios} ${anios===1?'año':'años'}`;
+  else dur=`${anios} ${anios===1?'año':'años'} y ${rem} ${rem===1?'mes':'meses'}`;
+  return {meses, dur, poco:meses<24};
+}
 function updateXirr(){
   const rows = sheetRows('XIRR GLOBAL');
   const kpis = document.querySelectorAll('#xirr .kpi');
@@ -6843,6 +6871,18 @@ function updateXirr(){
       if(cls) s.classList.add(cls);
     }
   });
+  // v129 · Antigüedad de la cartera en el small del hero XIRR.
+  const heroSmall = document.querySelector('#xirr .kpiHero small');
+  if(heroSmall){
+    const info = xirrAntiguedadInfo(rows);
+    if(info){
+      heroSmall.textContent = info.poco
+        ? `Rentabilidad anualizada. Cartera con ${info.dur} de historia: sobre un periodo tan corto el XIRR es muy sensible y no es proyectable.`
+        : `Tu rentabilidad real anualizada, desde el primer día. Cartera con ${info.dur} de historia.`;
+    } else {
+      heroSmall.textContent = 'Tu rentabilidad real anualizada, desde el primer día.';
+    }
+  }
   const grid = document.querySelector('#xirr .xirrAssetGrid');
   if(grid){
     grid.innerHTML = parseXirrRows().filter(x=>String(x.activo).toUpperCase()!=='TOTAL').map(x=>{
