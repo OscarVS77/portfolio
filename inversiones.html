@@ -399,7 +399,7 @@ label.btn.primary{
 .assetSummaryItem .asRow strong{font-weight:560;font-size:14px}
 .assetSummaryItem .asXirr{font-size:20px;font-weight:540;letter-spacing:-.5px}
 @media(max-width:980px){.assetSummaryGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:560px){.assetSummaryGrid{grid-template-columns:1fr}}
+@media(max-width:560px){.assetSummaryGrid{grid-template-columns:1fr;padding:0 20px 20px}}
 .capitalCard{background:linear-gradient(180deg,rgba(27,28,34,.96),rgba(17,18,23,.96));border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--soft)}
 .capitalCardKey{border:1.5px solid var(--gold)!important;box-shadow:0 0 0 1px rgba(255,211,77,.18),0 14px 34px rgba(0,0,0,.24)!important}
 .capitalCard label{display:block;color:var(--muted);font-size:13px;margin-bottom:10px;font-weight:620;min-height:2.6em;line-height:1.3}
@@ -1579,7 +1579,7 @@ html,body{
 .heroMetrics{gap:9px!important;margin-top:10px!important}
 .heroMetric{border-radius:12px!important;padding:10px!important;min-height:64px!important;background:rgba(0,0,0,.34)!important}
 .heroMetric label{font-size:9.8px!important;margin-bottom:6px!important;letter-spacing:.05em!important}
-.heroMetric strong{font-size:16.5px!important;font-weight:400!important;letter-spacing:-.45px!important}
+.heroMetric strong{font-size:22px!important;font-weight:560!important;letter-spacing:-.5px!important}
 .heroMetric small{font-size:9.8px!important;margin-top:5px!important;line-height:1.28!important}
 .chart{height:154px!important;margin-top:12px!important;border-radius:13px!important;background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.004))!important}
 .kpiStrip{margin-top:18px!important}
@@ -4540,12 +4540,12 @@ body:before{
   border-radius:16px!important;
   background:linear-gradient(180deg,rgba(27,28,34,.96),rgba(17,18,23,.96))!important;
 }
-.mobileAssetTop{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:11px!important;text-align:left!important;padding-right:120px!important;}
+.mobileAssetTop{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:11px!important;text-align:left!important;padding-right:120px!important;min-height:26px!important;}
 .mobileAssetTop .bullet{width:9px!important;height:9px!important;flex:0 0 9px!important;}
 .mobileAssetTop strong{font-size:16px!important;font-weight:700!important;color:var(--text)!important;line-height:1.1!important;letter-spacing:-.02em!important;}
 .mobileAssetTop small{display:block!important;color:var(--muted)!important;font-size:11.5px!important;margin-top:2px!important;}
 .mobileAssetCard{position:relative!important;}
-.mcaVal{position:absolute!important;top:14px!important;right:16px!important;text-align:right!important;font-size:22px!important;font-weight:600!important;letter-spacing:-.03em!important;color:var(--text)!important;white-space:nowrap!important;line-height:1!important;}
+.mcaVal{position:absolute!important;top:16px!important;right:16px!important;text-align:right!important;font-size:22px!important;font-weight:600!important;letter-spacing:-.03em!important;color:var(--text)!important;white-space:nowrap!important;line-height:1!important;}
 .mcaRow{display:flex!important;flex-direction:row!important;align-items:baseline!important;justify-content:space-between!important;gap:8px!important;font-size:13.5px!important;}
 .mcaRow:first-of-type{margin-top:11px!important;padding-top:11px!important;border-top:1px solid var(--line)!important;}
 .mcaRow span{color:var(--muted)!important;font-size:13px!important;}
@@ -4558,7 +4558,7 @@ body:before{
   #dashboard .mobileCarteraActual{display:block!important;}
   #dashboard .mobileCarteraActual .cardHeader h3,
   #dashboard .mobileCarteraActual .cardHeader p{ text-align:center!important; }
-  .mobileAssetList{padding:16px!important;}
+  .mobileAssetList{padding:14px 20px 20px!important;}
   .alertsCard{margin-top:0!important;}
   /* v130 · Resumen por activo: fila densa en mobile (antes v115 centrado/apilado) */
   #dashboard #assetSummaryDash .cardHeader h3,
@@ -6643,7 +6643,7 @@ function renderMobileCartera(cartera){
     const name=shortAssetName(x.activo);
     const platform=x.plataforma || '';
     return `<article class="mobileAssetCard">
-      <div class="mobileAssetTop"><span class="bullet ${assetClass(x.activo)}"></span><div><strong>${escHtml(name)}</strong><small>${escHtml(platform)}</small></div></div>
+      <div class="mobileAssetTop"><span class="bullet ${assetClass(x.activo)}"></span><div><strong>${escHtml(name)}</strong></div></div>
       <div class="mcaVal">${fmtMoney(x.valor)}</div>
       <div class="mcaRow"><span>P&amp;L</span><strong class="${clsByValue(x.pl)}">${fmtMoney(x.pl,2,true)}</strong></div>
       <div class="mcaRow"><span>Rentabilidad</span><strong class="${clsByValue(x.rent)}">${fmtPct(x.rent,2,true)}</strong></div>
