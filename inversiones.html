@@ -5343,32 +5343,20 @@ body:before{
             <p id="benchmarkPanelSubtitle">Tu cartera real frente a lo que habría pasado siguiendo exactamente tu asignación objetivo, con los mismos movimientos. Mide si desviarte de tus pesos ideales te ha costado o dado dinero. Plan de Pensiones aparte.</p>
           </div>
         </div>
-        <div class="benchmarkTabsGrouped" id="benchmarkTabs">
-          <div class="benchmarkTabGroup">
-            <div class="benchmarkTabGroupLabel">1 · Estrategia personal</div>
-            <div class="benchmarkTabGroupQ">¿Sigo bien mi asignación objetivo?</div>
-            <div class="benchmarkTabs">
-              <button class="active" type="button" data-benchmark-view="global">Cartera global</button>
-              <button type="button" data-benchmark-view="rv">Renta variable</button>
+        <div class="benchmarkNav" id="benchmarkTabs">
+          <div class="benchmarkNavBar">
+            <span class="benchmarkNavLabel">Comparación</span>
+            <div class="benchmarkGroupTabs" id="benchmarkGroupTabs">
+              <button class="active" type="button" data-benchmark-group="estrategia">Estrategia</button>
+              <button type="button" data-benchmark-group="mercado">Mercado</button>
+              <button type="button" data-benchmark-group="activos">Activos</button>
             </div>
           </div>
-          <div class="benchmarkTabGroup">
-            <div class="benchmarkTabGroupLabel">2 · Cartera frente al mercado</div>
-            <div class="benchmarkTabGroupQ">¿Mi cartera completa bate a los índices?</div>
-            <div class="benchmarkTabs">
-              <button type="button" class="benchmarkTabSoon" data-benchmark-view="vs_msci" disabled>vs MSCI World <span class="benchmarkSoonPill">pronto</span></button>
-              <button type="button" class="benchmarkTabSoon" data-benchmark-view="vs_sp500" disabled>vs S&amp;P 500 <span class="benchmarkSoonPill">pronto</span></button>
-            </div>
+          <div class="benchmarkNavBar">
+            <span class="benchmarkNavLabel">Vista</span>
+            <div class="benchmarkTabs" id="benchmarkViewTabs"></div>
           </div>
-          <div class="benchmarkTabGroup">
-            <div class="benchmarkTabGroupLabel">3 · Análisis de activos</div>
-            <div class="benchmarkTabGroupQ">¿Acerté con el timing de mis compras?</div>
-            <div class="benchmarkTabs">
-              <button type="button" data-benchmark-view="btc">Bitcoin</button>
-              <button type="button" data-benchmark-view="gold">Oro</button>
-              <button type="button" data-benchmark-view="msci_sp500">MSCI vs S&amp;P 500</button>
-            </div>
-          </div>
+          <p class="benchmarkGroupHint" id="benchmarkGroupHint">¿Sigo bien mi asignación objetivo?</p>
         </div>
         <div class="benchmarkApiActions">
           <button class="btn primary" id="benchmarkLoadBtn" type="button">Cargar benchmark</button>
@@ -5791,6 +5779,80 @@ const BENCHMARK_VIEW_CONFIG = {
   }
 };
 
+// v139: navegación en dos barras. Cada grupo agrupa varias vistas.
+// 'soon:true' = pestaña del Bloque 2 aún en construcción (Fase B).
+const BENCHMARK_GROUPS = {
+  estrategia: {
+    label:'Estrategia',
+    hint:'¿Sigo bien mi asignación objetivo?',
+    views:[
+      { view:'global', label:'Cartera global' },
+      { view:'rv', label:'Renta variable' }
+    ]
+  },
+  mercado: {
+    label:'Mercado',
+    hint:'¿Mi cartera completa bate a los índices?',
+    views:[
+      { view:'vs_msci', label:'vs MSCI World', soon:true },
+      { view:'vs_sp500', label:'vs S&P 500', soon:true }
+    ]
+  },
+  activos: {
+    label:'Activos',
+    hint:'¿Acerté con el timing de mis compras?',
+    views:[
+      { view:'btc', label:'Bitcoin' },
+      { view:'gold', label:'Oro' },
+      { view:'msci_sp500', label:'MSCI vs S&P 500' }
+    ]
+  }
+};
+let benchmarkActiveGroup = 'estrategia';
+
+// Devuelve a qué grupo pertenece una vista concreta.
+function benchmarkGroupOfView(view){
+  for(const g in BENCHMARK_GROUPS){
+    if(BENCHMARK_GROUPS[g].views.some(v=>v.view===view)) return g;
+  }
+  return 'estrategia';
+}
+
+// Redibuja la segunda barra (vistas) según el grupo activo y actualiza la pregunta.
+function renderBenchmarkViewTabs(group){
+  const cfg=BENCHMARK_GROUPS[group] || BENCHMARK_GROUPS.estrategia;
+  const row=document.getElementById('benchmarkViewTabs');
+  const hint=document.getElementById('benchmarkGroupHint');
+  if(hint) hint.textContent=cfg.hint;
+  if(!row) return;
+  row.innerHTML=cfg.views.map(v=>{
+    const soonCls=v.soon?' benchmarkTabSoon':'';
+    const activeCls=(v.view===benchmarkActiveView)?' active':'';
+    const dis=v.soon?' disabled':'';
+    const pill=v.soon?' <span class="benchmarkSoonPill">pronto</span>':'';
+    return `<button type="button" class="${soonCls.trim()}${activeCls}"${dis} data-benchmark-view="${v.view}">${v.label}${pill}</button>`;
+  }).join('');
+}
+
+// Cambia de grupo: marca el botón, redibuja vistas y activa la primera vista real del grupo.
+function applyBenchmarkGroup(group, autoload=true){
+  benchmarkActiveGroup=group || 'estrategia';
+  const cfg=BENCHMARK_GROUPS[benchmarkActiveGroup] || BENCHMARK_GROUPS.estrategia;
+  document.querySelectorAll('#benchmarkGroupTabs button').forEach(b=>b.classList.toggle('active', b.dataset.benchmarkGroup===benchmarkActiveGroup));
+  renderBenchmarkViewTabs(benchmarkActiveGroup);
+  const firstReal=cfg.views.find(v=>!v.soon);
+  if(firstReal){
+    applyBenchmarkView(firstReal.view);
+    if(autoload){
+      const statusText=(document.getElementById('benchmarkApiStatus')?.textContent || '').trim().toLowerCase();
+      if(!!benchmarkCache || statusText==='ok') setTimeout(()=>loadBenchmarkData(false), 0);
+    }
+  } else {
+    // Grupo sin vistas reales todavía (Mercado en Fase A): solo mostrar aviso.
+    renderBenchmarkViewTabs(benchmarkActiveGroup);
+  }
+}
+
 function benchmarkSetStatus(text, cls='yellow', note=''){
   const status=document.getElementById('benchmarkApiStatus');
   const noteEl=document.getElementById('benchmarkApiNote');
@@ -6068,7 +6130,18 @@ function updateBenchmarkWeightsTable(weights=null){
 function applyBenchmarkView(view){
   benchmarkActiveView=view || 'global';
   const cfg=BENCHMARK_VIEW_CONFIG[benchmarkActiveView] || BENCHMARK_VIEW_CONFIG.global;
-  document.querySelectorAll('#benchmarkTabs button').forEach(b=>b.classList.toggle('active', b.dataset.benchmarkView===benchmarkActiveView));
+  // v139: sincronizar el grupo al que pertenece esta vista y su barra de pestañas.
+  const grp=benchmarkGroupOfView(benchmarkActiveView);
+  benchmarkActiveGroup=grp;
+  document.querySelectorAll('#benchmarkGroupTabs button').forEach(b=>b.classList.toggle('active', b.dataset.benchmarkGroup===grp));
+  const hint=document.getElementById('benchmarkGroupHint');
+  if(hint) hint.textContent=(BENCHMARK_GROUPS[grp]||BENCHMARK_GROUPS.estrategia).hint;
+  const viewRow=document.getElementById('benchmarkViewTabs');
+  if(viewRow){
+    const hasBtn=viewRow.querySelector(`button[data-benchmark-view="${benchmarkActiveView}"]`);
+    if(!hasBtn) renderBenchmarkViewTabs(grp);
+  }
+  document.querySelectorAll('#benchmarkViewTabs button').forEach(b=>b.classList.toggle('active', b.dataset.benchmarkView===benchmarkActiveView));
   const title=document.getElementById('benchmarkPanelTitle');
   const sub=document.getElementById('benchmarkPanelSubtitle');
   if(title) title.textContent=cfg.title;
@@ -6254,20 +6327,22 @@ function renderMsciSummary(msci, sp, diff){
 }
 document.getElementById('benchmarkLoadBtn')?.addEventListener('click',()=>loadBenchmarkData(false));
 document.getElementById('benchmarkReloadBtn')?.addEventListener('click',()=>loadBenchmarkData(true));
-document.querySelectorAll('#benchmarkTabs button').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    // Fase A: las pestañas del Bloque 2 (vs MSCI / vs S&P) están en construcción; no hacen nada aún.
-    if(btn.disabled || btn.classList.contains('benchmarkTabSoon')) return;
-    applyBenchmarkView(btn.dataset.benchmarkView || 'global');
-    // v57: si ya se había cargado una comparativa, al cambiar de pestaña se carga automáticamente la nueva vista.
-    // Así no hace falta pulsar “Actualizar” después de seleccionar Renta variable, MSCI, Bitcoin u Oro.
-    const statusText = (document.getElementById('benchmarkApiStatus')?.textContent || '').trim().toLowerCase();
-    const hasBenchmarkAlreadyLoaded = !!benchmarkCache || statusText === 'ok';
-    if(hasBenchmarkAlreadyLoaded){
-      setTimeout(()=>loadBenchmarkData(false), 0);
-    }
-  });
+// v139: navegación en dos barras (grupo + vista) mediante delegación de eventos.
+document.getElementById('benchmarkTabs')?.addEventListener('click', (e)=>{
+  const groupBtn=e.target.closest('button[data-benchmark-group]');
+  if(groupBtn){
+    applyBenchmarkGroup(groupBtn.dataset.benchmarkGroup, true);
+    return;
+  }
+  const viewBtn=e.target.closest('button[data-benchmark-view]');
+  if(viewBtn){
+    if(viewBtn.disabled || viewBtn.classList.contains('benchmarkTabSoon')) return; // vistas del Bloque 2 aún en construcción
+    applyBenchmarkView(viewBtn.dataset.benchmarkView);
+    const statusText=(document.getElementById('benchmarkApiStatus')?.textContent || '').trim().toLowerCase();
+    if(!!benchmarkCache || statusText==='ok') setTimeout(()=>loadBenchmarkData(false), 0);
+  }
 });
+renderBenchmarkViewTabs('estrategia');
 applyBenchmarkView('global');
 
 // v57: pestañas Benchmark controladas por applyBenchmarkView + carga automática.
@@ -18757,38 +18832,58 @@ body:before{
 }
 </style>
 <style>
-/* Fase A · Reagrupación de pestañas Benchmark en 3 bloques (Estrategia personal / Cartera frente al mercado / Análisis de activos). Inyectado al final para ganar a las capas previas de .benchmarkTabs. */
-#benchmark .benchmarkTabsGrouped{
+/* v139 · Navegación Benchmark en dos barras (grupo + vista). Inyectado al final para ganar a capas previas de .benchmarkTabs. */
+#benchmark .benchmarkNav{
+  padding:14px 18px 0!important;
   display:flex!important;
   flex-direction:column!important;
-  gap:14px!important;
-  padding:16px 18px 0!important;
+  gap:9px!important;
 }
-#benchmark .benchmarkTabGroup{
+#benchmark .benchmarkNavBar{
   display:flex!important;
-  flex-direction:column!important;
+  align-items:center!important;
+  gap:12px!important;
+  flex-wrap:wrap!important;
 }
-#benchmark .benchmarkTabGroup + .benchmarkTabGroup{
-  border-top:1px solid var(--line)!important;
-  padding-top:14px!important;
-}
-#benchmark .benchmarkTabGroupLabel{
-  font-size:10px!important;
+#benchmark .benchmarkNavLabel{
+  font-size:9.5px!important;
   font-weight:700!important;
   text-transform:uppercase!important;
-  letter-spacing:.06em!important;
+  letter-spacing:.07em!important;
   color:var(--muted)!important;
-  margin:0 0 5px!important;
+  min-width:78px!important;
+  flex:0 0 78px!important;
 }
-#benchmark .benchmarkTabGroupQ{
+#benchmark .benchmarkGroupTabs,
+#benchmark .benchmarkNav .benchmarkTabs{
+  display:flex!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  padding:0!important;
+  margin:0!important;
+}
+#benchmark .benchmarkGroupTabs button{
+  height:32px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:var(--text2)!important;
+  padding:0 14px!important;
+  font-size:11px!important;
+  font-weight:640!important;
+  cursor:pointer!important;
+}
+#benchmark .benchmarkGroupTabs button.active{
+  background:#f2c94c!important;
+  color:#070707!important;
+  border-color:#f2c94c!important;
+}
+#benchmark .benchmarkGroupHint{
+  margin:0 0 2px 90px!important;
   font-size:11.5px!important;
   color:var(--text2)!important;
   font-style:italic!important;
-  margin:0 0 9px!important;
-}
-#benchmark .benchmarkTabsGrouped .benchmarkTabs{
-  padding:0!important;
-  margin:0!important;
+  min-height:15px!important;
 }
 #benchmark .benchmarkSoonPill{
   font-size:8.5px!important;
@@ -18805,5 +18900,9 @@ body:before{
   cursor:default!important;
   opacity:.5!important;
   border-style:dashed!important;
+}
+@media(max-width:680px){
+  #benchmark .benchmarkNavLabel{min-width:100%!important;flex:0 0 100%!important;margin-bottom:-2px!important;}
+  #benchmark .benchmarkGroupHint{margin-left:0!important;}
 }
 </style>
