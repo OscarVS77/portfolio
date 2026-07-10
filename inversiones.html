@@ -5339,16 +5339,36 @@ body:before{
       <section class="card pageBlock">
         <div class="cardHeader">
           <div>
-            <h3 id="benchmarkPanelTitle">Global · Cartera real vs Cartera objetivo</h3>
-            <p id="benchmarkPanelSubtitle">Compara lo que tienes de verdad con lo que habría pasado siguiendo exactamente tus pesos objetivo. Plan de Pensiones separado.</p>
+            <h3 id="benchmarkPanelTitle">Cartera global · Real vs objetivo</h3>
+            <p id="benchmarkPanelSubtitle">Tu cartera real frente a lo que habría pasado siguiendo exactamente tu asignación objetivo, con los mismos movimientos. Mide si desviarte de tus pesos ideales te ha costado o dado dinero. Plan de Pensiones aparte.</p>
           </div>
         </div>
-        <div class="benchmarkTabs" id="benchmarkTabs">
-          <button class="active" type="button" data-benchmark-view="global">Global</button>
-          <button type="button" data-benchmark-view="rv">Renta variable</button>
-          <button type="button" data-benchmark-view="msci_sp500">MSCI vs S&amp;P 500</button>
-          <button type="button" data-benchmark-view="btc">Bitcoin</button>
-          <button type="button" data-benchmark-view="gold">Oro</button>
+        <div class="benchmarkTabsGrouped" id="benchmarkTabs">
+          <div class="benchmarkTabGroup">
+            <div class="benchmarkTabGroupLabel">1 · Estrategia personal</div>
+            <div class="benchmarkTabGroupQ">¿Sigo bien mi asignación objetivo?</div>
+            <div class="benchmarkTabs">
+              <button class="active" type="button" data-benchmark-view="global">Cartera global</button>
+              <button type="button" data-benchmark-view="rv">Renta variable</button>
+            </div>
+          </div>
+          <div class="benchmarkTabGroup">
+            <div class="benchmarkTabGroupLabel">2 · Cartera frente al mercado</div>
+            <div class="benchmarkTabGroupQ">¿Mi cartera completa bate a los índices?</div>
+            <div class="benchmarkTabs">
+              <button type="button" class="benchmarkTabSoon" data-benchmark-view="vs_msci" disabled>vs MSCI World <span class="benchmarkSoonPill">pronto</span></button>
+              <button type="button" class="benchmarkTabSoon" data-benchmark-view="vs_sp500" disabled>vs S&amp;P 500 <span class="benchmarkSoonPill">pronto</span></button>
+            </div>
+          </div>
+          <div class="benchmarkTabGroup">
+            <div class="benchmarkTabGroupLabel">3 · Análisis de activos</div>
+            <div class="benchmarkTabGroupQ">¿Acerté con el timing de mis compras?</div>
+            <div class="benchmarkTabs">
+              <button type="button" data-benchmark-view="btc">Bitcoin</button>
+              <button type="button" data-benchmark-view="gold">Oro</button>
+              <button type="button" data-benchmark-view="msci_sp500">MSCI vs S&amp;P 500</button>
+            </div>
+          </div>
         </div>
         <div class="benchmarkApiActions">
           <button class="btn primary" id="benchmarkLoadBtn" type="button">Cargar benchmark</button>
@@ -5705,8 +5725,8 @@ const BENCHMARK_OSCAR_WEIGHTS = [
 
 const BENCHMARK_VIEW_CONFIG = {
   global: {
-    title:'Global · Cartera real vs Cartera objetivo',
-    subtitle:'Compara lo que tienes de verdad con lo que habría pasado siguiendo exactamente tus pesos objetivo. Plan de Pensiones separado.',
+    title:'Cartera global · Real vs objetivo',
+    subtitle:'Tu cartera real frente a lo que habría pasado siguiendo exactamente tu asignación objetivo, con los mismos movimientos. Mide si desviarte de tus pesos ideales te ha costado o dado dinero. Plan de Pensiones aparte.',
     realLabel:'Tu cartera real',
     targetLabel:'Cartera objetivo',
     targetSmall:'Cartera objetivo simulada',
@@ -6236,6 +6256,8 @@ document.getElementById('benchmarkLoadBtn')?.addEventListener('click',()=>loadBe
 document.getElementById('benchmarkReloadBtn')?.addEventListener('click',()=>loadBenchmarkData(true));
 document.querySelectorAll('#benchmarkTabs button').forEach(btn=>{
   btn.addEventListener('click',()=>{
+    // Fase A: las pestañas del Bloque 2 (vs MSCI / vs S&P) están en construcción; no hacen nada aún.
+    if(btn.disabled || btn.classList.contains('benchmarkTabSoon')) return;
     applyBenchmarkView(btn.dataset.benchmarkView || 'global');
     // v57: si ya se había cargado una comparativa, al cambiar de pestaña se carga automáticamente la nueva vista.
     // Así no hace falta pulsar “Actualizar” después de seleccionar Renta variable, MSCI, Bitcoin u Oro.
@@ -18732,5 +18754,56 @@ body:before{
   border:1.5px solid var(--gold)!important;
   border-color:var(--gold)!important;
   box-shadow:0 0 0 1px rgba(255,211,77,.18),0 14px 34px rgba(0,0,0,.26)!important;
+}
+</style>
+<style>
+/* Fase A · Reagrupación de pestañas Benchmark en 3 bloques (Estrategia personal / Cartera frente al mercado / Análisis de activos). Inyectado al final para ganar a las capas previas de .benchmarkTabs. */
+#benchmark .benchmarkTabsGrouped{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:14px!important;
+  padding:16px 18px 0!important;
+}
+#benchmark .benchmarkTabGroup{
+  display:flex!important;
+  flex-direction:column!important;
+}
+#benchmark .benchmarkTabGroup + .benchmarkTabGroup{
+  border-top:1px solid var(--line)!important;
+  padding-top:14px!important;
+}
+#benchmark .benchmarkTabGroupLabel{
+  font-size:10px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  color:var(--muted)!important;
+  margin:0 0 5px!important;
+}
+#benchmark .benchmarkTabGroupQ{
+  font-size:11.5px!important;
+  color:var(--text2)!important;
+  font-style:italic!important;
+  margin:0 0 9px!important;
+}
+#benchmark .benchmarkTabsGrouped .benchmarkTabs{
+  padding:0!important;
+  margin:0!important;
+}
+#benchmark .benchmarkSoonPill{
+  font-size:8.5px!important;
+  font-weight:700!important;
+  text-transform:uppercase!important;
+  letter-spacing:.04em!important;
+  background:rgba(242,201,76,.16)!important;
+  color:#e8b14a!important;
+  padding:1px 5px!important;
+  border-radius:999px!important;
+  margin-left:5px!important;
+}
+#benchmark .benchmarkTabSoon{
+  cursor:default!important;
+  opacity:.5!important;
+  border-style:dashed!important;
 }
 </style>
