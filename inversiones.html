@@ -18905,4 +18905,13 @@ body:before{
   #benchmark .benchmarkNavLabel{min-width:100%!important;flex:0 0 100%!important;margin-bottom:-2px!important;}
   #benchmark .benchmarkGroupHint{margin-left:0!important;}
 }
+/* v139: altura fija del subtítulo del panel para que al cambiar de vista no salte
+   todo el bloque inferior (barras, cápsulas, gráfico). El texto varía de 1 a 2 líneas
+   según la vista; reservamos el alto de 2 líneas siempre. */
+#benchmark #benchmarkPanelSubtitle{
+  min-height:36px!important;
+}
+#benchmark .benchmarkGroupHint{
+  min-height:16px!important;
+}
 </style>
