@@ -5379,9 +5379,11 @@ body:before{
             <em>Tu cartera menos Cartera objetivo</em>
           </article>
         </div>
+        <div class="benchmarkPanelStable" id="benchmarkPanelStable">
         <div class="benchmarkChartReal" id="benchmarkChart"><div class="chartEmpty">Pulsa “Cargar benchmark” para simular tus mismos movimientos contra tu Cartera objetivo.</div></div>
         <div class="benchmarkLegend"><span><span class="legendDot bGreen"></span>Tu cartera actual</span><span><span class="legendDot bGold"></span>Cartera objetivo simulada</span></div>
         <div class="benchmarkSummary" id="benchmarkSummary"><span>Lectura del resultado</span><strong>Pendiente de cargar</strong><p>Cuando cargues el benchmark, aquí verás una explicación simple del resultado: si tu cartera real va por delante o por detrás de tu Cartera objetivo.</p></div>
+        </div>
         <div class="benchmarkError" id="benchmarkError"></div>
       </section>
 
@@ -18550,16 +18552,17 @@ body:before{
   border-color:var(--accent)!important;
   color:#0a0c0e!important;
 }
-/* v139: el gráfico vacío ahora mantiene la MISMA altura que el lleno (280px) para que
-   al cambiar de vista no haya salto vertical. Antes se reducía a 150px y el paso
-   280→150→280 (lleno→vacío→recargado) era el movimiento molesto del layout. */
+/* v140: la altura del gráfico vacío se controla ahora desde #benchmarkPanelStable. */
 #benchmark .benchmarkChartReal:has(.chartEmpty){
   min-height:280px!important;
 }
-#benchmark .benchmarkChartReal .chartEmpty{
-  display:flex!important;align-items:center!important;justify-content:center!important;
-  min-height:280px!important;padding:24px!important;color:var(--muted)!important;
-  text-align:center!important;font-size:13px!important;
+/* v140: la tabla de composición cambia de nº de filas según la vista; reservamos
+   la altura de 5 filas para que la sección inferior no cambie de tamaño. */
+#benchmark #benchmarkWeightsBody{
+  display:table-row-group!important;
+}
+#benchmark .grid.two article.card:first-child .tableWrap{
+  min-height:250px!important;
 }
 .yearCard.active{
   border-color:rgba(95,211,155,.55)!important;
@@ -18907,32 +18910,28 @@ body:before{
   #benchmark .benchmarkNavLabel{min-width:100%!important;flex:0 0 100%!important;margin-bottom:-2px!important;}
   #benchmark .benchmarkGroupHint{margin-left:0!important;}
 }
-/* v139: altura fija del subtítulo del panel para que al cambiar de vista no salte
-   todo el bloque inferior (barras, cápsulas, gráfico). El texto varía de 1 a 2 líneas
-   según la vista; reservamos el alto de 2 líneas siempre. */
+/* v140: contenedor de altura fija que engloba gráfico + leyenda + resumen.
+   Al cambiar de vista, el contenido se vacía y se rellena dentro de este marco,
+   pero el marco no cambia de tamaño, así que nada de abajo salta. */
+#benchmark #benchmarkPanelStable{
+  min-height:460px!important;
+}
+#benchmark #benchmarkPanelStable #benchmarkChart{
+  min-height:280px!important;
+  height:280px!important;
+}
+#benchmark #benchmarkPanelStable #benchmarkChart .chartEmpty{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  height:100%!important;min-height:280px!important;padding:24px!important;
+  color:var(--muted)!important;text-align:center!important;font-size:13px!important;
+}
+#benchmark #benchmarkPanelStable #benchmarkSummary{
+  min-height:124px!important;
+}
 #benchmark #benchmarkPanelSubtitle{
   min-height:36px!important;
 }
 #benchmark .benchmarkGroupHint{
   min-height:16px!important;
-}
-/* v139: el salto real al cambiar de vista lo causa el ciclo de vaciar→rellenar el panel.
-   Estabilizamos la altura del contenedor del gráfico (también en estado vacío) y del
-   resumen, para que el bloque inferior no colapse y se re-expanda. */
-#benchmark .benchmarkChartReal{
-  min-height:280px!important;
-  display:flex!important;
-  flex-direction:column!important;
-  justify-content:center!important;
-}
-#benchmark .benchmarkChartReal .chartEmpty{
-  margin:auto!important;
-  text-align:center!important;
-}
-#benchmark .benchmarkChartReal svg{
-  margin:auto!important;
-}
-#benchmark #benchmarkSummary{
-  min-height:96px!important;
 }
 </style>
