@@ -78,7 +78,7 @@ html,body{
   font-size:14px;font-weight:560;display:flex;justify-content:space-between;align-items:center;cursor:pointer;text-align:left;
 }
 .nav button:hover{background:rgba(255,255,255,.045);color:var(--text)}
-.nav button.active{background:#fff;color:#050505}
+.nav button.active{background:linear-gradient(180deg,#e8b14a,#e8b14a);color:#090909}
 .navStatus{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 0 12px currentColor}
 .navStatus.ok{background:var(--green);color:var(--green)}
 .navStatus.warn{background:var(--yellow);color:var(--yellow)}
@@ -104,7 +104,7 @@ html,body{
   height:38px;padding:0 14px;border-radius:12px;font-size:13px;font-weight:620;cursor:pointer;
 }
 .btn:hover{background:rgba(255,255,255,.1);color:var(--text)}
-.btn.primary{background:#f4f1ea;color:#0b0d0f;border-color:#f4f1ea}
+.btn.primary{background:#e8b14a;color:#090909;border-color:#e8b14a}
 .fileInput{display:none}
 .section{display:none}
 .section.active{display:block}
@@ -558,7 +558,7 @@ html,body{background:var(--bg);color:var(--text);font-feature-settings:"tnum" 1,
   transition:background .16s ease,color .16s ease,transform .16s ease;
 }
 .nav button:hover{transform:translateX(1px)}
-.nav button.active{background:#f5f6f8;color:#050505;box-shadow:0 12px 30px rgba(255,255,255,.08)}
+.nav button.active{background:#e8b14a;color:#090909;box-shadow:0 12px 30px rgba(232,177,74,.14)}
 .navStatus{width:8px;height:8px}
 .sideFoot{background:rgba(0,0,0,.55);border-color:rgba(255,255,255,.09);border-radius:18px;padding:14px}
 .sideFoot strong{font-size:19px;color:#fff}
@@ -571,7 +571,7 @@ html,body{background:var(--bg);color:var(--text);font-feature-settings:"tnum" 1,
 .pageTitle p{font-size:13px;color:#8c929e;margin-top:6px}
 .btn,label.btn,.importStatus{height:42px;border-radius:999px;font-weight:700;font-size:13px}
 .btn{background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.095)}
-.btn.primary,label.btn.primary{background:#f5f6f8;color:#000;border-color:#f5f6f8;box-shadow:0 10px 24px rgba(255,255,255,.08)}
+.btn.primary,label.btn.primary{background:#e8b14a;color:#090909;border-color:#e8b14a;box-shadow:0 10px 24px rgba(232,177,74,.14)}
 .importStatus{background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.085);color:#969ca8}
 .pageBlock{margin-top:14px}
 .grid,.kpiStrip{gap:14px}
@@ -18375,11 +18375,11 @@ body:before{
   --blue:#6e93e8;
   --plan:#a78bfa;
   --accent:#f4f1ea;           /* acento neutro hueso, NO amarillo */
-  /* neutraliza el sistema "active-yellow" heredado en un solo punto */
-  --active-yellow:#f4f1ea;
-  --active-yellow-hover:#ffffff;
-  --active-yellow-soft:rgba(244,241,234,.14);
-  --active-yellow-border:#f4f1ea;
+  /* naranja estable desde el inicio: evita el flash blanco->naranja al cargar */
+  --active-yellow:#e8b14a;
+  --active-yellow-hover:#e8b14a;
+  --active-yellow-soft:rgba(232,177,74,.14);
+  --active-yellow-border:#e8b14a;
   --active-yellow-shadow:0 10px 26px rgba(244,241,234,.10), inset 0 1px 0 rgba(255,255,255,.20);
   --radius:18px;
   --pad-card:20px;
