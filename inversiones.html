@@ -18550,13 +18550,15 @@ body:before{
   border-color:var(--accent)!important;
   color:#0a0c0e!important;
 }
-/* gráfica de benchmark vacía: deja de ser un hueco enorme */
+/* v139: el gráfico vacío ahora mantiene la MISMA altura que el lleno (280px) para que
+   al cambiar de vista no haya salto vertical. Antes se reducía a 150px y el paso
+   280→150→280 (lleno→vacío→recargado) era el movimiento molesto del layout. */
 #benchmark .benchmarkChartReal:has(.chartEmpty){
-  min-height:150px!important;
+  min-height:280px!important;
 }
 #benchmark .benchmarkChartReal .chartEmpty{
   display:flex!important;align-items:center!important;justify-content:center!important;
-  min-height:150px!important;padding:24px!important;color:var(--muted)!important;
+  min-height:280px!important;padding:24px!important;color:var(--muted)!important;
   text-align:center!important;font-size:13px!important;
 }
 .yearCard.active{
@@ -18913,5 +18915,24 @@ body:before{
 }
 #benchmark .benchmarkGroupHint{
   min-height:16px!important;
+}
+/* v139: el salto real al cambiar de vista lo causa el ciclo de vaciar→rellenar el panel.
+   Estabilizamos la altura del contenedor del gráfico (también en estado vacío) y del
+   resumen, para que el bloque inferior no colapse y se re-expanda. */
+#benchmark .benchmarkChartReal{
+  min-height:280px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#benchmark .benchmarkChartReal .chartEmpty{
+  margin:auto!important;
+  text-align:center!important;
+}
+#benchmark .benchmarkChartReal svg{
+  margin:auto!important;
+}
+#benchmark #benchmarkSummary{
+  min-height:96px!important;
 }
 </style>
