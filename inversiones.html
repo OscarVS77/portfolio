@@ -18934,4 +18934,22 @@ body:before{
 #benchmark .benchmarkGroupHint{
   min-height:16px!important;
 }
+/* v140: la cabecera ESTADO API cambia de altura al pasar de "Sin cargar" a
+   "Cargando · Consultando Edge Function..." (1→2 líneas). Y las notas <em> de las
+   cápsulas pasan de 1 a 2 líneas con datos reales. Ambas están fuera del panel
+   estable y provocaban el salto. Se fijan sus alturas. */
+#benchmark .benchmarkState{
+  min-height:118px!important;
+}
+#benchmark .benchmarkState em{
+  min-height:30px!important;
+  display:block!important;
+}
+#benchmark .benchmarkGrid .benchmarkMetric{
+  min-height:104px!important;
+}
+#benchmark .benchmarkGrid .benchmarkMetric em{
+  min-height:32px!important;
+  display:block!important;
+}
 </style>
