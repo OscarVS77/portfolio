@@ -36,6 +36,13 @@
   --btc:#e89a52;
   --plan:#a78bfa;
   --accent:#d9c9a8;
+  /* v141: definidas también aquí (además del <style> del final) para que existan desde
+     el primer frame; si no, los botones activos nacen blancos y viran a naranja al cargar. */
+  --active-yellow:#f2c94c;
+  --active-yellow-hover:#ffd75e;
+  --active-yellow-soft:rgba(242,201,76,.16);
+  --active-yellow-border:rgba(242,201,76,.62);
+  --active-yellow-shadow:0 10px 28px rgba(242,201,76,.16), inset 0 1px 0 rgba(255,255,255,.30);
   --radius:20px;
   --shadow:0 24px 70px rgba(0,0,0,.46);
   --soft:0 14px 34px rgba(0,0,0,.24);
@@ -4972,7 +4979,7 @@ body:before{
 <div class="app">
   <aside class="sidebar">
     <div class="brand"><div class="brandName">Portfolio Oscar</div></div>
-    <div class="nav" id="nav"></div>
+    <div class="nav" id="nav"><button class="active" data-page="dashboard"><span>Dashboard</span><span class="navStatus ok"></span></button><button data-page="cartera"><span>Cartera actual</span><span class="navStatus ok"></span></button><button data-page="xirr"><span>XIRR global</span><span class="navStatus ok"></span></button><button data-page="movimientos"><span>Movimientos</span><span class="navStatus ok"></span></button><button data-page="historial"><span>Historial</span><span class="navStatus ok"></span></button><button data-page="benchmark"><span>Benchmark</span><span class="navStatus ok"></span></button><button data-page="asesoria"><span>Asesoría</span><span class="navStatus ok"></span></button><button data-page="auditoria"><span>Auditoría</span><span class="navStatus ok"></span></button></div>
     <div class="sideFoot sideUpdate"><span class="brandDate">Última actualización · 5/6/2026</span></div>
   </aside>
 
@@ -5615,13 +5622,18 @@ const pages=[
   ["auditoria","Auditoría","Estado técnico de la web y funciones activas.","ok"]
 ];
 const nav=document.getElementById("nav");
+// v141: los botones ya están escritos en el HTML para que el menú se vea desde el primer
+// frame (antes se creaban aquí y el menú aparecía en blanco ~1s). Solo se enganchan.
 pages.forEach((p,i)=>{
-  const b=document.createElement("button");
-  b.innerHTML=`<span>${p[1]}</span><span class="navStatus ${p[3]}"></span>`;
+  let b=nav.querySelector(`button[data-page="${p[0]}"]`);
+  if(!b){
+    b=document.createElement("button");
+    b.innerHTML=`<span>${p[1]}</span><span class="navStatus ${p[3]}"></span>`;
+    b.dataset.page=p[0];
+    if(i===0)b.className="active";
+    nav.appendChild(b);
+  }
   b.onclick=()=>show(p[0]);
-  b.dataset.page=p[0];
-  if(i===0)b.className="active";
-  nav.appendChild(b);
 });
 function show(id){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
