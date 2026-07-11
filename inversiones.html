@@ -5739,6 +5739,41 @@ const BENCHMARK_VIEW_CONFIG = {
       return !a.includes('plan') && !a.includes('pensiones') && !a.includes('cartera total') && a!=='total';
     }
   },
+  // v142 · Bloque 2: cartera COMPLETA (incluye Plan de Pensiones) contra un índice único.
+  // El Plan de Pensiones no tiene proxy propio: se simula contra el índice de la vista,
+  // coherente con su objetivo (replicar el crecimiento de la renta variable mundial).
+  vs_msci: {
+    title:'Cartera completa · vs MSCI World',
+    subtitle:'Tu cartera entera, incluido el Plan de Pensiones, frente a haber invertido ese mismo dinero, en las mismas fechas, en el MSCI World (proxy URTH).',
+    realLabel:'Tu cartera completa',
+    targetLabel:'MSCI World',
+    targetSmall:'MSCI World / URTH',
+    empty:'Pulsa “Cargar benchmark” para comparar tu cartera completa contra el MSCI World.',
+    includePension:true,
+    weights:()=>[
+      { key:'msci', name:'MSCI World', proxy:'URTH', weight:1 }
+    ],
+    assetTest:(asset)=> {
+      const a=normalizeText(asset);
+      return !a.includes('cartera total') && a!=='total';
+    }
+  },
+  vs_sp500: {
+    title:'Cartera completa · vs S&P 500',
+    subtitle:'Tu cartera entera, incluido el Plan de Pensiones, frente a haber invertido ese mismo dinero, en las mismas fechas, en el S&P 500 (proxy SPY).',
+    realLabel:'Tu cartera completa',
+    targetLabel:'S&P 500',
+    targetSmall:'S&P 500 / SPY',
+    empty:'Pulsa “Cargar benchmark” para comparar tu cartera completa contra el S&P 500.',
+    includePension:true,
+    weights:()=>[
+      { key:'sp500', name:'S&P 500', proxy:'SPY', weight:1 }
+    ],
+    assetTest:(asset)=> {
+      const a=normalizeText(asset);
+      return !a.includes('cartera total') && a!=='total';
+    }
+  },
   rv: {
     title:'Renta variable · Real vs objetivo',
     subtitle:'Compara tus fondos reales de renta variable contra el reparto objetivo interno: 80% MSCI World, 12,5% Emerging Markets y 7,5% Small Cap.',
@@ -5808,8 +5843,8 @@ const BENCHMARK_GROUPS = {
     label:'Mercado',
     hint:'¿Mi cartera completa bate a los índices?',
     views:[
-      { view:'vs_msci', label:'vs MSCI World', soon:true },
-      { view:'vs_sp500', label:'vs S&P 500', soon:true }
+      { view:'vs_msci', label:'vs MSCI World' },
+      { view:'vs_sp500', label:'vs S&P 500' }
     ]
   },
   activos: {
@@ -5915,18 +5950,19 @@ function benchmarkNumber(value){
   if(s.includes(',')) return Number(s.replace(/\./g,'').replace(',','.'));
   return Number(s);
 }
-function getCurrentPortfolioValueNoPension(assetTest=null){
+function getCurrentPortfolioValueNoPension(assetTest=null, includePension=false){
   const cartera=parseCartera?.() || [];
   const rows=cartera.filter(x=>{
     const a=normalizeText(x.activo || '');
     if(!a || a === 'total') return false;
-    if(a.includes('plan') || a.includes('pensiones')) return false;
+    // v142: el Bloque 2 (cartera vs mercado) SÍ incluye el Plan de Pensiones.
+    if(!includePension && (a.includes('plan') || a.includes('pensiones'))) return false;
     if(assetTest && !assetTest(x.activo)) return false;
     return true;
   });
   return rows.reduce((sum,x)=>sum + (benchmarkNumber(x.valor)||0),0);
 }
-function parseBenchmarkFlowsFromXirr(assetTest=null){
+function parseBenchmarkFlowsFromXirr(assetTest=null, includePension=false){
   const rows = sheetRows?.('XIRR GLOBAL') || [];
   const flows=[];
   let headerRow=-1;
@@ -5954,7 +5990,7 @@ function parseBenchmarkFlowsFromXirr(assetTest=null){
     const a=normalizeText(activo);
     const t=normalizeText(tipo);
     const inc=normalizeText(incluye);
-    if(a.includes('plan') || a.includes('pensiones')) continue;
+    if(!includePension && (a.includes('plan') || a.includes('pensiones'))) continue;
     if(a.includes('cartera total') || a==='total') continue;
     if(assetTest && !assetTest(activo)) continue;
     if(t.includes('valor actual') || t.includes('valor final') || t.includes('valoracion')) continue;
@@ -5978,7 +6014,7 @@ function isTemplateAssetRow(comment){
   return normalizeText(comment).trim().startsWith('plantilla');
 }
 
-function parseMonthlyAssetHistory(assetTest=null){
+function parseMonthlyAssetHistory(assetTest=null, includePension=false){
   const rows = sheetRows?.('HISTÓRICO MENSUAL X ACTIVO') || sheetRows?.('HISTORICO MENSUAL X ACTIVO') || [];
   const out=[];
   if(!rows.length) return out;
@@ -6014,14 +6050,14 @@ function parseMonthlyAssetHistory(assetTest=null){
     if(!date || !asset || !Number.isFinite(value) || value<=0) continue;
     const a=normalizeText(asset);
     if(a.includes('total')) continue;
-    if(a.includes('plan') || a.includes('pensiones')) continue;
+    if(!includePension && (a.includes('plan') || a.includes('pensiones'))) continue;
     if(assetTest && !assetTest(asset)) continue;
     out.push({date, asset, value, invested, xirr});
   }
   return out.sort((a,b)=>a.date.localeCompare(b.date));
 }
-function aggregateMonthlyHistory(assetTest=null){
-  const rows=parseMonthlyAssetHistory(assetTest);
+function aggregateMonthlyHistory(assetTest=null, includePension=false){
+  const rows=parseMonthlyAssetHistory(assetTest, includePension);
   if(!rows.length) return [];
   const byDate=new Map();
   rows.forEach(r=>{
@@ -6198,19 +6234,21 @@ async function loadBenchmarkData(force=false){
   }
 
   const weights=cfg.weights();
-  const flows=parseBenchmarkFlowsFromXirr(cfg.assetTest);
+  // v142: el Bloque 2 (vs_msci / vs_sp500) incluye el Plan de Pensiones en flujos y valor.
+  const withPension = !!cfg.includePension;
+  const flows=parseBenchmarkFlowsFromXirr(cfg.assetTest, withPension);
   if(flows.length<1){
     benchmarkSetStatus('Sin flujos','yellow','Faltan movimientos reales para esta vista.');
     benchmarkSetError(`Benchmark: no se han encontrado movimientos reales válidos para “${cfg.realLabel}” en XIRR GLOBAL.`);
     return;
   }
-  const currentValue=getCurrentPortfolioValueNoPension(cfg.assetTest);
+  const currentValue=getCurrentPortfolioValueNoPension(cfg.assetTest, withPension);
   if(!Number.isFinite(currentValue) || currentValue<=0){
     benchmarkSetStatus('Sin cartera','yellow','No se ha podido leer el valor actual de esta vista.');
     benchmarkSetError(`Benchmark: falta el valor actual de “${cfg.realLabel}” en CARTERA ACTUAL.`);
     return;
   }
-  const monthlyHistory=aggregateMonthlyHistory(cfg.assetTest);
+  const monthlyHistory=aggregateMonthlyHistory(cfg.assetTest, withPension);
   const {from,to}=getBenchmarkDateRange(flows);
   benchmarkSetStatus('Cargando','yellow','Consultando Edge Function y simulando tus flujos...');
   try{
@@ -6293,7 +6331,7 @@ function renderBenchmarkData(data, flows, currentValue, simulation, benchmarkSer
   if(diffCard) diffCard.textContent = `${fmtMoney(valueDiff,2,true)} frente a ${cfg.targetLabel}`;
 
   renderBenchmarkSummary(currentValue, simulation.finalValue, netInvested, realReturn, targetReturn, diff, valueDiff, flows.length, cfg, monthlyHistory);
-  renderBenchmarkChart(currentValue, simulation.finalValue, benchmarkSeries, flows, cfg, monthlyHistory);
+  renderBenchmarkChart(currentValue, simulation.finalValue, benchmarkSeries, flows, cfg, monthlyHistory, netInvested);
 }
 function renderBenchmarkSummary(currentValue, targetValue, netInvested, realReturn, targetReturn, diff, valueDiff, flowsCount, cfg, monthlyHistory=[]){
   const box=document.getElementById('benchmarkSummary');
@@ -14069,9 +14107,10 @@ function __v61Point(x,y,r,colorClass,label,value,meta='',visible=true,hit=14){
   const dot = visible ? `<circle class="benchmarkVisiblePoint ${colorClass}" cx="${x}" cy="${y}" r="${r}"/>` : '';
   return `<g data-benchmark-tip="${escHtml(__v61Tip(label,value,meta))}">${dot}<circle class="benchmarkHitArea" cx="${x}" cy="${y}" r="${hit}" fill="transparent"/></g>`;
 }
-function __v61PointSeries(arr,toX,toY,colorClass,label,formatter,meta=''){
+function __v61PointSeries(arr,toX,toY,colorClass,label,formatter,meta='',normFn=null){
+  const nz=normFn || (p=>Number(p.normalized));
   return (arr||[]).map((p,i)=>{
-    const v=Number(p.normalized);
+    const v=Number(nz(p));
     if(!Number.isFinite(v)) return '';
     const x=toX(i,arr.length).toFixed(1);
     const y=toY(v).toFixed(1);
@@ -14080,33 +14119,48 @@ function __v61PointSeries(arr,toX,toY,colorClass,label,formatter,meta=''){
     return __v61Point(x,y,3.2,colorClass,label,value,date + (meta?` · ${meta}`:''),false,11);
   }).join('');
 }
-function __benchAreaPath(arr, toX, toY, n, h, padB){
+function __benchAreaPath(arr, toX, toY, n, h, padB, normFn=null){
   if(!arr || arr.length<2) return '';
-  const d=arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(Number(p.normalized)).toFixed(1)}`).join(' ');
+  const nz=normFn || (p=>Number(p.normalized));
+  const d=arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(nz(p)).toFixed(1)}`).join(' ');
   return `${d} L ${toX(arr.length-1,arr.length).toFixed(1)},${(h-padB).toFixed(1)} L ${toX(0,arr.length).toFixed(1)},${(h-padB).toFixed(1)} Z`;
 }
-function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries, flows, cfg, monthlyHistory=[]){
+function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries, flows, cfg, monthlyHistory=[], netInvested=0){
   const box=document.getElementById('benchmarkChart');
   if(!box) return;
   __v61TooltipInit();
   if(!benchmarkSeries.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la simulación.</div>'; return; }
   const w=1200, h=320, padL=14, padR=20, padT=26, padB=44;
   const plotH=h-padT-padB;
-  const finalInvested=benchmarkSeries[benchmarkSeries.length-1]?.invested || 1;
+  // v142 · BASE ÚNICA. Antes cada punto se normalizaba contra el aportado acumulado hasta
+  // su fecha (base móvil) mientras las tarjetas usan el aportado neto total (base fija).
+  // Eso hacía que los tooltips no coincidieran con las tarjetas (+11,29% vs +5,77%) y que
+  // el punto real quedara descolgado de la línea. Ahora TODO se normaliza contra
+  // netInvested, el mismo denominador de las tarjetas: gráfica y tarjetas dicen lo mismo.
+  const denom=(Number.isFinite(netInvested) && netInvested>0)
+    ? netInvested
+    : (benchmarkSeries[benchmarkSeries.length-1]?.invested || 1);
+  const normOf=(p)=>{
+    const v=Number(p?.value);
+    return Number.isFinite(v) ? (v/denom)*100 : Number(p?.normalized);
+  };
+  const benchNorms=benchmarkSeries.map(normOf);
   const useMonthlyHistory=Array.isArray(monthlyHistory) && monthlyHistory.length>=3;
   const realHistory=useMonthlyHistory ? monthlyHistory : [];
-  const realNorm=Number(((currentValue/finalInvested)*100).toFixed(4));
-  const values=[...benchmarkSeries.map(x=>Number(x.normalized)), ...realHistory.map(x=>Number(x.normalized)), realNorm].filter(Number.isFinite);
+  const realHistNorms=realHistory.map(normOf);
+  const realNorm=Number(((currentValue/denom)*100).toFixed(4));
+  const benchFinalNorm=Number(((benchmarkFinalValue/denom)*100).toFixed(4));
+  const values=[...benchNorms, ...realHistNorms, realNorm, benchFinalNorm].filter(Number.isFinite);
   const rawMin=Math.min(...values), rawMax=Math.max(...values);
   const pad=(rawMax-rawMin)*.14 || 4;
   const min=Math.min(rawMin-pad,98), max=Math.max(rawMax+pad,102);
   const span=(max-min)||1;
   const toX=(i,n)=>padL + (i/Math.max(1,n-1))*(w-padL-padR);
   const toY=(v)=>padT + (max-v)/span*plotH;
-  const line=(arr)=>arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(Number(p.normalized)).toFixed(1)}`).join(' ');
+  const line=(arr)=>arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(normOf(p)).toFixed(1)}`).join(' ');
   const realX=w-padR;
-  const realY=toY(useMonthlyHistory ? Number(realHistory[realHistory.length-1].normalized) : realNorm);
-  const benchY=toY(Number(benchmarkSeries[benchmarkSeries.length-1].normalized));
+  const realY=toY(useMonthlyHistory ? realHistNorms[realHistNorms.length-1] : realNorm);
+  const benchY=toY(benchNorms[benchNorms.length-1]);
   const ticks=benchmarkTicks(benchmarkSeries,5);
   const tickSvg=ticks.map(t=>`<text x="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y="${h-14}" fill="var(--muted)" font-size="11" text-anchor="middle">${t.label}</text>`).join('');
   // grid horizontal suave (4 líneas) con etiqueta de rentabilidad
@@ -14116,16 +14170,16 @@ function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries
     const y=toY(v);
     return `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${w-padR}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.05)"/><text x="${padL}" y="${(y-5).toFixed(1)}" fill="rgba(255,255,255,.28)" font-size="10">${benchmarkPct(v-100)}</text>`;
   }).join('');
-  const benchArea=__benchAreaPath(benchmarkSeries,toX,toY,benchmarkSeries.length,h,padB);
-  const realArea=useMonthlyHistory?__benchAreaPath(realHistory,toX,toY,realHistory.length,h,padB):'';
+  const benchArea=__benchAreaPath(benchmarkSeries,toX,toY,benchmarkSeries.length,h,padB,normOf);
+  const realArea=useMonthlyHistory?__benchAreaPath(realHistory,toX,toY,realHistory.length,h,padB,normOf):'';
   const realLineSvg = useMonthlyHistory
-    ? `<path d="${realArea}" fill="url(#benchRealGrad)"/><path d="${line(realHistory)}" fill="none" stroke="var(--green)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>${__v61PointSeries(realHistory,toX,toY,'greenPoint',cfg.realLabel,v=>benchmarkPct(v-100),'dato real mensual')}`
+    ? `<path d="${realArea}" fill="url(#benchRealGrad)"/><path d="${line(realHistory)}" fill="none" stroke="var(--green)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>${__v61PointSeries(realHistory,toX,toY,'greenPoint',cfg.realLabel,v=>benchmarkPct(v-100),'dato real mensual',normOf)}`
     : '';
   const realValue = `${fmtMoney(currentValue)} · ${benchmarkPct(realNorm-100)}`;
-  const targetValue = `${fmtMoney(benchmarkFinalValue)} · ${benchmarkPct(Number(benchmarkSeries[benchmarkSeries.length-1].normalized)-100)}`;
+  const targetValue = `${fmtMoney(benchmarkFinalValue)} · ${benchmarkPct(benchFinalNorm-100)}`;
   const realMeta = useMonthlyHistory ? 'último cierre real del Excel' : 'valor real actual';
   const targetMeta = 'simulación con tus movimientos';
-  const targetHits=__v61PointSeries(benchmarkSeries,toX,toY,'goldPoint',cfg.targetLabel,v=>benchmarkPct(v-100),'simulación');
+  const targetHits=__v61PointSeries(benchmarkSeries,toX,toY,'goldPoint',cfg.targetLabel,v=>benchmarkPct(v-100),'simulación',normOf);
   const guideColor = currentValue >= benchmarkFinalValue ? 'var(--green)' : 'var(--red)';
   box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${escHtml(cfg.targetLabel)} simulada y valor real actual">
     <defs>
