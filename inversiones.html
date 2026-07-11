@@ -5804,42 +5804,6 @@ updateDashboard = function(){
 </style>
 <script>
 (function(){
-  function polishDistributionV29(){
-    const card=document.querySelector('#dashboard .dashboardDistributionBlock .card');
-    if(!card) return;
-    const h=card.querySelector('.cardHeader h3');
-    const p=card.querySelector('.cardHeader p');
-    if(h) h.textContent='Distribución de cartera';
-    if(p) p.textContent='Peso actual por activo, tipo o plataforma.';
-    const tabs=card.querySelectorAll('.tabs span');
-    if(tabs[0]) tabs[0].textContent='Activos';
-    card.querySelectorAll('.legendRow').forEach(row=>{
-      const dot=row.querySelector('.legendDot');
-      const pct=row.querySelector('strong');
-      if(dot) row.style.setProperty('--c', getComputedStyle(dot).backgroundColor);
-      if(pct){
-        const n=parseFloat((pct.textContent||'').replace('%','').replace(',','.'));
-        if(!Number.isNaN(n)) row.style.setProperty('--w', Math.max(0,Math.min(100,n))+'%');
-      }
-    });
-  }
-  document.addEventListener('DOMContentLoaded', polishDistributionV29);
-  const prevAlloc=window.renderAllocationScope;
-  if(prevAlloc){
-    window.renderAllocationScope=function(){
-      const r=prevAlloc.apply(this,arguments);
-      polishDistributionV29();
-      return r;
-    };
-  }
-  const prevDash=window.updateDashboard;
-  if(prevDash){
-    window.updateDashboard=function(){
-      const r=prevDash.apply(this,arguments);
-      polishDistributionV29();
-      return r;
-    };
-  }
 })();
 </script>
 
@@ -6037,14 +6001,6 @@ updateDashboard = function(){
     }
   }
   document.addEventListener('DOMContentLoaded', forceDashboardDistributionAssets);
-  var prev=window.updateDashboard;
-  if(prev){
-    window.updateDashboard=function(){
-      var r=prev.apply(this,arguments);
-      setTimeout(forceDashboardDistributionAssets,0);
-      return r;
-    };
-  }
 })();
 </script>
 
@@ -7435,54 +7391,6 @@ try{
 
 
 </style>
-<script>
-(function(){
-  function renameDistributionBlock(){
-    const allocationCard = document.querySelector('#dashboard .donutWrap')?.closest('.card');
-    if(!allocationCard) return;
-    const h = allocationCard.querySelector('.cardHeader h3');
-    const p = allocationCard.querySelector('.cardHeader p');
-    if(h) h.textContent = 'Distribución de cartera';
-    if(p) p.textContent = 'Peso actual por activo, tipo o plataforma.';
-    const tabs = allocationCard.querySelectorAll('.tabs span');
-    if(tabs[0] && tabs[0].textContent.trim().toLowerCase()==='assets') tabs[0].textContent = 'Activos';
-  }
-  function styleDistributionLegend(){
-    document.querySelectorAll('#dashboard .legendRow').forEach(row=>{
-      const dot = row.querySelector('.legendDot');
-      const pct = row.querySelector('strong');
-      if(dot){ row.style.setProperty('--c', getComputedStyle(dot).backgroundColor); }
-      if(pct){
-        const n = parseFloat((pct.textContent||'').replace('%','').replace(',','.'));
-        if(!Number.isNaN(n)) row.style.setProperty('--w', Math.max(0, Math.min(100,n)) + '%');
-      }
-    });
-  }
-  function applyDashboardV27(){
-    renameDistributionBlock();
-    styleDistributionLegend();
-  }
-  document.addEventListener('DOMContentLoaded', applyDashboardV27);
-  const previousRenderAllocationScope = window.renderAllocationScope;
-  if(previousRenderAllocationScope){
-    window.renderAllocationScope = function(){
-      const result = previousRenderAllocationScope.apply(this, arguments);
-      applyDashboardV27();
-      return result;
-    };
-  }
-  const previousUpdateDashboard = window.updateDashboard;
-  if(previousUpdateDashboard){
-    window.updateDashboard = function(){
-      const result = previousUpdateDashboard.apply(this, arguments);
-      applyDashboardV27();
-      return result;
-    };
-  }
-})();
-</script>
-
-
 <style>/* =========================================================
    V37 · SOLO 3 CAMBIOS DESDE V33
    1) Eliminar gráfica del Dashboard
@@ -7706,32 +7614,6 @@ try{
 
 
 </style>
-<script>
-(function(){
-  function removeDashboardChartOnly(){
-    var chart=document.getElementById('dashboardChart');
-    if(chart) chart.remove();
-  }
-  document.addEventListener('DOMContentLoaded', removeDashboardChartOnly);
-  var previousUpdateDashboard=window.updateDashboard;
-  if(previousUpdateDashboard){
-    window.updateDashboard=function(){
-      var result=previousUpdateDashboard.apply(this, arguments);
-      removeDashboardChartOnly();
-      return result;
-    };
-  }
-  var previousRenderDashboardScope=window.renderDashboardScope;
-  if(previousRenderDashboardScope){
-    window.renderDashboardScope=function(){
-      var result=previousRenderDashboardScope.apply(this, arguments);
-      removeDashboardChartOnly();
-      return result;
-    };
-  }
-})();
-</script>
-
 <!-- V47 · Dashboard sin punto verde en valor principal -->
 <style>#dashboard #heroMetricValue .dot, #dashboard .heroTopMetric.primary .dot, #dashboard .bigValue .dot{
   display:none!important;
