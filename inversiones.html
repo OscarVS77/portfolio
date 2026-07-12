@@ -4125,13 +4125,16 @@ function parseMonthlyEvolution(){
     const invertido=Number(r[4]);
     const aportado=Number(r[5]);
     if(!Number.isFinite(invertido) && !Number.isFinite(aportado)) continue;
+    const estado=monthlyDataStatus(r) || (Number.isFinite(valor) && valor>0 ? 'sin clasificar' : 'sin cierre');
+    const fechaRealRaw=r[44] || fechaRaw;
     out.push({
-      fecha: fmtDate(fechaRaw),
+      fecha: fmtDate(fechaRealRaw),
+      fechaRaw: fechaRealRaw,
       anio, mes,
-      valor: isRealMonthlyClose(r) && Number.isFinite(valor) && valor>0 ? valor : null,
+      valor: Number.isFinite(valor) && valor>0 ? valor : null,
       invertido: Number.isFinite(invertido) ? invertido : null,
       aportado: Number.isFinite(aportado) ? aportado : null,
-      estado: String(r[43] || ''),
+      estado,
       fechaReal: r[44] || ''
     });
   }
@@ -4142,38 +4145,10 @@ function renderEvolutionChart(){
   const host=document.getElementById('dashboardEvolutionChart');
   if(!host) return;
   const series=parseMonthlyEvolution();
-  // Punto "Hoy": estado vivo desde RESUMEN, para que la gráfica termine en el valor actual
-  // (coherente con las tarjetas) y no en el último cierre mensual.
-  try{
-    const resumen=sheetRows('RESUMEN');
-    const valorHoy=Number(cell(resumen,5,2));
-    const netoHoy=Number(cell(resumen,6,4));
-    const aportadoHoy=Number(cell(resumen,6,2));
-    if(Number.isFinite(valorHoy) && valorHoy>0){
-      const last=series[series.length-1];
-      const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-      const hoy=new Date();
-      const mesHoy=MESES[hoy.getMonth()];
-      const anioHoy=hoy.getFullYear();
-      const mismoMes = last &&
-        String(last.anio).trim()===String(anioHoy) &&
-        String(last.mes||'').trim().toLowerCase()===mesHoy;
-      const mismoDia = mismoMes || (last && fmtDate(new Date())===last.fecha);
-      const puntoHoy={
-        fecha: fmtDate(new Date()),
-        anio: 'Hoy', mes: '',
-        valor: valorHoy,
-        invertido: Number.isFinite(netoHoy)?netoHoy:(last?last.invertido:null),
-        aportado: Number.isFinite(aportadoHoy)?aportadoHoy:(last?last.aportado:null),
-        esHoy: true
-      };
-      if(mismoDia){ series[series.length-1]=puntoHoy; } else { series.push(puntoHoy); }
-    }
-  }catch(e){}
   // Línea de referencia: capital invertido neto (coherente con G/P real del Excel).
   const invertido=series.filter(p=>Number.isFinite(Number(p.invertido)) && Number(p.invertido)>0)
                         .map(p=>({...p, v:Number(p.invertido)}));
-  // Línea de valor real de mercado: solo meses con cierre real (crece con el tiempo).
+  // Todas las valoraciones se muestran, pero su estado determina punto, trazo y texto.
   const valor=series.filter(p=>p.valor!=null && Number.isFinite(Number(p.valor)) && Number(p.valor)>0)
                     .map(p=>({...p, v:Number(p.valor)}));
   if(invertido.length<2){
@@ -4184,30 +4159,33 @@ function renderEvolutionChart(){
 }
 
 function renderEvolutionLine(el, aportado, valor, fullSeries){
-  // Escala común a ambas series sobre el eje temporal completo (fullSeries).
-  const idxByKey=new Map();
-  fullSeries.forEach((p,i)=>idxByKey.set((p.anio)+'-'+(p.mes), i));
-  const n=fullSeries.length;
+  const dateMs=p=>{
+    const raw=p?.fechaRaw;
+    const d=raw instanceof Date ? raw : typeof raw==='number' ? dateFromSerial(raw) : new Date(raw);
+    return d && !isNaN(d) ? d.getTime() : NaN;
+  };
+  const allDates=fullSeries.map(dateMs).filter(Number.isFinite);
+  const minDate=Math.min(...allDates), maxDate=Math.max(...allDates);
   const allV=[...aportado.map(p=>p.v), ...valor.map(p=>p.v)].filter(Number.isFinite);
   const min=Math.min(...allV), max=Math.max(...allV);
   const span=max-min || Math.max(Math.abs(max),1);
   const yMin=Math.max(0, min-span*.12), yMax=max+span*.16;
   const W=880,H=270,L=8,R=18,T=30,B=46;
   const plotW=W-L-R, plotH=H-T-B;
-  const xFor=p=>{ const i=idxByKey.get((p.anio)+'-'+(p.mes)) ?? 0; return L+(n<=1?plotW:plotW*i/(n-1)); };
+  const xFor=p=>{ const ms=dateMs(p); return L+((Number.isFinite(ms)&&maxDate>minDate)?(ms-minDate)/(maxDate-minDate):1)*plotW; };
   const yFor=v=>T+(yMax-v)/(yMax-yMin)*plotH;
   // Aportado (línea de referencia, tenue).
   const apXY=aportado.map(p=>({x:xFor(p),y:yFor(p.v),v:p.v,p}));
   const apD=apXY.map((p,i)=>`${i?'L':'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
-  // Valor real (línea principal, verde, con área).
+  // Las observaciones se unen por segmentos: sólido solo cuando ambos extremos son cierres reales.
   const vlXY=valor.map(p=>({x:xFor(p),y:yFor(p.v),v:p.v,p}));
-  const vlD=vlXY.map((p,i)=>`${i?'L':'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
-  const vlArea=vlXY.length>=2 ? `${vlD} L ${vlXY[vlXY.length-1].x.toFixed(1)} ${H-B} L ${vlXY[0].x.toFixed(1)} ${H-B} Z` : '';
+  const valuationSegments=vlXY.slice(1).map((pt,i)=>{
+    const prev=vlXY[i];
+    const bothReal=prev.p.estado==='cierre real' && pt.p.estado==='cierre real';
+    return `<line x1="${prev.x.toFixed(1)}" y1="${prev.y.toFixed(1)}" x2="${pt.x.toFixed(1)}" y2="${pt.y.toFixed(1)}" stroke="${bothReal?'var(--green)':'var(--gold)'}" stroke-width="${bothReal?'2.8':'2.2'}" ${bothReal?'':'stroke-dasharray="6 5" opacity=".58"'} stroke-linecap="round"/>`;
+  }).join('');
   const yTicks=[yMin+(yMax-yMin)*.25,yMin+(yMax-yMin)*.5,yMin+(yMax-yMin)*.75];
   const tickLines=yTicks.map(v=>`<line x1="${L}" y1="${yFor(v).toFixed(1)}" x2="${W-R}" y2="${yFor(v).toFixed(1)}" stroke="rgba(255,255,255,.05)"/>`).join('');
-  // mapa de invertido por mes para enriquecer el tooltip del punto de valor real
-  const invByKey=new Map();
-  apXY.forEach(a=>invByKey.set((a.p.anio)+'-'+(a.p.mes), a.v));
   // El SVG usa preserveAspectRatio="none": se estira en X para llenar el ancho del host.
   // Compensamos ese estiramiento dibujando los puntos como elipses con rx reducido,
   // para que tras el estirado se vean circulares. ry queda como radio nominal.
@@ -4219,7 +4197,7 @@ function renderEvolutionLine(el, aportado, valor, fullSeries){
     return `<g data-evo-tip="${escHtml(tip)}"><ellipse class="evoPointMuted" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" rx="${exFor(2.6)}" ry="2.6" fill="var(--blue)"/><circle class="evoHitArea" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="14" fill="transparent"/></g>`;
   }).join('');
   const vlPoints=vlXY.map(pt=>{
-    const inv=invByKey.get((pt.p.anio)+'-'+(pt.p.mes));
+    const inv=Number(pt.p.invertido);
     let gpLine='';
     if(Number.isFinite(inv)){
       const gp=pt.v-inv;
@@ -4227,26 +4205,42 @@ function renderEvolutionLine(el, aportado, valor, fullSeries){
       const cls=gp>=0?'tipGreen':'tipRed';
       gpLine=`<br><span class="${cls}">${gp>=0?'+':''}${escHtml(fmtMoney(gp))} · ${gp>=0?'+':''}${pct.toFixed(2).replace('.',',')}% G/P</span>`;
     }
-    const tip=`<strong>${escHtml(chartFullLabel(pt.p))}</strong><br><span>Valor real · ${escHtml(fmtMoney(pt.v))}</span>${gpLine}`;
-    return `<g data-evo-tip="${escHtml(tip)}"><ellipse class="evoRealPoint" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" rx="${exFor(5)}" ry="5" fill="var(--green)"/><circle class="evoHitArea" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="18" fill="transparent"/></g>`;
+    const labels={'cierre real':'Cierre mensual real','reconstruido':'Valoración reconstruida','provisional':'Valoración provisional'};
+    const label=labels[pt.p.estado] || 'Valoración';
+    const warning=pt.p.estado==='cierre real' ? '' : '<br><span>No es un cierre mensual</span>';
+    const tip=`<strong>${escHtml(label)} · ${escHtml(pt.p.fecha)}</strong><br><span>Valor de mercado · ${escHtml(fmtMoney(pt.v))}</span>${gpLine}${warning}`;
+    const x=pt.x.toFixed(1), y=pt.y.toFixed(1);
+    let mark='';
+    if(pt.p.estado==='provisional'){
+      const dx=Number(exFor(7));
+      mark=`<polygon class="evoProvisionalPoint" points="${(pt.x).toFixed(1)},${(pt.y-7).toFixed(1)} ${(pt.x+dx).toFixed(1)},${y} ${x},${(pt.y+7).toFixed(1)} ${(pt.x-dx).toFixed(1)},${y}" fill="var(--yellow)"/>`;
+    }else if(pt.p.estado==='reconstruido'){
+      mark=`<ellipse class="evoReconstructedPoint" cx="${x}" cy="${y}" rx="${exFor(5)}" ry="5" fill="var(--gold)" opacity=".55"/>`;
+    }else{
+      mark=`<ellipse class="evoRealPoint" cx="${x}" cy="${y}" rx="${exFor(5)}" ry="5" fill="var(--green)"/>`;
+    }
+    return `<g data-evo-tip="${escHtml(tip)}">${mark}<circle class="evoHitArea" cx="${x}" cy="${y}" r="18" fill="transparent"/></g>`;
   }).join('');
-  // Lectura de cabecera: si hay 2+ valores reales, mostrar G/P entre primer y último cierre real.
+  // Cabecera: última valoración disponible, con su estado explícito.
   let headline='';
   if(vlXY.length>=1){
     const last=vlXY[vlXY.length-1];
-    // aportado correspondiente al mismo mes del último cierre real
-    const apSame=apXY.find(a=>(a.p.anio===last.p.anio)&&(a.p.mes===last.p.mes));
-    if(apSame){
-      const gp=last.v-apSame.v;
+    const inv=Number(last.p.invertido);
+    if(Number.isFinite(inv)){
+      const gp=last.v-inv;
       const cls=gp>=0?'green':'red';
-      headline=`<div class="evoHeadline"><span class="evoHeadValue">${escHtml(fmtMoney(last.v))}</span><span class="evoHeadGp ${cls}">${gp>=0?'+':''}${escHtml(fmtMoney(gp))} G/P real</span></div>`;
+      const stateLabel=last.p.estado==='provisional'?'Valoración provisional':last.p.estado==='reconstruido'?'Valoración reconstruida':'Cierre mensual real';
+      headline=`<div class="evoHeadline"><span class="evoHeadValue">${escHtml(fmtMoney(last.v))}</span><span class="evoHeadGp ${cls}">${gp>=0?'+':''}${escHtml(fmtMoney(gp))} G/P real</span><span class="evoHeadState">${stateLabel} · ${escHtml(last.p.fecha)}</span></div>`;
     }
   }
-  const ap0=apXY[0], apN=apXY[apXY.length-1];
+  const apN=apXY[apXY.length-1], vlN=vlXY[vlXY.length-1];
+  const lastState=vlN?.p.estado==='provisional'?'provisional':vlN?.p.estado==='reconstruido'?'reconstruida':'cierre real';
   el.innerHTML=`
     ${headline}
     <div class="evoLegend">
-      <span class="evoLegendItem"><span class="evoDotReal"></span>Valor real de mercado${vlXY.length<2?' · 1 cierre por ahora':''}</span>
+      <span class="evoLegendItem"><span class="evoDotReal"></span>Cierre mensual real</span>
+      <span class="evoLegendItem"><span class="evoDotReconstructed"></span>Valoración reconstruida</span>
+      <span class="evoLegendItem"><span class="evoDotProvisional"></span>Valoración provisional</span>
       <span class="evoLegendItem"><span class="evoDotMuted"></span>Capital invertido neto</span>
     </div>
     <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Evolución de la cartera">
@@ -4257,13 +4251,12 @@ function renderEvolutionLine(el, aportado, valor, fullSeries){
         </linearGradient>
       </defs>
       ${tickLines}
-      ${vlArea?`<path d="${vlArea}" fill="url(#evoGrad)"/>`:''}
       <path d="${apD}" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-dasharray="4 4" opacity=".9" stroke-linecap="round"/>
-      ${vlD?`<path d="${vlD}" fill="none" stroke="var(--green)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>`:''}
+      ${valuationSegments}
       ${apPoints}
       ${vlPoints}
     </svg>
-    <div class="chartRange"><span><strong>Inicio</strong> · ${escHtml(chartFullLabel(ap0.p))} · ${escHtml(fmtMoney(ap0.v))}</span><span><strong>Último</strong> · ${escHtml(chartFullLabel(apN.p))} · ${escHtml(fmtMoney(apN.v))}</span></div>`;
+    <div class="chartRange"><span><strong>Capital neto actual</strong> · ${escHtml(fmtMoney(apN.v))}</span><span><strong>Última valoración ${lastState}</strong> · ${escHtml(vlN?.p.fecha || '-')} · ${escHtml(fmtMoney(vlN?.v))}</span></div>`;
   __evoTooltipInit(el);
 }
 
@@ -8253,6 +8246,10 @@ a:focus-visible{
   font-size:12px;
   line-height:1.4;
 }.benchmarkWeightsWarning.active{display:block;}
+.evoHeadState{font-size:11.5px;color:var(--yellow);font-weight:650;}
+.evoDotReconstructed{width:9px;height:9px;border-radius:50%;background:var(--gold);opacity:.55;display:inline-block;}
+.evoDotProvisional{width:9px;height:9px;background:var(--yellow);display:inline-block;transform:rotate(45deg);}
+.evoProvisionalPoint,.evoReconstructedPoint{cursor:crosshair;stroke:rgba(0,0,0,.4);stroke-width:1.4;}
 </style>
 </body>
 </html>
