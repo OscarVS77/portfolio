@@ -3236,6 +3236,15 @@ function getBenchmarkTargetWeights(){
     return BENCHMARK_WEIGHTS_FALLBACK;
   }
 }
+// Pesos de la vista Renta variable (MSCI + Emerging + Small), derivados de los pesos
+// objetivo del Excel y renormalizados a 100% entre esos tres activos. Antes estaban
+// fijos en el código (80/12,5/7,5) y se habrían quedado desfasados si cambiaba el Excel.
+function getBenchmarkRvWeights(){
+  const eq = getBenchmarkTargetWeights().filter(w=>['msci','emerging','small'].includes(w.key));
+  const total = eq.reduce((s,x)=>s+x.weight,0);
+  if(!(total>0)) return eq;
+  return eq.map(x=>({...x, weight:x.weight/total}));
+}
 
 const BENCHMARK_VIEW_CONFIG = {
   global: {
@@ -3288,16 +3297,12 @@ const BENCHMARK_VIEW_CONFIG = {
   },
   rv: {
     title:'Renta variable · Real vs objetivo',
-    subtitle:'Compara tus fondos reales de renta variable contra el reparto objetivo interno: 80% MSCI World, 12,5% Emerging Markets y 7,5% Small Cap.',
+    subtitle:'Compara tus fondos reales de renta variable contra el reparto objetivo interno (MSCI World, Emerging Markets y Small Cap), calculado a partir de tus pesos objetivo del Excel.',
     realLabel:'Tu renta variable',
     targetLabel:'Objetivo RV',
     targetSmall:'Renta variable objetivo',
     empty:'Pulsa “Cargar benchmark” para simular tus movimientos de renta variable contra su objetivo interno.',
-    weights:()=>[
-      { key:'msci', name:'MSCI World', proxy:'URTH', weight:0.80 },
-      { key:'emerging', name:'Emerging Markets', proxy:'EEM', weight:0.125 },
-      { key:'small', name:'Small Cap', proxy:'IWM', weight:0.075 }
-    ],
+    weights:()=>getBenchmarkRvWeights(),
     assetTest:(asset)=> {
       const a=normalizeText(asset);
       return a.includes('msci') || a.includes('emerging') || a.includes('small');
@@ -4359,7 +4364,7 @@ function carteraStatusFor(row){
   const rent=Number(row.rent);
   const pl=Number(row.pl);
   if(key==='pension') return {label:'Separado', cls:'ok'};
-  if(Number.isFinite(desv) && Math.abs(desv)>=2) return {label:'Vigilar', cls:'warn'};
+  if(Number.isFinite(desv) && Math.abs(desv)>=0.02) return {label:'Vigilar', cls:'warn'};
   if((Number.isFinite(rent)&&rent<0) || (Number.isFinite(pl)&&pl<0)) return {label:'Revisar', cls:'bad'};
   return {label:'OK', cls:'ok'};
 }
@@ -4878,7 +4883,7 @@ function updateAsesoria(){
     const rent=Number(x.rent);
     let reason='';
     let cls='yellow';
-    if(Number.isFinite(desv) && Math.abs(desv)>=2){
+    if(Number.isFinite(desv) && Math.abs(desv)>=0.02){
       reason = desv<0 ? 'Bajo objetivo' : 'Sobre objetivo';
     }else if((Number.isFinite(pl)&&pl<0) || (Number.isFinite(rent)&&rent<0)){
       reason = 'Rentabilidad negativa'; cls='red';
