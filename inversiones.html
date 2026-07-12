@@ -4388,24 +4388,24 @@ function carteraDiagnosisText(row, xirrRow){
   if(key==='pension'){
     text='Plan Pensiones queda separado de la allocation operativa. Sirve como bloque de largo plazo y no debe mezclarse con los pesos objetivo de la cartera invertible.';
   }else if(key==='btc'){
-    if(Number.isFinite(desv) && desv < -2) text='Bitcoin está por debajo del objetivo. Conviene reforzarlo con aportaciones controladas, sin forzar ventas de otros activos.';
-    else if(Number.isFinite(desv) && desv > 2) text='Bitcoin está por encima del objetivo. Conviene vigilar el peso para que no domine la cartera.';
+    if(Number.isFinite(desv) && desv < -0.02) text='Bitcoin está por debajo del objetivo. Conviene reforzarlo con aportaciones controladas, sin forzar ventas de otros activos.';
+    else if(Number.isFinite(desv) && desv > 0.02) text='Bitcoin está por encima del objetivo. Conviene vigilar el peso para que no domine la cartera.';
     else text='Bitcoin está razonablemente alineado con su objetivo. No requiere rebalanceo urgente, pero conviene vigilar su XIRR y mantener aportaciones controladas.';
   }else if(key==='gold'){
-    if(Number.isFinite(desv) && desv < -2) text='Oro está por debajo del objetivo. Puede reforzarse con nuevas aportaciones para recuperar su función defensiva dentro de la cartera.';
-    else if(Number.isFinite(desv) && desv > 2) text='Oro está por encima del objetivo. Mantener sin reforzar hasta que vuelva a rango sería lo más prudente.';
+    if(Number.isFinite(desv) && desv < -0.02) text='Oro está por debajo del objetivo. Puede reforzarse con nuevas aportaciones para recuperar su función defensiva dentro de la cartera.';
+    else if(Number.isFinite(desv) && desv > 0.02) text='Oro está por encima del objetivo. Mantener sin reforzar hasta que vuelva a rango sería lo más prudente.';
     else text='Oro está dentro de un rango razonable frente al objetivo y mantiene su papel defensivo.';
   }else if(key==='msci'){
-    if(Number.isFinite(desv) && desv > 2) text='MSCI World está por encima de objetivo. Sigue siendo el núcleo de la cartera, pero no necesita sobreponderarse más por ahora.';
-    else if(Number.isFinite(desv) && desv < -2) text='MSCI World está por debajo de objetivo. Puede reforzarse con aportaciones nuevas, al ser el bloque principal de renta variable global.';
+    if(Number.isFinite(desv) && desv > 0.02) text='MSCI World está por encima de objetivo. Sigue siendo el núcleo de la cartera, pero no necesita sobreponderarse más por ahora.';
+    else if(Number.isFinite(desv) && desv < -0.02) text='MSCI World está por debajo de objetivo. Puede reforzarse con aportaciones nuevas, al ser el bloque principal de renta variable global.';
     else text='MSCI World está razonablemente alineado con su objetivo y sigue actuando como núcleo principal de la cartera.';
   }else if(key==='emerging'){
-    if(Number.isFinite(desv) && desv > 2) text='Emerging Markets está por encima de objetivo. Mantener sin reforzar evitaría aumentar demasiado el riesgo específico.';
-    else if(Number.isFinite(desv) && desv < -2) text='Emerging Markets está por debajo de objetivo. Puede reforzarse con aportaciones, manteniendo su peso controlado.';
+    if(Number.isFinite(desv) && desv > 0.02) text='Emerging Markets está por encima de objetivo. Mantener sin reforzar evitaría aumentar demasiado el riesgo específico.';
+    else if(Number.isFinite(desv) && desv < -0.02) text='Emerging Markets está por debajo de objetivo. Puede reforzarse con aportaciones, manteniendo su peso controlado.';
     else text='Emerging Markets está dentro de un rango razonable frente al objetivo.';
   }else if(key==='small'){
-    if(Number.isFinite(desv) && desv > 2) text='Small Cap está por encima de objetivo. Conviene mantener sin reforzar hasta que vuelva a rango.';
-    else if(Number.isFinite(desv) && desv < -2) text='Small Cap está por debajo de objetivo. Puede reforzarse con aportaciones, sin perder de vista su volatilidad.';
+    if(Number.isFinite(desv) && desv > 0.02) text='Small Cap está por encima de objetivo. Conviene mantener sin reforzar hasta que vuelva a rango.';
+    else if(Number.isFinite(desv) && desv < -0.02) text='Small Cap está por debajo de objetivo. Puede reforzarse con aportaciones, sin perder de vista su volatilidad.';
     else text='Small Cap está razonablemente alineado con su objetivo.';
   }else{
     text=`${name} está razonablemente alineado con la cartera.`;
