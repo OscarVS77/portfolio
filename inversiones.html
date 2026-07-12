@@ -3174,12 +3174,14 @@ movementSearch?.addEventListener('input',applyMovementFilters);
 const BENCHMARK_FUNCTION_NAME = 'benchmark-market-data';
 let benchmarkCache = null;
 let benchmarkActiveView = 'global';
+const BENCHMARK_WEIGHTS_CACHE_KEY = 'portfolioOscar:lastValidBenchmarkWeights:v1';
+let benchmarkWeightsSource = 'missing';
 
 // v150: los pesos objetivo se leen del Excel (hoja OBJETIVOS Y PROYECCIÓN, Bloque A),
 // que es la fuente de verdad. Antes estaban fijos en el código y se habían quedado
 // desfasados (p. ej. Bitcoin 15,04% cuando el objetivo real es 7,14%), lo que
-// falseaba la Cartera objetivo del Benchmark.
-const BENCHMARK_WEIGHTS_FALLBACK = [];
+// falseaba la Cartera objetivo del Benchmark. Como respaldo solo se admiten los
+// últimos pesos válidos que hayan sido leídos previamente de un Excel real.
 
 // Mapa activo del Excel -> clave y proxy de mercado.
 const BENCHMARK_PROXY_MAP = {
@@ -3190,11 +3192,42 @@ const BENCHMARK_PROXY_MAP = {
   'bitcoin':         { key:'btc',      proxy:'BTC-USD' }
 };
 
-// Lee los pesos objetivo del Excel. Si no puede, usa el fallback.
+function benchmarkSetWeightsWarning(active){
+  let el=document.getElementById('benchmarkWeightsWarning');
+  if(active && !el){
+    el=document.createElement('div');
+    el.id='benchmarkWeightsWarning';
+    el.className='benchmarkWeightsWarning';
+    document.getElementById('benchmarkError')?.before(el);
+  }
+  if(el){
+    el.textContent=active ? 'Atención: se están usando los últimos pesos válidos guardados; no proceden del Excel actual.' : '';
+    el.classList.toggle('active',!!active);
+  }
+}
+function getCachedBenchmarkTargetWeights(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(BENCHMARK_WEIGHTS_CACHE_KEY) || '[]');
+    if(!Array.isArray(parsed) || parsed.length!==5) return [];
+    const valid=parsed.every(x=>BENCHMARK_PROXY_MAP[x.name?.toLowerCase()]?.key===x.key && Number.isFinite(Number(x.weight)) && Number(x.weight)>0);
+    const total=parsed.reduce((sum,x)=>sum+Number(x.weight||0),0);
+    if(!valid || Math.abs(total-1)>0.0001) return [];
+    return parsed.map(x=>({key:x.key,name:x.name,proxy:BENCHMARK_PROXY_MAP[x.name.toLowerCase()].proxy,weight:Number(x.weight)}));
+  }catch(e){ return []; }
+}
+function useCachedBenchmarkTargetWeights(){
+  const cached=getCachedBenchmarkTargetWeights();
+  benchmarkWeightsSource=cached.length ? 'cache' : 'missing';
+  benchmarkSetWeightsWarning(cached.length>0);
+  return cached;
+}
+
+// Lee los pesos objetivo del Excel. Si falla, solo admite los últimos pesos válidos
+// guardados desde una lectura anterior del propio Excel.
 function getBenchmarkTargetWeights(){
   try{
     const rows = sheetRows('OBJETIVOS Y PROYECCIÓN');
-    if(!rows || !rows.length) return BENCHMARK_WEIGHTS_FALLBACK;
+    if(!rows || !rows.length) return useCachedBenchmarkTargetWeights();
     // Acotar al Bloque A: empieza tras la cabecera 'Activo | Peso objetivo' y
     // termina en la primera fila de totales. El Bloque B repite los activos y
     // debe ignorarse (si no, se leen los pesos dos veces).
@@ -3205,7 +3238,7 @@ function getBenchmarkTargetWeights(){
       if(start<0 && a==='activo' && bcol==='peso objetivo'){ start=i+1; continue; }
       if(start>=0 && (a.startsWith('aportación mensual total') || a.startsWith('total pesos objetivo'))){ end=i; break; }
     }
-    if(start<0) return BENCHMARK_WEIGHTS_FALLBACK;
+    if(start<0) return useCachedBenchmarkTargetWeights();
     const out=[]; const seen=new Set();
     for(let i=start;i<end;i++){
       const name = String(rows[i]?.[0] ?? '').trim();
@@ -3217,12 +3250,15 @@ function getBenchmarkTargetWeights(){
       seen.add(map.key);
       out.push({ key:map.key, name, proxy:map.proxy, weight:w });
     }
-    if(out.length < 5) return BENCHMARK_WEIGHTS_FALLBACK;
+    if(out.length < 5) return useCachedBenchmarkTargetWeights();
     const total = out.reduce((s,x)=>s+x.weight,0);
     if(total>0 && Math.abs(total-1)>0.0001) out.forEach(x=>{ x.weight = x.weight/total; });
+    localStorage.setItem(BENCHMARK_WEIGHTS_CACHE_KEY,JSON.stringify(out));
+    benchmarkWeightsSource='excel';
+    benchmarkSetWeightsWarning(false);
     return out;
   }catch(e){
-    return BENCHMARK_WEIGHTS_FALLBACK;
+    return useCachedBenchmarkTargetWeights();
   }
 }
 // Pesos de la vista Renta variable (MSCI + Emerging + Small), derivados de los pesos
@@ -8206,6 +8242,17 @@ a:focus-visible{
   outline:2px solid var(--gold)!important;
   outline-offset:2px!important;
 }
+.benchmarkWeightsWarning{
+  display:none;
+  margin:10px 0 0;
+  padding:10px 12px;
+  border:1px solid rgba(242,201,76,.45);
+  border-radius:5px;
+  background:rgba(242,201,76,.08);
+  color:var(--yellow);
+  font-size:12px;
+  line-height:1.4;
+}.benchmarkWeightsWarning.active{display:block;}
 </style>
 </body>
 </html>
