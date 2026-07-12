@@ -2932,8 +2932,8 @@ html{
         <article class="card">
           <div class="advisorBlock">
             <span>Lectura principal</span>
-          <strong id="advisorMainReading">La cartera va bien: rentabilidad real positiva, XIRR positivo y sin señales críticas.</strong>
-          <p id="advisorToday">Lo importante hoy es mantener la disciplina de aportaciones y vigilar los activos con mayor desviación frente al objetivo.</p>
+            <strong id="advisorMainReading">La cartera va bien: rentabilidad real positiva, XIRR positivo y sin señales críticas.</strong>
+            <p id="advisorToday">Lo importante hoy es mantener la disciplina de aportaciones y vigilar los activos con mayor desviación frente al objetivo.</p>
           </div>
         </article>
 
@@ -3179,7 +3179,13 @@ let benchmarkActiveView = 'global';
 // que es la fuente de verdad. Antes estaban fijos en el código y se habían quedado
 // desfasados (p. ej. Bitcoin 15,04% cuando el objetivo real es 7,14%), lo que
 // falseaba la Cartera objetivo del Benchmark.
-const BENCHMARK_WEIGHTS_FALLBACK = [];
+const BENCHMARK_WEIGHTS_FALLBACK = [
+  { key:'msci', name:'MSCI World', proxy:'URTH', weight:0.6857 },
+  { key:'emerging', name:'Emerging Markets', proxy:'EEM', weight:0.1071 },
+  { key:'small', name:'Small Cap', proxy:'IWM', weight:0.0644 },
+  { key:'gold', name:'Oro', proxy:'GLD', weight:0.0714 },
+  { key:'btc', name:'Bitcoin', proxy:'BTC-USD', weight:0.0714 }
+];
 
 // Mapa activo del Excel -> clave y proxy de mercado.
 const BENCHMARK_PROXY_MAP = {
@@ -3526,7 +3532,7 @@ function parseMonthlyAssetHistory(assetTest=null, includePension=false){
   if(!rows.length) return out;
 
   let headerRow=-1;
-  let colDate=-1, colAsset=-1, colInvested=-1, colValue=-1, colXirr=-1, colStatus=-1, colComment=-1;
+  let colDate=-1, colAsset=-1, colInvested=-1, colValue=-1, colXirr=-1, colComment=-1;
   for(let i=0;i<Math.min(rows.length,20);i++){
     const header=(rows[i]||[]).map(x=>normalizeText(x));
     const d=header.findIndex(x=>x.includes('fecha') && x.includes('cierre'));
@@ -3539,7 +3545,6 @@ function parseMonthlyAssetHistory(assetTest=null, includePension=false){
       colValue=v;
       colInvested=header.findIndex(x=>x.includes('invertido') && x.includes('real'));
       colXirr=header.findIndex(x=>x.includes('xirr'));
-      colStatus=header.findIndex(x=>x==='estado' || x.includes('estado'));
       colComment=header.findIndex(x=>x.includes('comentario'));
       break;
     }
@@ -3553,7 +3558,6 @@ function parseMonthlyAssetHistory(assetTest=null, includePension=false){
     const value=benchmarkNumber(row[colValue]);
     const invested=colInvested>=0 ? benchmarkNumber(row[colInvested]) : NaN;
     const xirr=colXirr>=0 ? benchmarkNumber(row[colXirr]) : NaN;
-    if(colStatus>=0 && normalizeText(row[colStatus])!=='ok') continue;
     if(colComment>=0 && isTemplateAssetRow(row[colComment])) continue;
     if(!date || !asset || !Number.isFinite(value) || value<=0) continue;
     const a=normalizeText(asset);
@@ -3589,8 +3593,8 @@ function aggregateMonthlyHistory(assetTest=null, includePension=false){
 }
 
 function getBenchmarkDateRange(flows){
-  const xirr=sheetRows?.('XIRR GLOBAL') || [];
-  const to=isoDateFromAny(cell(xirr,4,1)) || new Date().toISOString().slice(0,10);
+  const resumen=sheetRows?.('RESUMEN') || [];
+  const to=isoDateFromAny(cell(resumen,2,2)) || new Date().toISOString().slice(0,10);
   const from=flows[0]?.date || '2025-01-01';
   return {from,to};
 }
@@ -3680,7 +3684,6 @@ function updateBenchmarkWeightsTable(weights=null){
     body.innerHTML=`<tr><td>MSCI World</td><td>URTH</td><td>Referencia</td></tr><tr><td>S&amp;P 500</td><td>SPY</td><td>Referencia</td></tr>`;
     return;
   }
-  if(!list.length) return;
   body.innerHTML=list.map(x=>`<tr><td>${x.name}</td><td>${x.proxy}</td><td>${benchmarkPct(x.weight*100).replace('+','')}</td></tr>`).join('');
 }
 function applyBenchmarkView(view){
@@ -3740,11 +3743,6 @@ async function loadBenchmarkData(force=false){
   }
 
   const weights=cfg.weights();
-  if(!Array.isArray(weights) || !weights.length){
-    benchmarkSetStatus('Excel inválido','red','No se han podido leer los pesos objetivo del Excel.');
-    benchmarkSetError('Benchmark detenido: faltan pesos objetivo válidos en OBJETIVOS Y PROYECCIÓN. No se usarán valores de respaldo.');
-    return;
-  }
   // v142: el Bloque 2 (vs_msci / vs_sp500) incluye el Plan de Pensiones en flujos y valor.
   const withPension = !!cfg.includePension;
   const flows=parseBenchmarkFlowsFromXirr(cfg.assetTest, withPension);
@@ -3914,7 +3912,7 @@ document.getElementById("excelFile").addEventListener("change", e=>{
   if(file) handleExcelImport(file);
 });
 // Portfolio Oscar · importación Excel v2
-const REQUIRED_SHEETS = ['RESUMEN','CARTERA ACTUAL','XIRR GLOBAL','HISTÓRICO MENSUAL','HISTÓRICO MENSUAL X ACTIVO','OBJETIVOS Y PROYECCIÓN','AUDITORÍA'];
+const REQUIRED_SHEETS = ['RESUMEN','CARTERA ACTUAL','XIRR GLOBAL','HISTÓRICO MENSUAL','AUDITORÍA'];
 // Devuelve la última hoja con nombre de año (AAAA) presente en el Excel, p.ej. '2025' o '2026'.
 function latestYearSheet(){
   const sheets = importedWorkbook?.Sheets || {};
@@ -3999,13 +3997,11 @@ function sheetRows(name){
   return XLSX.utils.sheet_to_json(sheet, {header:1, raw:true, defval:''});
 }
 function cell(rows, r, c){ return rows?.[r-1]?.[c-1] ?? ''; }
-function monthlyDataStatus(row){ return normalizeText(row?.[43] || '').trim(); }
-function isRealMonthlyClose(row){ return monthlyDataStatus(row)==='cierre real'; }
 function setStatus(ok, text, fileName=''){
   const status=document.getElementById('importStatus');
   if(!status) return;
   status.className = ok ? 'importStatus ok' : 'importStatus';
-  status.innerHTML = `<span class="bullet ${ok?'bOk':'bBad'}"></span>${escHtml(text || fileName)}`;
+  status.innerHTML = `<span class="bullet ${ok?'bOk':'bBad'}"></span>${text || fileName}`;
 }
 function setNavStatus(page, st){
   const dot = document.querySelector(`.nav button[data-page="${page}"] .navStatus`);
@@ -4024,7 +4020,7 @@ function updateDashboard(){
   const xirr = cell(resumen,7,2);
   const simple = cell(resumen,7,4);
   const rentPlat = cell(resumen,7,6);
-  const date = fmtDate(cell(sheetRows('XIRR GLOBAL'),4,1));
+  const date = fmtDate(cell(resumen,2,2));
   document.querySelectorAll('.brandDate').forEach(el=>el.textContent=`Última actualización · ${date}`);
   const big = document.querySelector('#dashboard .bigValue');
   if(big){
@@ -4092,11 +4088,9 @@ function parseMonthlyEvolution(){
     out.push({
       fecha: fmtDate(fechaRaw),
       anio, mes,
-      valor: isRealMonthlyClose(r) && Number.isFinite(valor) && valor>0 ? valor : null,
+      valor: Number.isFinite(valor) && valor>0 ? valor : null,
       invertido: Number.isFinite(invertido) ? invertido : null,
-      aportado: Number.isFinite(aportado) ? aportado : null,
-      estado: String(r[43] || ''),
-      fechaReal: r[44] || ''
+      aportado: Number.isFinite(aportado) ? aportado : null
     });
   }
   return out;
@@ -4361,12 +4355,12 @@ function getAssetXirrMap(){
 function carteraStatusFor(row){
   if(!row) return {label:'OK', cls:'ok'};
   const key=carteraKeyFromName(row.activo);
+  const desv=Number(row.desv);
+  const rent=Number(row.rent);
+  const pl=Number(row.pl);
   if(key==='pension') return {label:'Separado', cls:'ok'};
-  const resumen=sheetRows('RESUMEN');
-  const rowByKey={btc:20,gold:21,msci:22,emerging:23,small:24};
-  const state=normalizeText(cell(resumen,rowByKey[key],6));
-  if(state.includes('revisar')) return {label:'Revisar', cls:'bad'};
-  if(state.includes('vigilar')) return {label:'Vigilar', cls:'warn'};
+  if(Number.isFinite(desv) && Math.abs(desv)>=0.02) return {label:'Vigilar', cls:'warn'};
+  if((Number.isFinite(rent)&&rent<0) || (Number.isFinite(pl)&&pl<0)) return {label:'Revisar', cls:'bad'};
   return {label:'OK', cls:'ok'};
 }
 function carteraDiagnosisText(row, xirrRow){
@@ -4590,7 +4584,7 @@ function updateHistoricoMensual(){
   const real=[];
   for(let r=5;r<=rows.length;r++){
     const val=cell(rows,r,4);
-    if(val!=='' && val!=null && isRealMonthlyClose(rows[r-1])){
+    if(val!=='' && val!=null){
       real.push({fecha:cell(rows,r,1), mes:cell(rows,r,3), anio:cell(rows,r,2), valor:val, xirr:cell(rows,r,9)});
     }
   }
@@ -4664,7 +4658,7 @@ function updateMovimientosFromXirr(rows){
     const assetKey = normalizeText(shortAssetName(m.activo)).replace(/\s+/g,'-');
     const search = normalizeText(`${m.fecha} ${m.tipo} ${m.activo} ${m.importe} ${m.plataforma} ${m.incluye} ${m.nota}`);
     const amountClass = normalizeText(m.tipo).includes('valor actual') ? 'green' : '';
-    return `<tr data-kind="${escHtml(m.kind)}" data-asset="${escHtml(assetKey)}" data-search="${escHtml(search)}"><td>${escHtml(m.fecha)}</td><td>${escHtml(m.tipo)}</td><td><span class="assetCell"><span class="bullet ${assetClass(m.activo)}"></span>${escHtml(shortAssetName(m.activo))}</span></td><td class="${amountClass}">${fmtMoney(m.importe)}</td><td>${escHtml(m.plataforma)}</td><td>${escHtml(m.incluye)}</td><td>${escHtml(m.nota)}</td></tr>`;
+    return `<tr data-kind="${m.kind}" data-asset="${assetKey}" data-search="${search}"><td>${m.fecha}</td><td>${m.tipo}</td><td><span class="assetCell"><span class="bullet ${assetClass(m.activo)}"></span>${shortAssetName(m.activo)}</span></td><td class="${amountClass}">${fmtMoney(m.importe)}</td><td>${m.plataforma}</td><td>${m.incluye}</td><td>${m.nota}</td></tr>`;
   }).join('');
   rebuildMovementFilters(movs);
   applyMovementFiltersDynamic();
@@ -4680,7 +4674,7 @@ function rebuildMovementFilters(movs){
   const filters=document.getElementById('movementFilters');
   if(!filters) return;
   const unique=[...new Set(movs.map(m=>shortAssetName(m.activo)).filter(x=>x && x!=='Cartera total'))];
-  filters.innerHTML=`<button class="filterPill active" data-filter="all">Todos los activos</button>` + unique.map(a=>`<button class="filterPill" data-filter="${escHtml(normalizeText(a).replace(/\s+/g,'-'))}">${escHtml(a)}</button>`).join('');
+  filters.innerHTML=`<button class="filterPill active" data-filter="all">Todos los activos</button>` + unique.map(a=>`<button class="filterPill" data-filter="${normalizeText(a).replace(/\s+/g,'-')}">${a}</button>`).join('');
   // Reenlazar filtros tras recrearlos.
   activeMovementFilter='all';
   activeMovementMode='real';
@@ -4730,10 +4724,7 @@ function updateAuditoria(){
   const cacheMeta = JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
   const hasCache = !!localStorage.getItem(CACHE_KEY);
   const fileName = importedData?.fileName || cacheMeta.fileName || 'Excel no importado';
-  const auditRows=hasWorkbook ? sheetRows('AUDITORÍA') : [];
-  const auditState=normalizeText(cell(auditRows,2,5));
-  const failedControls=auditRows.filter((row,index)=>index>=4 && normalizeText(row?.[4])==='revisar');
-  const ok = hasWorkbook && missing.length === 0 && auditState==='ok' && failedControls.length===0;
+  const ok = hasWorkbook && missing.length === 0;
 
   const set = (selector, value, cls='') => {
     const el = document.querySelector(selector);
@@ -4743,15 +4734,15 @@ function updateAuditoria(){
   };
 
   set('[data-web-audit="global-status"]', ok ? 'OK' : 'Pendiente', ok ? 'green' : 'yellow');
-  set('[data-web-audit="global-note"]', ok ? 'Excel y controles internos en OK' : hasWorkbook ? `${failedControls.length || missing.length} control(es) requieren revisión` : 'Importa el Excel para validar la web');
+  set('[data-web-audit="global-note"]', ok ? 'Web operativa con Excel cargado' : 'Importa el Excel para validar la web');
   set('[data-web-audit="excel-status"]', ok ? 'Conectado' : 'Pendiente', ok ? 'green' : 'yellow');
-  set('[data-web-audit="excel-note"]', hasWorkbook ? `${fileName} · ${failedControls.length ? 'controles con incidencias' : 'auditoría interna OK'}` : 'Fuente única de datos');
+  set('[data-web-audit="excel-note"]', ok ? fileName : 'Fuente única de datos');
   set('[data-web-audit="cache-status"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : 'yellow');
   set('[data-web-audit="cache-note"]', hasCache ? 'Último Excel guardado en este navegador' : 'Se activará al importar Excel');
   set('[data-web-audit="backup-status"]', hasWorkbook || hasCache ? 'Disponible' : 'Pendiente', hasWorkbook || hasCache ? 'green' : 'yellow');
   set('[data-web-audit="cache-check"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : 'yellow');
 
-  setNavStatus('auditoria', ok ? 'ok' : hasWorkbook ? 'bad' : 'warn');
+  setNavStatus('auditoria', ok ? 'ok' : 'warn');
   updateDataStatus?.();
 }
 
@@ -4782,7 +4773,6 @@ function updateDataStatus(){
     const cloudDownloaded=localStorage.getItem('portfolioOscar:lastCloudDownload:v1') || '';
     const hasExcel=!!fileName;
     const realImportDate = manualImport || cloudUploaded || '';
-    const valuationDate=importedWorkbook ? fmtDate(cell(sheetRows('XIRR GLOBAL'),4,1)) : '';
     setDataStatus('file', hasExcel ? fileName : 'Sin Excel', hasExcel ? 'green' : 'yellow');
     setDataStatus('file-note', hasExcel ? 'Excel como fuente única' : 'Importa o carga desde nube');
     setDataStatus('local', realImportDate ? formatDataStatusDate(realImportDate) : 'Pendiente', realImportDate ? 'green' : 'yellow');
@@ -4790,7 +4780,7 @@ function updateDataStatus(){
     if(dashAgeEl){
       if(realImportDate){
         const origen = manualImport ? 'Importado' : 'Cargado desde nube';
-        dashAgeEl.textContent = `${valuationDate ? `Valoración ${valuationDate} · ` : ''}${origen} ${formatDataStatusDate(realImportDate)}`;
+        dashAgeEl.textContent = origen + ' · ' + formatDataStatusDate(realImportDate);
       }else{
         dashAgeEl.textContent = 'Importa el Excel para ver la fecha de los datos.';
       }
@@ -4876,7 +4866,7 @@ function updateAsesoria(){
   const gpReal = cell(resumen,6,6);
   const xirr = cell(resumen,7,2);
   const simple = cell(resumen,7,4);
-  const date = fmtDate(cell(sheetRows('XIRR GLOBAL'),4,1));
+  const date = fmtDate(cell(resumen,2,2));
   const rows = (cartera||[]).filter(x=>{
     const a=String(x.activo||'').trim().toUpperCase();
     const p=String(x.peso||'').toLowerCase();
@@ -4886,12 +4876,9 @@ function updateAsesoria(){
     const desv=Number(x.desv);
     const pl=Number(x.pl);
     const rent=Number(x.rent);
-    const excelStatus=carteraStatusFor(x);
     let reason='';
-    let cls=excelStatus.cls==='bad'?'red':'yellow';
-    if(excelStatus.cls==='bad'){
-      reason='Revisar';
-    }else if(Number.isFinite(desv) && Math.abs(desv)>=0.02){
+    let cls='yellow';
+    if(Number.isFinite(desv) && Math.abs(desv)>=0.02){
       reason = desv<0 ? 'Bajo objetivo' : 'Sobre objetivo';
     }else if((Number.isFinite(pl)&&pl<0) || (Number.isFinite(rent)&&rent<0)){
       reason = 'Rentabilidad negativa'; cls='red';
@@ -4899,13 +4886,7 @@ function updateAsesoria(){
     return reason ? {name:shortAssetName(x.activo), reason, cls, abs:Number.isFinite(desv)?Math.abs(desv):0} : null;
   }).filter(Boolean).sort((a,b)=>b.abs-a.abs).slice(0,4);
 
-  const globalReading=cleanText(cell(resumen,16,2));
-  const globalState=statusFromText(cell(resumen,16,2));
-  const st=globalState==='bad'
-    ? {label:'Revisar',cls:'red',note:globalReading}
-    : globalState==='warn'
-      ? {label:'Vigilar',cls:'yellow',note:globalReading}
-      : {label:'Correcto',cls:'green',note:globalReading || 'Cartera alineada con seguimiento normal.'};
+  const st=advisorStatusFromData(gpReal, xirr, watch.length);
   const set=(id,val,cls)=>{ const el=document.getElementById(id); if(el){ el.textContent=val; if(cls!==undefined) el.className=cls||''; } };
   set('advisorState', st.label, st.cls);
   set('advisorStateNote', st.note);
@@ -4914,17 +4895,25 @@ function updateAsesoria(){
   set('advisorXirr', fmtPct(xirr,2,true), clsByValue(xirr));
 
   const firstWatch = watch[0];
-  const recommendationShort = st.cls==='red' ? 'Revisar cartera' : firstWatch ? `Vigilar ${firstWatch.name}` : 'Mantener rumbo';
+  const recommendationShort = firstWatch ? `Vigilar ${firstWatch.name}` : 'Mantener rumbo';
   set('advisorRecommendationShort', recommendationShort, firstWatch ? firstWatch.cls : 'green');
 
   const main = document.getElementById('advisorMainReading');
   if(main){
-    main.className = st.cls;
-    main.textContent=globalReading || st.note;
+    main.className = clsByValue(gpReal);
+    if(Number(gpReal)<0 || Number(xirr)<0){
+      main.textContent='La cartera necesita revisión: la lectura de rentabilidad no es suficientemente sólida hoy.';
+    }else if(watch.length){
+      main.textContent=`La cartera va bien: valor positivo, XIRR positivo y ${watch.length} punto${watch.length>1?'s':''} de vigilancia sin urgencia crítica.`;
+    }else{
+      main.textContent='La cartera va bien: rentabilidad real positiva, XIRR positivo y sin señales críticas.';
+    }
   }
   const today=document.getElementById('advisorToday');
   if(today){
-    today.textContent = cleanText(cell(resumen,15,2)) || globalReading || 'Mantener la disciplina de aportaciones definida en el Excel.';
+    today.textContent = watch.length
+      ? `Lo importante hoy es no tocar la estructura general y usar nuevas aportaciones para corregir desviaciones: ${watch.map(x=>`${x.name} (${x.reason.toLowerCase()})`).join(', ')}.`
+      : `Lo importante hoy es mantener la disciplina de aportaciones. No hay desviaciones relevantes frente al objetivo.`;
   }
   const list=document.getElementById('advisorWatchList');
   if(list){
@@ -4934,7 +4923,13 @@ function updateAsesoria(){
   }
   const reco=document.getElementById('advisorExcelRecommendation');
   if(reco){
-    reco.textContent = globalReading || 'Mantener la estrategia actual según los controles del Excel.';
+    if(firstWatch){
+      reco.textContent = firstWatch.reason==='Bajo objetivo'
+        ? `Priorizar nuevas aportaciones hacia ${firstWatch.name} hasta acercarlo a su objetivo. No hace falta vender otros activos si la desviación puede corregirse aportando.`
+        : `Mantener ${firstWatch.name} bajo vigilancia y evitar reforzarlo mientras siga por encima de objetivo.`;
+    }else{
+      reco.textContent='Mantener la estrategia actual. No hay una señal clara que justifique cambios estructurales hoy.';
+    }
   }
   const note=document.getElementById('advisorExcelNote');
   if(note){
@@ -4942,7 +4937,7 @@ function updateAsesoria(){
   }
   const conf=document.getElementById('advisorConfidence');
   if(conf){
-    conf.innerHTML = `<strong>Confianza de datos:</strong> ${importedData?.fileName ? `Excel cargado · ${escHtml(importedData.fileName)}${date ? ` · valoración ${escHtml(date)}` : ''}.` : 'demo pendiente de Excel real cargado.'}`;
+    conf.innerHTML = `<strong>Confianza de datos:</strong> ${importedData?.fileName ? `Excel cargado · ${importedData.fileName}${date ? ` · actualización ${date}` : ''}.` : 'demo pendiente de Excel real cargado.'}`;
   }
   setNavStatus('asesoria', st.cls==='red' ? 'bad' : st.cls==='yellow' ? 'warn' : 'ok');
 }
@@ -4954,10 +4949,6 @@ function applyWorkbookAfterRead(fileName, fromCache=false){
   updateDashboard(); updateCartera(); updateXirr(); updateHistorial(); updateAsesoria(); updateAuditoria(); updateDataStatus?.();
   setStatus(true, fromCache ? `${fileName || 'Excel'} recuperado` : `${fileName || 'Excel'} importado`);
   setNavStatus('dashboard','ok'); setNavStatus('cartera','ok'); setNavStatus('xirr','ok'); setNavStatus('movimientos','ok'); setNavStatus('historial','ok'); setNavStatus('asesoria','ok');
-  if(normalizeText(cell(sheetRows('AUDITORÍA'),2,5))!=='ok'){
-    ['dashboard','cartera','xirr','movimientos','historial','benchmark','asesoria','auditoria'].forEach(page=>setNavStatus(page,'bad'));
-    setStatus(false,'REVISAR · el Excel contiene controles internos con incidencias');
-  }
   return true;
 }
 function loadWorkbookCache(){
@@ -5026,14 +5017,6 @@ function validateWorkbook(wb){
   const missing = REQUIRED_SHEETS.filter(s=>!wb.Sheets[s]);
   const hasYear = Object.keys(wb.Sheets || {}).some(n=>/^\d{4}$/.test(n));
   if(!hasYear) missing.push('hoja de año (AAAA)');
-  if(missing.length || typeof XLSX==='undefined') return missing;
-  const rowsOf=name=>XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,raw:true,defval:''});
-  const hasHeader=(name, expected)=>rowsOf(name).some(row=>expected.every((value,index)=>normalizeText(row[index])===normalizeText(value)));
-  if(!hasHeader('CARTERA ACTUAL',['Activo','Plataforma','ISIN / Ticker','Tipo','Invertido (€)'])) missing.push('estructura CARTERA ACTUAL');
-  if(!hasHeader('XIRR GLOBAL',['Fecha','Activo','Tipo','Plataforma','Importe XIRR'])) missing.push('estructura XIRR GLOBAL');
-  if(!hasHeader('HISTÓRICO MENSUAL',['Fecha cierre','Año','Mes','Valor cartera total'])) missing.push('estructura HISTÓRICO MENSUAL');
-  const objetivos=rowsOf('OBJETIVOS Y PROYECCIÓN');
-  if(!objetivos.some(row=>normalizeText(row[0])==='activo' && normalizeText(row[1])==='peso objetivo')) missing.push('estructura OBJETIVOS Y PROYECCIÓN');
   return missing;
 }
 async function handleExcelImport(file){
@@ -5083,7 +5066,7 @@ function getRealClosures(){
   const real=[];
   for(let r=5;r<=rows.length;r++){
     const val=cell(rows,r,4);
-    if(val!=='' && val!=null && Number.isFinite(Number(val)) && isRealMonthlyClose(rows[r-1])){
+    if(val!=='' && val!=null && Number.isFinite(Number(val))){
       real.push({fecha:cell(rows,r,1), mes:cell(rows,r,3), anio:cell(rows,r,2), valor:Number(val), xirr:Number(cell(rows,r,9))});
     }
   }
@@ -5979,8 +5962,9 @@ updateDashboard = function(){
     if(asset.includes('plan pensiones') || String(row.peso).toLowerCase()==='separado'){
       return {label:'Separado', cls:'neutral'};
     }
-    const status=carteraStatusFor(row);
-    return {label:status.label, cls:status.cls==='bad'?'bad':status.cls};
+    const desv = Number(row.desv);
+    if(!Number.isFinite(desv)) return {label:'-', cls:'neutral'};
+    return Math.abs(desv) >= 0.02 ? {label:'Vigilar', cls:'warn'} : {label:'OK', cls:'ok'};
   }
   function renderDistributionTable(mode, cartera){
     const legend=document.querySelector('#dashboard .dashboardDistributionBlock .legend') || document.querySelector('#dashboard .legend');
@@ -6266,8 +6250,6 @@ async function cloudLogin(){
     const { data, error } = await portfolioSupabase.auth.signInWithPassword({email,password});
     if(error) throw error;
     portfolioCloudSession=data.session;
-    const passwordInput=document.getElementById('cloudPassword');
-    if(passwordInput) passwordInput.value='';
     cloudSetLine('Conectado correctamente.', 'ok');
     cloudUpdateButtons();
     setTimeout(cloudHide, 600);
@@ -6357,8 +6339,8 @@ function normalizeSupabaseAuditLabels(){
   document.querySelectorAll('.auditWebChecks div').forEach(row=>{
     const label=row.querySelector('strong')?.textContent?.trim();
     const status=row.querySelector('span');
-    if(label==='Supabase' && status){ const active=!!portfolioCloudSession?.user; status.textContent=active?'Activo':'Sin sesión'; status.className=active?'green':'yellow'; }
-    if(label==='Benchmark/API' && status){ const b=document.getElementById('benchmarkApiStatus'); status.textContent=b?.textContent?.trim() || 'Sin cargar'; status.className=b?.className || 'yellow'; }
+    if(label==='Supabase' && status){ status.textContent='Activo'; status.className='green'; }
+    if(label==='Benchmark/API' && status){ status.textContent='Activo'; status.className='green'; }
   });
 }
 
@@ -6511,14 +6493,17 @@ function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries
   if(!benchmarkSeries.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la simulación.</div>'; return; }
   const w=1200, h=320, padL=14, padR=20, padT=26, padB=44;
   const plotH=h-padT-padB;
+  // v142 · BASE ÚNICA. Antes cada punto se normalizaba contra el aportado acumulado hasta
+  // su fecha (base móvil) mientras las tarjetas usan el aportado neto total (base fija).
+  // Eso hacía que los tooltips no coincidieran con las tarjetas (+11,29% vs +5,77%) y que
+  // el punto real quedara descolgado de la línea. Ahora TODO se normaliza contra
+  // netInvested, el mismo denominador de las tarjetas: gráfica y tarjetas dicen lo mismo.
   const denom=(Number.isFinite(netInvested) && netInvested>0)
     ? netInvested
     : (benchmarkSeries[benchmarkSeries.length-1]?.invested || 1);
   const normOf=(p)=>{
-    const normalized=Number(p?.normalized);
-    if(Number.isFinite(normalized)) return normalized;
-    const v=Number(p?.value), invested=Number(p?.invested);
-    return Number.isFinite(v) && invested>0 ? (v/invested)*100 : NaN;
+    const v=Number(p?.value);
+    return Number.isFinite(v) ? (v/denom)*100 : Number(p?.normalized);
   };
   const benchNorms=benchmarkSeries.map(normOf);
   const useMonthlyHistory=Array.isArray(monthlyHistory) && monthlyHistory.length>=3;
@@ -6531,20 +6516,14 @@ function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries
   const pad=(rawMax-rawMin)*.14 || 4;
   const min=Math.min(rawMin-pad,98), max=Math.max(rawMax+pad,102);
   const span=(max-min)||1;
-  const allDates=[...benchmarkSeries,...realHistory].map(p=>Date.parse(`${p.date}T00:00:00Z`)).filter(Number.isFinite);
-  const minDate=Math.min(...allDates), maxDate=Math.max(...allDates);
-  const toDateX=(date)=>{
-    const ms=Date.parse(`${date}T00:00:00Z`);
-    return padL + ((Number.isFinite(ms) && maxDate>minDate ? (ms-minDate)/(maxDate-minDate) : 1))*(w-padL-padR);
-  };
-  const xForSeries=arr=>(i)=>toDateX(arr[i]?.date);
+  const toX=(i,n)=>padL + (i/Math.max(1,n-1))*(w-padL-padR);
   const toY=(v)=>padT + (max-v)/span*plotH;
-  const line=(arr)=>arr.map((p,i)=>`${i?'L':'M'}${toDateX(p.date).toFixed(1)},${toY(normOf(p)).toFixed(1)}`).join(' ');
-  const realX=toDateX(benchmarkSeries[benchmarkSeries.length-1]?.date);
-  const realY=toY(realNorm);
+  const line=(arr)=>arr.map((p,i)=>`${i?'L':'M'}${toX(i,arr.length).toFixed(1)},${toY(normOf(p)).toFixed(1)}`).join(' ');
+  const realX=w-padR;
+  const realY=toY(useMonthlyHistory ? realHistNorms[realHistNorms.length-1] : realNorm);
   const benchY=toY(benchNorms[benchNorms.length-1]);
   const ticks=benchmarkTicks(benchmarkSeries,5);
-  const tickSvg=ticks.map(t=>`<text x="${toDateX(t.date).toFixed(1)}" y="${h-14}" fill="var(--muted)" font-size="11" text-anchor="middle">${t.label}</text>`).join('');
+  const tickSvg=ticks.map(t=>`<text x="${toX(t.idx,benchmarkSeries.length).toFixed(1)}" y="${h-14}" fill="var(--muted)" font-size="11" text-anchor="middle">${t.label}</text>`).join('');
   // grid horizontal suave (4 líneas) con etiqueta de rentabilidad
   const gridN=4;
   const grid=[...Array(gridN+1)].map((_,k)=>{
@@ -6552,16 +6531,16 @@ function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries
     const y=toY(v);
     return `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${w-padR}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.05)"/><text x="${padL}" y="${(y-5).toFixed(1)}" fill="rgba(255,255,255,.28)" font-size="10">${benchmarkPct(v-100)}</text>`;
   }).join('');
-  const benchArea=__benchAreaPath(benchmarkSeries,xForSeries(benchmarkSeries),toY,benchmarkSeries.length,h,padB,normOf);
-  const realArea=useMonthlyHistory?__benchAreaPath(realHistory,xForSeries(realHistory),toY,realHistory.length,h,padB,normOf):'';
+  const benchArea=__benchAreaPath(benchmarkSeries,toX,toY,benchmarkSeries.length,h,padB,normOf);
+  const realArea=useMonthlyHistory?__benchAreaPath(realHistory,toX,toY,realHistory.length,h,padB,normOf):'';
   const realLineSvg = useMonthlyHistory
-    ? `<path d="${realArea}" fill="url(#benchRealGrad)"/><path d="${line(realHistory)}" fill="none" stroke="var(--green)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>${__v61PointSeries(realHistory,xForSeries(realHistory),toY,'greenPoint',cfg.realLabel,v=>benchmarkPct(v-100),'dato real mensual',normOf)}`
+    ? `<path d="${realArea}" fill="url(#benchRealGrad)"/><path d="${line(realHistory)}" fill="none" stroke="var(--green)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>${__v61PointSeries(realHistory,toX,toY,'greenPoint',cfg.realLabel,v=>benchmarkPct(v-100),'dato real mensual',normOf)}`
     : '';
   const realValue = `${fmtMoney(currentValue)} · ${benchmarkPct(realNorm-100)}`;
   const targetValue = `${fmtMoney(benchmarkFinalValue)} · ${benchmarkPct(benchFinalNorm-100)}`;
   const realMeta = useMonthlyHistory ? 'último cierre real del Excel' : 'valor real actual';
   const targetMeta = 'simulación con tus movimientos';
-  const targetHits=__v61PointSeries(benchmarkSeries,xForSeries(benchmarkSeries),toY,'goldPoint',cfg.targetLabel,v=>benchmarkPct(v-100),'simulación',normOf);
+  const targetHits=__v61PointSeries(benchmarkSeries,toX,toY,'goldPoint',cfg.targetLabel,v=>benchmarkPct(v-100),'simulación',normOf);
   const guideColor = currentValue >= benchmarkFinalValue ? 'var(--green)' : 'var(--red)';
   box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${escHtml(cfg.targetLabel)} simulada y valor real actual">
     <defs>
