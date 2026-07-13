@@ -8662,6 +8662,45 @@ strong.neutral, span.neutral, em.neutral, .pill.neutral, .statusPill.neutral,
   }
   #dashboard #assetSummaryDash .assetSummaryItem:last-child{border-bottom:0!important;}
 }
+
+/* v168 · Alineación móvil coherente: contenido a la izquierda */
+@media(max-width:760px){
+  #dashboard .cardHeader,
+  #dashboard .cardHeader > div{
+    justify-content:flex-start!important;
+    text-align:left!important;
+  }
+  #dashboard .cardHeader h2,
+  #dashboard .cardHeader h3,
+  #dashboard .cardHeader p,
+  #dashboard .alertsCard .cardHeader h3,
+  #dashboard #assetSummaryDash .cardHeader h3{
+    width:100%!important;
+    text-align:left!important;
+  }
+  #dashboard .hero .cardHeader p{
+    font-size:0!important;
+  }
+  #dashboard .hero .cardHeader p:after{
+    content:'Valor actual y lectura por plataforma.';
+    font-size:13px!important;
+    line-height:1.3!important;
+    color:var(--muted)!important;
+  }
+  #dashboard .heroBody,
+  #dashboard .heroTopMetrics,
+  #dashboard .heroTopMetric.primary{
+    align-items:flex-start!important;
+    text-align:left!important;
+  }
+  #dashboard #heroMetricValue label,
+  #dashboard #heroMetricValue strong,
+  #dashboard #heroMetricValue small,
+  #dashboard .dashDataAge{
+    width:100%!important;
+    text-align:left!important;
+  }
+}
 </style>
 </body>
 </html>
