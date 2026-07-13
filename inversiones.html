@@ -8193,6 +8193,99 @@ a:focus-visible{
 .evoDotReconstructed{width:9px;height:9px;border-radius:50%;background:var(--gold);opacity:.55;display:inline-block;}
 .evoDotProvisional{width:9px;height:9px;background:var(--yellow);display:inline-block;transform:rotate(45deg);}
 .evoProvisionalPoint,.evoReconstructedPoint{cursor:crosshair;stroke:rgba(0,0,0,.4);stroke-width:1.4;}
+
+/* v162 · Tipografía y contraste: lectura cómoda sin alterar la jerarquía */
+:root{
+  --text2:#c0c4cb;
+  --muted:#9da3ae;
+  --muted2:#898f9a;
+}
+html, body{font-size:14.5px!important;}
+.nav button{font-size:13px!important;}
+.brandDate, .sideFoot{font-size:11.5px!important;color:var(--muted)!important;}
+.pageTitle p, .cardHeader p, .sourceBox, .kpiHeroNote,
+.advisorHero p, .auditWebHero p, .benchmarkHero p,
+.historyTop p, .yearHero p, .diagnosisClean p{
+  font-size:12.5px!important;
+  line-height:1.42!important;
+  color:var(--muted)!important;
+}
+.btn, label.btn, .importStatus{font-size:12.5px!important;}
+.kpi label, .capitalCard label, .heroMetric label, .dataStatusCard label,
+.advisorState span, .advisorMetric span, .advisorBlock span,
+.auditWebState span, .auditWebCard span, .benchmarkMetric span,
+.yearSummarySide span, .yearFacts span{
+  font-size:12px!important;
+  color:var(--muted)!important;
+}
+.kpi small, .capitalCard small, .heroMetric small, .dataStatusCard small,
+.advisorMetric small, .advisorState em, .auditWebState em, .auditWebCard em,
+.benchmarkMetric em, .yearPills button span, .assetSummaryItem .asRow span{
+  font-size:12px!important;
+  line-height:1.38!important;
+  color:var(--muted)!important;
+}
+.tableWrap .table th, .assetTable th, .cleanTable th, .annualTable th,
+.distTable th, .recoTable th{
+  font-size:12px!important;
+  color:var(--muted)!important;
+}
+.tableWrap .table td, .assetTable td, .cleanTable td, .annualTable td,
+.distTable td, .recoTable td{
+  font-size:12.5px!important;
+}
+.assetMeta, .assetName small, .assetRow small{font-size:11.5px!important;color:var(--muted)!important;}
+.xirrAssetName{font-size:12.5px!important;}
+.xirrSub{font-size:11.5px!important;line-height:1.35!important;color:var(--muted)!important;}
+.pill, .statusPill, .filterPill{font-size:12px!important;}
+.alertName, .alertStatus, .legendRow, .reco p{font-size:12.5px!important;}
+.advisorList strong, .advisorList span, .advisorConfidence,
+.auditWebChecks div, .auditWebPages strong, .auditWebPages span{
+  font-size:12px!important;
+  line-height:1.4!important;
+}
+#benchmark .benchmarkNavLabel{font-size:11.5px!important;color:var(--muted)!important;}
+#benchmark .benchmarkGroupTabs button, #benchmark .benchmarkTabs button{font-size:12px!important;}
+#benchmark .benchmarkGroupHint, .benchmarkLegend, .benchmarkError,
+.benchmarkNote, .benchmarkWeightsWarning{font-size:12px!important;line-height:1.42!important;}
+#benchmark .benchmarkSoonPill{font-size:10.5px!important;}
+.chartRange, .chartBadge, .evoLegendItem, .evoHeadState{font-size:11.5px!important;}
+
+@media(max-width:760px){
+  html, body{font-size:15px!important;}
+  .pageTitle p, .cardHeader p, .sourceBox, .kpiHeroNote{font-size:13px!important;}
+  .btn, label.btn, .importStatus, .nav button{font-size:13px!important;}
+  .topbar .actions .btn, .topbar .actions label.btn, .topbar .actions .importStatus{font-size:13px!important;}
+  .kpi small, .capitalCard small, .heroMetric small, .dataStatusCard small{font-size:12px!important;}
+}
+.sidebar .sideUpdate .brandDate{font-size:11.5px!important;}
+#dashboard .tabs span{font-size:12px!important;}
+#dashboard .heroMetric label, #dashboard .heroMetric small,
+#dashboard .heroTopMetric label, #dashboard .heroTopMetric small,
+#dashboard .capitalCard label, #dashboard .capitalCard small{font-size:12px!important;line-height:1.38!important;}
+#dashboard .distTable th{font-size:12px!important;color:var(--muted)!important;}
+#cartera .carteraTableTitle{font-size:12px!important;color:var(--muted)!important;}
+#movimientos .cardHeader p{font-size:12.5px!important;}
+#movimientos .filterPill{font-size:12px!important;}
+#historial .yearSummaryMain p{font-size:12.5px!important;color:var(--muted)!important;}
+#historial .yearSummarySide span{font-size:12px!important;color:var(--muted)!important;}
+#benchmark .benchmarkState span, #benchmark .benchmarkCard span, #benchmark .benchmarkMetric span,
+#benchmark .benchmarkSummary span{font-size:12px!important;color:var(--muted)!important;}
+#benchmark .benchmarkState em, #benchmark .benchmarkCard em, #benchmark .benchmarkMetric em{
+  font-size:12px!important;line-height:1.38!important;color:var(--muted)!important;
+}
+#benchmark .benchmarkApiActions .btn{font-size:12px!important;}
+#benchmark .benchmarkTable th{font-size:12px!important;color:var(--muted)!important;}
+#benchmark .benchmarkTable td{font-size:12.5px!important;}
+#benchmark .benchmarkSummary p, #benchmark .benchmarkSummary em{font-size:12px!important;line-height:1.4!important;}
+#benchmark .sheetChecks strong, #benchmark .sheetChecks span{font-size:12px!important;}
+#asesoria .advisorState span, #asesoria .advisorMetric span, #asesoria .advisorBlock span{font-size:12px!important;}
+#asesoria .advisorState em, #asesoria .advisorMetric small{font-size:12px!important;line-height:1.38!important;}
+#asesoria .advisorList strong, #asesoria .advisorList span, #asesoria .advisorConfidence{font-size:12px!important;}
+#auditoria .auditWebState span, #auditoria .auditWebCard span, #auditoria .dataStatusCard label{font-size:12px!important;}
+#auditoria .auditWebState em, #auditoria .auditWebCard em, #auditoria .dataStatusCard small{font-size:12px!important;line-height:1.38!important;}
+#auditoria .auditWebChecks div, #auditoria .auditWebChecks strong, #auditoria .auditWebChecks span,
+#auditoria .auditWebPages strong, #auditoria .auditWebPages span{font-size:12px!important;}
 </style>
 </body>
 </html>
