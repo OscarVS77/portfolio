@@ -2750,7 +2750,7 @@ html{
           </article>
           <article class="benchmarkMetric card">
             <span>Diferencia</span>
-            <strong id="benchmarkDiffReturn" class="yellow">--</strong>
+            <strong id="benchmarkDiffReturn" class="neutral">--</strong>
             <em>Tu cartera menos Cartera objetivo</em>
           </article>
         </div>
@@ -2793,9 +2793,9 @@ html{
           </div>
           <div class="sheetChecks auditWebChecks">
             <div><strong>Excel como fuente real</strong><span class="green">Sí</span></div>
-            <div><strong>Plan Pensiones</strong><span class="yellow">Separado</span></div>
-            <div><strong>Edge Function</strong><span id="benchmarkEdgeCheck" class="yellow">Pendiente</span></div>
-            <div><strong>API externa</strong><span id="benchmarkProviderCheck" class="yellow">No conectada</span></div>
+            <div><strong>Plan Pensiones</strong><span class="neutral">Separado</span></div>
+            <div><strong>Edge Function</strong><span id="benchmarkEdgeCheck" class="neutral">Pendiente</span></div>
+            <div><strong>API externa</strong><span id="benchmarkProviderCheck" class="neutral">No conectada</span></div>
           </div>
           <div class="benchmarkNote"><strong>Lectura:</strong> la comparación usa tus movimientos reales de XIRR GLOBAL y simula esos mismos flujos contra Cartera objetivo. La línea verde ya no dibuja una rentabilidad falsa: marca tu valor actual frente a la Cartera objetivo.</div>
         </article>
@@ -2922,7 +2922,7 @@ html{
           <div class="sheetChecks auditWebChecks">
             <div><strong>Importar Excel</strong><span data-web-audit="import-check" class="green">Activo</span></div>
             <div><strong>Visualización por páginas</strong><span class="green">Activa</span></div>
-            <div><strong>Guardado local</strong><span data-web-audit="cache-check" class="yellow">Pendiente</span></div>
+            <div><strong>Guardado local</strong><span data-web-audit="cache-check" class="neutral">Pendiente</span></div>
             <div><strong>Exportar backup</strong><span class="green">Activo</span></div>
           </div>
         </article>
@@ -2938,7 +2938,7 @@ html{
             <div><strong>Excel como fuente única</strong><span class="green">Sí</span></div>
             <div><strong>Supabase</strong><span class="green">Activo</span></div>
             <div><strong>Benchmark/API</strong><span class="green">Activo</span></div>
-            <div><strong>Edición desde la web</strong><span class="yellow">Pendiente</span></div>
+            <div><strong>Edición desde la web</strong><span class="neutral">Pendiente</span></div>
           </div>
         </article>
       </section>
@@ -2966,7 +2966,7 @@ html{
         <section class="dataStatusGrid" id="dataStatusGrid">
           <article class="card dataStatusCard"><label>Excel cargado</label><strong data-data-status="file">Sin Excel</strong><small data-data-status="file-note">Fuente principal pendiente</small></article>
           <article class="card dataStatusCard"><label>Excel importado</label><strong data-data-status="local">Pendiente</strong><small data-data-status="local-note">Día y hora de importación/carga</small></article>
-          <article class="card dataStatusCard"><label>Supabase Cloud</label><strong data-data-status="cloud" class="yellow">Sin sesión</strong><small data-data-status="cloud-note">Guardar/Cargar nube pendiente</small></article>
+          <article class="card dataStatusCard"><label>Supabase Cloud</label><strong data-data-status="cloud" class="neutral">Sin sesión</strong><small data-data-status="cloud-note">Guardar/Cargar nube pendiente</small></article>
           <article class="card dataStatusCard"><label>Benchmark/API</label><strong data-data-status="benchmark">Sin datos</strong><small data-data-status="benchmark-note">Carga el Excel antes de solicitar datos</small></article>
         </section>
       </section>
@@ -3357,7 +3357,7 @@ function applyBenchmarkGroup(group, autoload=true){
   }
 }
 
-function benchmarkSetStatus(text, cls='yellow', note=''){
+function benchmarkSetStatus(text, cls='neutral', note=''){
   const status=document.getElementById('benchmarkApiStatus');
   const noteEl=document.getElementById('benchmarkApiNote');
   if(status){ status.textContent=text; status.className=cls; }
@@ -3367,7 +3367,7 @@ function benchmarkSetStatus(text, cls='yellow', note=''){
   const auditNote=document.getElementById('auditBenchmarkNote');
   if(audit){ audit.textContent=text; audit.className=cls; }
   if(auditNote && note) auditNote.textContent=note;
-  setNavStatus?.('benchmark', cls==='green'?'ok':cls==='red'?'bad':'warn');
+  setNavStatus?.('benchmark', cls==='green'?'ok':cls==='red'?'bad':cls==='yellow'?'warn':'off');
 }
 function benchmarkSetError(message){
   const el=document.getElementById('benchmarkError');
@@ -3666,7 +3666,7 @@ function applyBenchmarkView(view){
     summary.innerHTML=`<span>Lectura del resultado</span><strong>Pendiente de cargar</strong><p>Cuando cargues esta vista, aquí verás una explicación simple y automática del resultado.</p>`;
   }
   ['benchmarkPortfolioReturn','benchmarkOscarReturn','benchmarkDiffReturn'].forEach(id=>{
-    const el=document.getElementById(id); if(el){ el.textContent='--'; el.className=id==='benchmarkDiffReturn'?'yellow':''; }
+    const el=document.getElementById(id); if(el){ el.textContent='--'; el.className=id==='benchmarkDiffReturn'?'neutral':''; }
   });
   document.getElementById('benchmarkPortfolioNote').textContent = benchmarkActiveView==='msci_sp500' ? 'URTH · referencia externa' : 'Excel · movimientos reales';
   document.getElementById('benchmarkOscarNote').textContent = benchmarkActiveView==='msci_sp500' ? 'SPY · referencia externa' : 'Mismos movimientos simulados';
@@ -3710,7 +3710,7 @@ async function loadBenchmarkData(force=false){
   }
   const monthlyHistory=aggregateMonthlyHistory(cfg.assetTest, withPension);
   const {from,to}=getBenchmarkDateRange(flows);
-  benchmarkSetStatus('Cargando','yellow','Consultando Edge Function y simulando tus flujos...');
+  benchmarkSetStatus('Cargando','neutral','Consultando Edge Function y simulando tus flujos...');
   try{
     const { data, error } = await portfolioSupabase.functions.invoke(BENCHMARK_FUNCTION_NAME, {
       body: { benchmark:'benchmark_oscar_global', range:'custom', from, to, weights, force }
@@ -3735,7 +3735,7 @@ async function loadBenchmarkData(force=false){
   }
 }
 async function loadMsciVsSp500(force=false){
-  benchmarkSetStatus('Cargando','yellow','Consultando MSCI World y S&P 500...');
+  benchmarkSetStatus('Cargando','neutral','Consultando MSCI World y S&P 500...');
   try{
     const { data, error } = await portfolioSupabase.functions.invoke(BENCHMARK_FUNCTION_NAME, {
       body: { benchmark:'msci_world_vs_sp500', range:'1y', force }
@@ -4695,12 +4695,12 @@ function updateAuditoria(){
 
   set('[data-web-audit="global-status"]', 'OK', 'green');
   set('[data-web-audit="global-note"]', 'Interfaz y controles técnicos operativos');
-  set('[data-web-audit="excel-status"]', !hasWorkbook ? 'Sin datos' : ok ? 'Conectado' : missing.length ? 'Error' : 'Revisar', !hasWorkbook ? '' : ok ? 'green' : 'red');
+  set('[data-web-audit="excel-status"]', !hasWorkbook ? 'Sin datos' : ok ? 'Conectado' : missing.length ? 'Error' : 'Revisar', !hasWorkbook ? 'neutral' : ok ? 'green' : 'red');
   set('[data-web-audit="excel-note"]', !hasWorkbook ? 'Excel no conectado' : `${fileName} · ${ok ? 'auditoría interna OK' : `${failedControls.length || missing.length} control(es) requieren revisión`}`);
-  set('[data-web-audit="cache-status"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : '');
+  set('[data-web-audit="cache-status"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : 'neutral');
   set('[data-web-audit="cache-note"]', hasCache ? 'Último Excel guardado en este navegador' : 'Se activará al importar Excel');
-  set('[data-web-audit="backup-status"]', hasWorkbook || hasCache ? 'Disponible' : 'Sin datos', hasWorkbook || hasCache ? 'green' : '');
-  set('[data-web-audit="cache-check"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : '');
+  set('[data-web-audit="backup-status"]', hasWorkbook || hasCache ? 'Disponible' : 'Sin datos', hasWorkbook || hasCache ? 'green' : 'neutral');
+  set('[data-web-audit="cache-check"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : 'neutral');
 
   setNavStatus('auditoria', 'ok');
   updateDataStatus?.();
@@ -4734,9 +4734,9 @@ function updateDataStatus(){
     const hasExcel=!!fileName;
     const realImportDate = manualImport || cloudUploaded || '';
     const valuationDate=importedWorkbook ? fmtDate(cell(sheetRows('XIRR GLOBAL'),4,1)) : '';
-    setDataStatus('file', hasExcel ? fileName : 'Sin Excel', hasExcel ? 'green' : '');
+    setDataStatus('file', hasExcel ? fileName : 'Sin Excel', hasExcel ? 'green' : 'neutral');
     setDataStatus('file-note', hasExcel ? 'Excel como fuente única' : 'Importa o carga desde nube');
-    setDataStatus('local', realImportDate ? formatDataStatusDate(realImportDate) : 'Pendiente', realImportDate ? 'green' : '');
+    setDataStatus('local', realImportDate ? formatDataStatusDate(realImportDate) : 'Pendiente', realImportDate ? 'green' : 'neutral');
     const dashAgeEl=document.querySelector('[data-data-status="dash-age"]');
     if(dashAgeEl){
       if(realImportDate){
@@ -4754,7 +4754,7 @@ function updateDataStatus(){
       setDataStatus('local-note', 'Se activa al importar Excel');
     }
     const logged=!!portfolioCloudSession?.user;
-    setDataStatus('cloud', logged ? 'Activo' : 'Sin sesión', logged ? 'green' : '');
+    setDataStatus('cloud', logged ? 'Activo' : 'Sin sesión', logged ? 'green' : 'neutral');
     let cloudNote = logged ? 'Sesión iniciada' : 'Login pendiente';
     if(cloudUploaded){
       cloudNote = 'Excel subido · ' + formatDataStatusDate(cloudUploaded);
@@ -4816,17 +4816,17 @@ function clearWorkbookCache(){
 function updateAsesoria(){
   const set=(id,val,cls)=>{ const el=document.getElementById(id); if(el){ el.textContent=val; if(cls!==undefined) el.className=cls||''; } };
   if(!importedWorkbook){
-    set('advisorState', 'Sin datos', '');
+    set('advisorState', 'Sin datos', 'neutral');
     set('advisorStateNote', 'Importa o carga el Excel para evaluar la cartera.');
-    set('advisorValue', '--', '');
-    set('advisorGain', '--', '');
-    set('advisorXirr', '--', '');
-    set('advisorRecommendationShort', 'Sin datos', '');
-    set('advisorMainReading', 'Importa o carga el Excel para obtener una lectura financiera.', '');
+    set('advisorValue', '--', 'neutral');
+    set('advisorGain', '--', 'neutral');
+    set('advisorXirr', '--', 'neutral');
+    set('advisorRecommendationShort', 'Sin datos', 'neutral');
+    set('advisorMainReading', 'Importa o carga el Excel para obtener una lectura financiera.', 'neutral');
     set('advisorToday', 'No se mostrará ningún diagnóstico sin datos reales.');
     const emptyList=document.getElementById('advisorWatchList');
     if(emptyList) emptyList.innerHTML='<div><strong>Estado financiero</strong><span>Sin datos</span></div>';
-    set('advisorExcelRecommendation', 'Sin datos', '');
+    set('advisorExcelRecommendation', 'Sin datos', 'neutral');
     set('advisorExcelNote', 'La recomendación aparecerá únicamente cuando haya un Excel cargado.');
     const emptyConfidence=document.getElementById('advisorConfidence');
     if(emptyConfidence) emptyConfidence.innerHTML='<strong>Confianza de datos:</strong> sin Excel cargado.';
@@ -4853,7 +4853,7 @@ function updateAsesoria(){
   const globalReading=cleanText(cell(resumen,16,2));
   const globalState=statusFromText(cell(resumen,16,2));
   const st=!globalReading
-    ? {label:'Sin datos',cls:'',note:'El Excel no contiene un diagnóstico global.'}
+    ? {label:'Sin datos',cls:'neutral',note:'El Excel no contiene un diagnóstico global.'}
     : globalState==='bad'
       ? {label:'Revisar',cls:'red',note:globalReading}
       : globalState==='warn'
@@ -4867,7 +4867,7 @@ function updateAsesoria(){
 
   const firstWatch = watch[0];
   const recommendationShort = st.cls==='red' ? 'Revisar cartera' : firstWatch ? `Vigilar ${firstWatch.name}` : globalReading ? 'Sin alertas' : 'Sin datos';
-  set('advisorRecommendationShort', recommendationShort, firstWatch ? firstWatch.cls : globalReading ? 'green' : '');
+  set('advisorRecommendationShort', recommendationShort, firstWatch ? firstWatch.cls : globalReading ? 'green' : 'neutral');
 
   const main = document.getElementById('advisorMainReading');
   if(main){
@@ -4896,7 +4896,7 @@ function updateAsesoria(){
   if(conf){
     conf.innerHTML = `<strong>Confianza de datos:</strong> Excel cargado · ${escHtml(importedData?.fileName || 'fuente importada')}${date ? ` · valoración ${escHtml(date)}` : ''}.`;
   }
-  setNavStatus('asesoria', st.cls==='red' ? 'bad' : st.cls==='yellow' ? 'warn' : 'ok');
+  setNavStatus('asesoria', st.cls==='red' ? 'bad' : st.cls==='yellow' ? 'warn' : st.cls==='green' ? 'ok' : 'off');
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -6315,8 +6315,8 @@ function normalizeSupabaseAuditLabels(){
   document.querySelectorAll('.auditWebChecks div').forEach(row=>{
     const label=row.querySelector('strong')?.textContent?.trim();
     const status=row.querySelector('span');
-    if(label==='Supabase' && status){ const active=!!portfolioCloudSession?.user; status.textContent=active?'Activo':'Sin sesión'; status.className=active?'green':'yellow'; }
-    if(label==='Benchmark/API' && status){ const b=document.getElementById('benchmarkApiStatus'); status.textContent=b?.textContent?.trim() || 'Sin cargar'; status.className=b?.className || 'yellow'; }
+    if(label==='Supabase' && status){ const active=!!portfolioCloudSession?.user; status.textContent=active?'Activo':'Sin sesión'; status.className=active?'green':'neutral'; }
+    if(label==='Benchmark/API' && status){ const b=document.getElementById('benchmarkApiStatus'); status.textContent=b?.textContent?.trim() || 'Sin cargar'; status.className=b?.className || 'neutral'; }
   });
 }
 
@@ -6340,7 +6340,7 @@ function updateCloudAudit(forcedState){
     strong.textContent='Sin configurar'; strong.className='yellow'; em.textContent='Falta URL y anon key'; return;
   }
   if(!portfolioCloudSession?.user){
-    strong.textContent='Sin sesión'; strong.className='yellow'; em.textContent='Login pendiente'; return;
+    strong.textContent='Sin sesión'; strong.className='neutral'; em.textContent='Login pendiente'; return;
   }
   strong.textContent='Activo'; strong.className='green';
   em.textContent=last ? 'Última sync · ' + new Date(last).toLocaleString('es-ES') : 'Sesión iniciada';
@@ -8286,6 +8286,59 @@ html, body{font-size:14.5px!important;}
 #auditoria .auditWebState em, #auditoria .auditWebCard em, #auditoria .dataStatusCard small{font-size:12px!important;line-height:1.38!important;}
 #auditoria .auditWebChecks div, #auditoria .auditWebChecks strong, #auditoria .auditWebChecks span,
 #auditoria .auditWebPages strong, #auditoria .auditWebPages span{font-size:12px!important;}
+
+/* v163 · Gramática visual única para selección y estados */
+:root{
+  --state-ok:var(--green);
+  --state-warn:var(--yellow);
+  --state-bad:var(--red);
+  --state-neutral:var(--muted);
+  --selection-bg:#e8b14a;
+  --selection-ink:#171006;
+  --selection-soft:rgba(232,177,74,.10);
+}
+strong.green, span.green, em.green, .pill.green, .statusPill.ok, .alertStatus.ok{color:var(--state-ok)!important;}
+strong.yellow, span.yellow, em.yellow, .pill.yellow, .statusPill.warn, .alertStatus.warn{color:var(--state-warn)!important;}
+strong.red, span.red, em.red, .pill.red, .statusPill.bad, .alertStatus.bad{color:var(--state-bad)!important;}
+strong.neutral, span.neutral, em.neutral, .pill.neutral, .statusPill.neutral,
+.advisorState .neutral, .advisorMetric .neutral, .advisorBlock .neutral,
+.auditWebCard .neutral, .dataStatusCard .neutral, .benchmarkState .neutral{
+  color:var(--state-neutral)!important;
+}
+.pill.green, .statusPill.ok{border-color:rgba(95,211,155,.32)!important;background:rgba(95,211,155,.08)!important;}
+.pill.yellow, .statusPill.warn{border-color:rgba(232,177,74,.34)!important;background:rgba(232,177,74,.08)!important;}
+.pill.red, .statusPill.bad{border-color:rgba(240,116,106,.34)!important;background:rgba(240,116,106,.08)!important;}
+.pill.neutral, .statusPill.neutral{border-color:var(--line)!important;background:rgba(255,255,255,.035)!important;}
+.nav button.active, .tabs span.active, .filterPills .filterPill.active,
+.yearPills button.active, .yearCard.active, #cartera .carteraProTabs button.active,
+#benchmark .benchmarkNav .benchmarkTabs button.active{
+  background:var(--selection-bg)!important;
+  background-image:none!important;
+  color:var(--selection-ink)!important;
+  border-color:var(--selection-bg)!important;
+  box-shadow:0 8px 20px rgba(232,177,74,.14)!important;
+}
+.nav button.active span, .tabs span.active, .filterPills .filterPill.active,
+.yearPills button.active strong, .yearPills button.active span,
+#cartera .carteraProTabs button.active,
+#benchmark .benchmarkNav .benchmarkTabs button.active{color:var(--selection-ink)!important;}
+#movimientos .movementModePills .filterPill.active,
+#benchmark .benchmarkGroupTabs button.active{
+  background:var(--selection-soft)!important;
+  background-image:none!important;
+  color:var(--selection-bg)!important;
+  border-color:rgba(232,177,74,.58)!important;
+  box-shadow:none!important;
+}
+.nav button.active .navStatus{box-shadow:0 0 0 2px rgba(0,0,0,.18)!important;}
+.nav button.active .navStatus.ok{background:var(--state-ok)!important;color:var(--state-ok)!important;}
+.nav button.active .navStatus.warn{background:var(--state-warn)!important;color:var(--state-warn)!important;}
+.nav button.active .navStatus.bad{background:var(--state-bad)!important;color:var(--state-bad)!important;}
+.nav button.active .navStatus.off{background:#3f3b34!important;color:#3f3b34!important;}
+.navStatus.ok{background:var(--state-ok)!important;color:var(--state-ok)!important;}
+.navStatus.warn{background:var(--state-warn)!important;color:var(--state-warn)!important;}
+.navStatus.bad{background:var(--state-bad)!important;color:var(--state-bad)!important;}
+.navStatus.off, .bOff{background:var(--state-neutral)!important;color:var(--state-neutral)!important;}
 </style>
 </body>
 </html>
