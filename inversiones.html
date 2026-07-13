@@ -98,7 +98,7 @@
   width:270px;height:270px;border-radius:50%;
   background:conic-gradient(var(--blue) 0 64.80%,var(--em) 64.80% 75.47%,var(--small) 75.47% 81.62%,var(--gold) 81.62% 86.35%,var(--btc) 86.35% 100%);
   position:relative;box-shadow:0 24px 60px rgba(0,0,0,.28);
-}.donut:after{content:"";position:absolute;inset:42px;background:linear-gradient(180deg,#191a20,#121319);border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.065)}.donutCenter{position:absolute;inset:0;display:grid;place-items:center;text-align:center;z-index:2}.donutCenter span{display:block;color:var(--muted);font-size:13px;margin-bottom:8px}.donutCenter strong{font-size:28px;font-weight:470}.legend{display:grid;gap:10px;padding:0 26px 24px}.legendRow{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:center;color:var(--text2);font-size:13px}.legendDot{width:9px;height:9px;border-radius:50%}.legendRow strong{color:var(--text);font-weight:560}.bBlue{background:var(--blue)}.bGreen{background:var(--em)}.bSmall{background:var(--small)}.bGold{background:var(--gold)}.bBtc{background:var(--btc)}.bPlan{background:var(--plan)}.bOk{background:var(--green)}.bWarn{background:var(--yellow)}.bBad{background:var(--red)}.pill{display:inline-flex;align-items:center;gap:8px;border-radius:4px;padding:6px 10px;background:var(--bg);border:1px solid var(--line);font-size:12px;font-weight:650}.bullet{width:8px;height:8px;border-radius:50%;flex:0 0 auto}.tableWrap{
+}.donut:after{content:"";position:absolute;inset:42px;background:linear-gradient(180deg,#191a20,#121319);border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.065)}.donutCenter{position:absolute;inset:0;display:grid;place-items:center;text-align:center;z-index:2}.donutCenter span{display:block;color:var(--muted);font-size:13px;margin-bottom:8px}.donutCenter strong{font-size:28px;font-weight:470}.legend{display:grid;gap:10px;padding:0 26px 24px}.legendRow{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:center;color:var(--text2);font-size:13px}.legendDot{width:9px;height:9px;border-radius:50%}.legendRow strong{color:var(--text);font-weight:560}.bBlue{background:var(--blue)}.bGreen{background:var(--em)}.bSmall{background:var(--small)}.bGold{background:var(--gold)}.bBtc{background:var(--btc)}.bPlan{background:var(--plan)}.bOk{background:var(--green)}.bWarn{background:var(--yellow)}.bBad{background:var(--red)}.bOff{background:var(--muted2)}.pill{display:inline-flex;align-items:center;gap:8px;border-radius:4px;padding:6px 10px;background:var(--bg);border:1px solid var(--line);font-size:12px;font-weight:650}.bullet{width:8px;height:8px;border-radius:50%;flex:0 0 auto}.tableWrap{
   position:relative;overflow-x:auto;overflow-y:hidden;padding:0 0 4px;margin:12px 20px 20px;
   border-radius:6px;border:1px solid var(--line2);background:rgba(255,255,255,.015)
 }.table{width:100%;border-collapse:separate;border-spacing:0;color:var(--text2)}.tableWrap .table{padding:0;margin:0;width:100%;min-width:1040px;border-spacing:0}.tableWrap .table th{
@@ -2440,7 +2440,7 @@ html{
 <div class="app">
   <aside class="sidebar">
     <div class="brand"><div class="brandName">Portfolio Oscar</div></div>
-    <div class="nav" id="nav" role="navigation" aria-label="Páginas del portfolio"><button class="active" aria-current="page" data-page="dashboard"><span>Dashboard</span><span class="navStatus ok"></span></button><button data-page="cartera"><span>Cartera actual</span><span class="navStatus ok"></span></button><button data-page="xirr"><span>XIRR global</span><span class="navStatus ok"></span></button><button data-page="movimientos"><span>Movimientos</span><span class="navStatus ok"></span></button><button data-page="historial"><span>Historial</span><span class="navStatus ok"></span></button><button data-page="benchmark"><span>Benchmark</span><span class="navStatus ok"></span></button><button data-page="asesoria"><span>Asesoría</span><span class="navStatus ok"></span></button><button data-page="auditoria"><span>Auditoría</span><span class="navStatus ok"></span></button></div>
+    <div class="nav" id="nav" role="navigation" aria-label="Páginas del portfolio"><button class="active" aria-current="page" data-page="dashboard"><span>Dashboard</span><span class="navStatus off"></span></button><button data-page="cartera"><span>Cartera actual</span><span class="navStatus off"></span></button><button data-page="xirr"><span>XIRR global</span><span class="navStatus off"></span></button><button data-page="movimientos"><span>Movimientos</span><span class="navStatus off"></span></button><button data-page="historial"><span>Historial</span><span class="navStatus off"></span></button><button data-page="benchmark"><span>Benchmark</span><span class="navStatus off"></span></button><button data-page="asesoria"><span>Asesoría</span><span class="navStatus off"></span></button><button data-page="auditoria"><span>Auditoría</span><span class="navStatus off"></span></button></div>
     <div class="sideFoot sideUpdate"><span class="brandDate">Última actualización · sin datos</span></div>
   </aside>
 
@@ -2457,7 +2457,7 @@ html{
         <button class="btn cloudBtn" id="cloudSaveBtn" type="button" disabled>Guardar nube</button>
         <button class="btn cloudBtn" id="cloudLoadBtn" type="button" disabled>Cargar nube</button>
         <button class="btn cloudBtn" id="cloudLoginBtn" type="button">Cloud</button>
-        <span class="importStatus" id="importStatus"><span class="bullet bWarn"></span>Diseño demo · sin Excel conectado</span>
+        <span class="importStatus" id="importStatus"><span class="bullet bOff"></span>Sin Excel conectado</span>
       </div>
     </div>
 
@@ -2471,8 +2471,8 @@ html{
             <div class="bigValue"><div><span class="dot"></span><strong>--</strong><span></span></div><div class="gain">Valor total actual de la cartera</div></div>
             <div class="dashDataAge" data-data-status="dash-age">Importa el Excel para ver la fecha de los datos.</div>
             <div class="heroMetrics">
-              <div class="heroMetric good"><label>P&amp;L plataforma</label><strong class="green">--</strong><small>Resultado que aparece al sumar los activos según plataforma.</small></div>
-              <div class="heroMetric good"><label>Rentabilidad plataforma</label><strong class="green">--</strong><small>Rentabilidad simple mostrada por los activos/plataformas.</small></div>
+              <div class="heroMetric"><label>P&amp;L plataforma</label><strong>--</strong><small>Resultado que aparece al sumar los activos según plataforma.</small></div>
+              <div class="heroMetric"><label>Rentabilidad plataforma</label><strong>--</strong><small>Rentabilidad simple mostrada por los activos/plataformas.</small></div>
             </div>
           </div>
         </article>
@@ -2490,9 +2490,9 @@ html{
       <section class="capitalGrid">
         <article class="capitalCard"><label>Total aportado histórico bruto</label><strong>--</strong><small>Todo el dinero aportado desde el inicio, antes de retiradas.</small></article>
         <article class="capitalCard"><label>Capital invertido neto actual</label><strong>--</strong><small>Aportado histórico menos retiradas.</small></article>
-        <article class="capitalCard"><label>Ganancia / pérdida real</label><strong class="green">--</strong><small>Valor actual menos capital invertido neto.</small></article>
-        <article class="capitalCard capitalCardKey"><label>Rentabilidad simple real</label><strong class="green">--</strong><small>Desde el primer día. Simple, no anualizada.</small></article>
-        <article class="capitalCard capitalCardKey"><label>XIRR global</label><strong class="green">--</strong><small>Desde el primer día. Rentabilidad anualizada.</small></article>
+        <article class="capitalCard"><label>Ganancia / pérdida real</label><strong>--</strong><small>Valor actual menos capital invertido neto.</small></article>
+        <article class="capitalCard capitalCardKey"><label>Rentabilidad simple real</label><strong>--</strong><small>Desde el primer día. Simple, no anualizada.</small></article>
+        <article class="capitalCard capitalCardKey"><label>XIRR global</label><strong>--</strong><small>Desde el primer día. Rentabilidad anualizada.</small></article>
       </section>
 
       <section class="card pageBlock assetSummaryCard" id="assetSummaryDash">
@@ -2518,12 +2518,7 @@ html{
             <div class="cardHeader"><div><h3>Distribución operativa</h3><p>Peso real, objetivo, desviación y estado por activo.</p></div></div>
             <div class="legend">
               <div class="distTableWrap"><table class="distTable"><thead><tr><th>Activo</th><th>Valor actual</th><th>Peso real</th><th>Objetivo</th><th>Desviación</th><th>Estado</th></tr></thead><tbody>
-                <tr><td><div class="distAsset"><span class="legendDot bBtc"></span><strong>Bitcoin</strong></div></td><td>--</td><td>--</td><td>--</td><td>--</td><td><span class="statusPill ok">OK</span></td></tr>
-                <tr><td><div class="distAsset"><span class="legendDot bGold"></span><strong>Oro</strong></div></td><td>--</td><td>--</td><td>--</td><td class="yellow">--</td><td><span class="statusPill warn">Vigilar</span></td></tr>
-                <tr><td><div class="distAsset"><span class="legendDot bBlue"></span><strong>MSCI World</strong></div></td><td>--</td><td>--</td><td>--</td><td class="yellow">--</td><td><span class="statusPill warn">Vigilar</span></td></tr>
-                <tr><td><div class="distAsset"><span class="legendDot bGreen"></span><strong>Emerging Markets</strong></div></td><td>--</td><td>--</td><td>--</td><td class="green">--</td><td><span class="statusPill ok">OK</span></td></tr>
-                <tr><td><div class="distAsset"><span class="legendDot bSmall"></span><strong>Small Cap</strong></div></td><td>--</td><td>--</td><td>--</td><td class="green">--</td><td><span class="statusPill ok">OK</span></td></tr>
-                <tr><td><div class="distAsset"><span class="legendDot bPlan"></span><strong>Plan Pensiones</strong></div></td><td>--</td><td>Separado</td><td>Separado</td><td>-</td><td><span class="statusPill neutral">Separado</span></td></tr>
+                <tr><td colspan="6">Sin datos · importa o carga el Excel para ver la distribución.</td></tr>
               </tbody></table></div>
             </div>
           </article>
@@ -2532,13 +2527,7 @@ html{
         <article class="card alertsCard">
           <div class="cardHeader"><div><h3>Alertas principales</h3><p>Lectura directa de la hoja RESUMEN / AUDITORÍA del Excel.</p></div></div>
           <div class="alerts">
-            <div class="alert"><div class="alertName">Bitcoin</div><div class="alertStatus ok"><span class="bullet bOk"></span>BTC en rango</div></div>
-            <div class="alert"><div class="alertName">Oro</div><div class="alertStatus warn"><span class="bullet bWarn"></span>Oro bajo objetivo: subir con aportaciones</div></div>
-            <div class="alert"><div class="alertName">MSCI World</div><div class="alertStatus warn"><span class="bullet bWarn"></span>MSCI alto: mantener aportación</div></div>
-            <div class="alert"><div class="alertName">Emerging Markets</div><div class="alertStatus ok"><span class="bullet bOk"></span>EM en rango</div></div>
-            <div class="alert"><div class="alertName">Small Cap</div><div class="alertStatus ok"><span class="bullet bOk"></span>Small Cap en rango</div></div>
-            <div class="alert"><div class="alertName">BTC techo absoluto</div><div class="alertStatus warn"><span class="bullet bWarn"></span>BTC cerca del techo del 15% operativo: vigilar</div></div>
-            <div class="alert"><div class="alertName">Diagnóstico global</div><div class="alertStatus warn"><span class="bullet bWarn"></span>Cartera razonable: ajustar con nuevas aportaciones</div></div>
+            <div class="alert"><div class="alertName">Estado financiero</div><div class="alertStatus"><span class="bullet bOff"></span>Sin datos · importa o carga el Excel.</div></div>
           </div>
         </article>
       </div>
@@ -2571,34 +2560,7 @@ html{
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><div class="assetName"><span class="bullet bBtc"></span><div><span class="assetNameText">BTC Bitcoin</span><span class="assetMeta">Bitcoin · Koinly</span></div></div></td>
-                <td>--</td><td>--</td><td class="red">--</td><td class="red">--</td><td>--</td><td>--</td><td class="green">--</td>
-              </tr>
-              <tr>
-                <td><div class="assetName"><span class="bullet bGold"></span><div><span class="assetNameText">iShares Physical Gold ETC</span><span class="assetMeta">Oro · Trade Republic</span></div></div></td>
-                <td>--</td><td>--</td><td class="green">--</td><td class="green">--</td><td>--</td><td>--</td><td class="yellow">--</td>
-              </tr>
-              <tr>
-                <td><div class="assetName"><span class="bullet bBlue"></span><div><span class="assetNameText">MSCI World</span><span class="assetMeta">Renta variable · MyInvestor</span></div></div></td>
-                <td>--</td><td>--</td><td class="green">--</td><td class="green">--</td><td>--</td><td>--</td><td class="yellow">--</td>
-              </tr>
-              <tr>
-                <td><div class="assetName"><span class="bullet bGreen"></span><div><span class="assetNameText">Emerging Markets</span><span class="assetMeta">Renta variable · MyInvestor</span></div></div></td>
-                <td>--</td><td>--</td><td class="green">--</td><td class="green">--</td><td>--</td><td>--</td><td class="green">--</td>
-              </tr>
-              <tr>
-                <td><div class="assetName"><span class="bullet bSmall"></span><div><span class="assetNameText">Small Cap</span><span class="assetMeta">Renta variable · MyInvestor</span></div></div></td>
-                <td>--</td><td>--</td><td class="green">--</td><td class="green">--</td><td>--</td><td>--</td><td class="green">--</td>
-              </tr>
-              <tr>
-                <td><div class="assetName"><span class="bullet bPlan"></span><div><span class="assetNameText">Plan Pensiones</span><span class="assetMeta">Separado de allocation</span></div></div></td>
-                <td>--</td><td>--</td><td class="green">--</td><td class="green">--</td><td>Separado</td><td>Separado</td><td>-</td>
-              </tr>
-              <tr class="totalRow">
-                <td><div class="assetName"><span class="bullet bOk"></span><div><span class="assetNameText">TOTAL</span><span class="assetMeta">Cartera completa</span></div></div></td>
-                <td>--</td><td>--</td><td class="green">--</td><td class="green">--</td><td>--</td><td>--</td><td></td>
-              </tr>
+              <tr><td colspan="8">Sin datos · importa o carga el Excel para ver las posiciones.</td></tr>
             </tbody>
           </table>
         </div>
@@ -2607,12 +2569,12 @@ html{
 
     <section class="section" id="xirr">
       <div class="xirrHeroWrap pageBlock">
-        <article class="kpi kpiHero"><label>XIRR global</label><strong class="green">--</strong><small>Tu rentabilidad real anualizada, desde el primer día.</small></article>
+        <article class="kpi kpiHero"><label>XIRR global</label><strong>--</strong><small>Tu rentabilidad real anualizada, desde el primer día.</small></article>
         <p class="kpiHeroNote"><strong>El XIRR es tu indicador principal:</strong> mide cómo crece tu dinero teniendo en cuenta cuándo lo invertiste. El resto de cifras de esta página son contexto.</p>
         <section class="kpiStripContext">
-          <article class="kpi"><label>Rentabilidad simple real</label><strong class="green">--</strong><small>dato complementario</small></article>
+          <article class="kpi"><label>Rentabilidad simple real</label><strong>--</strong><small>dato complementario</small></article>
           <article class="kpi"><label>Valor actual total</label><strong>--</strong><small>último valor</small></article>
-          <article class="kpi"><label>Cierres reales</label><strong>Activo</strong><small>base para gráficas</small></article>
+          <article class="kpi"><label>Cierres reales</label><strong>Sin datos</strong><small>base para gráficas</small></article>
         </section>
       </div>
       
@@ -2623,38 +2585,7 @@ html{
             <p>Rentabilidad anualizada individual desde la hoja XIRR GLOBAL. Complementa el XIRR global.</p>
           </div>
         </div>
-        <div class="xirrAssetGrid">
-          <article class="xirrAssetCard">
-            <div class="xirrAssetTop"><div class="xirrAssetName"><span class="bullet bBtc"></span><span>BTC Bitcoin</span></div><span class="pill red">revisar</span></div>
-            <div class="xirrValue red">--</div>
-            <div class="xirrSub"><span>Rent. simple real</span><strong class="red">--</strong><span>G/P real</span><strong class="red">--</strong></div>
-          </article>
-          <article class="xirrAssetCard">
-            <div class="xirrAssetTop"><div class="xirrAssetName"><span class="bullet bGold"></span><span>Oro</span></div><span class="pill green">OK</span></div>
-            <div class="xirrValue green">--</div>
-            <div class="xirrSub"><span>Rent. simple real</span><strong class="green">--</strong><span>G/P real</span><strong class="green">--</strong></div>
-          </article>
-          <article class="xirrAssetCard">
-            <div class="xirrAssetTop"><div class="xirrAssetName"><span class="bullet bBlue"></span><span>MSCI World</span></div><span class="pill green">OK</span></div>
-            <div class="xirrValue green">--</div>
-            <div class="xirrSub"><span>Rent. simple real</span><strong class="green">--</strong><span>G/P real</span><strong class="green">--</strong></div>
-          </article>
-          <article class="xirrAssetCard">
-            <div class="xirrAssetTop"><div class="xirrAssetName"><span class="bullet bGreen"></span><span>Emerging Markets</span></div><span class="pill green">OK</span></div>
-            <div class="xirrValue green">--</div>
-            <div class="xirrSub"><span>Rent. simple real</span><strong class="green">--</strong><span>G/P real</span><strong class="green">--</strong></div>
-          </article>
-          <article class="xirrAssetCard">
-            <div class="xirrAssetTop"><div class="xirrAssetName"><span class="bullet bSmall"></span><span>Small Cap</span></div><span class="pill green">OK</span></div>
-            <div class="xirrValue green">--</div>
-            <div class="xirrSub"><span>Rent. simple real</span><strong class="green">--</strong><span>G/P real</span><strong class="green">--</strong></div>
-          </article>
-          <article class="xirrAssetCard">
-            <div class="xirrAssetTop"><div class="xirrAssetName"><span class="bullet bPlan"></span><span>Plan Pensiones</span></div><span class="pill green">OK</span></div>
-            <div class="xirrValue green">--</div>
-            <div class="xirrSub"><span>Rent. simple real</span><strong class="green">--</strong><span>G/P real</span><strong class="green">--</strong></div>
-          </article>
-        </div>
+        <div class="xirrAssetGrid"><div class="chartEmpty">Sin datos · importa o carga el Excel para ver el XIRR por activo.</div></div>
       </div>
 
       <div class="card pageBlock">
@@ -2667,10 +2598,7 @@ html{
         <div class="tableWrap">
           <table class="table compactTable">
             <thead><tr><th>Fecha cierre</th><th>Mes</th><th>Valor cartera total</th><th>XIRR global</th><th>Estado</th><th>Comentario</th></tr></thead>
-            <tbody>
-              <tr><td>--</td><td>--</td><td>--</td><td class="green">--</td><td>OK</td><td>Cierre anual disponible</td></tr>
-              <tr><td>--</td><td>--</td><td>--</td><td class="green">--</td><td>OK</td><td>Cierre real disponible</td></tr>
-            </tbody>
+            <tbody><tr><td colspan="6">Sin datos · importa o carga el Excel para ver los cierres reales.</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -2703,7 +2631,7 @@ html{
           <table class="table compactTable" id="movementsTable">
             <thead><tr><th>Fecha</th><th>Tipo</th><th>Activo</th><th>Importe</th><th>Plataforma</th><th>Incluye XIRR</th><th>Nota</th></tr></thead>
             <tbody>
-              <tr><td colspan="7">No se han encontrado movimientos reales en XIRR GLOBAL.</td></tr>
+              <tr><td colspan="7">Sin datos · importa o carga el Excel para ver los movimientos.</td></tr>
             </tbody>
           </table>
         </div>
@@ -2720,12 +2648,7 @@ html{
             <h2>Resumen por años</h2>
             <p>Vista cerrada por ejercicio. Sin detalle mensual.</p>
           </div>
-          <div class="yearPills">
-            <button class="active" onclick="showYear('y2025', this)"><strong>2025</strong><span>Cerrado</span></button>
-            <button class="disabled"><strong>2026</strong><span>En curso</span></button>
-            <button class="disabled"><strong>2027</strong><span>Pendiente</span></button>
-            <button class="disabled"><strong>2028</strong><span>Pendiente</span></button>
-          </div>
+          <div class="yearPills"><button class="active" onclick="showYear('y2025', this)"><strong>--</strong><span>Sin datos</span></button></div>
         </div>
 
         <div class="historyMain yearDetail active" id="y2025">
@@ -2737,16 +2660,16 @@ html{
             </div>
             <div class="yearSummarySide">
               <div><span>Invertido</span><strong>--</strong></div>
-              <div><span>P&L</span><strong class="green">--</strong></div>
-              <div><span>Rentabilidad</span><strong class="green">--</strong></div>
-              <div><span>XIRR</span><strong class="green">--</strong></div>
+              <div><span>P&L</span><strong>--</strong></div>
+              <div><span>Rentabilidad</span><strong>--</strong></div>
+              <div><span>XIRR</span><strong>--</strong></div>
             </div>
           </section>
 
           <section class="card pageBlock historyAssetBlock">
             <div class="cardHeader">
               <div>
-                <h3>Activos 2025</h3>
+                <h3>Activos</h3>
                 <p>Cierre anual por activo.</p>
               </div>
             </div>
@@ -2761,23 +2684,14 @@ html{
                     <th>Peso</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr><td><span class="assetNameLine"><span class="bullet bGold"></span><span><strong>Oro</strong><small>Trade Republic</small></span></span></td><td>--</td><td>--</td><td class="green">--</td><td>--</td></tr>
-                  <tr><td><span class="assetNameLine"><span class="bullet bBtc"></span><span><strong>Bitcoin</strong><small>Bitcoin</small></span></span></td><td>--</td><td>--</td><td class="red">--</td><td>--</td></tr>
-                  <tr><td><span class="assetNameLine"><span class="bullet bPlan"></span><span><strong>Plan Pensiones</strong><small>MyInvestor</small></span></span></td><td>--</td><td>--</td><td class="green">--</td><td>Separado</td></tr>
-                  <tr><td><span class="assetNameLine"><span class="bullet bBlue"></span><span><strong>MSCI World</strong><small>MyInvestor</small></span></span></td><td>--</td><td>--</td><td class="green">--</td><td>--</td></tr>
-                  <tr><td><span class="assetNameLine"><span class="bullet bGreen"></span><span><strong>Emerging Markets</strong><small>MyInvestor</small></span></span></td><td>--</td><td>--</td><td class="green">--</td><td>--</td></tr>
-                  <tr><td><span class="assetNameLine"><span class="bullet bSmall"></span><span><strong>Small Cap</strong><small>MyInvestor</small></span></span></td><td>--</td><td>--</td><td class="green">--</td><td>--</td></tr>
-                  <tr class="total"><td><span class="assetNameLine"><span class="bullet bOk"></span><span><strong>Total</strong><small>--</small></span></span></td><td>--</td><td>--</td><td class="green">--</td><td>--</td></tr>
-                </tbody>
+                <tbody><tr><td colspan="5">Sin datos · importa o carga el Excel para ver el historial anual.</td></tr></tbody>
               </table>
             </div>
           </section>
 
           <section class="diagnosisClean card pageBlock">
-            <span class="eyebrow">Diagnóstico 2025</span>
-            <strong>Rebalanceo fondos 2025: NO necesario.</strong>
-            <p>La distribución estaba razonablemente alineada.</p>
+            <span class="eyebrow">Diagnóstico</span>
+            <strong>Sin datos · importa o carga el Excel.</strong>
           </section>
         </div>
       </section>
@@ -2794,8 +2708,8 @@ html{
         </div>
         <div class="benchmarkState">
           <span>Estado API</span>
-          <strong id="benchmarkApiStatus" class="yellow">Sin cargar</strong>
-          <em id="benchmarkApiNote">Edge Function pendiente de probar</em>
+          <strong id="benchmarkApiStatus">Sin datos</strong>
+          <em id="benchmarkApiNote">Carga el Excel antes de solicitar la comparativa.</em>
         </div>
       </section>
 
@@ -2900,8 +2814,8 @@ html{
         </div>
         <div class="advisorState">
           <span>Estado general</span>
-          <strong id="advisorState" class="green">Correcto</strong>
-          <em id="advisorStateNote">Cartera alineada con seguimiento normal.</em>
+          <strong id="advisorState">Sin datos</strong>
+          <em id="advisorStateNote">Importa o carga el Excel para evaluar la cartera.</em>
         </div>
       </section>
 
@@ -2913,17 +2827,17 @@ html{
         </article>
         <article class="card advisorMetric">
           <span>G/P real</span>
-          <strong id="advisorGain" class="green">--</strong>
+          <strong id="advisorGain">--</strong>
           <small>Valor actual menos capital neto invertido.</small>
         </article>
         <article class="card advisorMetric">
           <span>XIRR global</span>
-          <strong id="advisorXirr" class="green">--</strong>
+          <strong id="advisorXirr">--</strong>
           <small>Rentabilidad anualizada desde el inicio.</small>
         </article>
         <article class="card advisorMetric">
           <span>Recomendación</span>
-          <strong id="advisorRecommendationShort" class="yellow">Vigilar Oro</strong>
+          <strong id="advisorRecommendationShort">Sin datos</strong>
           <small>Lectura práctica desde el Excel.</small>
         </article>
       </section>
@@ -2932,8 +2846,8 @@ html{
         <article class="card">
           <div class="advisorBlock">
             <span>Lectura principal</span>
-          <strong id="advisorMainReading">La cartera va bien: rentabilidad real positiva, XIRR positivo y sin señales críticas.</strong>
-          <p id="advisorToday">Lo importante hoy es mantener la disciplina de aportaciones y vigilar los activos con mayor desviación frente al objetivo.</p>
+          <strong id="advisorMainReading">Importa o carga el Excel para obtener una lectura financiera.</strong>
+          <p id="advisorToday">No se mostrará ningún diagnóstico sin datos reales.</p>
           </div>
         </article>
 
@@ -2945,8 +2859,7 @@ html{
             </div>
           </div>
           <div class="advisorList" id="advisorWatchList">
-            <div><strong>Oro</strong><span class="yellow">Bajo objetivo</span></div>
-            <div><strong>MSCI World</strong><span class="yellow">Sobre objetivo</span></div>
+            <div><strong>Estado financiero</strong><span>Sin datos</span></div>
           </div>
         </article>
       </section>
@@ -2954,10 +2867,10 @@ html{
       <section class="card pageBlock">
         <div class="advisorBlock">
           <span>Recomendación del Excel</span>
-          <strong id="advisorExcelRecommendation">Seguir aportando con normalidad y reforzar los activos por debajo de objetivo con nuevas aportaciones, sin vender de forma innecesaria.</strong>
-          <p id="advisorExcelNote">La lectura se basa en valor actual, G/P real, XIRR global, desviaciones frente a objetivo y alertas principales del Excel.</p>
+          <strong id="advisorExcelRecommendation">Sin datos</strong>
+          <p id="advisorExcelNote">La recomendación aparecerá únicamente cuando haya un Excel cargado.</p>
         </div>
-        <div class="advisorConfidence" id="advisorConfidence"><strong>Confianza de datos:</strong> demo pendiente de Excel real cargado.</div>
+        <div class="advisorConfidence" id="advisorConfidence"><strong>Confianza de datos:</strong> sin Excel cargado.</div>
       </section>
     </section>
 
@@ -2969,17 +2882,17 @@ html{
           <p>Control de la web publicada: importación, guardado local, backup y conexión visual con el Excel.</p>
         </div>
         <div class="auditWebState">
-          <span data-web-audit="global-label">Estado</span>
-          <strong data-web-audit="global-status" class="green">OK</strong>
-          <em data-web-audit="global-note">Web operativa</em>
+          <span data-web-audit="global-label">Estado técnico</span>
+          <strong data-web-audit="global-status">Comprobando</strong>
+          <em data-web-audit="global-note">Verificando la interfaz.</em>
         </div>
       </section>
 
       <section class="auditWebGrid pageBlock">
         <article class="auditWebCard card">
           <span>Excel importado</span>
-          <strong data-web-audit="excel-status">Pendiente</strong>
-          <em data-web-audit="excel-note">Fuente única de datos</em>
+          <strong data-web-audit="excel-status">Sin datos</strong>
+          <em data-web-audit="excel-note">Excel no conectado</em>
         </article>
         <article class="auditWebCard card">
           <span>Guardado local</span>
@@ -2988,13 +2901,13 @@ html{
         </article>
         <article class="auditWebCard card">
           <span>Backup</span>
-          <strong data-web-audit="backup-status">Disponible</strong>
-          <em>Exporta copia del Excel cargado</em>
+          <strong data-web-audit="backup-status">Sin datos</strong>
+          <em>Disponible después de cargar el Excel</em>
         </article>
         <article class="auditWebCard card">
           <span>Benchmark/API</span>
-          <strong id="auditBenchmarkStatus" class="green">OK</strong>
-          <em id="auditBenchmarkNote">Datos recibidos vía Edge Function.</em>
+          <strong id="auditBenchmarkStatus">Sin comprobar</strong>
+          <em id="auditBenchmarkNote">No se han solicitado datos.</em>
         </article>
       </section>
 
@@ -3054,7 +2967,7 @@ html{
           <article class="card dataStatusCard"><label>Excel cargado</label><strong data-data-status="file">Sin Excel</strong><small data-data-status="file-note">Fuente principal pendiente</small></article>
           <article class="card dataStatusCard"><label>Excel importado</label><strong data-data-status="local">Pendiente</strong><small data-data-status="local-note">Día y hora de importación/carga</small></article>
           <article class="card dataStatusCard"><label>Supabase Cloud</label><strong data-data-status="cloud" class="yellow">Sin sesión</strong><small data-data-status="cloud-note">Guardar/Cargar nube pendiente</small></article>
-          <article class="card dataStatusCard"><label>Benchmark/API</label><strong data-data-status="benchmark" class="yellow">Sin cargar</strong><small data-data-status="benchmark-note">Edge Function disponible</small></article>
+          <article class="card dataStatusCard"><label>Benchmark/API</label><strong data-data-status="benchmark">Sin datos</strong><small data-data-status="benchmark-note">Carga el Excel antes de solicitar datos</small></article>
         </section>
       </section>
     </section>
@@ -3066,14 +2979,14 @@ html{
 <script>window.addEventListener('DOMContentLoaded', function(){ if(typeof loadWorkbookCache==='function') loadWorkbookCache(); });</script>
 <script>
 const pages=[
-  ["dashboard","Dashboard","Resumen principal desde la hoja RESUMEN del Excel.","ok"],
-  ["cartera","Cartera actual","Detalle de activos desde CARTERA ACTUAL.","ok"],
-  ["xirr","XIRR global","Rentabilidad ponderada y flujos de inversión.","ok"],
-  ["movimientos","Movimientos","Movimientos conectados con el cálculo XIRR.","ok"],
-  ["historial","Historial","Resumen anual y años anteriores.","ok"],
-  ["benchmark","Benchmark","Tu cartera real frente a cartera objetivo y referencias externas.","ok"],
-  ["asesoria","Asesoría","Lectura ejecutiva de lo importante hoy de la cartera.","ok"],
-  ["auditoria","Auditoría","Estado técnico de la web y funciones activas.","ok"]
+  ["dashboard","Dashboard","Resumen principal desde la hoja RESUMEN del Excel.","off"],
+  ["cartera","Cartera actual","Detalle de activos desde CARTERA ACTUAL.","off"],
+  ["xirr","XIRR global","Rentabilidad ponderada y flujos de inversión.","off"],
+  ["movimientos","Movimientos","Movimientos conectados con el cálculo XIRR.","off"],
+  ["historial","Historial","Resumen anual y años anteriores.","off"],
+  ["benchmark","Benchmark","Tu cartera real frente a cartera objetivo y referencias externas.","off"],
+  ["asesoria","Asesoría","Lectura ejecutiva de lo importante hoy de la cartera.","off"],
+  ["auditoria","Auditoría","Estado técnico de la web y funciones activas.","off"]
 ];
 const nav=document.getElementById("nav");
 // v141: los botones ya están escritos en el HTML para que el menú se vea desde el primer
@@ -4740,6 +4653,10 @@ function updateHistorial(){
   // Sincroniza el número de la pestaña de año activa con el último cierre disponible.
   const activePillYear = document.querySelector('#historial .yearPills button.active strong');
   if(activePillYear && yearName) activePillYear.textContent = yearName;
+  const activePillState = document.querySelector('#historial .yearPills button.active span');
+  if(activePillState && yearName) activePillState.textContent = 'Cerrado';
+  const assetsYearTitle = document.querySelector('#historial .historyAssetBlock .cardHeader h3');
+  if(assetsYearTitle && yearName) assetsYearTitle.textContent = `Activos ${yearName}`;
   const summary = {};
   for(let r=14;r<=21;r++) summary[cell(rows,r,1)] = cell(rows,r,2);
   // La clave de XIRR del cierre anual incluye el año (p.ej. "XIRR 2025"): la buscamos sin fijar el año.
@@ -4769,23 +4686,23 @@ function updateAuditoria(){
   const failedControls=auditRows.filter((row,index)=>index>=4 && normalizeText(row?.[4])==='revisar');
   const ok = hasWorkbook && missing.length === 0 && auditState==='ok' && failedControls.length===0;
 
-  const set = (selector, value, cls='') => {
+  const set = (selector, value, cls) => {
     const el = document.querySelector(selector);
     if(!el) return;
     el.textContent = value;
-    if(cls) el.className = cls;
+    if(cls!==undefined) el.className = cls || '';
   };
 
-  set('[data-web-audit="global-status"]', ok ? 'OK' : 'Pendiente', ok ? 'green' : 'yellow');
-  set('[data-web-audit="global-note"]', ok ? 'Excel y controles internos en OK' : hasWorkbook ? `${failedControls.length || missing.length} control(es) requieren revisión` : 'Importa el Excel para validar la web');
-  set('[data-web-audit="excel-status"]', ok ? 'Conectado' : 'Pendiente', ok ? 'green' : 'yellow');
-  set('[data-web-audit="excel-note"]', hasWorkbook ? `${fileName} · ${failedControls.length ? 'controles con incidencias' : 'auditoría interna OK'}` : 'Fuente única de datos');
-  set('[data-web-audit="cache-status"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : 'yellow');
+  set('[data-web-audit="global-status"]', 'OK', 'green');
+  set('[data-web-audit="global-note"]', 'Interfaz y controles técnicos operativos');
+  set('[data-web-audit="excel-status"]', !hasWorkbook ? 'Sin datos' : ok ? 'Conectado' : missing.length ? 'Error' : 'Revisar', !hasWorkbook ? '' : ok ? 'green' : 'red');
+  set('[data-web-audit="excel-note"]', !hasWorkbook ? 'Excel no conectado' : `${fileName} · ${ok ? 'auditoría interna OK' : `${failedControls.length || missing.length} control(es) requieren revisión`}`);
+  set('[data-web-audit="cache-status"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : '');
   set('[data-web-audit="cache-note"]', hasCache ? 'Último Excel guardado en este navegador' : 'Se activará al importar Excel');
-  set('[data-web-audit="backup-status"]', hasWorkbook || hasCache ? 'Disponible' : 'Pendiente', hasWorkbook || hasCache ? 'green' : 'yellow');
-  set('[data-web-audit="cache-check"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : 'yellow');
+  set('[data-web-audit="backup-status"]', hasWorkbook || hasCache ? 'Disponible' : 'Sin datos', hasWorkbook || hasCache ? 'green' : '');
+  set('[data-web-audit="cache-check"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : '');
 
-  setNavStatus('auditoria', ok ? 'ok' : hasWorkbook ? 'bad' : 'warn');
+  setNavStatus('auditoria', 'ok');
   updateDataStatus?.();
 }
 
@@ -4817,9 +4734,9 @@ function updateDataStatus(){
     const hasExcel=!!fileName;
     const realImportDate = manualImport || cloudUploaded || '';
     const valuationDate=importedWorkbook ? fmtDate(cell(sheetRows('XIRR GLOBAL'),4,1)) : '';
-    setDataStatus('file', hasExcel ? fileName : 'Sin Excel', hasExcel ? 'green' : 'yellow');
+    setDataStatus('file', hasExcel ? fileName : 'Sin Excel', hasExcel ? 'green' : '');
     setDataStatus('file-note', hasExcel ? 'Excel como fuente única' : 'Importa o carga desde nube');
-    setDataStatus('local', realImportDate ? formatDataStatusDate(realImportDate) : 'Pendiente', realImportDate ? 'green' : 'yellow');
+    setDataStatus('local', realImportDate ? formatDataStatusDate(realImportDate) : 'Pendiente', realImportDate ? 'green' : '');
     const dashAgeEl=document.querySelector('[data-data-status="dash-age"]');
     if(dashAgeEl){
       if(realImportDate){
@@ -4837,7 +4754,7 @@ function updateDataStatus(){
       setDataStatus('local-note', 'Se activa al importar Excel');
     }
     const logged=!!portfolioCloudSession?.user;
-    setDataStatus('cloud', logged ? 'Activo' : 'Sin sesión', logged ? 'green' : 'yellow');
+    setDataStatus('cloud', logged ? 'Activo' : 'Sin sesión', logged ? 'green' : '');
     let cloudNote = logged ? 'Sesión iniciada' : 'Login pendiente';
     if(cloudUploaded){
       cloudNote = 'Excel subido · ' + formatDataStatusDate(cloudUploaded);
@@ -4849,7 +4766,7 @@ function updateDataStatus(){
     setDataStatus('cloud-note', cloudNote);
     const b=document.getElementById('benchmarkApiStatus');
     const bText=b?.textContent?.trim() || 'Sin cargar';
-    const bCls=b?.className || 'yellow';
+    const bCls=b?.className || '';
     setDataStatus('benchmark', bText, bCls);
     setDataStatus('benchmark-note', bText.toLowerCase().includes('ok') || bCls.includes('green') ? 'Datos recibidos vía Edge Function' : 'Disponible cuando cargues benchmark');
   }catch(err){
@@ -4897,6 +4814,25 @@ function clearWorkbookCache(){
 }
 
 function updateAsesoria(){
+  const set=(id,val,cls)=>{ const el=document.getElementById(id); if(el){ el.textContent=val; if(cls!==undefined) el.className=cls||''; } };
+  if(!importedWorkbook){
+    set('advisorState', 'Sin datos', '');
+    set('advisorStateNote', 'Importa o carga el Excel para evaluar la cartera.');
+    set('advisorValue', '--', '');
+    set('advisorGain', '--', '');
+    set('advisorXirr', '--', '');
+    set('advisorRecommendationShort', 'Sin datos', '');
+    set('advisorMainReading', 'Importa o carga el Excel para obtener una lectura financiera.', '');
+    set('advisorToday', 'No se mostrará ningún diagnóstico sin datos reales.');
+    const emptyList=document.getElementById('advisorWatchList');
+    if(emptyList) emptyList.innerHTML='<div><strong>Estado financiero</strong><span>Sin datos</span></div>';
+    set('advisorExcelRecommendation', 'Sin datos', '');
+    set('advisorExcelNote', 'La recomendación aparecerá únicamente cuando haya un Excel cargado.');
+    const emptyConfidence=document.getElementById('advisorConfidence');
+    if(emptyConfidence) emptyConfidence.innerHTML='<strong>Confianza de datos:</strong> sin Excel cargado.';
+    setNavStatus('asesoria', 'off');
+    return;
+  }
   const resumen = sheetRows('RESUMEN');
   const cartera = parseCartera();
   const valueTotal = cell(resumen,5,2);
@@ -4916,12 +4852,13 @@ function updateAsesoria(){
 
   const globalReading=cleanText(cell(resumen,16,2));
   const globalState=statusFromText(cell(resumen,16,2));
-  const st=globalState==='bad'
-    ? {label:'Revisar',cls:'red',note:globalReading}
-    : globalState==='warn'
-      ? {label:'Vigilar',cls:'yellow',note:globalReading}
-      : {label:'Correcto',cls:'green',note:globalReading || 'Cartera alineada con seguimiento normal.'};
-  const set=(id,val,cls)=>{ const el=document.getElementById(id); if(el){ el.textContent=val; if(cls!==undefined) el.className=cls||''; } };
+  const st=!globalReading
+    ? {label:'Sin datos',cls:'',note:'El Excel no contiene un diagnóstico global.'}
+    : globalState==='bad'
+      ? {label:'Revisar',cls:'red',note:globalReading}
+      : globalState==='warn'
+        ? {label:'Vigilar',cls:'yellow',note:globalReading}
+        : {label:'Correcto',cls:'green',note:globalReading};
   set('advisorState', st.label, st.cls);
   set('advisorStateNote', st.note);
   set('advisorValue', fmtMoney(valueTotal));
@@ -4929,8 +4866,8 @@ function updateAsesoria(){
   set('advisorXirr', fmtPct(xirr,2,true), clsByValue(xirr));
 
   const firstWatch = watch[0];
-  const recommendationShort = st.cls==='red' ? 'Revisar cartera' : firstWatch ? `Vigilar ${firstWatch.name}` : 'Mantener rumbo';
-  set('advisorRecommendationShort', recommendationShort, firstWatch ? firstWatch.cls : 'green');
+  const recommendationShort = st.cls==='red' ? 'Revisar cartera' : firstWatch ? `Vigilar ${firstWatch.name}` : globalReading ? 'Sin alertas' : 'Sin datos';
+  set('advisorRecommendationShort', recommendationShort, firstWatch ? firstWatch.cls : globalReading ? 'green' : '');
 
   const main = document.getElementById('advisorMainReading');
   if(main){
@@ -4939,17 +4876,17 @@ function updateAsesoria(){
   }
   const today=document.getElementById('advisorToday');
   if(today){
-    today.textContent = cleanText(cell(resumen,15,2)) || globalReading || 'Mantener la disciplina de aportaciones definida en el Excel.';
+    today.textContent = cleanText(cell(resumen,15,2)) || globalReading || 'Sin recomendación adicional registrada en el Excel.';
   }
   const list=document.getElementById('advisorWatchList');
   if(list){
     list.innerHTML = watch.length
       ? watch.map(x=>`<div><strong>${escHtml(x.name)}</strong><span class="${x.cls}">${escHtml(x.reason)}</span></div>`).join('')
-      : '<div><strong>Cartera global</strong><span class="green">Sin alertas relevantes</span></div>';
+      : '<div><strong>Cartera global</strong><span>Sin alertas registradas en el Excel</span></div>';
   }
   const reco=document.getElementById('advisorExcelRecommendation');
   if(reco){
-    reco.textContent = globalReading || 'Mantener la estrategia actual según los controles del Excel.';
+    reco.textContent = globalReading || 'Sin recomendación registrada en el Excel.';
   }
   const note=document.getElementById('advisorExcelNote');
   if(note){
@@ -4957,10 +4894,16 @@ function updateAsesoria(){
   }
   const conf=document.getElementById('advisorConfidence');
   if(conf){
-    conf.innerHTML = `<strong>Confianza de datos:</strong> ${importedData?.fileName ? `Excel cargado · ${escHtml(importedData.fileName)}${date ? ` · valoración ${escHtml(date)}` : ''}.` : 'demo pendiente de Excel real cargado.'}`;
+    conf.innerHTML = `<strong>Confianza de datos:</strong> Excel cargado · ${escHtml(importedData?.fileName || 'fuente importada')}${date ? ` · valoración ${escHtml(date)}` : ''}.`;
   }
   setNavStatus('asesoria', st.cls==='red' ? 'bad' : st.cls==='yellow' ? 'warn' : 'ok');
 }
+
+document.addEventListener('DOMContentLoaded',()=>{
+  updateAsesoria();
+  updateAuditoria();
+  updateDataStatus?.();
+});
 
 function applyWorkbookAfterRead(fileName, fromCache=false){
   const missing=validateWorkbook(importedWorkbook);
