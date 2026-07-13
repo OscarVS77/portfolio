@@ -2481,7 +2481,7 @@ html{
       <section class="pageBlock evolutionBlock" id="evolutionBlock">
         <article class="card evolutionCard">
           <div class="cardHeader evolutionHeader">
-            <div><h3>Evolución de la cartera</h3><p>Combina cierres reales con valoraciones reconstruidas o provisionales y las compara con el capital invertido neto. Cada observación conserva su fecha financiera y su naturaleza.</p></div>
+            <div><h3>Evolución de la cartera</h3><p>Cierres y valoraciones comparados con el capital invertido neto.</p></div>
           </div>
           <div class="chartHost" id="dashboardEvolutionChart"><div class="chartEmpty">Importa el Excel para ver la evolución real de la cartera.</div></div>
         </article>
@@ -4742,6 +4742,8 @@ function updateDataStatus(){
       if(realImportDate){
         const origen = manualImport ? 'Importado' : 'Cargado desde nube';
         dashAgeEl.textContent = `${valuationDate ? `Valoración ${valuationDate} · ` : ''}${origen} ${formatDataStatusDate(realImportDate)}`;
+      }else if(hasExcel){
+        dashAgeEl.textContent = `${valuationDate ? `Valoración ${valuationDate} · ` : ''}Excel recuperado`;
       }else{
         dashAgeEl.textContent = 'Importa el Excel para ver la fecha de los datos.';
       }
@@ -8427,6 +8429,122 @@ strong.neutral, span.neutral, em.neutral, .pill.neutral, .statusPill.neutral,
   #dashboard .chartHost{min-height:220px!important;}
   #dashboard .mobileAssetList{padding:12px 14px 14px!important;gap:8px!important;}
   #dashboard .alerts{padding:8px 14px 14px!important;}
+}
+
+/* v165 · Simplificación de tarjetas, bordes y lectura móvil */
+.card, .kpi, .capitalCard, .yearCard{
+  box-shadow:none!important;
+  background:rgba(13,15,18,.88)!important;
+  border-color:rgba(244,241,234,.09)!important;
+}
+.card:before{display:none!important;}
+.heroTopMetric, .heroMetric, .capitalCard, .assetSummaryItem, .mobileAssetCard,
+.advisorMetric, .auditWebCard, .dataStatusCard, .benchmarkMetric,
+.yearSummarySide > div, .yearFacts > div{
+  box-shadow:none!important;
+  background:rgba(0,0,0,.20)!important;
+  border-color:rgba(244,241,234,.075)!important;
+}
+.tableWrap, .assetTableWrap, .annualTableWrap, .distTableWrap,
+.cleanTableWrap, .recoTableWrap{
+  box-shadow:none!important;
+  background:rgba(0,0,0,.18)!important;
+  border-color:rgba(244,241,234,.08)!important;
+}
+#dashboard .capitalCard.capitalCardKey{
+  border:1px solid rgba(244,241,234,.09)!important;
+  box-shadow:none!important;
+}
+
+@media(max-width:760px){
+  #dashboard .mobileCarteraActual{display:none!important;}
+  #dashboard #assetSummaryDash{order:5;}
+  #dashboard .dashboardOps{order:6;}
+  #dashboard .evolutionCard{padding:14px 14px 18px!important;}
+  #dashboard .evoHeadline{gap:8px!important;margin-top:10px!important;}
+  #dashboard .evoLegend{gap:8px 12px!important;}
+  #dashboard .evoLegendItem{font-size:12px!important;line-height:1.25!important;}
+  #dashboard .chartAxisLabel{font-size:11.5px!important;}
+  #dashboard .chartHost{padding:0 8px!important;}
+
+  #dashboard .dashboardDistributionBlock,
+  #dashboard .distributionCard{overflow:visible!important;}
+  #dashboard .dashboardDistributionBlock .legend,
+  #dashboard .distributionCard .legend{
+    padding:10px 14px 14px!important;
+    overflow:visible!important;
+  }
+  #dashboard .dashboardDistributionBlock .distTableWrap,
+  #dashboard .distributionCard .distTableWrap{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    margin-top:8px!important;
+    overflow:visible!important;
+    border:0!important;
+    background:transparent!important;
+  }
+  #dashboard .dashboardDistributionBlock .distTable,
+  #dashboard .distributionCard .distTable{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+  #dashboard .distTable thead{display:none!important;}
+  #dashboard .distTable tbody{display:grid!important;gap:8px!important;}
+  #dashboard .distTable tbody tr{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:7px 14px!important;
+    padding:12px!important;
+    border:1px solid rgba(244,241,234,.075)!important;
+    border-radius:6px!important;
+    background:rgba(0,0,0,.20)!important;
+  }
+  #dashboard .distTable tbody td{
+    display:flex!important;
+    width:auto!important;
+    min-width:0!important;
+    padding:0!important;
+    border:0!important;
+    align-items:baseline!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+    white-space:normal!important;
+    text-align:right!important;
+    font-size:12.5px!important;
+  }
+  #dashboard .distTable tbody td:first-child{
+    grid-column:1 / -1!important;
+    padding-bottom:9px!important;
+    border-bottom:1px solid rgba(244,241,234,.07)!important;
+    text-align:left!important;
+  }
+  #dashboard .distTable tbody td:not(:first-child):before{
+    color:var(--muted)!important;
+    font-size:11px!important;
+    font-weight:650!important;
+    text-align:left!important;
+  }
+  #dashboard .distTable tbody td:nth-child(2):before{content:'Valor';}
+  #dashboard .distTable tbody td:nth-child(3):before{content:'Peso';}
+  #dashboard .distTable tbody td:nth-child(4):before{content:'Objetivo';}
+  #dashboard .distTable tbody td:nth-child(5):before{content:'Desviación';}
+  #dashboard .distTable tbody td:nth-child(6):before{content:'Estado';}
+  #dashboard .distTable tbody td:nth-child(6){grid-column:1 / -1!important;}
+
+  #dashboard .alertsCard .alert{
+    grid-template-columns:1fr!important;
+    gap:5px!important;
+    padding:11px 0!important;
+  }
+  #dashboard .alertsCard .alertName,
+  #dashboard .alertsCard .alertStatus{
+    justify-content:flex-start!important;
+    text-align:left!important;
+  }
+  #dashboard .alertsCard .alertStatus{line-height:1.4!important;}
 }
 </style>
 </body>
