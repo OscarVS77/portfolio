@@ -3717,7 +3717,29 @@ function __evoTooltipInit(host){
   if(!host || host.dataset.evoTooltip==='1') return;
   host.dataset.evoTooltip='1';
   host.addEventListener('mousemove', e=>{
-    const target=e.target?.closest?.('[data-evo-tip]');
+    const svg=host.querySelector('svg');
+    const matrix=svg?.getScreenCTM?.();
+    if(!svg || !matrix){ tip.style.display='none'; return; }
+    const cursor=new DOMPoint(e.clientX,e.clientY).matrixTransform(matrix.inverse());
+    let target=null;
+    let nearestDistance=Infinity;
+    host.querySelectorAll('g[data-evo-tip]').forEach(group=>{
+      const hit=group.querySelector('.evoHitArea');
+      if(!hit) return;
+      const cx=Number(hit.getAttribute('cx'));
+      const cy=Number(hit.getAttribute('cy'));
+      const radius=Number(hit.getAttribute('r'));
+      if(!Number.isFinite(cx) || !Number.isFinite(cy) || !Number.isFinite(radius)) return;
+      const svgDx=cursor.x-cx;
+      const svgDy=cursor.y-cy;
+      if(svgDx*svgDx+svgDy*svgDy>radius*radius) return;
+      const center=new DOMPoint(cx,cy).matrixTransform(matrix);
+      const screenDx=e.clientX-center.x;
+      const screenDy=e.clientY-center.y;
+      const distance=screenDx*screenDx+screenDy*screenDy;
+      // En empate conserva el punto dibujado después, coherente con el orden visual del SVG.
+      if(distance<=nearestDistance){ target=group; nearestDistance=distance; }
+    });
     if(!target){ tip.style.display='none'; return; }
     tip.innerHTML=target.getAttribute('data-evo-tip') || '';
     tip.style.display='block';
