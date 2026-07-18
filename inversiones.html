@@ -2794,7 +2794,6 @@ function parseBenchmarkFlowsFromXirr(assetTest=null, includePension=false){
     const activo=String(row[1] || '').trim();
     const tipo=String(row[2] || '').trim();
     const importeXirr=benchmarkNumber(row[4]);
-    const importeVisible=benchmarkNumber(row[5]);
     const incluye=String(row[6] || '').trim();
     if(!fecha || !activo || !tipo) continue;
 
@@ -2810,7 +2809,10 @@ function parseBenchmarkFlowsFromXirr(assetTest=null, includePension=false){
     const date=isoDateFromAny(fecha);
     if(!date) continue;
 
-    let cash=Number.isFinite(importeXirr) && importeXirr!==0 ? -importeXirr : importeVisible;
+    // El contrato financiero separa dos conceptos: Importe XIRR es el flujo
+    // económico y el importe visible solo documenta el movimiento. Un XIRR
+    // igual a cero (p. ej. un traspaso interno informativo) no aporta capital.
+    const cash=-importeXirr;
     if(!Number.isFinite(cash) || Math.abs(cash)<0.01) continue;
 
     flows.push({date, asset:activo, type:tipo, cash, row:i});
@@ -2825,7 +2827,158 @@ function isTemplateAssetRow(comment){
   return normalizeText(comment).trim().startsWith('plantilla');
 }
 
+// v175: histórico canónico. Si las tres hojas están presentes, toda la lectura
+// histórica usa fechas efectivas y controles acreditados; si no existen, se
+// conserva íntegramente el contrato heredado para libros anteriores.
+function canonicalHistoryIsAvailable(){
+  const sheets=importedWorkbook?.Sheets || {};
+  return Boolean(sheets['NÚCLEO CIERRES'] && sheets['NÚCLEO VALORACIONES'] && sheets['NÚCLEO XIRR HIST.']);
+}
+function canonicalHistoryHeader(rows, expected){
+  for(let i=0;i<Math.min(rows.length,12);i++){
+    const header=(rows[i]||[]).map(value=>normalizeText(value));
+    const columns=expected.map(label=>header.indexOf(normalizeText(label)));
+    if(columns.every(column=>column>=0)) return {row:i, columns};
+  }
+  return null;
+}
+function parseCanonicalAssetHistory(assetTest=null, includePension=false){
+  if(!canonicalHistoryIsAvailable()) return {available:false, rows:[]};
+  const rows=sheetRows?.('NÚCLEO VALORACIONES') || [];
+  const expected=['Periodo nominal','Fecha efectiva','Estado','Activo','Valor','Capital neto','XIRR activo','Control'];
+  const header=canonicalHistoryHeader(rows, expected);
+  if(!header) return {available:true, rows:[]};
+  const [colNominal,colEffective,colState,colAsset,colValue,colCapital,colXirr,colControl]=header.columns;
+  const out=[];
+  for(let i=header.row+1;i<rows.length;i++){
+    const row=rows[i] || [];
+    const state=normalizeText(row[colState]);
+    const control=normalizeText(row[colControl]);
+    if(state!=='cierre real' || control!=='ok') continue;
+    const date=isoDateFromAny(row[colEffective]);
+    const asset=String(row[colAsset] || '').trim();
+    const value=benchmarkNumber(row[colValue]);
+    const invested=benchmarkNumber(row[colCapital]);
+    const xirr=benchmarkNumber(row[colXirr]);
+    if(!date || !asset || !Number.isFinite(value) || value<=0) continue;
+    const assetKey=normalizeText(asset);
+    if(assetKey.includes('total')) continue;
+    if(!includePension && (assetKey.includes('plan') || assetKey.includes('pensiones'))) continue;
+    if(assetTest && !assetTest(asset)) continue;
+    const nominalDate=row[colNominal];
+    const nominalIso=isoDateFromAny(nominalDate);
+    const nominalUtc=nominalIso ? new Date(`${nominalIso}T00:00:00Z`) : null;
+    out.push({
+      date,
+      dateRaw:row[colEffective],
+      year:nominalUtc && !Number.isNaN(nominalUtc.getTime()) ? nominalUtc.getUTCFullYear() : '',
+      month:nominalUtc && !Number.isNaN(nominalUtc.getTime()) ? nominalUtc.toLocaleString('es-ES',{month:'long',timeZone:'UTC'}) : '',
+      asset,
+      value,
+      invested,
+      xirr
+    });
+  }
+  return {available:true, rows:out.sort((a,b)=>a.date.localeCompare(b.date))};
+}
+function parseCanonicalMonthlyEvolution(){
+  if(!canonicalHistoryIsAvailable()) return {available:false, rows:[]};
+  const rows=sheetRows?.('NÚCLEO CIERRES') || [];
+  const expected=['Periodo nominal','Año','Mes','Fecha efectiva','Estado','Valor cartera','Capital neto','Bruto acumulado','Control'];
+  const header=canonicalHistoryHeader(rows, expected);
+  if(!header) return {available:true, rows:[]};
+  const [colNominal,colYear,colMonth,colEffective,colState,colValue,colCapital,colGross,colControl]=header.columns;
+  const out=[];
+  for(let i=header.row+1;i<rows.length;i++){
+    const row=rows[i] || [];
+    const nominal=row[colNominal];
+    const state=normalizeText(row[colState]);
+    if(!nominal || !state) continue;
+    const valued=state!=='sin cierre';
+    const control=normalizeText(row[colControl]);
+    if((valued && control!=='ok') || (!valued && control!=='sin valoracion')) continue;
+    const value=benchmarkNumber(row[colValue]);
+    const capital=benchmarkNumber(row[colCapital]);
+    const gross=benchmarkNumber(row[colGross]);
+    const effective=valued ? row[colEffective] : '';
+    const dateRaw=effective || nominal;
+    if(!Number.isFinite(capital) || !Number.isFinite(gross)) continue;
+    out.push({
+      fecha:fmtDate(dateRaw),
+      fechaRaw:dateRaw,
+      anio:row[colYear],
+      mes:row[colMonth],
+      valor:valued && Number.isFinite(value) && value>0 ? value : null,
+      invertido:capital,
+      aportado:gross,
+      estado:state,
+      fechaReal:effective
+    });
+  }
+  return {available:true, rows:out};
+}
+
+// v175.1: el cierre anual deja de depender de crear manualmente una hoja AAAA.
+// Un diciembre acreditado como CIERRE REAL y con control OK es la fuente anual.
+function parseCanonicalAnnualHistory(){
+  if(!canonicalHistoryIsAvailable()) return {available:false, rows:[]};
+  const closureRows=sheetRows?.('NÚCLEO CIERRES') || [];
+  const valuationRows=sheetRows?.('NÚCLEO VALORACIONES') || [];
+  const closureHeader=canonicalHistoryHeader(closureRows,['Periodo nominal','Fecha efectiva','Estado','Valor cartera','Capital neto','G/P económica','Rentabilidad simple','XIRR','Control','Evidencia']);
+  const valuationHeader=canonicalHistoryHeader(valuationRows,['Periodo nominal','Fecha efectiva','Estado','Activo','Valor','Capital neto','G/P económica','Peso cartera','Control']);
+  if(!closureHeader || !valuationHeader) return {available:true, rows:[]};
+  const [cNominal,cEffective,cState,cValue,cCapital,cGain,cSimple,cXirr,cControl,cEvidence]=closureHeader.columns;
+  const [vNominal,vEffective,vState,vAsset,vValue,vCapital,vGain,vWeight,vControl]=valuationHeader.columns;
+  const valuations=[];
+  for(let i=valuationHeader.row+1;i<valuationRows.length;i++){
+    const row=valuationRows[i] || [];
+    const nominal=isoDateFromAny(row[vNominal]);
+    const effective=isoDateFromAny(row[vEffective]);
+    const state=normalizeText(row[vState]);
+    const control=normalizeText(row[vControl]);
+    const asset=String(row[vAsset] || '').trim();
+    const value=benchmarkNumber(row[vValue]);
+    const capital=benchmarkNumber(row[vCapital]);
+    const gain=benchmarkNumber(row[vGain]);
+    const weight=benchmarkNumber(row[vWeight]);
+    if(!nominal || !effective || state!=='cierre real' || control!=='ok' || !asset || ![value,capital,gain,weight].every(Number.isFinite)) continue;
+    valuations.push({nominal,effective,asset,value,capital,gain,weight});
+  }
+  const out=[];
+  for(let i=closureHeader.row+1;i<closureRows.length;i++){
+    const row=closureRows[i] || [];
+    const nominal=isoDateFromAny(row[cNominal]);
+    const effective=isoDateFromAny(row[cEffective]);
+    if(!nominal || !effective || normalizeText(row[cState])!=='cierre real' || normalizeText(row[cControl])!=='ok') continue;
+    const nominalDate=new Date(`${nominal}T00:00:00Z`);
+    if(Number.isNaN(nominalDate.getTime()) || nominalDate.getUTCMonth()!==11) continue;
+    const assets=valuations.filter(item=>item.nominal===nominal && item.effective===effective);
+    if(assets.length!==6) continue;
+    const value=benchmarkNumber(row[cValue]);
+    const capital=benchmarkNumber(row[cCapital]);
+    const gain=benchmarkNumber(row[cGain]);
+    const simple=benchmarkNumber(row[cSimple]);
+    const xirr=benchmarkNumber(row[cXirr]);
+    if(![value,capital,gain,simple,xirr].every(Number.isFinite)) continue;
+    out.push({
+      year:nominalDate.getUTCFullYear(), nominal, effective, value, capital, gain, simple, xirr,
+      evidence:String(row[cEvidence] || '').trim(),
+      assets:assets.map(item=>({
+        activo:item.asset,
+        plataforma:platformForAsset(item.asset),
+        inv:item.capital,
+        valor:item.value,
+        pl:item.gain,
+        peso:item.weight
+      }))
+    });
+  }
+  return {available:true, rows:out.sort((a,b)=>a.year-b.year)};
+}
+
 function parseMonthlyAssetHistory(assetTest=null, includePension=false){
+  const canonical=parseCanonicalAssetHistory(assetTest, includePension);
+  if(canonical.available) return canonical.rows.map(item=>({date:item.date,asset:item.asset,value:item.value,invested:item.invested,xirr:item.xirr}));
   const rows = sheetRows?.('HISTÓRICO MENSUAL X ACTIVO') || sheetRows?.('HISTORICO MENSUAL X ACTIVO') || [];
   const out=[];
   if(!rows.length) return out;
@@ -3163,8 +3316,9 @@ function renderBenchmarkSummary(currentValue, targetValue, netInvested, realRetu
   const absDiff = Math.abs(Number(valueDiff || 0));
   const absPct = Math.abs(Number(diff || 0));
   const historyCount = Array.isArray(monthlyHistory) ? monthlyHistory.length : 0;
+  const historySource = canonicalHistoryIsAvailable() ? 'NÚCLEO VALORACIONES' : 'HISTÓRICO MENSUAL X ACTIVO';
   const caution = historyCount >= 3
-    ? `La línea verde usa ${historyCount} cierres mensuales reales de HISTÓRICO MENSUAL X ACTIVO; la línea amarilla es la Cartera objetivo simulada con los mismos movimientos.`
+    ? `La línea verde usa ${historyCount} cierres mensuales reales de ${historySource}; la línea amarilla es la Cartera objetivo simulada con los mismos movimientos.`
     : `Histórico todavía insuficiente: hay ${historyCount} cierre${historyCount===1?'':'s'} mensual${historyCount===1?'':'es'} real${historyCount===1?'':'es'} útil${historyCount===1?'':'es'} para esta vista. Hasta tener 3 cierres, se muestra tu valor real actual como punto final y no se inventa una línea histórica.`;
   box.innerHTML = `<span>Lectura del resultado</span><strong>${title}</strong><p>Con los mismos movimientos reales, ${cfg.realLabel.toLowerCase()} vale ${fmtMoney(currentValue)} frente a ${fmtMoney(targetValue)} de ${cfg.targetLabel}. La diferencia actual es de ${fmtMoney(absDiff)} ${direction}, equivalente a ${fmtNumber(absPct,2)} puntos. La rentabilidad real es ${benchmarkPct(realReturn)} y ${cfg.targetLabel} habría hecho ${benchmarkPct(targetReturn)}. ${caution}</p>`;
 }
@@ -3218,8 +3372,30 @@ document.getElementById("excelFile").addEventListener("change", e=>{
   const file=e.target.files[0];
   if(file) handleExcelImport(file);
 });
-// Portfolio Oscar · importación Excel v2
-const REQUIRED_SHEETS = ['RESUMEN','CARTERA ACTUAL','XIRR GLOBAL','HISTÓRICO MENSUAL','HISTÓRICO MENSUAL X ACTIVO','OBJETIVOS Y PROYECCIÓN','AUDITORÍA'];
+// Portfolio Oscar · contrato de importación Excel v3
+const WORKBOOK_CONTRACT = Object.freeze({
+  id:'portfolio-oscar-web-v1',
+  requiredSheets:['RESUMEN','CARTERA ACTUAL','XIRR GLOBAL','HISTÓRICO MENSUAL','HISTÓRICO MENSUAL X ACTIVO','OBJETIVOS Y PROYECCIÓN','AUDITORÍA'],
+  carteraHeaders:['Activo','Plataforma','ISIN / Ticker','Tipo','Invertido (€)','Rentabilidad','Valor actual','P&L','Peso real','Peso objetivo','Desviación','Desv. relativa'],
+  carteraAssets:['BTC Bitcoin','iShares Physical Gold ETC','MSCI World','Emerging Markets','Small Cap','Plan Pensiones','TOTAL'],
+  xirrMasterHeaders:['Fecha valoración','Estado','Valor actual','Inv. plataforma','Invertido real (neto)','Aportado total (bruto)','G/P real','XIRR global','Rent. simple real','Dif. inv.'],
+  xirrAssetHeaders:['Activo','Invertido real','Inv. plataforma','Rentabilidad plataforma','Valor actual','G/P real','Rent. simple real','XIRR activo','Estado','Nota'],
+  movementHeaders:['Fecha','Activo','Tipo','Plataforma','Importe XIRR','Importe visible','Incluye XIRR global'],
+  monthlyHeaders:['Fecha cierre','Año','Mes','Valor cartera total','Invertido real neto','Aportado total bruto','G/P real','Rentabilidad simple real','XIRR global','MSCI World %','Emerging Markets %','Small Cap %','Oro %','Bitcoin %','Fondos indexados %','Satélites %','Liquidez','Deuda','Patrimonio neto','Estado auditoría','Comentario'],
+  monthlyAssetHeaders:['Fecha cierre','Año','Mes','Activo','Aportación mensual','Flujo neto mensual','Invertido real neto','Aportado bruto acum.','Valor cierre','G/P real','Rent. simple real','XIRR activo','Peso cartera','Estado','Comentario'],
+  canonicalClosureHeaders:['Periodo nominal','Año','Mes','Fecha efectiva','Estado','Valor cartera','Capital neto','Bruto acumulado','Retiradas acum.','G/P económica','Rentabilidad simple','XIRR','Activos valorados','Control','Evidencia','Dif. capital legado','XIRR legado'],
+  canonicalValuationHeaders:['ID valoración','Periodo nominal','Fecha efectiva','Estado','Activo','Valor','Capital neto','Bruto acumulado','Retiradas acum.','Aportación mensual','Flujo neto mensual','G/P económica','Rentabilidad simple','XIRR activo','Peso cartera','Control','Evidencia de valoración','Fuente del capital','Base plataforma 2025','Dif. plataforma/capital'],
+  canonicalSheets:['NÚCLEO CIERRES','NÚCLEO VALORACIONES','NÚCLEO XIRR HIST.'],
+  operationalSheets:['GUÍA DE USO','REGISTRO CIERRES'],
+  operationalRegisterHeaders:['Periodo nominal','Fecha efectiva','Estado','Evidencia / nota','BTC Bitcoin','iShares Physical Gold ETC','MSCI World','Emerging Markets','Small Cap','Plan Pensiones','Valor total','Terminales','Control entrada','Cierre anual'],
+  objectiveAssets:['MSCI World','Emerging Markets','Small Cap','Oro','Bitcoin','Plan Pensiones'],
+  auditHeaders:['Área','Control','Ubicación / fuente','Resultado','Estado','Lectura / acción si falla'],
+  annualAssets:['Oro','Bitcoin','Plan Pensiones','MSCI World','Emerging Markets','Small Cap'],
+  amountTolerance:0.02,
+  rateTolerance:0.000001,
+  displayRateTolerance:0.0002
+});
+const REQUIRED_SHEETS = WORKBOOK_CONTRACT.requiredSheets;
 // Devuelve la última hoja con nombre de año (AAAA) presente en el Excel, p.ej. '2025' o '2026'.
 function latestYearSheet(){
   const sheets = importedWorkbook?.Sheets || {};
@@ -3228,6 +3404,7 @@ function latestYearSheet(){
 }
 let importedWorkbook = null;
 let importedData = null;
+let lastWorkbookValidationIssues = [];
 
 function fmtNumber(value, decimals=2){
   const n = Number(value);
@@ -3375,6 +3552,8 @@ function renderAssetSummary(cartera){
 }
 
 function parseMonthlyEvolution(){
+  const canonical=parseCanonicalMonthlyEvolution();
+  if(canonical.available) return canonical.rows;
   const rows = sheetRows('HISTÓRICO MENSUAL');
   if(!rows.length) return [];
   let hdr = -1;
@@ -3965,18 +4144,28 @@ function applyMovementFiltersDynamic(){
 }
 
 function updateHistorial(){
-  const yearName = latestYearSheet();
-  const year = yearName || '—';
+  const canonicalAnnual=parseCanonicalAnnualHistory();
+  const canonicalRecord=canonicalAnnual.available && canonicalAnnual.rows.length ? canonicalAnnual.rows[canonicalAnnual.rows.length-1] : null;
+  const yearName = canonicalRecord ? null : latestYearSheet();
+  const year = canonicalRecord ? String(canonicalRecord.year) : (yearName || '—');
   const rows = yearName ? sheetRows(yearName) : [];
   // Sincroniza el número de la pestaña de año activa con el último cierre disponible.
   const activePillYear = document.querySelector('#historial .yearPills button.active strong');
-  if(activePillYear && yearName) activePillYear.textContent = yearName;
+  if(activePillYear && year!=='—') activePillYear.textContent = year;
   const activePillState = document.querySelector('#historial .yearPills button.active span');
-  if(activePillState && yearName) activePillState.textContent = 'Cerrado';
+  if(activePillState && year!=='—') activePillState.textContent = 'Cerrado';
   const assetsYearTitle = document.querySelector('#historial .historyAssetBlock .cardHeader h3');
-  if(assetsYearTitle && yearName) assetsYearTitle.textContent = `Activos ${yearName}`;
+  if(assetsYearTitle && year!=='—') assetsYearTitle.textContent = `Activos ${year}`;
   const summary = {};
-  for(let r=14;r<=21;r++) summary[cell(rows,r,1)] = cell(rows,r,2);
+  if(canonicalRecord){
+    summary['Valor total']=canonicalRecord.value;
+    summary['Invertido total']=canonicalRecord.capital;
+    summary['P&L total']=canonicalRecord.gain;
+    summary['Rentabilidad total']=canonicalRecord.simple;
+    summary[`XIRR ${year}`]=canonicalRecord.xirr;
+  }else{
+    for(let r=14;r<=21;r++) summary[cell(rows,r,1)] = cell(rows,r,2);
+  }
   // La clave de XIRR del cierre anual incluye el año (p.ej. "XIRR 2025"): la buscamos sin fijar el año.
   const xirrKey = Object.keys(summary).find(k=>/^xirr/i.test(String(k)));
   const xirrVal = xirrKey ? summary[xirrKey] : '';
@@ -3986,11 +4175,22 @@ function updateHistorial(){
   if(side) side.innerHTML=`<div><span>Invertido</span><strong>${fmtMoney(summary['Invertido total'])}</strong></div><div><span>P&L</span><strong class="${clsByValue(summary['P&L total'])}">${fmtMoney(summary['P&L total'])}</strong></div><div><span>Rentabilidad</span><strong class="${clsByValue(summary['Rentabilidad total'])}">${fmtPct(summary['Rentabilidad total'])}</strong></div><div><span>XIRR</span><strong class="${clsByValue(xirrVal)}">${fmtPct(xirrVal)}</strong></div>`;
   const tbody=document.querySelector('#historial .annualTable tbody');
   if(tbody){
-    const out=[]; for(let r=5;r<=11;r++){ const activo=cell(rows,r,1); if(activo) out.push({activo, plataforma:cell(rows,r,2), inv:cell(rows,r,3), rent:cell(rows,r,4), valor:cell(rows,r,5), pl:cell(rows,r,6), peso:cell(rows,r,7)}); }
+    const out=[];
+    if(canonicalRecord){
+      out.push(...canonicalRecord.assets);
+      out.push({activo:'TOTAL',plataforma:'Cierre canónico',inv:canonicalRecord.capital,valor:canonicalRecord.value,pl:canonicalRecord.gain,peso:1});
+    }else{
+      for(let r=5;r<=11;r++){ const activo=cell(rows,r,1); if(activo) out.push({activo, plataforma:cell(rows,r,2), inv:cell(rows,r,3), rent:cell(rows,r,4), valor:cell(rows,r,5), pl:cell(rows,r,6), peso:cell(rows,r,7)}); }
+    }
     tbody.innerHTML=out.map(x=>`<tr class="${String(x.activo).toUpperCase()==='TOTAL'?'total':''}"><td><span class="assetNameLine"><span class="bullet ${assetClass(x.activo)}"></span><span><strong>${escHtml(shortAssetName(x.activo))}</strong><small>${escHtml(x.plataforma||('Cierre '+year))}</small></span></span></td><td>${fmtMoney(x.inv)}</td><td>${fmtMoney(x.valor)}</td><td class="${clsByValue(x.pl)}">${fmtMoney(x.pl)}</td><td>${Number.isFinite(Number(x.peso))?fmtPct(x.peso):escHtml(x.peso)}</td></tr>`).join('');
   }
   const diag=document.querySelector('#historial .diagnosisClean');
-  if(diag) diag.innerHTML=`<span class="eyebrow">Diagnóstico ${year}</span><strong>${escHtml(cell(rows,24,1) || 'Sin diagnóstico')}</strong>`;
+  if(diag){
+    const diagnosis=canonicalRecord
+      ? `Cierre anual canónico acreditado · ${fmtDate(canonicalRecord.effective)}${canonicalRecord.evidence ? ` · ${canonicalRecord.evidence}` : ''}`
+      : (cell(rows,24,1) || 'Sin diagnóstico');
+    diag.innerHTML=`<span class="eyebrow">Diagnóstico ${year}</span><strong>${escHtml(diagnosis)}</strong>`;
+  }
 }
 
 function updateAuditoria(){
@@ -4227,17 +4427,20 @@ document.addEventListener('DOMContentLoaded',()=>{
   updateDataStatus?.();
 });
 
-function applyWorkbookAfterRead(fileName, fromCache=false){
-  const missing=validateWorkbook(importedWorkbook);
-  if(missing.length){ setStatus(false, `ERROR · faltan hojas: ${missing.join(', ')}`); setNavStatus('auditoria','bad'); return false; }
+function applyWorkbookAfterRead(fileName, fromCache=false, candidate=importedWorkbook){
+  const issues=validateWorkbook(candidate);
+  if(issues.length){
+    const visible=issues.slice(0,3).join(' · ');
+    const extra=issues.length>3 ? ` · y ${issues.length-3} incidencia(s) más` : '';
+    setStatus(false, `EXCEL RECHAZADO · ${visible}${extra}`);
+    setNavStatus('auditoria','bad');
+    return false;
+  }
+  importedWorkbook = candidate;
   importedData = {fileName:fileName || 'Excel importado'};
   updateDashboard(); updateCartera(); updateXirr(); updateHistorial(); updateAsesoria(); updateAuditoria(); updateDataStatus?.();
   setStatus(true, fromCache ? `${fileName || 'Excel'} recuperado` : `${fileName || 'Excel'} importado`);
   setNavStatus('dashboard','ok'); setNavStatus('cartera','ok'); setNavStatus('xirr','ok'); setNavStatus('movimientos','ok'); setNavStatus('historial','ok'); setNavStatus('asesoria','ok');
-  if(normalizeText(cell(sheetRows('AUDITORÍA'),2,5))!=='ok'){
-    ['dashboard','cartera','xirr','movimientos','historial','benchmark','asesoria','auditoria'].forEach(page=>setNavStatus(page,'bad'));
-    setStatus(false,'REVISAR · el Excel contiene controles internos con incidencias');
-  }
   return true;
 }
 function loadWorkbookCache(){
@@ -4247,8 +4450,8 @@ function loadWorkbookCache(){
     if(!stored) return;
     const meta = JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
     const buffer = base64ToArrayBuffer(stored);
-    importedWorkbook = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
-    applyWorkbookAfterRead(meta.fileName || 'último Excel', true);
+    const candidate = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
+    if(!applyWorkbookAfterRead(meta.fileName || 'último Excel', true, candidate)) clearWorkbookCache();
   }catch(err){
     console.warn('No se han podido recuperar los datos guardados:', err);
     clearWorkbookCache();
@@ -4302,26 +4505,441 @@ if(backupButton){
   backupButton.addEventListener('click', exportWorkbookBackup);
 }
 
-function validateWorkbook(wb){
-  const missing = REQUIRED_SHEETS.filter(s=>!wb.Sheets[s]);
-  const hasYear = Object.keys(wb.Sheets || {}).some(n=>/^\d{4}$/.test(n));
-  if(!hasYear) missing.push('hoja de año (AAAA)');
-  if(missing.length || typeof XLSX==='undefined') return missing;
-  const rowsOf=name=>XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,raw:true,defval:''});
-  const hasHeader=(name, expected)=>rowsOf(name).some(row=>expected.every((value,index)=>normalizeText(row[index])===normalizeText(value)));
-  if(!hasHeader('CARTERA ACTUAL',['Activo','Plataforma','ISIN / Ticker','Tipo','Invertido (€)'])) missing.push('estructura CARTERA ACTUAL');
-  if(!hasHeader('XIRR GLOBAL',['Fecha','Activo','Tipo','Plataforma','Importe XIRR'])) missing.push('estructura XIRR GLOBAL');
-  if(!hasHeader('HISTÓRICO MENSUAL',['Fecha cierre','Año','Mes','Valor cartera total'])) missing.push('estructura HISTÓRICO MENSUAL');
+function contractText(value){ return normalizeText(value).trim(); }
+function contractNumber(value){ return typeof value==='number' && Number.isFinite(value); }
+function contractApprox(left, right, tolerance=WORKBOOK_CONTRACT.amountTolerance){
+  return contractNumber(left) && contractNumber(right) && Math.abs(left-right)<=tolerance;
+}
+function contractDateDay(value){
+  if(value instanceof Date && !Number.isNaN(value.getTime())) return Math.floor(Date.UTC(value.getUTCFullYear(),value.getUTCMonth(),value.getUTCDate())/86400000);
+  if(contractNumber(value)) return Math.floor(value-25569);
+  if(typeof value==='string' && value.trim()){
+    const parsed=Date.parse(value);
+    if(Number.isFinite(parsed)) return Math.floor(parsed/86400000);
+  }
+  return null;
+}
+function contractAssetKey(value){
+  const text=contractText(value);
+  if(text.includes('btc') || text.includes('bitcoin')) return 'bitcoin';
+  if(text.includes('gold') || text.includes('oro')) return 'oro';
+  if(text.includes('msci') || text.includes('world')) return 'msci';
+  if(text.includes('emerging')) return 'emerging';
+  if(text.includes('small')) return 'small';
+  if(text.includes('plan') || text.includes('pensiones')) return 'pension';
+  if(text==='total') return 'total';
+  return text;
+}
+function contractXirr(flows){
+  const clean=(flows||[]).filter(flow=>contractNumber(flow.amount) && contractNumber(flow.day));
+  if(clean.length<2 || !clean.some(flow=>flow.amount<0) || !clean.some(flow=>flow.amount>0)) return null;
+  const firstDay=Math.min(...clean.map(flow=>flow.day));
+  const npv=rate=>clean.reduce((sum,flow)=>sum+flow.amount/Math.pow(1+rate,(flow.day-firstDay)/365),0);
+  let low=-0.999999999;
+  let high=1;
+  let lowValue=npv(low);
+  let highValue=npv(high);
+  for(let i=0;i<24 && Math.sign(lowValue)===Math.sign(highValue);i++){
+    high=high*2+1;
+    highValue=npv(high);
+  }
+  if(Number.isNaN(lowValue) || Number.isNaN(highValue) || Math.sign(lowValue)===Math.sign(highValue)) return null;
+  for(let i=0;i<90;i++){
+    const mid=(low+high)/2;
+    const midValue=npv(mid);
+    if(Number.isNaN(midValue)) return null;
+    if(Math.abs(midValue)<1e-9) return mid;
+    if(Math.sign(midValue)===Math.sign(lowValue)){
+      low=mid;
+      lowValue=midValue;
+    }else{
+      high=mid;
+      highValue=midValue;
+    }
+  }
+  return (low+high)/2;
+}
+function validateWorkbookDetailed(wb){
+  const issues=[];
+  const add=(code,message)=>{ if(!issues.some(issue=>issue.code===code)) issues.push({code,message}); };
+  if(typeof XLSX==='undefined'){
+    add('LIBRERIA_XLSX','La librería XLSX no está disponible');
+    return issues;
+  }
+  if(!wb?.Sheets){
+    add('LIBRO_INVALIDO','El archivo no contiene un libro Excel legible');
+    return issues;
+  }
+
+  const sheetNames=Object.keys(wb.Sheets);
+  const missing=REQUIRED_SHEETS.filter(name=>!wb.Sheets[name]);
+  if(missing.length) add('HOJAS_REQUERIDAS',`Faltan hojas obligatorias: ${missing.join(', ')}`);
+  const yearSheets=sheetNames.filter(name=>/^\d{4}$/.test(name)).sort();
+  if(!yearSheets.length) add('HOJA_ANUAL','Falta una hoja anual con nombre AAAA');
+  if(missing.length || !yearSheets.length) return issues;
+
+  const cache=new Map();
+  const rowsOf=name=>{
+    if(!cache.has(name)) cache.set(name,XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,raw:true,defval:''}));
+    return cache.get(name);
+  };
+  const at=(rows,row,column)=>rows?.[row-1]?.[column-1] ?? '';
+  const exactRow=(rows,row,expected,startColumn=1)=>expected.every((value,index)=>contractText(at(rows,row,startColumn+index))===contractText(value));
+  const exactColumn=(rows,column,startRow,expected)=>expected.every((value,index)=>contractText(at(rows,startRow+index,column))===contractText(value));
+  const allNumbers=(rows,cells)=>cells.every(([row,column])=>contractNumber(at(rows,row,column)));
+
+  const resumen=rowsOf('RESUMEN');
+  const cartera=rowsOf('CARTERA ACTUAL');
+  const xirr=rowsOf('XIRR GLOBAL');
+  const mensual=rowsOf('HISTÓRICO MENSUAL');
+  const mensualActivo=rowsOf('HISTÓRICO MENSUAL X ACTIVO');
   const objetivos=rowsOf('OBJETIVOS Y PROYECCIÓN');
-  if(!objetivos.some(row=>normalizeText(row[0])==='activo' && normalizeText(row[1])==='peso objetivo')) missing.push('estructura OBJETIVOS Y PROYECCIÓN');
-  return missing;
+  const auditoria=rowsOf('AUDITORÍA');
+
+  const resumenLabels=[
+    [1,1,'RESUMEN DE CARTERA'],[2,1,'Fecha de actualización'],[2,4,'Estado auditoría'],
+    [4,1,'INDICADORES CLAVE'],[5,1,'Valor actual total'],[5,3,'Inv. plataforma'],[5,5,'P&L plataforma'],
+    [6,1,'Aportado total (bruto)'],[6,3,'Invertido real (neto)'],[6,5,'G/P real'],
+    [7,1,'XIRR global'],[7,3,'Rent. simple real'],[7,5,'Rent. plataforma'],
+    [9,1,'Activo'],[9,2,'Estado'],[19,1,'Activo'],[19,2,'Valor actual'],[19,3,'Peso real'],[19,4,'Objetivo'],[19,5,'Desviación'],[19,6,'Estado']
+  ];
+  if(!resumenLabels.every(([row,column,value])=>contractText(at(resumen,row,column))===contractText(value))) add('RESUMEN_ESTRUCTURA','RESUMEN no conserva las celdas contractuales');
+  const resumenKpis=[[5,2],[5,4],[5,6],[6,2],[6,4],[6,6],[7,2],[7,4],[7,6]];
+  if(!allNumbers(resumen,resumenKpis) || contractDateDay(at(resumen,2,2))===null) add('RESUMEN_TIPOS','RESUMEN contiene fechas o indicadores con tipo inválido');
+  const alertLabels=['Bitcoin','Oro','MSCI World','Emerging Markets','Small Cap','BTC techo absoluto','Diagnóstico global'];
+  if(!exactColumn(resumen,1,10,alertLabels) || alertLabels.some((_,index)=>!String(at(resumen,10+index,2)||'').trim())) add('RESUMEN_ALERTAS','El bloque de alertas de RESUMEN está incompleto o desplazado');
+  const distributionAssets=['Bitcoin','Oro','MSCI World','Emerging Markets','Small Cap','Plan Pensiones'];
+  if(!exactColumn(resumen,1,20,distributionAssets) || distributionAssets.some((_,index)=>!String(at(resumen,20+index,6)||'').trim())) add('RESUMEN_DISTRIBUCION','La distribución operativa de RESUMEN está incompleta o desplazada');
+
+  if(!exactRow(cartera,3,WORKBOOK_CONTRACT.carteraHeaders) || !exactColumn(cartera,1,4,WORKBOOK_CONTRACT.carteraAssets)) add('CARTERA_ESTRUCTURA','CARTERA ACTUAL no conserva encabezados, filas u orden contractual');
+  let carteraTypesOk=true;
+  for(let row=4;row<=9;row++){
+    if(![1,2,3,4].every(column=>String(at(cartera,row,column)||'').trim()) || ![5,6,7,8].every(column=>contractNumber(at(cartera,row,column)))) carteraTypesOk=false;
+    if(row<=8 && ![9,10,11,12].every(column=>contractNumber(at(cartera,row,column)))) carteraTypesOk=false;
+    if(row===9 && (contractText(at(cartera,row,9))!=='separado' || contractText(at(cartera,row,10))!=='separado')) carteraTypesOk=false;
+  }
+  if(!carteraTypesOk || ![5,6,7,8,9,10].every(column=>contractNumber(at(cartera,10,column)))) add('CARTERA_TIPOS','CARTERA ACTUAL contiene columnas vacías o tipos incompatibles');
+  const sumRange=(rows,startRow,endRow,column)=>{ let total=0; for(let row=startRow;row<=endRow;row++) total+=Number(at(rows,row,column)||0); return total; };
+  if(!contractApprox(at(cartera,10,5),sumRange(cartera,4,9,5)) || !contractApprox(at(cartera,10,7),sumRange(cartera,4,9,7)) || !contractApprox(at(cartera,10,8),sumRange(cartera,4,9,8))) add('CARTERA_TOTALES','Los totales de CARTERA ACTUAL no concilian con sus activos');
+  let carteraRatesOk=true;
+  for(let row=4;row<=10;row++){
+    const invested=at(cartera,row,5), rate=at(cartera,row,6), value=at(cartera,row,7), gain=at(cartera,row,8);
+    if(!contractApprox(gain,value-invested) || !contractApprox(rate,invested ? gain/invested : 0,WORKBOOK_CONTRACT.displayRateTolerance)) carteraRatesOk=false;
+  }
+  if(!carteraRatesOk) add('CARTERA_RENTABILIDAD','P&L o rentabilidad de plataforma no concilian en CARTERA ACTUAL');
+  if(!contractApprox(at(cartera,10,9),sumRange(cartera,4,8,9),WORKBOOK_CONTRACT.rateTolerance) || !contractApprox(at(cartera,10,10),sumRange(cartera,4,8,10),WORKBOOK_CONTRACT.rateTolerance) || !contractApprox(at(cartera,10,9),1,WORKBOOK_CONTRACT.rateTolerance) || !contractApprox(at(cartera,10,10),1,WORKBOOK_CONTRACT.rateTolerance)) add('CARTERA_PESOS','Los pesos reales u objetivo de CARTERA ACTUAL no suman el total contractual');
+
+  if(!exactRow(xirr,3,WORKBOOK_CONTRACT.xirrMasterHeaders) || !exactRow(xirr,7,WORKBOOK_CONTRACT.xirrAssetHeaders) || !exactColumn(xirr,1,8,WORKBOOK_CONTRACT.carteraAssets)) add('XIRR_ESTRUCTURA','XIRR GLOBAL no conserva sus bloques de resumen y activo');
+  if(contractDateDay(at(xirr,4,1))===null || contractText(at(xirr,4,2))!=='ok' || ![3,4,5,6,7,8,9,10].every(column=>contractNumber(at(xirr,4,column)))) add('XIRR_TIPOS','El resumen maestro de XIRR contiene fecha, estado o valores inválidos');
+  let movementHeader=-1;
+  for(let row=1;row<=xirr.length;row++){
+    if(exactRow(xirr,row,WORKBOOK_CONTRACT.movementHeaders)){ movementHeader=row; break; }
+  }
+  if(movementHeader!==44) add('MOVIMIENTOS_ESTRUCTURA','La tabla de movimientos de XIRR GLOBAL no comienza en la posición contractual');
+  const movementRows=[];
+  const allowedAssets=new Set(WORKBOOK_CONTRACT.carteraAssets.slice(0,6).map(contractAssetKey));
+  if(movementHeader>0){
+    for(let row=movementHeader+1;row<=xirr.length;row++){
+      const values=Array.from({length:7},(_,index)=>at(xirr,row,index+1));
+      if(!values.some(value=>value!=='' && value!==null)) continue;
+      const day=contractDateDay(values[0]);
+      const assetKey=contractAssetKey(values[1]);
+      const type=contractText(values[2]);
+      const include=contractText(values[6]);
+      if(day===null || !String(values[1]||'').trim() || !type || !String(values[3]||'').trim() || !contractNumber(values[4]) || !contractNumber(values[5]) || !['si','no'].includes(include)) add('MOVIMIENTOS_TIPOS','Hay movimientos con campos obligatorios o tipos inválidos');
+      if(!allowedAssets.has(assetKey)) add('MOVIMIENTOS_ACTIVOS','Hay movimientos asociados a activos no contractuales');
+      movementRows.push({row,day,assetKey,type,amount:values[4],visible:values[5],include});
+    }
+  }
+  if(!movementRows.length) add('MOVIMIENTOS_VACIOS','XIRR GLOBAL no contiene movimientos utilizables');
+  const valuationDay=contractDateDay(at(xirr,4,1));
+  if(movementRows.some(item=>item.day===null || item.day>valuationDay)) add('MOVIMIENTOS_FECHAS','Hay movimientos posteriores o incompatibles con la fecha de valoración');
+  const included=movementRows.filter(item=>item.include==='si' && item.day!==null && item.day<=valuationDay);
+  const terminalRows=included.filter(item=>item.type==='valor actual');
+  const maxTerminalDay=terminalRows.length ? Math.max(...terminalRows.map(item=>item.day)) : null;
+  const currentTerminals=terminalRows.filter(item=>item.day===valuationDay);
+  const currentTerminalAssets=new Set(currentTerminals.map(item=>item.assetKey));
+  if(maxTerminalDay!==valuationDay || currentTerminals.length!==allowedAssets.size || currentTerminalAssets.size!==allowedAssets.size || currentTerminals.some(item=>item.amount<=0)) add('MOVIMIENTOS_TERMINALES','Las valoraciones terminales actuales no cubren una vez cada activo');
+  const historical=included.filter(item=>item.type!=='valor actual');
+  const valueCurrent=currentTerminals.reduce((sum,item)=>sum+Number(item.amount||0),0);
+  const netInvested=-historical.reduce((sum,item)=>sum+Number(item.amount||0),0);
+  const grossInvested=-included.filter(item=>item.amount<0).reduce((sum,item)=>sum+Number(item.amount||0),0);
+  const withdrawals=historical.filter(item=>item.amount>0).reduce((sum,item)=>sum+Number(item.amount||0),0);
+  const gainReal=valueCurrent+withdrawals-grossInvested;
+  if(!contractApprox(at(xirr,4,3),valueCurrent) || !contractApprox(at(xirr,4,5),netInvested) || !contractApprox(at(xirr,4,6),grossInvested) || !contractApprox(at(xirr,4,7),gainReal) || !contractApprox(at(xirr,4,9),netInvested ? gainReal/netInvested : 0,WORKBOOK_CONTRACT.rateTolerance)) add('XIRR_CONCILIACION','Valor, capital, G/P o rentabilidad simple de XIRR GLOBAL no concilian con los movimientos');
+  const globalFlows=[...historical,...currentTerminals].map(item=>({amount:item.amount,day:item.day}));
+  const recalculatedXirr=contractXirr(globalFlows);
+  if(!contractNumber(recalculatedXirr) || !contractApprox(at(xirr,4,8),recalculatedXirr,WORKBOOK_CONTRACT.rateTolerance)) add('XIRR_RECALCULO','La XIRR global no coincide con el recálculo independiente de movimientos');
+
+  const carteraByKey=new Map();
+  for(let row=4;row<=9;row++) carteraByKey.set(contractAssetKey(at(cartera,row,1)),row);
+  let assetXirrOk=true;
+  for(let row=8;row<=13;row++){
+    const key=contractAssetKey(at(xirr,row,1));
+    const carteraRow=carteraByKey.get(key);
+    const assetHistory=historical.filter(item=>item.assetKey===key);
+    const assetTerminal=currentTerminals.filter(item=>item.assetKey===key);
+    const assetNet=-assetHistory.reduce((sum,item)=>sum+Number(item.amount||0),0);
+    const assetValue=assetTerminal.reduce((sum,item)=>sum+Number(item.amount||0),0);
+    const assetGain=assetValue-assetNet;
+    const assetRate=assetNet ? assetGain/assetNet : 0;
+    const assetXirr=contractXirr([...assetHistory,...assetTerminal].map(item=>({amount:item.amount,day:item.day})));
+    if(!carteraRow || ![2,3,4,5,6,7,8].every(column=>contractNumber(at(xirr,row,column))) || contractText(at(xirr,row,9))!=='ok') assetXirrOk=false;
+    if(!contractApprox(at(xirr,row,2),assetNet) || !contractApprox(at(xirr,row,3),at(cartera,carteraRow,5)) || !contractApprox(at(xirr,row,4),at(cartera,carteraRow,6),WORKBOOK_CONTRACT.displayRateTolerance) || !contractApprox(at(xirr,row,5),at(cartera,carteraRow,7)) || !contractApprox(at(xirr,row,6),assetGain) || !contractApprox(at(xirr,row,7),assetRate,WORKBOOK_CONTRACT.rateTolerance) || !contractNumber(assetXirr) || !contractApprox(at(xirr,row,8),assetXirr,WORKBOOK_CONTRACT.rateTolerance)) assetXirrOk=false;
+  }
+  if(!assetXirrOk) add('XIRR_ACTIVOS','Los resúmenes XIRR por activo no concilian con movimientos y cartera');
+  if(!contractApprox(at(xirr,14,2),netInvested) || !contractApprox(at(xirr,14,3),at(cartera,10,5)) || !contractApprox(at(xirr,14,4),at(cartera,10,6),WORKBOOK_CONTRACT.displayRateTolerance) || !contractApprox(at(xirr,14,5),valueCurrent) || !contractApprox(at(xirr,14,6),gainReal) || !contractApprox(at(xirr,14,7),at(xirr,4,9),WORKBOOK_CONTRACT.rateTolerance) || !contractApprox(at(xirr,14,8),at(xirr,4,8),WORKBOOK_CONTRACT.rateTolerance) || contractText(at(xirr,14,9))!=='ok') add('XIRR_TOTAL','La fila TOTAL de XIRR por activo no concilia con el resumen maestro');
+
+  if(!exactRow(objetivos,5,['Activo','Peso objetivo']) || !exactColumn(objetivos,1,6,WORKBOOK_CONTRACT.objectiveAssets) || contractText(at(objetivos,11,2))!=='separado') add('OBJETIVOS_ESTRUCTURA','OBJETIVOS Y PROYECCIÓN no conserva el Bloque A contractual');
+  const objectiveWeights=[];
+  for(let row=6;row<=10;row++) objectiveWeights.push(at(objetivos,row,2));
+  if(!objectiveWeights.every(value=>contractNumber(value) && value>0) || !contractApprox(objectiveWeights.reduce((sum,value)=>sum+value,0),1,WORKBOOK_CONTRACT.rateTolerance) || !contractApprox(at(objetivos,13,2),1,WORKBOOK_CONTRACT.rateTolerance)) add('OBJETIVOS_PESOS','Los pesos objetivo no son numéricos, positivos o no suman el 100%');
+  let objectiveLinksOk=true;
+  for(let row=6;row<=10;row++){
+    const key=contractAssetKey(at(objetivos,row,1));
+    const carteraRow=carteraByKey.get(key);
+    if(!carteraRow || !contractApprox(at(objetivos,row,2),at(cartera,carteraRow,10),WORKBOOK_CONTRACT.rateTolerance)) objectiveLinksOk=false;
+  }
+  if(!objectiveLinksOk) add('OBJETIVOS_CONCILIACION','Los objetivos no coinciden entre OBJETIVOS Y PROYECCIÓN y CARTERA ACTUAL');
+
+  const summaryPairs=[
+    [at(resumen,5,2),at(xirr,4,3),WORKBOOK_CONTRACT.amountTolerance],
+    [at(resumen,5,4),at(cartera,10,5),WORKBOOK_CONTRACT.amountTolerance],
+    [at(resumen,5,6),at(cartera,10,8),WORKBOOK_CONTRACT.amountTolerance],
+    [at(resumen,6,2),at(xirr,4,6),WORKBOOK_CONTRACT.amountTolerance],
+    [at(resumen,6,4),at(xirr,4,5),WORKBOOK_CONTRACT.amountTolerance],
+    [at(resumen,6,6),at(xirr,4,7),WORKBOOK_CONTRACT.amountTolerance],
+    [at(resumen,7,2),at(xirr,4,8),WORKBOOK_CONTRACT.rateTolerance],
+    [at(resumen,7,4),at(xirr,4,9),WORKBOOK_CONTRACT.rateTolerance],
+    [at(resumen,7,6),at(cartera,10,6),WORKBOOK_CONTRACT.displayRateTolerance]
+  ];
+  if(!summaryPairs.every(([left,right,tolerance])=>contractApprox(left,right,tolerance))) add('RESUMEN_CONCILIACION','RESUMEN no coincide con CARTERA ACTUAL o XIRR GLOBAL');
+  let distributionLinksOk=true;
+  for(let row=20;row<=25;row++){
+    const key=contractAssetKey(at(resumen,row,1));
+    const carteraRow=carteraByKey.get(key);
+    if(!carteraRow || !contractApprox(at(resumen,row,2),at(cartera,carteraRow,7))) distributionLinksOk=false;
+    if(row<=24 && (!contractApprox(at(resumen,row,3),at(cartera,carteraRow,9),WORKBOOK_CONTRACT.rateTolerance) || !contractApprox(at(resumen,row,4),at(cartera,carteraRow,10),WORKBOOK_CONTRACT.rateTolerance) || !contractApprox(at(resumen,row,5),at(cartera,carteraRow,11),WORKBOOK_CONTRACT.rateTolerance))) distributionLinksOk=false;
+  }
+  if(!distributionLinksOk) add('RESUMEN_DISTRIBUCION_CONCILIACION','La distribución de RESUMEN no coincide con CARTERA ACTUAL');
+
+  if(!exactRow(mensual,4,WORKBOOK_CONTRACT.monthlyHeaders) || contractText(at(mensual,4,44))!=='estado del dato' || contractText(at(mensual,4,45))!=='fecha real de valoracion') add('HISTORICO_MENSUAL_ESTRUCTURA','HISTÓRICO MENSUAL no conserva encabezados ni columnas AR/AS');
+  const allowedMonthlyStates=new Set(['sin cierre','cierre real','reconstruido','provisional']);
+  let monthlyRowsOk=true;
+  let monthlyCalcOk=true;
+  let realClosures=0;
+  const monthlyKeys=new Set();
+  for(let row=5;row<=mensual.length;row++){
+    const hasRow=[at(mensual,row,1),at(mensual,row,2),at(mensual,row,3),at(mensual,row,44)].some(value=>value!=='' && value!==null);
+    if(!hasRow) continue;
+    const day=contractDateDay(at(mensual,row,1));
+    const year=at(mensual,row,2);
+    const month=String(at(mensual,row,3)||'').trim();
+    const state=contractText(at(mensual,row,44));
+    const key=`${year}|${month}`;
+    if(day===null || !Number.isInteger(Number(year)) || !month || !allowedMonthlyStates.has(state) || monthlyKeys.has(key)) monthlyRowsOk=false;
+    monthlyKeys.add(key);
+    if(state==='cierre real') realClosures++;
+    if(state!=='sin cierre'){
+      if(![4,5,6,7,8,9].every(column=>contractNumber(at(mensual,row,column))) || contractDateDay(at(mensual,row,45))===null || !contractText(at(mensual,row,20)).startsWith('ok')) monthlyRowsOk=false;
+      const value=at(mensual,row,4), invested=at(mensual,row,5), gain=at(mensual,row,7), simple=at(mensual,row,8);
+      if(!contractApprox(gain,value-invested) || !contractApprox(simple,invested ? gain/invested : 0,WORKBOOK_CONTRACT.rateTolerance) || !contractApprox(sumRange(mensual,row,row,10)+sumRange(mensual,row,row,11)+sumRange(mensual,row,row,12)+sumRange(mensual,row,row,13)+sumRange(mensual,row,row,14),1,WORKBOOK_CONTRACT.displayRateTolerance)) monthlyCalcOk=false;
+    }
+  }
+  if(!monthlyRowsOk || realClosures<1) add('HISTORICO_MENSUAL_FILAS','HISTÓRICO MENSUAL contiene filas incompletas, duplicadas o sin cierres reales');
+  if(!monthlyCalcOk) add('HISTORICO_MENSUAL_CONCILIACION','Los cierres valorados no concilian G/P, rentabilidad o pesos');
+
+  if(!exactRow(mensualActivo,4,WORKBOOK_CONTRACT.monthlyAssetHeaders)) add('HISTORICO_ACTIVO_ESTRUCTURA','HISTÓRICO MENSUAL X ACTIVO no conserva sus quince columnas');
+  let monthlyAssetRowsOk=true;
+  const monthlyAssetKeys=new Set();
+  for(let row=5;row<=mensualActivo.length;row++){
+    const hasRow=[at(mensualActivo,row,1),at(mensualActivo,row,2),at(mensualActivo,row,3),at(mensualActivo,row,4)].some(value=>value!=='' && value!==null);
+    if(!hasRow) continue;
+    const day=contractDateDay(at(mensualActivo,row,1));
+    const year=at(mensualActivo,row,2);
+    const month=String(at(mensualActivo,row,3)||'').trim();
+    const key=contractAssetKey(at(mensualActivo,row,4));
+    const status=contractText(at(mensualActivo,row,14));
+    const comment=String(at(mensualActivo,row,15)||'').trim();
+    const unique=`${day}|${key}`;
+    if(day===null || !Number.isInteger(Number(year)) || !month || !allowedAssets.has(key) || !['ok','reconstruido','provisional'].includes(status) || !comment || monthlyAssetKeys.has(unique)) monthlyAssetRowsOk=false;
+    monthlyAssetKeys.add(unique);
+    if(!contractText(comment).startsWith('plantilla') && (!contractNumber(at(mensualActivo,row,9)) || Number(at(mensualActivo,row,9))<=0)) monthlyAssetRowsOk=false;
+  }
+  if(!monthlyAssetRowsOk) add('HISTORICO_ACTIVO_FILAS','El histórico por activo contiene filas incompletas, duplicadas o con tipos incompatibles');
+
+  // v175: el histórico canónico es opcional para libros heredados, pero
+  // indivisible y autoritativo cuando aparece. La web vuelve a calcular sus
+  // importes y XIRR desde los movimientos antes de aceptar el libro.
+  const canonicalPresent=WORKBOOK_CONTRACT.canonicalSheets.filter(name=>Boolean(wb.Sheets[name]));
+  const operationalPresent=WORKBOOK_CONTRACT.operationalSheets.filter(name=>Boolean(wb.Sheets[name]));
+  if(operationalPresent.length && operationalPresent.length!==WORKBOOK_CONTRACT.operationalSheets.length){
+    add('OPERATIVA_PARCIAL','La capa operativa está incompleta: GUÍA DE USO y REGISTRO CIERRES deben aparecer conjuntamente');
+  }
+  if(operationalPresent.length===WORKBOOK_CONTRACT.operationalSheets.length){
+    const guideRows=rowsOf('GUÍA DE USO');
+    const registerRows=rowsOf('REGISTRO CIERRES');
+    const guideText=normalizeText((guideRows.slice(0,12).flat().join(' ') || ''));
+    if(!guideText.includes('guia') || !guideText.includes('tabla_xirr') || !exactRow(registerRows,5,WORKBOOK_CONTRACT.operationalRegisterHeaders)){
+      add('OPERATIVA_ESTRUCTURA','GUÍA DE USO o REGISTRO CIERRES no conservan el contrato operativo v0.4.1');
+    }
+  }
+  if(canonicalPresent.length && canonicalPresent.length!==WORKBOOK_CONTRACT.canonicalSheets.length){
+    add('HISTORICO_CANONICO_PARCIAL','El histórico canónico está incompleto: deben existir conjuntamente NÚCLEO CIERRES, NÚCLEO VALORACIONES y NÚCLEO XIRR HIST.');
+  }
+  if(canonicalPresent.length===WORKBOOK_CONTRACT.canonicalSheets.length){
+    const canonicalClosures=rowsOf('NÚCLEO CIERRES');
+    const canonicalValuations=rowsOf('NÚCLEO VALORACIONES');
+    const canonicalXirr=rowsOf('NÚCLEO XIRR HIST.');
+    let canonicalStructureOk=true;
+    if(!exactRow(canonicalClosures,5,WORKBOOK_CONTRACT.canonicalClosureHeaders)) canonicalStructureOk=false;
+    if(!exactRow(canonicalValuations,5,WORKBOOK_CONTRACT.canonicalValuationHeaders)) canonicalStructureOk=false;
+
+    const canonicalStates=new Set(['sin cierre','cierre real','reconstruido','provisional']);
+    const valuedStates=new Set(['cierre real','reconstruido','provisional']);
+    const closureRecords=[];
+    const closureKeys=new Set();
+    for(let row=6;row<=canonicalClosures.length;row++){
+      const nominal=contractDateDay(at(canonicalClosures,row,1));
+      const state=contractText(at(canonicalClosures,row,5));
+      const hasRow=nominal!==null || state || String(at(canonicalClosures,row,3)||'').trim();
+      if(!hasRow) continue;
+      const effective=contractDateDay(at(canonicalClosures,row,4));
+      const control=contractText(at(canonicalClosures,row,14));
+      if(nominal===null || closureKeys.has(nominal) || !canonicalStates.has(state) || !Number.isInteger(Number(at(canonicalClosures,row,2))) || !String(at(canonicalClosures,row,3)||'').trim()) canonicalStructureOk=false;
+      closureKeys.add(nominal);
+      if(![7,8,9].every(column=>contractNumber(at(canonicalClosures,row,column))) || !String(at(canonicalClosures,row,15)||'').trim()) canonicalStructureOk=false;
+      if(state==='sin cierre'){
+        if(effective!==null || !['',null].includes(at(canonicalClosures,row,6)) || Number(at(canonicalClosures,row,13)||0)!==0 || control!=='sin valoracion') canonicalStructureOk=false;
+      }else if(effective===null || ![6,10,11,12,13].every(column=>contractNumber(at(canonicalClosures,row,column))) || Number(at(canonicalClosures,row,6))<=0 || Number(at(canonicalClosures,row,13))!==allowedAssets.size || control!=='ok'){
+        canonicalStructureOk=false;
+      }
+      closureRecords.push({row,nominal,effective,state});
+    }
+    if(!closureRecords.length || !closureRecords.some(item=>item.state==='cierre real')) canonicalStructureOk=false;
+
+    const valuationRecords=[];
+    const valuationKeys=new Set();
+    for(let row=6;row<=canonicalValuations.length;row++){
+      const id=String(at(canonicalValuations,row,1)||'').trim();
+      const asset=String(at(canonicalValuations,row,5)||'').trim();
+      if(!id && !asset) continue;
+      const nominal=contractDateDay(at(canonicalValuations,row,2));
+      const effective=contractDateDay(at(canonicalValuations,row,3));
+      const state=contractText(at(canonicalValuations,row,4));
+      const assetKey=contractAssetKey(asset);
+      const key=`${nominal}|${assetKey}`;
+      if(!id || nominal===null || effective===null || !valuedStates.has(state) || !allowedAssets.has(assetKey) || valuationKeys.has(key)) canonicalStructureOk=false;
+      if(![6,7,8,9,10,11,12,13,14,15].every(column=>contractNumber(at(canonicalValuations,row,column))) || Number(at(canonicalValuations,row,6))<=0 || contractText(at(canonicalValuations,row,16))!=='ok' || !String(at(canonicalValuations,row,17)||'').trim() || !String(at(canonicalValuations,row,18)||'').trim()) canonicalStructureOk=false;
+      valuationKeys.add(key);
+      valuationRecords.push({row,id,nominal,effective,state,asset,assetKey});
+    }
+    const valuedClosures=closureRecords.filter(item=>valuedStates.has(item.state));
+    if(valuationRecords.length!==valuedClosures.length*allowedAssets.size) canonicalStructureOk=false;
+
+    let helperSeries=0;
+    const helperColumns=Math.max(0,...canonicalXirr.map(row=>(row||[]).length));
+    for(let series=0;series<Math.ceil(helperColumns/2);series++){
+      const dateColumn=series*2+1;
+      const flowColumn=dateColumn+1;
+      const dateHeader=String(at(canonicalXirr,3,dateColumn)||'').trim();
+      const flowHeader=String(at(canonicalXirr,3,flowColumn)||'').trim();
+      if(!dateHeader && !flowHeader) continue;
+      if(!dateHeader || !['global','activo'].includes(contractText(flowHeader)) || contractText(at(canonicalXirr,4,dateColumn))!=='fecha' || contractText(at(canonicalXirr,4,flowColumn))!=='flujo' || !contractNumber(at(canonicalXirr,209,flowColumn)) || contractText(at(canonicalXirr,210,flowColumn))!=='ok') canonicalStructureOk=false;
+      else helperSeries++;
+    }
+    // Las matrices son evidencia histórica inicial, no una dependencia para
+    // cada cierre futuro: la conciliación inferior recalcula todos los XIRR.
+    if(helperSeries===0) canonicalStructureOk=false;
+    if(!canonicalStructureOk) add('HISTORICO_CANONICO_ESTRUCTURA','Las hojas canónicas no conservan encabezados, estados, cardinalidad, controles o matrices XIRR válidos');
+
+    const monthStartDay=nominal=>{
+      const date=new Date(nominal*86400000);
+      return Math.floor(Date.UTC(date.getUTCFullYear(),date.getUTCMonth(),1)/86400000);
+    };
+    let canonicalFinancialOk=true;
+    for(const closure of closureRecords){
+      const cutoff=closure.state==='sin cierre' ? closure.nominal : closure.effective;
+      const eligible=movementRows.filter(item=>item.include==='si' && item.type!=='valor actual' && item.day!==null && item.day<=cutoff);
+      const gross=-eligible.filter(item=>Number(item.amount)<0).reduce((sum,item)=>sum+Number(item.amount),0);
+      const withdrawals=eligible.filter(item=>Number(item.amount)>0).reduce((sum,item)=>sum+Number(item.amount),0);
+      const capital=-eligible.reduce((sum,item)=>sum+Number(item.amount),0);
+      if(!contractApprox(at(canonicalClosures,closure.row,7),capital) || !contractApprox(at(canonicalClosures,closure.row,8),gross) || !contractApprox(at(canonicalClosures,closure.row,9),withdrawals)) canonicalFinancialOk=false;
+      if(closure.state==='sin cierre') continue;
+
+      const valuationsForClosure=valuationRecords.filter(item=>item.nominal===closure.nominal);
+      const assetsForClosure=new Set(valuationsForClosure.map(item=>item.assetKey));
+      if(valuationsForClosure.length!==allowedAssets.size || assetsForClosure.size!==allowedAssets.size || valuationsForClosure.some(item=>item.effective!==closure.effective || item.state!==closure.state)){
+        canonicalFinancialOk=false;
+        continue;
+      }
+      const value=valuationsForClosure.reduce((sum,item)=>sum+Number(at(canonicalValuations,item.row,6)||0),0);
+      const gain=value+withdrawals-gross;
+      const simple=capital ? gain/capital : 0;
+      const globalXirr=contractXirr([
+        ...eligible.map(item=>({amount:Number(item.amount),day:item.day})),
+        ...valuationsForClosure.map(item=>({amount:Number(at(canonicalValuations,item.row,6)),day:closure.effective}))
+      ]);
+      if(!contractApprox(at(canonicalClosures,closure.row,6),value) || !contractApprox(at(canonicalClosures,closure.row,10),gain) || !contractApprox(at(canonicalClosures,closure.row,11),simple,WORKBOOK_CONTRACT.rateTolerance) || !contractNumber(globalXirr) || !contractApprox(at(canonicalClosures,closure.row,12),globalXirr,WORKBOOK_CONTRACT.rateTolerance)) canonicalFinancialOk=false;
+
+      for(const valuation of valuationsForClosure){
+        const assetMovements=eligible.filter(item=>item.assetKey===valuation.assetKey);
+        const assetGross=-assetMovements.filter(item=>Number(item.amount)<0).reduce((sum,item)=>sum+Number(item.amount),0);
+        const assetWithdrawals=assetMovements.filter(item=>Number(item.amount)>0).reduce((sum,item)=>sum+Number(item.amount),0);
+        const assetCapital=-assetMovements.reduce((sum,item)=>sum+Number(item.amount),0);
+        const assetValue=Number(at(canonicalValuations,valuation.row,6));
+        const assetGain=assetValue+assetWithdrawals-assetGross;
+        const assetSimple=assetCapital ? assetGain/assetCapital : 0;
+        const monthStart=monthStartDay(closure.nominal);
+        const monthly=assetMovements.filter(item=>item.day>=monthStart);
+        const monthlyContribution=-monthly.filter(item=>Number(item.amount)<0).reduce((sum,item)=>sum+Number(item.amount),0);
+        const monthlyNet=monthly.reduce((sum,item)=>sum+Number(item.amount),0);
+        const assetXirr=contractXirr([...assetMovements.map(item=>({amount:Number(item.amount),day:item.day})),{amount:assetValue,day:closure.effective}]);
+        const weight=value ? assetValue/value : 0;
+        if(!contractApprox(at(canonicalValuations,valuation.row,7),assetCapital) || !contractApprox(at(canonicalValuations,valuation.row,8),assetGross) || !contractApprox(at(canonicalValuations,valuation.row,9),assetWithdrawals) || !contractApprox(at(canonicalValuations,valuation.row,10),monthlyContribution) || !contractApprox(at(canonicalValuations,valuation.row,11),monthlyNet) || !contractApprox(at(canonicalValuations,valuation.row,12),assetGain) || !contractApprox(at(canonicalValuations,valuation.row,13),assetSimple,WORKBOOK_CONTRACT.rateTolerance) || !contractNumber(assetXirr) || !contractApprox(at(canonicalValuations,valuation.row,14),assetXirr,WORKBOOK_CONTRACT.rateTolerance) || !contractApprox(at(canonicalValuations,valuation.row,15),weight,WORKBOOK_CONTRACT.rateTolerance)) canonicalFinancialOk=false;
+      }
+    }
+    if(!canonicalFinancialOk) add('HISTORICO_CANONICO_CONCILIACION','El histórico canónico no coincide con el recálculo independiente de movimientos, valoraciones, capitales o XIRR');
+  }
+
+  if(!exactRow(auditoria,4,WORKBOOK_CONTRACT.auditHeaders) || contractText(at(auditoria,2,4))!=='estado global') add('AUDITORIA_ESTRUCTURA','AUDITORÍA no conserva su estado maestro y cabeceras');
+  let auditChecks=0;
+  let auditFailed=false;
+  const benignAuditStates=new Set(['ok','correcto','info','0']);
+  for(let row=5;row<=auditoria.length;row++){
+    const control=String(at(auditoria,row,2)||'').trim();
+    const state=contractText(at(auditoria,row,5));
+    if(!control && !state) continue;
+    if(state==='estado') continue;
+    auditChecks++;
+    if(!control || !benignAuditStates.has(state)) auditFailed=true;
+  }
+  const auditDay=contractDateDay(at(auditoria,2,2));
+  const summaryDay=contractDateDay(at(resumen,2,2));
+  if(contractText(at(auditoria,2,5))!=='ok' || auditChecks<38 || auditFailed || contractText(at(resumen,2,6))!==contractText(at(auditoria,2,5)) || auditDay===null || summaryDay!==auditDay || auditDay<valuationDay) add('AUDITORIA_CONTROLES','La auditoría maestra no está en OK, está incompleta o no coincide con la fecha de actualización');
+
+  for(const yearName of yearSheets){
+    const annual=rowsOf(yearName);
+    const headerOk=contractText(at(annual,4,1))==='activo' && contractText(at(annual,4,2))==='plataforma' && contractText(at(annual,4,3))==='invertido (€)' && contractText(at(annual,4,4))==='rentabilidad' && contractText(at(annual,4,5)).includes(contractText(yearName)) && contractText(at(annual,4,6))==='p&l (€)' && contractText(at(annual,4,7))==='peso sin pp';
+    const annualAssets=[];
+    for(let row=5;row<=10;row++) annualAssets.push(contractText(at(annual,row,1)));
+    const expectedAnnualAssets=[...WORKBOOK_CONTRACT.annualAssets].map(contractText).sort();
+    if(!headerOk || JSON.stringify([...annualAssets].sort())!==JSON.stringify(expectedAnnualAssets) || contractText(at(annual,11,1))!=='total' || ![3,4,5,6,7].every(column=>contractNumber(at(annual,11,column))) || contractText(at(annual,14,1))!=='invertido total' || contractText(at(annual,15,1))!=='valor total' || contractText(at(annual,16,1))!=='p&l total' || contractText(at(annual,17,1))!=='rentabilidad total' || !contractText(at(annual,18,1)).startsWith('xirr') || !String(at(annual,24,1)||'').trim()) add('ANUAL_ESTRUCTURA',`La hoja anual ${yearName} está vacía, incompleta o desplazada`);
+    if(!contractApprox(at(annual,11,3),sumRange(annual,5,10,3)) || !contractApprox(at(annual,11,5),sumRange(annual,5,10,5)) || !contractApprox(at(annual,11,6),sumRange(annual,5,10,6)) || !contractApprox(at(annual,14,2),at(annual,11,3)) || !contractApprox(at(annual,15,2),at(annual,11,5)) || !contractApprox(at(annual,16,2),at(annual,11,6)) || !contractApprox(at(annual,17,2),at(annual,11,4),WORKBOOK_CONTRACT.displayRateTolerance) || !contractNumber(at(annual,18,2))) add('ANUAL_CONCILIACION',`La hoja anual ${yearName} no concilia activos, total y resumen`);
+  }
+
+  return issues;
+}
+function validateWorkbook(wb){
+  lastWorkbookValidationIssues=validateWorkbookDetailed(wb);
+  return lastWorkbookValidationIssues.map(issue=>`${issue.code}: ${issue.message}`);
 }
 async function handleExcelImport(file){
   try{
     if(typeof XLSX==='undefined') throw new Error('No se ha cargado la librería XLSX. Revisa la conexión a internet o incrusta SheetJS en local.');
     const buffer=await file.arrayBuffer();
-    importedWorkbook = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
-    const ok = applyWorkbookAfterRead(file.name, false);
+    const candidate = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
+    const ok = applyWorkbookAfterRead(file.name, false, candidate);
     if(ok) saveWorkbookCache(buffer, file.name, {manualImport:true});
   }catch(err){ console.error(err); setStatus(false, `ERROR · ${err.message}`); setNavStatus('auditoria','bad'); }
 }
@@ -4549,6 +5167,17 @@ function renderAllocationScope(mode, carteraArg){
 
 /* v20 · Histórico mensual por activo: gráficas por pestaña del Dashboard */
 function parseMonthlyAssetClosures(){
+  const canonical=parseCanonicalAssetHistory(null, true);
+  if(canonical.available){
+    return canonical.rows.map(item=>({
+      fecha:item.dateRaw,
+      anio:item.year,
+      mes:item.month,
+      activo:item.asset,
+      valor:item.value,
+      xirr:item.xirr
+    }));
+  }
   const rows = sheetRows('HISTÓRICO MENSUAL X ACTIVO');
   const out=[];
   if(!rows.length) return out;
@@ -5559,9 +6188,14 @@ async function cloudLoadWorkbook(){
     const resp = await fetch(bustUrl, {cache:'no-store'});
     if(!resp.ok) throw new Error('Descarga nube HTTP ' + resp.status);
     const buffer = await resp.arrayBuffer();
-    importedWorkbook = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
+    const candidate = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
+    const accepted = applyWorkbookAfterRead?.(PORTFOLIO_SUPABASE_CONFIG.fileName, true, candidate);
+    if(!accepted){
+      cloudSetLine('Excel de nube rechazado por el contrato de datos.', 'bad');
+      updateCloudAudit('error');
+      return;
+    }
     saveWorkbookCache?.(buffer, PORTFOLIO_SUPABASE_CONFIG.fileName);
-    applyWorkbookAfterRead?.(PORTFOLIO_SUPABASE_CONFIG.fileName, true);
     const nowIso = new Date().toISOString();
     localStorage.setItem('portfolioOscar:lastCloudSync:v1', nowIso);
     localStorage.setItem('portfolioOscar:lastCloudDownload:v1', nowIso);
