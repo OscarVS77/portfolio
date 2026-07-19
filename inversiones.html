@@ -1926,12 +1926,12 @@ html{
 
     <section class="section" id="xirr">
       <div class="xirrHeroWrap pageBlock">
-        <article class="kpi kpiHero"><label>XIRR global</label><strong>--</strong><small>Tu rentabilidad real anualizada, desde el primer día.</small></article>
-        <p class="kpiHeroNote"><strong>El XIRR es tu indicador principal:</strong> mide cómo crece tu dinero teniendo en cuenta cuándo lo invertiste. El resto de cifras de esta página son contexto.</p>
+        <article class="kpi kpiHero"><label>XIRR global</label><strong>--</strong><small>Rentabilidad anualizada · periodo disponible</small></article>
+        <p class="kpiHeroNote"><strong>El XIRR refleja la rentabilidad de tu dinero teniendo en cuenta el momento de cada aportación.</strong> · El historial todavía es corto. Interpreta el resultado como orientación, no como proyección.</p>
         <section class="kpiStripContext">
-          <article class="kpi"><label>Rentabilidad simple real</label><strong>--</strong><small>dato complementario</small></article>
-          <article class="kpi"><label>Valor actual total</label><strong>--</strong><small>último valor</small></article>
-          <article class="kpi"><label>Cierres reales</label><strong>Sin datos</strong><small>base para gráficas</small></article>
+          <article class="kpi"><label>Rentabilidad simple real</label><strong>--</strong><small>Resultado acumulado real</small></article>
+          <article class="kpi"><label>Valor actual total</label><strong>--</strong><small>Último valor disponible</small></article>
+          <article class="kpi"><label>Cierres reales</label><strong>Sin datos</strong><small>Base válida para gráficas</small></article>
         </section>
       </div>
       
@@ -4026,16 +4026,19 @@ function updateXirr(){
       if(cls) s.classList.add(cls);
     }
   });
-  // v129 · Antigüedad de la cartera en el small del hero XIRR.
+  // v175.2 · Periodo y advertencia separados visualmente sin alterar el contrato de datos.
   const heroSmall = document.querySelector('#xirr .kpiHero small');
+  const heroNote = document.querySelector('#xirr .kpiHeroNote');
   if(heroSmall){
     const info = xirrAntiguedadInfo(rows);
     if(info){
-      heroSmall.textContent = info.poco
-        ? `Rentabilidad anualizada. Cartera con ${info.dur} de historia: sobre un periodo tan corto el XIRR es muy sensible y no es proyectable.`
-        : `Tu rentabilidad real anualizada, desde el primer día. Cartera con ${info.dur} de historia.`;
+      heroSmall.textContent = `Rentabilidad anualizada · ${info.dur}`;
+      const warningNode = heroNote ? [...heroNote.childNodes].find(n=>n.nodeType===Node.TEXT_NODE) : null;
+      if(warningNode) warningNode.textContent = info.poco
+        ? ' · El historial todavía es corto. Interpreta el resultado como orientación, no como proyección.'
+        : '';
     } else {
-      heroSmall.textContent = 'Tu rentabilidad real anualizada, desde el primer día.';
+      heroSmall.textContent = 'Rentabilidad anualizada · periodo no disponible';
     }
   }
   const grid = document.querySelector('#xirr .xirrAssetGrid');
@@ -8441,6 +8444,162 @@ strong.neutral, span.neutral, em.neutral, .pill.neutral, .statusPill.neutral,
     display:grid!important;grid-template-columns:1fr!important;
     padding:13px 0!important;border:0!important;
   }
+}
+</style>
+<style>
+/* v175.2 · XIRR global: jerarquía superior sin alterar datos ni módulos */
+#xirr.active .xirrHeroWrap{
+  display:grid!important;
+  grid-template-columns:minmax(330px,.9fr) minmax(360px,1.1fr)!important;
+  grid-template-areas:'principal significado' 'resumen resumen'!important;
+  gap:0!important;
+  overflow:hidden!important;
+  margin-top:0!important;
+  border:1px solid rgba(95,211,155,.34)!important;
+  border-radius:6px!important;
+  background:linear-gradient(180deg,rgba(18,19,24,.86),rgba(5,6,9,.96))!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+#xirr.active .kpiHero{
+  grid-area:principal!important;
+  min-height:250px!important;
+  padding:30px 34px 28px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#xirr.active .kpiHero label{
+  margin:0 0 13px!important;
+  color:var(--muted)!important;
+  font-size:11px!important;
+  font-weight:650!important;
+  letter-spacing:.085em!important;
+  text-transform:uppercase!important;
+}
+#xirr.active .kpiHero strong{
+  display:block!important;
+  margin:0!important;
+  font-size:clamp(56px,6vw,76px)!important;
+  font-weight:400!important;
+  line-height:.94!important;
+  letter-spacing:-3.5px!important;
+  font-variant-numeric:tabular-nums lining-nums!important;
+}
+#xirr.active .kpiHero small{
+  margin-top:18px!important;
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.4!important;
+}
+#xirr.active .kpiHeroNote{
+  grid-area:significado!important;
+  align-self:center!important;
+  max-width:620px!important;
+  margin:0!important;
+  padding:0 clamp(34px,4vw,58px)!important;
+  border-left:1px solid var(--line)!important;
+  color:var(--muted)!important;
+  font-size:11px!important;
+  line-height:1.5!important;
+}
+#xirr.active .kpiHeroNote:before{
+  content:'Qué significa';
+  display:block!important;
+  margin-bottom:10px!important;
+  color:var(--muted2)!important;
+  font-size:10px!important;
+  font-weight:650!important;
+  letter-spacing:.08em!important;
+  text-transform:uppercase!important;
+}
+#xirr.active .kpiHeroNote strong{
+  display:block!important;
+  margin:0 0 18px!important;
+  padding-bottom:16px!important;
+  border-bottom:1px solid var(--line2)!important;
+  color:var(--text2)!important;
+  font-size:16px!important;
+  font-weight:400!important;
+  line-height:1.5!important;
+  letter-spacing:-.015em!important;
+}
+#xirr.active .kpiStripContext{
+  grid-area:resumen!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:0!important;
+  border-top:1px solid var(--line)!important;
+  background:rgba(0,0,0,.18)!important;
+}
+#xirr.active .kpiStripContext .kpi{
+  min-height:98px!important;
+  padding:18px 24px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#xirr.active .kpiStripContext .kpi + .kpi{border-left:1px solid var(--line)!important;}
+#xirr.active .kpiStripContext .kpi label{
+  margin:0 0 7px!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  font-weight:650!important;
+  letter-spacing:.07em!important;
+  text-transform:uppercase!important;
+}
+#xirr.active .kpiStripContext .kpi strong{
+  display:block!important;
+  margin:0!important;
+  color:var(--text)!important;
+  font-size:22px!important;
+  font-weight:400!important;
+  line-height:1.05!important;
+  letter-spacing:-.65px!important;
+  font-variant-numeric:tabular-nums lining-nums!important;
+}
+#xirr.active .kpiStripContext .kpi strong.green{color:var(--green)!important;}
+#xirr.active .kpiStripContext .kpi small{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--muted2)!important;
+  font-size:10.5px!important;
+  line-height:1.35!important;
+}
+@media(max-width:860px){
+  #xirr.active .xirrHeroWrap{
+    grid-template-columns:1fr!important;
+    grid-template-areas:'principal' 'significado' 'resumen'!important;
+  }
+  #xirr.active .kpiHero{
+    min-height:0!important;
+    padding:27px 24px 24px!important;
+  }
+  #xirr.active .kpiHeroNote{
+    max-width:none!important;
+    padding:24px!important;
+    border-left:0!important;
+    border-top:1px solid var(--line)!important;
+  }
+  #xirr.active .kpiHero strong{font-size:58px!important;}
+  #xirr.active .kpiStripContext{grid-template-columns:1fr 1fr!important;}
+  #xirr.active .kpiStripContext .kpi:nth-child(3){grid-column:1/-1;border-left:0!important;border-top:1px solid var(--line)!important;}
+}
+@media(max-width:560px){
+  #xirr.active .kpiHero{padding:25px 20px 22px!important;}
+  #xirr.active .kpiHero strong{font-size:52px!important;letter-spacing:-2.5px!important;}
+  #xirr.active .kpiHeroNote{padding:22px 20px!important;}
+  #xirr.active .kpiHeroNote strong{font-size:14px!important;}
+  #xirr.active .kpiStripContext{grid-template-columns:1fr!important;}
+  #xirr.active .kpiStripContext .kpi{padding:17px 20px!important;}
+  #xirr.active .kpiStripContext .kpi + .kpi{border-left:0!important;border-top:1px solid var(--line)!important;}
+  #xirr.active .kpiStripContext .kpi:nth-child(3){grid-column:auto!important;}
 }
 </style>
 </body>
