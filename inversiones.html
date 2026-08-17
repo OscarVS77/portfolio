@@ -923,11 +923,14 @@ html{
   gap:18px!important;
 }
 @media(max-width:1150px){:root{--appPad:12px!important;--topGap:16px!important;}.app{width:100%!important;padding:12px!important;}.sidebar{position:relative!important;top:auto!important;left:auto!important;width:auto!important;height:auto!important;margin-bottom:16px!important;}.main{margin-left:0!important;width:100%!important;}.topbar{top:12px!important;margin-bottom:16px!important;}
-}/* v12 · Movimientos: tabla con alineación editorial real */
+}/* v12 · Movimientos: tabla con alineación editorial real.
+   v175.10: ancho fijo limitado a escritorio; la presentación móvil de
+   Movimientos será una lista propia (v175.15), nunca esta tabla comprimida. */
+@media(min-width:761px){
 #movementsTable{
   table-layout:fixed!important;
   min-width:1120px!important;
-}#movementsTable th, #movementsTable td{
+}}#movementsTable th, #movementsTable td{
   vertical-align:middle!important;
 }#movementsTable th:nth-child(1), #movementsTable td:nth-child(1){
   width:120px!important;
@@ -974,10 +977,10 @@ html{
   text-overflow:ellipsis!important;
 }#movements .tableWrap{
   overflow-x:auto!important;
-}#movementsTable{
+}@media(min-width:761px){#movementsTable{
   table-layout:fixed!important;
   min-width:1120px!important;
-}/* v16 · Gráficas reales y limpias */.chartEmpty{
+}}/* v16 · Gráficas reales y limpias */.chartEmpty{
   height:100%;
   min-height:150px;
   display:flex;
@@ -1302,7 +1305,8 @@ html{
     overflow:hidden!important;
     text-overflow:ellipsis!important;
     color:var(--text2)!important;
-  }#backupBtn{display:none!important;}.section:not(#dashboard){display:none!important;}#dashboard{display:block!important;}.pageBlock{margin-top:10px!important;}.grid, .capitalGrid, .dashboardOps{
+  }#backupBtn{display:none!important;}/* v175.10: retirado .section:not(#dashboard){display:none}: la visibilidad
+  vuelve a .section.active y el acceso lo gobierna el registro de páginas móviles listas. */.pageBlock{margin-top:10px!important;}.grid, .capitalGrid, .dashboardOps{
     display:grid!important;
     grid-template-columns:1fr!important;
     gap:10px!important;
@@ -1749,8 +1753,8 @@ html{
 }#asesoria .advisorConfidence strong{color:var(--text)!important;font-weight:560!important}
 @media(max-width:1150px){#asesoria .advisorHero{grid-template-columns:1fr!important;align-items:start!important}#asesoria .advisorState{text-align:left!important}#asesoria .advisorMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}#asesoria .advisorLayout{grid-template-columns:1fr!important}
 }
-@media(max-width:760px){#asesoria{display:none!important}
-}
+/* v175.10: retirado el bloqueo móvil de #asesoria; su acceso lo gobierna el
+   registro de páginas móviles listas hasta que tenga presentación propia. */
 </style>
 
 
@@ -1857,11 +1861,11 @@ html{
       </section>
 
       <section class="capitalGrid">
-        <article class="capitalCard"><label>Total aportado histórico bruto</label><strong>--</strong><small>Todo el dinero aportado desde el inicio, antes de retiradas.</small></article>
-        <article class="capitalCard"><label>Capital invertido neto actual</label><strong>--</strong><small>Aportado histórico menos retiradas.</small></article>
-        <article class="capitalCard"><label>Ganancia / pérdida real</label><strong>--</strong><small>Valor actual menos capital invertido neto.</small></article>
-        <article class="capitalCard capitalCardKey"><label>Rentabilidad simple real</label><strong>--</strong><small>Desde el primer día. Simple, no anualizada.</small></article>
-        <article class="capitalCard capitalCardKey"><label>XIRR global</label><strong>--</strong><small>Desde el primer día. Rentabilidad anualizada.</small></article>
+        <article class="capitalCard" data-capital="bruto"><label>Total aportado histórico bruto</label><strong>--</strong><small>Todo el dinero aportado desde el inicio, antes de retiradas.</small></article>
+        <article class="capitalCard" data-capital="neto"><label>Capital invertido neto actual</label><strong>--</strong><small>Aportado histórico menos retiradas.</small></article>
+        <article class="capitalCard" data-capital="gp"><label>Ganancia / pérdida real</label><strong>--</strong><small>Valor actual menos capital invertido neto.</small></article>
+        <article class="capitalCard capitalCardKey" data-capital="rentsimple"><label>Rentabilidad simple real</label><strong>--</strong><small>Desde el primer día. Simple, no anualizada.</small></article>
+        <article class="capitalCard capitalCardKey" data-capital="xirr"><label>XIRR global</label><strong>--</strong><small>Desde el primer día. Rentabilidad anualizada.</small></article>
       </section>
 
       <section class="card pageBlock assetSummaryCard" id="assetSummaryDash">
@@ -2293,8 +2297,8 @@ html{
           </div>
           <div class="sheetChecks auditWebChecks">
             <div><strong>Excel como fuente única</strong><span class="green">Sí</span></div>
-            <div><strong>Supabase</strong><span class="green">Activo</span></div>
-            <div><strong>Benchmark/API</strong><span class="green">Activo</span></div>
+            <div><strong>Supabase</strong><span class="green">Integrada</span></div>
+            <div><strong>Benchmark/API</strong><span class="green">Integrada</span></div>
             <div><strong>Edición desde la web</strong><span class="neutral">Pendiente</span></div>
           </div>
         </article>
@@ -2360,6 +2364,9 @@ pages.forEach((p,i)=>{
   b.onclick=()=>show(p[0]);
 });
 function show(id){
+  // v175.10: en móvil solo se navega a páginas con presentación móvil
+  // terminada; el resto recae en Dashboard (destino ausente, no roto).
+  if(typeof mobilePageAllowed==='function' && !mobilePageAllowed(id)) id='dashboard';
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   document.querySelectorAll(".nav button").forEach(b=>{
@@ -2370,6 +2377,9 @@ function show(id){
   const p=pages.find(x=>x[0]===id);
   document.getElementById("title").textContent=p[1];
   document.getElementById("subtitle").textContent=p[2];
+  // v175.13: la barra móvil refleja cualquier cambio de página, también los
+  // programáticos; sin esto quedaba marcando la pestaña anterior.
+  if(typeof syncMobileTabbar==='function') syncMobileTabbar();
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function showYear(id, el){
@@ -2888,6 +2898,9 @@ function parseCanonicalMonthlyEvolution(){
   const header=canonicalHistoryHeader(rows, expected);
   if(!header) return {available:true, rows:[]};
   const [colNominal,colYear,colMonth,colEffective,colState,colValue,colCapital,colGross,colControl]=header.columns;
+  // v175.5: la XIRR acreditada de cada cierre viaja con la fila. No se añade a
+  // `expected` para no invalidar libros heredados que no la traigan.
+  const colXirr=(rows[header.row]||[]).map(value=>normalizeText(value)).indexOf('xirr');
   const out=[];
   for(let i=header.row+1;i<rows.length;i++){
     const row=rows[i] || [];
@@ -2912,7 +2925,8 @@ function parseCanonicalMonthlyEvolution(){
       invertido:capital,
       aportado:gross,
       estado:state,
-      fechaReal:effective
+      fechaReal:effective,
+      xirr:colXirr>=0 ? benchmarkNumber(row[colXirr]) : null
     });
   }
   return {available:true, rows:out};
@@ -3370,6 +3384,9 @@ applyBenchmarkView('global');
 // v57: pestañas Benchmark controladas por applyBenchmarkView + carga automática.
 document.getElementById("excelFile").addEventListener("change", e=>{
   const file=e.target.files[0];
+  // v175.7: sin limpiar el value, reelegir el mismo .xlsx corregido no dispara
+  // 'change' y obliga a recargar la página. El File ya está capturado.
+  e.target.value="";
   if(file) handleExcelImport(file);
 });
 // Portfolio Oscar · contrato de importación Excel v3
@@ -3405,6 +3422,11 @@ function latestYearSheet(){
 let importedWorkbook = null;
 let importedData = null;
 let lastWorkbookValidationIssues = [];
+// v175.8: incidencias del último INTENTO de importación rechazado. Separado de
+// la validación del libro activo: revalidar el Excel vigente no debe borrar
+// el registro de que el último candidato fue rechazado. Se limpia al importar
+// con éxito.
+let lastRejectedImport = null;
 
 function fmtNumber(value, decimals=2){
   const n = Number(value);
@@ -3542,7 +3564,7 @@ function renderAssetSummary(cartera){
     const pesoNum = Number(x.peso);
     const pesoTxt = Number.isFinite(pesoNum) ? fmtPct(x.peso) : 'Separado';
     const xirrTxt = (xirrVal!==null && xirrVal!==undefined && xirrVal!=='') ? fmtPct(xirrVal) : '—';
-    return `<article class="assetSummaryItem">
+    return `<article class="assetSummaryItem" data-asset="${key}">
       <div class="asName"><span class="bullet ${assetClass(x.activo)}"></span><span>${escHtml(shortAssetName(x.activo))}</span></div>
       <div class="asXirr ${clsByValue(xirrVal)}"><span class="asXirrLabel">XIRR</span>${xirrTxt}</div>
       <div class="asRow"><span>Valor actual</span><strong>${fmtMoney(x.valor)}</strong></div>
@@ -4053,16 +4075,9 @@ function updateXirr(){
   updateMovimientosFromXirr(rows);
 }
 function updateHistoricoMensual(){
-  const rows = sheetRows('HISTÓRICO MENSUAL');
   const tbody = [...document.querySelectorAll('#xirr table tbody')].find(t=>t.closest('.card')?.textContent.includes('Cierres reales disponibles'));
   if(!tbody) return;
-  const real=[];
-  for(let r=5;r<=rows.length;r++){
-    const val=cell(rows,r,4);
-    if(val!=='' && val!=null && isRealMonthlyClose(rows[r-1])){
-      real.push({fecha:cell(rows,r,1), mes:cell(rows,r,3), anio:cell(rows,r,2), valor:val, xirr:cell(rows,r,9)});
-    }
-  }
+  const real=getRealClosures();
   tbody.innerHTML = real.map(x=>`<tr><td>${fmtDate(x.fecha)}</td><td>${x.mes} ${x.anio}</td><td>${fmtMoney(x.valor)}</td><td class="${clsByValue(x.xirr)}">${fmtPct(x.xirr)}</td><td>OK</td><td>Cierre real disponible</td></tr>`).join('');
   renderXirrChart();
 }
@@ -4236,16 +4251,44 @@ function updateAuditoria(){
     if(cls!==undefined) el.className = cls || '';
   };
 
-  set('[data-web-audit="global-status"]', 'OK', 'green');
-  set('[data-web-audit="global-note"]', 'Interfaz y controles técnicos operativos');
-  set('[data-web-audit="excel-status"]', !hasWorkbook ? 'Sin datos' : ok ? 'Conectado' : missing.length ? 'Error' : 'Revisar', !hasWorkbook ? 'neutral' : ok ? 'green' : 'red');
-  set('[data-web-audit="excel-note"]', !hasWorkbook ? 'Excel no conectado' : `${fileName} · ${ok ? 'auditoría interna OK' : `${failedControls.length || missing.length} control(es) requieren revisión`}`);
+  // v175.8: el estado global deja de forzarse a OK. Refleja el estado real:
+  // sin Excel es neutral, un rechazo se ve (aunque siga activo el Excel
+  // anterior), y con Excel manda su auditoría.
+  const rejectedCount = lastRejectedImport?.issues?.length || 0;
+  const rejected = rejectedCount > 0;
+  if(rejected && hasWorkbook){
+    set('[data-web-audit="global-status"]', 'Revisar', 'red');
+    set('[data-web-audit="global-note"]', `Último intento rechazado · ${rejectedCount} incidencia(s) · se mantiene el Excel anterior`);
+  }else if(rejected){
+    set('[data-web-audit="global-status"]', 'Revisar', 'red');
+    set('[data-web-audit="global-note"]', `Excel rechazado · ${rejectedCount} incidencia(s)`);
+  }else if(!hasWorkbook){
+    set('[data-web-audit="global-status"]', 'Sin datos', 'neutral');
+    set('[data-web-audit="global-note"]', 'Importa o carga el Excel para comprobar la app');
+  }else if(ok){
+    set('[data-web-audit="global-status"]', 'OK', 'green');
+    set('[data-web-audit="global-note"]', 'Interfaz y controles del Excel operativos');
+  }else{
+    set('[data-web-audit="global-status"]', 'Revisar', 'yellow');
+    set('[data-web-audit="global-note"]', `${failedControls.length || missing.length} control(es) requieren revisión`);
+  }
+  // La tarjeta Excel describe el libro ACTIVO; el rechazo de un candidato solo
+  // la ocupa cuando no hay ningún libro activo que describir.
+  const rejectedNoData = rejected && !hasWorkbook;
+  set('[data-web-audit="excel-status"]', rejectedNoData ? 'Rechazado' : !hasWorkbook ? 'Sin datos' : ok ? 'Conectado' : missing.length ? 'Error' : 'Revisar', rejectedNoData ? 'red' : !hasWorkbook ? 'neutral' : ok ? 'green' : 'red');
+  set('[data-web-audit="excel-note"]', rejectedNoData ? `${rejectedCount} incidencia(s) · la web sigue sin datos` : !hasWorkbook ? 'Excel no conectado' : `${fileName} · ${ok ? 'auditoría interna OK' : `${failedControls.length || missing.length} control(es) requieren revisión`}`);
   set('[data-web-audit="cache-status"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : 'neutral');
   set('[data-web-audit="cache-note"]', hasCache ? 'Último Excel guardado en este navegador' : 'Se activará al importar Excel');
   set('[data-web-audit="backup-status"]', hasWorkbook || hasCache ? 'Disponible' : 'Sin datos', hasWorkbook || hasCache ? 'green' : 'neutral');
   set('[data-web-audit="cache-check"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : 'neutral');
 
-  setNavStatus('auditoria', 'ok');
+  // v175.8: "Páginas conectadas" según datos reales, no verdes fijos.
+  const pageState = !hasWorkbook ? ['—','neutral'] : ok ? ['OK','green'] : ['Revisar','yellow'];
+  document.querySelectorAll('.auditWebPages span').forEach(el=>{
+    el.textContent = pageState[0]; el.className = pageState[1];
+  });
+
+  setNavStatus('auditoria', rejected ? 'bad' : !hasWorkbook ? 'off' : ok ? 'ok' : 'warn');
   updateDataStatus?.();
 }
 
@@ -4459,10 +4502,16 @@ function applyWorkbookAfterRead(fileName, fromCache=false, candidate=importedWor
     const extra=issues.length>3 ? ` · y ${issues.length-3} incidencia(s) más` : '';
     setStatus(false, `EXCEL RECHAZADO · ${visible}${extra}`);
     setNavStatus('auditoria','bad');
+    // v175.8: registrar el intento rechazado y reflejarlo en Auditoría (solo
+    // presentación; la decisión de aceptar o rechazar no cambia). El Excel
+    // anterior, si existe, permanece activo e intacto.
+    lastRejectedImport = {fileName: fileName || 'Excel', issues};
+    updateAuditoria();
     return false;
   }
   importedWorkbook = candidate;
   importedData = {fileName:fileName || 'Excel importado'};
+  lastRejectedImport = null; // v175.8: una importación válida limpia el rechazo anterior
   updateDashboard(); updateCartera(); updateXirr(); updateHistorial(); updateAsesoria(); updateAuditoria(); updateDataStatus?.();
   setStatus(true, fromCache ? `${fileName || 'Excel'} recuperado` : `${fileName || 'Excel'} importado`);
   setNavStatus('dashboard','ok'); setNavStatus('cartera','ok'); setNavStatus('xirr','ok'); setNavStatus('movimientos','ok'); setNavStatus('historial','ok'); setNavStatus('asesoria','ok');
@@ -4817,8 +4866,22 @@ function validateWorkbookDetailed(wb){
     const canonicalValuations=rowsOf('NÚCLEO VALORACIONES');
     const canonicalXirr=rowsOf('NÚCLEO XIRR HIST.');
     let canonicalStructureOk=true;
-    if(!exactRow(canonicalClosures,5,WORKBOOK_CONTRACT.canonicalClosureHeaders)) canonicalStructureOk=false;
-    if(!exactRow(canonicalValuations,5,WORKBOOK_CONTRACT.canonicalValuationHeaders)) canonicalStructureOk=false;
+    // v175.4: junto al booleano se acumula el motivo concreto, en lenguaje llano
+    // y nombrando el mes, la hoja y la celda que hay que rellenar. Un código
+    // técnico obligaba a auditar el libro entero a mano para encontrar la causa.
+    const canonicalReasons=[];
+    const canonicalFail=reason=>{
+      canonicalStructureOk=false;
+      if(reason && canonicalReasons.length<4 && !canonicalReasons.includes(reason)) canonicalReasons.push(reason);
+    };
+    const canonicalPeriod=row=>{
+      const month=String(at(canonicalClosures,row,3)||'').trim();
+      const year=String(at(canonicalClosures,row,2)||'').trim();
+      return month && year ? `${month} ${year} (fila ${row})` : `fila ${row}`;
+    };
+    const missingColumns=(rows,row,spec)=>spec.filter(([column])=>!contractNumber(at(rows,row,column))).map(([,label])=>label);
+    if(!exactRow(canonicalClosures,5,WORKBOOK_CONTRACT.canonicalClosureHeaders)) canonicalFail('NÚCLEO CIERRES no conserva su fila de encabezados');
+    if(!exactRow(canonicalValuations,5,WORKBOOK_CONTRACT.canonicalValuationHeaders)) canonicalFail('NÚCLEO VALORACIONES no conserva su fila de encabezados');
 
     const canonicalStates=new Set(['sin cierre','cierre real','reconstruido','provisional']);
     const valuedStates=new Set(['cierre real','reconstruido','provisional']);
@@ -4831,17 +4894,22 @@ function validateWorkbookDetailed(wb){
       if(!hasRow) continue;
       const effective=contractDateDay(at(canonicalClosures,row,4));
       const control=contractText(at(canonicalClosures,row,14));
-      if(nominal===null || closureKeys.has(nominal) || !canonicalStates.has(state) || !Number.isInteger(Number(at(canonicalClosures,row,2))) || !String(at(canonicalClosures,row,3)||'').trim()) canonicalStructureOk=false;
+      if(nominal===null || closureKeys.has(nominal) || !canonicalStates.has(state) || !Number.isInteger(Number(at(canonicalClosures,row,2))) || !String(at(canonicalClosures,row,3)||'').trim()) canonicalFail(`NÚCLEO CIERRES, ${canonicalPeriod(row)}: periodo, año, mes o estado inválidos`);
       closureKeys.add(nominal);
-      if(![7,8,9].every(column=>contractNumber(at(canonicalClosures,row,column))) || !String(at(canonicalClosures,row,15)||'').trim()) canonicalStructureOk=false;
+      if(![7,8,9].every(column=>contractNumber(at(canonicalClosures,row,column)))) canonicalFail(`NÚCLEO CIERRES, ${canonicalPeriod(row)}: faltan los importes de capital (columnas G, H o I)`);
+      if(!String(at(canonicalClosures,row,15)||'').trim()) canonicalFail(`REGISTRO CIERRES, ${canonicalPeriod(row)}: falta rellenar la celda amarilla "Evidencia / nota"`);
       if(state==='sin cierre'){
-        if(effective!==null || !['',null].includes(at(canonicalClosures,row,6)) || Number(at(canonicalClosures,row,13)||0)!==0 || control!=='sin valoracion') canonicalStructureOk=false;
-      }else if(effective===null || ![6,10,11,12,13].every(column=>contractNumber(at(canonicalClosures,row,column))) || Number(at(canonicalClosures,row,6))<=0 || Number(at(canonicalClosures,row,13))!==allowedAssets.size || control!=='ok'){
-        canonicalStructureOk=false;
+        if(effective!==null || !['',null].includes(at(canonicalClosures,row,6)) || Number(at(canonicalClosures,row,13)||0)!==0 || control!=='sin valoracion') canonicalFail(`NÚCLEO CIERRES, ${canonicalPeriod(row)}: marcado SIN CIERRE pero contiene datos de valoración`);
+      }else{
+        const missing=missingColumns(canonicalClosures,row,[[6,'Valor cartera'],[10,'G/P económica'],[11,'Rentabilidad simple'],[12,'XIRR'],[13,'Activos valorados']]);
+        if(missing.length) canonicalFail(`NÚCLEO CIERRES, ${canonicalPeriod(row)}: faltan ${missing.join(', ')}`);
+        if(effective===null) canonicalFail(`REGISTRO CIERRES, ${canonicalPeriod(row)}: falta rellenar la celda amarilla "Fecha efectiva"`);
+        if(!missing.length && (Number(at(canonicalClosures,row,6))<=0 || Number(at(canonicalClosures,row,13))!==allowedAssets.size)) canonicalFail(`NÚCLEO CIERRES, ${canonicalPeriod(row)}: el cierre no cubre los ${allowedAssets.size} activos con valor positivo`);
+        if(control!=='ok') canonicalFail(`REGISTRO CIERRES, ${canonicalPeriod(row)}: Control entrada no está en OK`);
       }
       closureRecords.push({row,nominal,effective,state});
     }
-    if(!closureRecords.length || !closureRecords.some(item=>item.state==='cierre real')) canonicalStructureOk=false;
+    if(!closureRecords.length || !closureRecords.some(item=>item.state==='cierre real')) canonicalFail('REGISTRO CIERRES: no hay ningún periodo marcado como CIERRE REAL');
 
     const valuationRecords=[];
     const valuationKeys=new Set();
@@ -4854,13 +4922,19 @@ function validateWorkbookDetailed(wb){
       const state=contractText(at(canonicalValuations,row,4));
       const assetKey=contractAssetKey(asset);
       const key=`${nominal}|${assetKey}`;
-      if(!id || nominal===null || effective===null || !valuedStates.has(state) || !allowedAssets.has(assetKey) || valuationKeys.has(key)) canonicalStructureOk=false;
-      if(![6,7,8,9,10,11,12,13,14,15].every(column=>contractNumber(at(canonicalValuations,row,column))) || Number(at(canonicalValuations,row,6))<=0 || contractText(at(canonicalValuations,row,16))!=='ok' || !String(at(canonicalValuations,row,17)||'').trim() || !String(at(canonicalValuations,row,18)||'').trim()) canonicalStructureOk=false;
+      const valuationLabel=`${asset||'activo sin nombre'} (fila ${row})`;
+      if(!id || nominal===null || effective===null || !valuedStates.has(state) || !allowedAssets.has(assetKey) || valuationKeys.has(key)) canonicalFail(`NÚCLEO VALORACIONES, ${valuationLabel}: identificador, periodo, estado o activo inválidos`);
+      const missingValuation=missingColumns(canonicalValuations,row,[[6,'Valor'],[7,'Capital neto'],[8,'Bruto acumulado'],[9,'Retiradas acum.'],[10,'Aportación mensual'],[11,'Flujo neto mensual'],[12,'G/P económica'],[13,'Rentabilidad simple'],[14,'XIRR activo'],[15,'Peso cartera']]);
+      if(missingValuation.length) canonicalFail(`NÚCLEO VALORACIONES, ${valuationLabel}: faltan ${missingValuation.join(', ')}`);
+      if(!missingValuation.length && Number(at(canonicalValuations,row,6))<=0) canonicalFail(`NÚCLEO VALORACIONES, ${valuationLabel}: el valor del activo no es positivo`);
+      if(contractText(at(canonicalValuations,row,16))!=='ok') canonicalFail(`NÚCLEO VALORACIONES, ${valuationLabel}: Control no está en OK`);
+      if(!String(at(canonicalValuations,row,17)||'').trim()) canonicalFail('REGISTRO CIERRES: hay cierres sin la celda amarilla "Evidencia / nota" rellenada');
+      if(!String(at(canonicalValuations,row,18)||'').trim()) canonicalFail(`NÚCLEO VALORACIONES, ${valuationLabel}: falta la Fuente del capital`);
       valuationKeys.add(key);
       valuationRecords.push({row,id,nominal,effective,state,asset,assetKey});
     }
     const valuedClosures=closureRecords.filter(item=>valuedStates.has(item.state));
-    if(valuationRecords.length!==valuedClosures.length*allowedAssets.size) canonicalStructureOk=false;
+    if(valuationRecords.length!==valuedClosures.length*allowedAssets.size) canonicalFail(`NÚCLEO VALORACIONES: cada cierre valorado necesita ${allowedAssets.size} valoraciones; hay ${valuationRecords.length} para ${valuedClosures.length} cierre(s) y se esperaban ${valuedClosures.length*allowedAssets.size}`);
 
     let helperSeries=0;
     const helperColumns=Math.max(0,...canonicalXirr.map(row=>(row||[]).length));
@@ -4870,13 +4944,13 @@ function validateWorkbookDetailed(wb){
       const dateHeader=String(at(canonicalXirr,3,dateColumn)||'').trim();
       const flowHeader=String(at(canonicalXirr,3,flowColumn)||'').trim();
       if(!dateHeader && !flowHeader) continue;
-      if(!dateHeader || !['global','activo'].includes(contractText(flowHeader)) || contractText(at(canonicalXirr,4,dateColumn))!=='fecha' || contractText(at(canonicalXirr,4,flowColumn))!=='flujo' || !contractNumber(at(canonicalXirr,209,flowColumn)) || contractText(at(canonicalXirr,210,flowColumn))!=='ok') canonicalStructureOk=false;
+      if(!dateHeader || !['global','activo'].includes(contractText(flowHeader)) || contractText(at(canonicalXirr,4,dateColumn))!=='fecha' || contractText(at(canonicalXirr,4,flowColumn))!=='flujo' || !contractNumber(at(canonicalXirr,209,flowColumn)) || contractText(at(canonicalXirr,210,flowColumn))!=='ok') canonicalFail(`NÚCLEO XIRR HIST.: la serie "${dateHeader||'sin nombre'}" no conserva sus filas de control`);
       else helperSeries++;
     }
     // Las matrices son evidencia histórica inicial, no una dependencia para
     // cada cierre futuro: la conciliación inferior recalcula todos los XIRR.
-    if(helperSeries===0) canonicalStructureOk=false;
-    if(!canonicalStructureOk) add('HISTORICO_CANONICO_ESTRUCTURA','Las hojas canónicas no conservan encabezados, estados, cardinalidad, controles o matrices XIRR válidos');
+    if(helperSeries===0) canonicalFail('NÚCLEO XIRR HIST.: no hay ninguna serie de flujos válida');
+    if(!canonicalStructureOk) add('HISTORICO_CANONICO_ESTRUCTURA', canonicalReasons.length ? canonicalReasons.join(' · ') : 'Las hojas canónicas no conservan encabezados, estados, cardinalidad, controles o matrices XIRR válidos');
 
     const monthStartDay=nominal=>{
       const date=new Date(nominal*86400000);
@@ -5001,7 +5075,17 @@ function getDashboardRows(scope, cartera){
   return rows;
 }
 
+// v175.5: los cierres reales salen de NÚCLEO CIERRES, que se regenera solo desde
+// REGISTRO CIERRES y conserva todos los meses. HISTÓRICO MENSUAL queda como
+// legado para libros anteriores: una fila que no se congelara a tiempo hacía
+// desaparecer un mes de esta tabla y de la gráfica XIRR sin ningún aviso.
 function getRealClosures(){
+  const canonical=parseCanonicalMonthlyEvolution();
+  if(canonical.available){
+    return canonical.rows
+      .filter(x=>normalizeText(x.estado)==='cierre real' && Number.isFinite(Number(x.valor)) && Number(x.valor)>0)
+      .map(x=>({fecha:x.fechaRaw, mes:capitalizeMonth(x.mes), anio:x.anio, valor:Number(x.valor), xirr:Number(x.xirr)}));
+  }
   const rows = sheetRows('HISTÓRICO MENSUAL');
   const real=[];
   for(let r=5;r<=rows.length;r++){
@@ -5011,6 +5095,12 @@ function getRealClosures(){
     }
   }
   return real;
+}
+// NÚCLEO CIERRES escribe el mes en minúscula (TEXT(fecha,"mmmm")); el resto de
+// la interfaz lo muestra capitalizado.
+function capitalizeMonth(value){
+  const text=String(value ?? '').trim();
+  return text ? text.charAt(0).toUpperCase()+text.slice(1) : text;
 }
 function shortMonthLabel(x){
   const m = String(x.mes || '').trim();
@@ -6402,6 +6492,11 @@ function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries
   if(!box) return;
   __v61TooltipInit();
   if(!benchmarkSeries.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la simulación.</div>'; return; }
+  // v175.17: alimentación de la gráfica móvil. Solo captura los argumentos ya
+  // calculados de esta llamada (ninguna lógica cambia); el módulo móvil los
+  // redibuja a escala legible con la misma transformación de presentación.
+  window.__benchmarkMobileFeed={kind:'sim', currentValue:currentValue, benchmarkFinalValue:benchmarkFinalValue,
+    benchmarkSeries:benchmarkSeries, cfg:cfg, monthlyHistory:monthlyHistory, netInvested:netInvested};
   const w=1200, h=320, padL=14, padR=20, padT=26, padB=44;
   const plotH=h-padT-padB;
   const denom=(Number.isFinite(netInvested) && netInvested>0)
@@ -6478,6 +6573,8 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
   __v61TooltipInit();
   const a=seriesA || [], b=seriesB || [];
   if(!a.length || !b.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la comparación.</div>'; return; }
+  // v175.17: alimentación de la gráfica móvil (ver renderBenchmarkChart).
+  window.__benchmarkMobileFeed={kind:'two', seriesA:a, seriesB:b, labelA:labelA, labelB:labelB};
   const w=1200, h=320, padL=14, padR=20, padT=26, padB=44;
   const plotH=h-padT-padB;
   const values=[...a.map(x=>Number(x.normalized)),...b.map(x=>Number(x.normalized))].filter(Number.isFinite);
@@ -6621,35 +6718,1360 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
 
 
 <script>
+/* v175.10 · Navegación móvil base. Sustituye a forceMobileDashboard() (v64):
+   ya no se expulsa al usuario a Dashboard al rotar; solo se recae en Dashboard
+   si la página activa no tiene presentación móvil terminada. La barra y la
+   hoja "Más" se crean únicamente en viewport móvil: en escritorio no existen
+   y la firma visual de escritorio queda intacta. */
 (function(){
-  var mobileDashboardQuery=window.matchMedia('(max-width: 760px)');
-  function isMobileDashboard(){ return mobileDashboardQuery.matches; }
-  function forceMobileDashboard(){
-    if(!isMobileDashboard()) return;
-    /* iPhone: no usamos show('dashboard') porque esa función hace window.scrollTo(0)
-       y Safari dispara resize al ocultar/mostrar la barra del navegador.
-       Resultado anterior: al intentar bajar, la página volvía arriba. */
+  // Registro de páginas con presentación móvil terminada. Se amplía fase a
+  // fase. Un destino fuera de esta lista está ausente en móvil.
+  var MOBILE_READY_PAGES=['dashboard','cartera','xirr','movimientos','historial','benchmark','asesoria','auditoria'];
+  // La barra queda fija en cuatro destinos (decisión de Óscar, v175.15):
+  // las demás páginas listas viven en la hoja "Más", grupo Secciones.
+  var BAR_PAGES=['dashboard','cartera','xirr'];
+  var SHEET_PAGES=[
+    {id:'benchmark', label:'Benchmark'},
+    {id:'movimientos', label:'Movimientos'},
+    {id:'historial', label:'Historial'},
+    {id:'asesoria', label:'Asesoría'},
+    {id:'auditoria', label:'Auditoría'}
+  ];
+  var mq=window.matchMedia('(max-width: 760px)');
+
+  window.mobilePageAllowed=function(id){
+    return !mq.matches || MOBILE_READY_PAGES.indexOf(id)!==-1;
+  };
+
+  function activePageId(){
+    var active=document.querySelector('.section.active');
+    return active ? active.id : 'dashboard';
+  }
+
+  /* Recaída sin scroll: mismo mecanismo que la v64 (no show()) porque Safari
+     dispara resize al ocultar/mostrar su barra y show() hace scrollTo(0). */
+  function fallbackToDashboard(){
     document.querySelectorAll('.section').forEach(function(section){
-      section.classList.toggle('active', section.id === 'dashboard');
+      section.classList.toggle('active', section.id==='dashboard');
     });
     document.querySelectorAll('.nav button').forEach(function(button){
-      button.classList.toggle('active', button.dataset.page === 'dashboard');
+      button.classList.toggle('active', button.dataset.page==='dashboard');
     });
-    var title=document.getElementById('title');
-    var subtitle=document.getElementById('subtitle');
-    if(title) title.textContent='Dashboard móvil';
-    if(subtitle) subtitle.textContent='Resumen principal de la cartera';
   }
-  window.addEventListener('DOMContentLoaded', forceMobileDashboard, {once:true});
-  window.addEventListener('orientationchange', function(){ setTimeout(forceMobileDashboard, 250); });
-  if(typeof mobileDashboardQuery.addEventListener==='function'){
-    mobileDashboardQuery.addEventListener('change', function(event){
-      if(event.matches) forceMobileDashboard();
+
+  var ICONS={
+    dashboard:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>',
+    cartera:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.4 6.4"/></svg>',
+    xirr:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19l6-7 4 3 6-8"/><path d="M4 19h16" opacity=".4"/></svg>',
+    mas:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>'
+  };
+  var TAB_LABELS={dashboard:'Dashboard', cartera:'Cartera', xirr:'XIRR'};
+
+  window.syncMobileTabbar=syncTabbar;
+  function syncTabbar(){
+    var bar=document.getElementById('mobileTabbar');
+    if(!bar) return;
+    var current=activePageId();
+    var inBar=false;
+    bar.querySelectorAll('button[data-mpage]').forEach(function(btn){
+      var on=btn.dataset.mpage===current;
+      if(on) inBar=true;
+      btn.classList.toggle('active', on);
+      if(on) btn.setAttribute('aria-current','page'); else btn.removeAttribute('aria-current');
     });
-  }else if(typeof mobileDashboardQuery.addListener==='function'){
-    mobileDashboardQuery.addListener(function(event){
-      if(event.matches) forceMobileDashboard();
+    // Página activa alojada en la hoja (p. ej. Movimientos): se marca "Más",
+    // también con aria-current (v175.20).
+    var mas=document.getElementById('mobileMasBtn');
+    if(mas){
+      var hosted=!inBar && MOBILE_READY_PAGES.indexOf(current)!==-1;
+      mas.classList.toggle('active', hosted);
+      if(hosted) mas.setAttribute('aria-current','page');
+      else mas.removeAttribute('aria-current');
+    }
+  }
+
+  /* Comportamiento modal (v175.10): foco dentro al abrir, tabulador atrapado,
+     Escape/Cerrar cierran, y el foco vuelve al botón "Más" al cerrar. */
+  function openSheet(){
+    var wrap=document.getElementById('mobileSheetWrap');
+    if(!wrap) return;
+    refreshSheetState();
+    wrap.classList.add('open');
+    var btn=document.getElementById('mobileMasBtn');
+    if(btn) btn.setAttribute('aria-expanded','true');
+    // v175.20: el foco entra en el primer destino de Secciones disponible;
+    // si no hubiera ninguno, en Importar Excel. Nunca en el contenedor
+    // (un Shift+Tab inmediato escaparía al fondo).
+    var first=document.querySelector('#mobileSheetWrap [data-sheet-page]')
+           || document.getElementById('mobileSheetImport');
+    if(first) first.focus();
+  }
+  function closeSheet(){
+    var wrap=document.getElementById('mobileSheetWrap');
+    if(!wrap || !wrap.classList.contains('open')) return;
+    wrap.classList.remove('open');
+    var btn=document.getElementById('mobileMasBtn');
+    if(btn){ btn.setAttribute('aria-expanded','false'); btn.focus(); }
+  }
+  function trapSheetTab(e){
+    if(e.key!=='Tab') return;
+    // v175.13: la trampa vale para cualquier hoja abierta (Más o detalle).
+    var wrap=document.querySelector('.mobileSheetWrap.open');
+    if(!wrap) return;
+    var focusables=[].slice.call(wrap.querySelectorAll('button'));
+    if(!focusables.length) return;
+    // El índice -1 cubre tanto el foco fuera de la hoja como el foco en el
+    // propio contenedor (#mobileSheet, tabindex=-1, enfocable por clic).
+    var idx=focusables.indexOf(document.activeElement);
+    if(e.shiftKey){
+      if(idx<=0){ e.preventDefault(); focusables[focusables.length-1].focus(); }
+    }else{
+      if(idx===-1 || idx===focusables.length-1){ e.preventDefault(); focusables[0].focus(); }
+    }
+  }
+
+  /* Los botones de la hoja son apoderados de los controles reales del topbar:
+     ninguna lógica de importación/nube se duplica ni se toca. */
+  function refreshSheetState(){
+    var status=document.getElementById('mobileSheetStatus');
+    var real=document.getElementById('importStatus');
+    if(status && real) status.textContent=real.textContent.trim();
+    [['mobileSheetSave','cloudSaveBtn'],['mobileSheetLoad','cloudLoadBtn']].forEach(function(pair){
+      var proxy=document.getElementById(pair[0]);
+      var target=document.getElementById(pair[1]);
+      if(proxy && target) proxy.disabled=!!target.disabled;
     });
+    var session=document.getElementById('mobileSheetSession');
+    var login=document.getElementById('cloudLoginBtn');
+    if(session && login) session.textContent=login.textContent.trim() || 'Cloud';
+  }
+  function proxyClick(id){
+    var target=document.getElementById(id);
+    if(target && !target.disabled){ closeSheet(); target.click(); }
+  }
+
+  function ensureMobileNav(){
+    if(!mq.matches || document.getElementById('mobileTabbar')) return;
+    var bar=document.createElement('nav');
+    bar.id='mobileTabbar';
+    bar.className='mobileTabbar';
+    bar.setAttribute('aria-label','Navegación móvil');
+    var inner=document.createElement('div');
+    inner.className='mobileTabbarInner';
+    BAR_PAGES.forEach(function(pid){
+      var b=document.createElement('button');
+      b.type='button';
+      b.dataset.mpage=pid;
+      b.innerHTML=(ICONS[pid]||'')+(TAB_LABELS[pid]||pid);
+      b.addEventListener('click', function(){ show(pid); syncTabbar(); });
+      inner.appendChild(b);
+    });
+    var more=document.createElement('button');
+    more.type='button';
+    more.id='mobileMasBtn';
+    more.setAttribute('aria-haspopup','dialog');
+    more.setAttribute('aria-controls','mobileSheet');
+    more.setAttribute('aria-expanded','false');
+    more.innerHTML=ICONS.mas+'Más';
+    more.addEventListener('click', openSheet);
+    inner.appendChild(more);
+    bar.appendChild(inner);
+    document.body.appendChild(bar);
+
+    var wrap=document.createElement('div');
+    wrap.id='mobileSheetWrap';
+    wrap.className='mobileSheetWrap';
+    wrap.innerHTML=
+      '<div class="mobileSheetBack"></div>'+
+      '<div class="mobileSheet" id="mobileSheet" role="dialog" aria-modal="true" aria-label="Más" tabindex="-1">'+
+        '<div class="mobileSheetHandle"></div>'+
+        '<h3>Más</h3>'+
+        '<p class="mobileSheetSub">Las demás áreas se incorporarán cuando su presentación móvil esté terminada.</p>'+
+        '<div class="mobileSheetGroup">Secciones</div>'+
+        '<div class="mobileSheetNav">'+SHEET_PAGES.filter(function(p){
+          return MOBILE_READY_PAGES.indexOf(p.id)!==-1;
+        }).map(function(p){
+          return '<button type="button" data-sheet-page="'+p.id+'">'+p.label+
+            '<span class="mobileSheetNavChev" aria-hidden="true">›</span></button>';
+        }).join('')+'</div>'+
+        '<div class="mobileSheetGroup">Datos</div>'+
+        '<p class="mobileSheetStatus" id="mobileSheetStatus"></p>'+
+        '<div class="mobileSheetActions">'+
+          '<button type="button" class="primary" id="mobileSheetImport">Importar Excel</button>'+
+          '<button type="button" id="mobileSheetSave">Guardar nube</button>'+
+          '<button type="button" id="mobileSheetLoad">Cargar nube</button>'+
+          '<button type="button" id="mobileSheetSession">Cloud</button>'+
+        '</div>'+
+        '<button type="button" class="mobileSheetCloseBtn" id="mobileSheetClose">Cerrar</button>'+
+      '</div>';
+    document.body.appendChild(wrap);
+    wrap.querySelector('.mobileSheetBack').addEventListener('click', closeSheet);
+    document.getElementById('mobileSheetClose').addEventListener('click', closeSheet);
+    wrap.querySelectorAll('[data-sheet-page]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        closeSheet();
+        show(btn.dataset.sheetPage);
+      });
+    });
+    document.getElementById('mobileSheetImport').addEventListener('click', function(){
+      closeSheet();
+      var input=document.getElementById('excelFile');
+      if(input) input.click();
+    });
+    document.getElementById('mobileSheetSave').addEventListener('click', function(){ proxyClick('cloudSaveBtn'); });
+    document.getElementById('mobileSheetLoad').addEventListener('click', function(){ proxyClick('cloudLoadBtn'); });
+    document.getElementById('mobileSheetSession').addEventListener('click', function(){ proxyClick('cloudLoginBtn'); });
+    document.addEventListener('keydown', function(e){
+      if(e.key!=='Escape') return;
+      var assetWrap=document.getElementById('mobileAssetSheetWrap');
+      if(assetWrap && assetWrap.classList.contains('open')) closeAssetSheet();
+      else closeSheet();
+    });
+    document.addEventListener('keydown', trapSheetTab);
+    syncTabbar();
+  }
+
+  /* ===== v175.11 · Dashboard móvil final =====
+     Todo es presentación: se leen valores YA renderizados desde el Excel y se
+     reflejan en móvil. Ningún cálculo, ninguna cifra propia. */
+
+  // Chip de variación: espejo de G/P real y rentabilidad simple (texto y
+  // signo tal cual los pintó updateDashboard). Solo existe con datos.
+  function updateHeroChip(){
+    var heroBody=document.querySelector('#dashboard .hero .heroBody');
+    var gp=document.querySelector('#dashboard .capitalCard[data-capital="gp"] strong');
+    var rs=document.querySelector('#dashboard .capitalCard[data-capital="rentsimple"] strong');
+    if(!heroBody || !gp || !rs) return;
+    var chip=document.getElementById('mobileHeroChip');
+    var gpTxt=gp.textContent.trim(), rsTxt=rs.textContent.trim();
+    if(!gpTxt || gpTxt==='--'){ if(chip) chip.remove(); return; }
+    if(!chip){
+      chip=document.createElement('div');
+      chip.id='mobileHeroChip';
+      heroBody.appendChild(chip);
+    }
+    var sign=gp.classList.contains('red') ? 'neg' : gp.classList.contains('green') ? 'pos' : '';
+    chip.className='mobileHeroChip'+(sign ? ' '+sign : '');
+    chip.innerHTML='<strong>'+escHtml(gpTxt)+'</strong><span>'+escHtml(rsTxt)+'</span>';
+  }
+
+  // Atención consolidada: agrupa las alertas renderizadas por la identidad
+  // estable de su control (carteraKeyFromName sobre el NOMBRE fijo del
+  // control de RESUMEN, nunca interpretando el texto del mensaje). Sin datos
+  // o con todo en OK no interviene: la presentación v170 queda intacta.
+  function consolidateAlerts(){
+    var list=document.querySelector('#dashboard .alerts');
+    var card=document.querySelector('#dashboard .alertsCard');
+    if(!list || !card) return;
+    var box=document.getElementById('mobileAttention');
+    var rows=[].slice.call(list.querySelectorAll('.alert:not(.alertAllOk)')).map(function(row){
+      var st=row.querySelector('.alertStatus');
+      var cls=!st ? '' : st.classList.contains('bad') ? 'bad'
+            : st.classList.contains('warn') ? 'warn'
+            : st.classList.contains('ok') ? 'ok' : '';
+      var nameEl=row.querySelector('.alertName');
+      return {name:nameEl ? nameEl.textContent.trim() : '',
+              text:st ? st.textContent.trim() : '', cls:cls};
+    }).filter(function(r){ return r.cls && r.name; });
+    var issues=rows.filter(function(r){ return r.cls!=='ok'; });
+    if(!issues.length){
+      if(box) box.remove();
+      list.classList.remove('mobileConsolidated');
+      return;
+    }
+    var groups={}, order=[];
+    issues.forEach(function(r){
+      var key=carteraKeyFromName(r.name);
+      if(!groups[key]){ groups[key]={title:r.name, cls:'warn', items:[]}; order.push(key); }
+      if(r.cls==='bad') groups[key].cls='bad';
+      groups[key].items.push(r);
+    });
+    var nBad=0, nWarn=0;
+    order.forEach(function(k){ groups[k].cls==='bad' ? nBad++ : nWarn++; });
+    if(!box){
+      box=document.createElement('div');
+      box.id='mobileAttention';
+      box.className='mobileAttention';
+      card.insertBefore(box, list);
+    }
+    var wasOpen=box.dataset.open==='1';
+    var summary=(nBad ? nBad+' aviso'+(nBad===1?'':'s') : '')
+      +(nBad && nWarn ? ' · ' : '')
+      +(nWarn ? nWarn+' vigilancia'+(nWarn===1?'':'s') : '');
+    box.innerHTML=
+      '<button type="button" class="mobileAttnSummary" aria-expanded="'+(wasOpen?'true':'false')+'">'+
+        '<span class="mAttLights">'+(nBad?'<i class="mAttBad"></i>':'')+(nWarn?'<i class="mAttWarn"></i>':'')+'</span>'+
+        '<span class="mAttTxt">'+summary+'</span>'+
+        '<span class="mAttChev" aria-hidden="true">›</span>'+
+      '</button>'+
+      '<div class="mobileAttnList">'+order.map(function(k){
+        var g=groups[k];
+        return '<div class="mAttGroup">'+
+          '<div class="mAttHead"><strong>'+escHtml(g.title)+'</strong>'+
+          '<span class="mAttState '+g.cls+'">'+(g.cls==='bad'?'Revisar':'Vigilar')+'</span></div>'+
+          g.items.map(function(it){
+            return '<p class="mAttItem">'+
+              (g.items.length>1 ? '<span class="mAttCtrl">'+escHtml(it.name)+'</span>' : '')+
+              escHtml(it.text)+'</p>';
+          }).join('')+
+        '</div>';
+      }).join('')+'</div>';
+    box.classList.toggle('open', wasOpen);
+    box.querySelector('.mobileAttnSummary').addEventListener('click', function(){
+      var open=box.classList.toggle('open');
+      box.dataset.open=open?'1':'0';
+      this.setAttribute('aria-expanded', open?'true':'false');
+    });
+    list.classList.add('mobileConsolidated');
+  }
+
+  /* ===== v175.12 · Gráfica de evolución móvil =====
+     Mismo parser y misma semántica que escritorio (parseMonthlyEvolution,
+     estados cierre real / reconstruido / provisional, eje X proporcional al
+     tiempo). Solo presentación: ninguna cifra se calcula, todas se muestran
+     tal cual llegan del Excel con los formateadores compartidos. */
+  function mobileEvoDateMs(p){
+    var raw=p && p.fechaRaw;
+    var d=raw instanceof Date ? raw : typeof raw==='number' ? dateFromSerial(raw) : new Date(raw);
+    return d && !isNaN(d) ? d.getTime() : NaN;
+  }
+  function updateMobileEvolution(){
+    if(!mq.matches) return;
+    var section=document.getElementById('dashboard');
+    var host=document.getElementById('mobileEvolution');
+    if(!section || typeof parseMonthlyEvolution!=='function') return;
+    var series=[];
+    try{ series=parseMonthlyEvolution(); }catch(e){ series=[]; }
+    var aportado=series.filter(function(p){ return Number.isFinite(Number(p.invertido)) && Number(p.invertido)>0; })
+                       .map(function(p){ return {p:p, v:Number(p.invertido)}; });
+    var valor=series.filter(function(p){ return p.valor!=null && Number.isFinite(Number(p.valor)) && Number(p.valor)>0; })
+                    .map(function(p){ return {p:p, v:Number(p.valor)}; });
+    if(aportado.length<2){ if(host) host.remove(); return; }
+    if(!host){
+      host=document.createElement('section');
+      host.id='mobileEvolution';
+      host.className='mobileEvolution';
+      section.insertBefore(host, section.querySelector('.capitalGrid'));
+    }
+    var dates=series.map(mobileEvoDateMs).filter(Number.isFinite);
+    var minD=Math.min.apply(null,dates), maxD=Math.max.apply(null,dates);
+    var vals=aportado.concat(valor).map(function(x){ return x.v; });
+    var min=Math.min.apply(null,vals), max=Math.max.apply(null,vals);
+    var span=(max-min) || Math.max(Math.abs(max),1);
+    var yMin=Math.max(0,min-span*.12), yMax=max+span*.16;
+    var W=360,H=250,L=6,R=10,T=14,B=34;
+    var xFor=function(x){ var ms=mobileEvoDateMs(x.p); return L+((Number.isFinite(ms)&&maxD>minD)?(ms-minD)/(maxD-minD):1)*(W-L-R); };
+    var yFor=function(v){ return T+(yMax-v)/(yMax-yMin)*(H-T-B); };
+    var ap=aportado.map(function(x){ return {x:xFor(x),y:yFor(x.v),v:x.v,p:x.p}; });
+    var vl=valor.map(function(x){ return {x:xFor(x),y:yFor(x.v),v:x.v,p:x.p}; });
+    var apD=ap.map(function(pt,i){ return (i?'L':'M')+pt.x.toFixed(1)+' '+pt.y.toFixed(1); }).join(' ');
+    var segs=vl.slice(1).map(function(pt,i){
+      var prev=vl[i];
+      var bothReal=prev.p.estado==='cierre real' && pt.p.estado==='cierre real';
+      return '<line x1="'+prev.x.toFixed(1)+'" y1="'+prev.y.toFixed(1)+'" x2="'+pt.x.toFixed(1)+'" y2="'+pt.y.toFixed(1)+
+        '" stroke="'+(bothReal?'var(--green)':'var(--gold)')+'" stroke-width="'+(bothReal?'2.4':'2')+'"'+
+        (bothReal?'':' stroke-dasharray="6 5" opacity=".58"')+' stroke-linecap="round"/>';
+    }).join('');
+    var marks=vl.map(function(pt){
+      var x=pt.x.toFixed(1), y=pt.y.toFixed(1);
+      if(pt.p.estado==='provisional'){
+        return '<polygon class="mevProvPoint" points="'+pt.x.toFixed(1)+','+(pt.y-5.4).toFixed(1)+' '+(pt.x+5.4).toFixed(1)+','+y+' '+x+','+(pt.y+5.4).toFixed(1)+' '+(pt.x-5.4).toFixed(1)+','+y+'" fill="var(--yellow)"/>';
+      }
+      if(pt.p.estado==='reconstruido'){
+        return '<circle class="mevRecPoint" cx="'+x+'" cy="'+y+'" r="4" fill="var(--gold)" opacity=".6"/>';
+      }
+      return '<circle class="mevRealPoint" cx="'+x+'" cy="'+y+'" r="4" fill="var(--green)"/>';
+    }).join('');
+    // Meses legibles: hasta 4 marcas sobre fechas reales de la serie, con
+    // separación mínima para que no se rocen cuando las fechas se agrupan;
+    // la primera y la última siempre se conservan.
+    var tickIdx=[]; var nT=Math.min(4,vl.length);
+    for(var i=0;i<nT;i++){ tickIdx.push(Math.round(i*(vl.length-1)/Math.max(nT-1,1))); }
+    tickIdx=tickIdx.filter(function(v,i,a){ return a.indexOf(v)===i; });
+    var MIN_TICK_GAP=44;
+    var lastIdx=tickIdx[tickIdx.length-1];
+    var kept=[];
+    tickIdx.forEach(function(idx){
+      if(!kept.length){ kept.push(idx); return; }
+      var prev=kept[kept.length-1];
+      if(vl[idx].x - vl[prev].x >= MIN_TICK_GAP){ kept.push(idx); return; }
+      // conflicto: la última marca gana sobre una intermedia previa
+      if(idx===lastIdx && prev!==tickIdx[0]) kept[kept.length-1]=idx;
+    });
+    tickIdx=kept;
+    var lastYear=null;
+    var ticks=tickIdx.map(function(idx){
+      var pt=vl[idx];
+      var d=new Date(mobileEvoDateMs(pt.p));
+      var lbl=d.toLocaleDateString('es-ES',{month:'short'}).replace('.','');
+      var yy=String(d.getFullYear()).slice(2);
+      if(d.getFullYear()!==lastYear){ lbl+=' '+yy; lastYear=d.getFullYear(); }
+      var anchor=idx===0?'start':idx===vl.length-1?'end':'middle';
+      return '<text x="'+pt.x.toFixed(1)+'" y="'+(H-12)+'" text-anchor="'+anchor+'" fill="var(--muted)" font-size="11">'+escHtml(lbl)+'</text>';
+    }).join('');
+    var grid=[.25,.5,.75].map(function(f){
+      var y=yFor(yMin+(yMax-yMin)*f).toFixed(1);
+      return '<line x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'" stroke="rgba(255,255,255,.05)"/>';
+    }).join('');
+    var last=vl[vl.length-1];
+    var stateLabels={'cierre real':'Cierre mensual real','reconstruido':'Valoración reconstruida','provisional':'Valoración provisional'};
+    var lastCap=ap[ap.length-1];
+    host.innerHTML=
+      '<div class="mobileEvoTip" id="mobileEvoTip" aria-live="polite"></div>'+
+      '<svg viewBox="0 0 '+W+' '+H+'" id="mobileEvoSvg" role="img" aria-label="Evolución de la cartera">'+
+        grid+
+        '<path d="'+apD+'" fill="none" stroke="var(--blue)" stroke-width="1.5" stroke-dasharray="4 4" opacity=".7"/>'+
+        segs+marks+
+        '<line id="mobileEvoCross" x1="0" y1="'+T+'" x2="0" y2="'+(H-B)+'" stroke="rgba(255,255,255,.25)" style="display:none"/>'+
+        ticks+
+      '</svg>'+
+      '<div class="mobileEvoFoot">'+
+        '<span class="mev-line"><i class="mevReal"></i>Cierre real · <i class="mevRec"></i>Reconstruida · <i class="mevProv"></i>Provisional · <i class="mevCap"></i>Capital invertido</span>'+
+        '<span class="mev-line">Última valoración: '+escHtml(stateLabels[last.p.estado]||'Valoración')+' · '+escHtml(last.p.fecha)+
+        (lastCap?' · Capital neto actual '+escHtml(fmtMoney(lastCap.v)):'')+'</span>'+
+      '</div>';
+    // Tooltip táctil y de puntero: punto de valoración más cercano en X.
+    var svg=host.querySelector('#mobileEvoSvg');
+    var cross=host.querySelector('#mobileEvoCross');
+    var tip=host.querySelector('#mobileEvoTip');
+    function showAt(clientX){
+      var rect=svg.getBoundingClientRect();
+      var xu=(clientX-rect.left)/rect.width*W;
+      var best=null;
+      vl.forEach(function(pt){
+        var d=Math.abs(pt.x-xu);
+        if(!best || d<best.d) best={d:d, pt:pt};
+      });
+      if(!best) return;
+      var pt=best.pt;
+      cross.setAttribute('x1',pt.x.toFixed(1));
+      cross.setAttribute('x2',pt.x.toFixed(1));
+      cross.style.display='block';
+      var inv=Number(pt.p.invertido);
+      tip.innerHTML='<strong>'+escHtml(stateLabels[pt.p.estado]||'Valoración')+' · '+escHtml(pt.p.fecha)+'</strong>'+
+        'Valor de mercado · '+escHtml(fmtMoney(pt.v))+
+        (Number.isFinite(inv)?'<br>Capital invertido · '+escHtml(fmtMoney(inv)):'')+
+        (pt.p.estado==='cierre real'?'':'<br>No es un cierre mensual');
+      tip.classList.add('active');
+    }
+    ['pointerdown','pointermove'].forEach(function(ev){
+      svg.addEventListener(ev,function(e){ if(e.pointerType!=='touch'||e.type==='pointerdown'||e.buttons) showAt(e.clientX); },{passive:true});
+    });
+    ['touchstart','touchmove'].forEach(function(ev){
+      svg.addEventListener(ev,function(e){ if(e.touches.length) showAt(e.touches[0].clientX); },{passive:true});
+    });
+    svg.addEventListener('mousemove',function(e){ showAt(e.clientX); });
+    svg.addEventListener('mouseleave',function(){ cross.style.display='none'; tip.classList.remove('active'); });
+  }
+
+  /* ===== v175.13 · Cartera móvil =====
+     Lista de posiciones y hoja de detalle. Mismos orígenes que la tabla de
+     escritorio (parseCartera, getAssetXirrMap, carteraStatusFor) y mismos
+     formateadores; identidad estable por carteraKeyFromName. Solo presentación. */
+  var assetSheetOpener=null;
+  var mobileCarteraExpanded=false;
+
+  function ensureAssetSheet(){
+    if(document.getElementById('mobileAssetSheetWrap')) return;
+    var wrap=document.createElement('div');
+    wrap.id='mobileAssetSheetWrap';
+    wrap.className='mobileSheetWrap';
+    wrap.innerHTML=
+      '<div class="mobileSheetBack"></div>'+
+      '<div class="mobileSheet" id="mobileAssetSheet" role="dialog" aria-modal="true" aria-label="Detalle del activo" tabindex="-1">'+
+        '<div class="mobileSheetHandle"></div>'+
+        '<h3 id="mobileAssetSheetTitle"></h3>'+
+        '<p class="mobileSheetSub" id="mobileAssetSheetSub"></p>'+
+        '<div id="mobileAssetSheetBody"></div>'+
+        '<button type="button" class="mobileSheetCloseBtn" id="mobileAssetSheetClose">Cerrar</button>'+
+      '</div>';
+    document.body.appendChild(wrap);
+    wrap.querySelector('.mobileSheetBack').addEventListener('click', closeAssetSheet);
+    document.getElementById('mobileAssetSheetClose').addEventListener('click', closeAssetSheet);
+  }
+  function closeAssetSheet(){
+    var wrap=document.getElementById('mobileAssetSheetWrap');
+    if(!wrap || !wrap.classList.contains('open')) return;
+    wrap.classList.remove('open');
+    if(assetSheetOpener){ assetSheetOpener.focus(); assetSheetOpener=null; }
+  }
+  function openAssetSheet(key, opener){
+    ensureAssetSheet();
+    var rows=[]; try{ rows=parseCartera(); }catch(e){ return; }
+    var row=rows.filter(function(x){ return String(x.activo).toUpperCase()!=='TOTAL'; })
+                .find(function(x){ return carteraKeyFromName(x.activo)===key; });
+    if(!row) return;
+    var xmap={}; try{ xmap=getAssetXirrMap(); }catch(e){}
+    var xi=xmap[key];
+    var st=carteraStatusFor(row);
+    var pesoNum=Number(row.peso);
+    var objNum=Number(row.objetivo);
+    document.getElementById('mobileAssetSheetTitle').innerHTML=
+      '<span class="bullet '+assetClass(row.activo)+'" style="display:inline-block;margin-right:8px"></span>'+
+      escHtml(shortAssetName(row.activo));
+    document.getElementById('mobileAssetSheetSub').textContent=
+      'Detalle de la posición · '+((importedData&&importedData.fileName)||'Excel');
+    var line=function(label,valueHtml){
+      return '<div class="mobileAssetSheetRow"><span>'+label+'</span>'+valueHtml+'</div>';
+    };
+    var money=function(v){ return Number.isFinite(Number(v))?fmtMoney(v):'—'; };
+    var pct=function(v){ return Number.isFinite(Number(v))?fmtPct(v):'—'; };
+    var body=''
+      +line('Valor actual','<strong>'+escHtml(money(row.valor))+'</strong>')
+      +line('Invertido','<strong>'+escHtml(money(row.invertido))+'</strong>')
+      +line('P&amp;L','<strong class="'+clsByValue(row.pl)+'">'+escHtml(money(row.pl))+'</strong>')
+      +line('Rentabilidad','<strong class="'+clsByValue(row.rent)+'">'+escHtml(pct(row.rent))+'</strong>')
+      +line('XIRR individual','<strong class="'+clsByValue(xi&&xi.xirr)+'">'+escHtml(xi&&xi.xirr!==''&&xi.xirr!=null?fmtPct(xi.xirr):'—')+'</strong>')
+      +line('Peso real','<strong>'+(Number.isFinite(pesoNum)?escHtml(fmtPct(row.peso)):'Separado')+'</strong>');
+    if(Number.isFinite(objNum)){
+      // Desviación en neutro: indica dirección respecto al objetivo, no
+      // beneficio o pérdida; el juicio lo da el Estado (carteraStatusFor).
+      body+=line('Peso objetivo','<strong>'+escHtml(fmtPct(row.objetivo))+'</strong>')
+          +line('Desviación','<strong data-detail="desv">'+escHtml(pct(row.desv))+'</strong>');
+    }
+    body+=line('Plataforma','<strong>'+escHtml(String(row.plataforma||'—'))+'</strong>')
+        +line('Estado','<span class="mobileAssetState '+st.cls+'">'+escHtml(st.label)+'</span>');
+    document.getElementById('mobileAssetSheetBody').innerHTML=body;
+    assetSheetOpener=opener||null;
+    document.getElementById('mobileAssetSheetWrap').classList.add('open');
+    document.getElementById('mobileAssetSheetClose').focus();
+  }
+
+  function renderMobileCartera(){
+    if(!mq.matches) return;
+    var section=document.getElementById('cartera');
+    if(!section) return;
+    var host=document.getElementById('mobileCartera');
+    if(!host){
+      host=document.createElement('section');
+      host.id='mobileCartera';
+      host.className='mobileCartera';
+      section.insertBefore(host, section.firstElementChild);
+    }
+    var rows=[]; try{ rows=parseCartera(); }catch(e){ rows=[]; }
+    rows=rows.filter(function(x){ return String(x.activo).toUpperCase()!=='TOTAL'; });
+    var head='<h2>Cartera actual</h2><p class="mobileCarteraSub">Posiciones, pesos y XIRR por activo</p>';
+    if(!rows.length){
+      host.innerHTML=head+'<div class="mobileCarteraEmpty">Sin datos · importa o carga el Excel para ver las posiciones.</div>';
+      return;
+    }
+    var xmap={}; try{ xmap=getAssetXirrMap(); }catch(e){}
+    // Regla de escala pactada: hasta seis posiciones se muestran todas;
+    // por encima, las seis principales por valor y "Ver todos".
+    var visible=rows, hidden=0;
+    if(rows.length>6 && !mobileCarteraExpanded){
+      visible=rows.slice().sort(function(a,b){ return (Number(b.valor)||0)-(Number(a.valor)||0); }).slice(0,6);
+      hidden=rows.length-6;
+    }
+    // El Plan de Pensiones cierra la lista, visualmente separado.
+    visible=visible.slice().sort(function(a,b){
+      return (carteraKeyFromName(a.activo)==='pension')-(carteraKeyFromName(b.activo)==='pension');
+    });
+    host.innerHTML=head+visible.map(function(row){
+      var key=carteraKeyFromName(row.activo);
+      var xi=xmap[key];
+      var pesoNum=Number(row.peso);
+      var hasXirr=xi && xi.xirr!=='' && xi.xirr!=null;
+      return '<button type="button" class="mobileCarteraRow" data-asset="'+key+'">'+
+        '<span class="bullet '+assetClass(row.activo)+'"></span>'+
+        '<span class="mcName">'+escHtml(shortAssetName(row.activo))+'</span>'+
+        '<strong class="mcVal">'+escHtml(Number.isFinite(Number(row.valor))?fmtMoney(row.valor):'—')+'</strong>'+
+        '<span class="mcPeso">'+(Number.isFinite(pesoNum)?'Peso '+escHtml(fmtPct(row.peso)):'Separado')+'</span>'+
+        '<span class="mcXirr '+(hasXirr?clsByValue(xi.xirr):'')+'">XIRR '+(hasXirr?escHtml(fmtPct(xi.xirr)):'—')+'</span>'+
+      '</button>';
+    }).join('')+
+    (hidden?'<button type="button" class="mobileCarteraMore" id="mobileCarteraMore">Ver todos ('+rows.length+')</button>':'');
+    host.querySelectorAll('.mobileCarteraRow').forEach(function(btn){
+      btn.addEventListener('click', function(){ openAssetSheet(btn.dataset.asset, btn); });
+    });
+    var moreBtn=document.getElementById('mobileCarteraMore');
+    if(moreBtn) moreBtn.addEventListener('click', function(){
+      mobileCarteraExpanded=true;
+      renderMobileCartera();
+    });
+  }
+
+  /* ===== v175.14 · XIRR móvil =====
+     La página reutiliza el DOM y la capa CSS de v175.2 (dormida hasta ahora
+     en móvil). Solo la tabla de cierres se sustituye por una lista, con los
+     mismos literales de getRealClosures() que alimenta la tabla. */
+  function mobileClosuresCard(){
+    var cards=[].slice.call(document.querySelectorAll('#xirr .card'));
+    for(var i=0;i<cards.length;i++){
+      if(cards[i].textContent.indexOf('Cierres reales disponibles')!==-1) return cards[i];
+    }
+    return null;
+  }
+  function renderMobileClosures(){
+    if(!mq.matches) return;
+    var card=mobileClosuresCard();
+    if(!card) return;
+    var host=document.getElementById('mobileClosures');
+    if(!host){
+      host=document.createElement('div');
+      host.id='mobileClosures';
+      host.className='mobileClosures';
+      card.appendChild(host);
+    }
+    var rows=[]; try{ rows=getRealClosures(); }catch(e){ rows=[]; }
+    if(!rows.length){
+      // Sin cierres: se refleja el mismo texto que muestra la tabla.
+      var placeholder=card.querySelector('tbody td');
+      host.innerHTML='<div class="mobileClosuresEmpty">'+
+        escHtml(placeholder ? placeholder.textContent.trim() : 'Sin datos')+'</div>';
+      return;
+    }
+    // El número de cierres reales queda visible como calidad de la evidencia
+    // (recuento de las filas publicadas, no un cálculo financiero).
+    host.innerHTML='<div class="mobileClosuresCount">'+rows.length+' cierre'+(rows.length===1?'':'s')+
+      ' real'+(rows.length===1?'':'es')+' confirmado'+(rows.length===1?'':'s')+'</div>'+
+    rows.map(function(x){
+      return '<div class="mobileClosureRow">'+
+        '<div class="mclMain"><strong>'+escHtml(x.mes+' '+x.anio)+'</strong>'+
+        '<span class="mclDate">'+escHtml(fmtDate(x.fecha))+'</span></div>'+
+        '<div class="mclSide"><strong>'+escHtml(fmtMoney(x.valor))+'</strong>'+
+        '<span class="mclXirr '+clsByValue(x.xirr)+'">XIRR '+escHtml(fmtPct(x.xirr))+'</span></div>'+
+        '<span class="mclState">Cierre real</span>'+
+      '</div>';
+    }).join('');
+  }
+
+  /* ===== v175.15 · Movimientos móvil =====
+     Espejo de las filas YA renderizadas y filtradas de #movementsTable: la
+     lista muestra exactamente las filas visibles (sin .movementHidden), en su
+     mismo orden descendente. Los modos y el filtro de activo son apoderados
+     de las píldoras reales: ningún parser ni criterio se duplica. */
+  var mobileMovsLimit=20;
+  var MOBILE_MOVS_STEP=20;
+
+  function mobileMovsProxyMode(mode){
+    var pill=document.querySelector('#movementModeFilters .filterPill[data-mode="'+mode+'"]');
+    if(pill) pill.click();
+    mobileMovsLimit=MOBILE_MOVS_STEP;
+    renderMobileMovs();
+  }
+  function mobileMovsProxyAsset(value){
+    var pill=document.querySelector('#movementFilters .filterPill[data-filter="'+value+'"]');
+    if(pill) pill.click();
+    mobileMovsLimit=MOBILE_MOVS_STEP;
+    renderMobileMovs();
+  }
+
+  function renderMobileMovs(){
+    if(!mq.matches) return;
+    var section=document.getElementById('movimientos');
+    if(!section) return;
+    var host=document.getElementById('mobileMovs');
+    if(!host){
+      host=document.createElement('section');
+      host.id='mobileMovs';
+      host.className='mobileMovs';
+      section.insertBefore(host, section.firstElementChild);
+    }
+    var activeMode=document.querySelector('#movementModeFilters .filterPill.active');
+    var modeValue=activeMode ? activeMode.dataset.mode : 'real';
+    var assetPills=[].slice.call(document.querySelectorAll('#movementFilters .filterPill'));
+    var activeAsset=assetPills.filter(function(p){ return p.classList.contains('active'); })[0];
+    var assetValue=activeAsset ? activeAsset.dataset.filter : 'all';
+
+    var head='<h2>Movimientos</h2><p class="mobileMovsSub">Operaciones reales y valoraciones del Excel</p>'+
+      '<div class="mobileMovsModes" role="group" aria-label="Tipo de registro">'+
+        [['real','Operaciones'],['terminal','Valoraciones'],['all','Completo']].map(function(m){
+          return '<button type="button" data-mmode="'+m[0]+'" aria-pressed="'+(m[0]===modeValue?'true':'false')+'"'+
+            (m[0]===modeValue?' class="active"':'')+'>'+m[1]+'</button>';
+        }).join('')+
+      '</div>'+
+      (assetPills.length>1
+        ? '<label class="mobileMovsFilter">Activo'+
+          '<select id="mobileMovsAsset">'+assetPills.map(function(p){
+            return '<option value="'+escHtml(p.dataset.filter)+'"'+(p.dataset.filter===assetValue?' selected':'')+'>'+escHtml(p.textContent.trim())+'</option>';
+          }).join('')+'</select></label>'
+        : '');
+
+    var allRows=[].slice.call(document.querySelectorAll('#movementsTable tbody tr'));
+    var placeholder=allRows.length===1 && allRows[0].querySelector('td[colspan]');
+    if(!allRows.length || placeholder){
+      host.innerHTML=head+'<div class="mobileMovsEmpty">'+
+        escHtml(placeholder ? allRows[0].textContent.trim() : 'Sin datos')+'</div>';
+      bindMobileMovs(host);
+      return;
+    }
+    var visible=allRows.filter(function(tr){ return !tr.classList.contains('movementHidden'); });
+    if(!visible.length){
+      var noRes=document.getElementById('movementNoResults');
+      host.innerHTML=head+'<div class="mobileMovsEmpty">'+
+        escHtml(noRes ? noRes.textContent.trim() : 'Sin resultados')+'</div>';
+      bindMobileMovs(host);
+      return;
+    }
+    var shown=visible.slice(0, mobileMovsLimit);
+    host.innerHTML=head+shown.map(function(tr,i){
+      var td=tr.querySelectorAll('td');
+      var bullet=tr.querySelector('.assetCell .bullet');
+      var activo=tr.querySelector('.assetCell') ? tr.querySelector('.assetCell').textContent.trim() : td[2].textContent.trim();
+      return '<div class="mobileMovRow">'+
+        '<button type="button" class="mobileMovMain" aria-expanded="false" aria-controls="mmov-'+i+'">'+
+          '<span class="bullet '+(bullet?bullet.className.replace('bullet','').trim():'')+'"></span>'+
+          '<span class="mmvActivo">'+escHtml(activo)+'</span>'+
+          '<strong class="mmvImporte '+(td[3].className||'')+'">'+escHtml(td[3].textContent.trim())+'</strong>'+
+          '<span class="mmvTipo">'+escHtml(td[1].textContent.trim())+' · '+escHtml(td[0].textContent.trim())+'</span>'+
+          '<span class="mmvChev" aria-hidden="true">›</span>'+
+        '</button>'+
+        '<div class="mobileMovDetail" id="mmov-'+i+'" hidden>'+
+          '<div><span>Plataforma</span><strong>'+escHtml(td[4].textContent.trim())+'</strong></div>'+
+          '<div><span>Incluye XIRR</span><strong>'+escHtml(td[5].textContent.trim())+'</strong></div>'+
+          '<div><span>Nota</span><strong>'+escHtml(td[6].textContent.trim())+'</strong></div>'+
+        '</div>'+
+      '</div>';
+    }).join('')+
+    (visible.length>shown.length
+      ? '<button type="button" class="mobileMovsMore" id="mobileMovsMore">Ver más ('+(visible.length-shown.length)+' restantes)</button>'
+      : '');
+    bindMobileMovs(host);
+  }
+  function bindMobileMovs(host){
+    host.querySelectorAll('[data-mmode]').forEach(function(btn){
+      btn.addEventListener('click', function(){ mobileMovsProxyMode(btn.dataset.mmode); });
+    });
+    var sel=host.querySelector('#mobileMovsAsset');
+    if(sel) sel.addEventListener('change', function(){ mobileMovsProxyAsset(sel.value); });
+    host.querySelectorAll('.mobileMovMain').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var detail=document.getElementById(btn.getAttribute('aria-controls'));
+        var open=btn.getAttribute('aria-expanded')==='true';
+        btn.setAttribute('aria-expanded', open?'false':'true');
+        if(detail) detail.hidden=open;
+      });
+    });
+    var more=host.querySelector('#mobileMovsMore');
+    if(more) more.addEventListener('click', function(){
+      mobileMovsLimit+=MOBILE_MOVS_STEP;
+      renderMobileMovs();
+    });
+  }
+
+  /* ===== v175.16 · Historial móvil =====
+     Espejo del resumen anual, los activos del año y el diagnóstico ya
+     renderizados por updateHistorial desde el Excel. Resumen primero,
+     activos como lista con secundarios expandibles, diagnóstico plegado. */
+  function renderMobileHistorial(){
+    if(!mq.matches) return;
+    var section=document.getElementById('historial');
+    if(!section) return;
+    var host=document.getElementById('mobileHistorial');
+    if(!host){
+      host=document.createElement('section');
+      host.id='mobileHistorial';
+      host.className='mobileHistorial';
+      section.insertBefore(host, section.firstElementChild);
+    }
+    var pills=[].slice.call(document.querySelectorAll('#historial .yearPills button'));
+    var main=document.querySelector('#historial .yearSummaryMain');
+    var side=[].slice.call(document.querySelectorAll('#historial .yearSummarySide > div'));
+    var rows=[].slice.call(document.querySelectorAll('#historial .annualTable tbody tr'));
+    var diag=document.querySelector('#historial .diagnosisClean');
+    var head='<h2>Historial</h2><p class="mobileHistSub">Resumen cerrado por ejercicio</p>'+
+      (pills.length ? '<div class="mobileHistYears" role="group" aria-label="Ejercicio">'+
+        pills.map(function(p,i){
+          var y=p.querySelector('strong') ? p.querySelector('strong').textContent.trim() : p.textContent.trim();
+          var st=p.querySelector('span') ? p.querySelector('span').textContent.trim() : '';
+          return '<button type="button" data-hyear="'+i+'" aria-pressed="'+(p.classList.contains('active')?'true':'false')+'"'+
+            (p.classList.contains('active')?' class="active"':'')+'>'+escHtml(y)+(st?' · '+escHtml(st):'')+'</button>';
+        }).join('')+'</div>' : '');
+    var mainValue=main && main.querySelector('h2') ? main.querySelector('h2').textContent.trim() : '--';
+    var placeholder=rows.length===1 && rows[0].querySelector('td[colspan]');
+    if(mainValue==='--' || placeholder || !rows.length){
+      host.innerHTML=head+'<div class="mobileHistEmpty">'+
+        escHtml(placeholder ? rows[0].textContent.trim() : 'Sin datos · importa o carga el Excel para ver el historial.')+'</div>';
+      bindMobileHistorial(host);
+      return;
+    }
+    var eyebrow=main.querySelector('.eyebrow') ? main.querySelector('.eyebrow').textContent.trim() : '';
+    var summary='<div class="mobileHistHero"><span class="mobileHistEyebrow">'+escHtml(eyebrow)+'</span>'+
+      '<strong class="mobileHistValue">'+escHtml(mainValue)+'</strong></div>'+
+      '<div class="mobileHistSide">'+side.map(function(d){
+        var label=d.querySelector('span') ? d.querySelector('span').textContent.trim() : '';
+        var st=d.querySelector('strong');
+        return '<div class="mobileHistRow"><span>'+escHtml(label)+'</span>'+
+          '<strong class="'+(st?st.className:'')+'">'+escHtml(st?st.textContent.trim():'')+'</strong></div>';
+      }).join('')+'</div>';
+    var assets='<div class="mobileHistGroup">Activos del ejercicio</div>'+rows.map(function(tr,i){
+      var td=tr.querySelectorAll('td');
+      var isTotal=tr.classList.contains('total');
+      var bullet=tr.querySelector('.bullet');
+      var nameEl=tr.querySelector('.assetNameLine strong');
+      var platEl=tr.querySelector('.assetNameLine small');
+      var name=nameEl ? nameEl.textContent.trim() : td[0].textContent.trim();
+      if(isTotal){
+        return '<div class="mobileHistTotal"><span>'+escHtml(name)+'</span>'+
+          '<span class="mhtSide"><strong>'+escHtml(td[2].textContent.trim())+'</strong>'+
+          '<em class="'+(td[3].className||'')+'">'+escHtml(td[3].textContent.trim())+'</em></span></div>';
+      }
+      return '<div class="mobileHistAsset">'+
+        '<button type="button" class="mobileHistMain" aria-expanded="false" aria-controls="mhist-'+i+'">'+
+          '<span class="bullet '+(bullet?bullet.className.replace('bullet','').trim():'')+'"></span>'+
+          '<span class="mhaName">'+escHtml(name)+'</span>'+
+          '<strong class="mhaValor">'+escHtml(td[2].textContent.trim())+'</strong>'+
+          '<span class="mhaPl '+(td[3].className||'')+'">'+escHtml(td[3].textContent.trim())+'</span>'+
+          '<span class="mhaChev" aria-hidden="true">›</span>'+
+        '</button>'+
+        '<div class="mobileHistDetail" id="mhist-'+i+'" hidden>'+
+          '<div><span>Invertido</span><strong>'+escHtml(td[1].textContent.trim())+'</strong></div>'+
+          '<div><span>Peso</span><strong>'+escHtml(td[4].textContent.trim())+'</strong></div>'+
+          (platEl?'<div><span>Detalle</span><strong>'+escHtml(platEl.textContent.trim())+'</strong></div>':'')+
+        '</div>'+
+      '</div>';
+    }).join('');
+    var diagText=diag ? (diag.querySelector('strong') ? diag.querySelector('strong').textContent.trim() : diag.textContent.trim()) : '';
+    var diagEyebrow=diag && diag.querySelector('.eyebrow') ? diag.querySelector('.eyebrow').textContent.trim() : 'Diagnóstico';
+    var diagBlock=diagText ? '<div class="mobileHistDiag">'+
+      '<button type="button" class="mobileHistDiagBtn" aria-expanded="false" aria-controls="mhistDiag">'+
+        escHtml(diagEyebrow)+'<span class="mhaChev" aria-hidden="true">›</span></button>'+
+      '<p id="mhistDiag" hidden>'+escHtml(diagText)+'</p></div>' : '';
+    host.innerHTML=head+summary+assets+diagBlock;
+    bindMobileHistorial(host);
+  }
+  function bindMobileHistorial(host){
+    host.querySelectorAll('[data-hyear]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var pills=document.querySelectorAll('#historial .yearPills button');
+        var real=pills[Number(btn.dataset.hyear)];
+        if(real) real.click();
+        renderMobileHistorial();
+      });
+    });
+    host.querySelectorAll('.mobileHistMain, .mobileHistDiagBtn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var target=document.getElementById(btn.getAttribute('aria-controls'));
+        var open=btn.getAttribute('aria-expanded')==='true';
+        btn.setAttribute('aria-expanded', open?'false':'true');
+        if(target) target.hidden=open;
+      });
+    });
+  }
+
+  /* ===== v175.17 · Benchmark móvil =====
+     Espejo del panel real: estado API, navegación de dos niveles, métricas,
+     resumen, avisos, pesos y criterio técnico se leen del DOM ya renderizado;
+     la gráfica se redibuja a escala legible desde los argumentos capturados
+     de la última llamada real (misma transformación de presentación normOf;
+     ninguna simulación, peso, flujo ni cálculo se toca). */
+  function mobileBenchNormOf(p){
+    var normalized=Number(p && p.normalized);
+    if(Number.isFinite(normalized)) return normalized;
+    var v=Number(p && p.value), invested=Number(p && p.invested);
+    return Number.isFinite(v) && invested>0 ? (v/invested)*100 : NaN;
+  }
+  function drawMobileBenchChart(container){
+    var deskChart=document.getElementById('benchmarkChart');
+    var feed=window.__benchmarkMobileFeed;
+    var hasSvg=deskChart && deskChart.querySelector('svg');
+    if(!hasSvg || !feed){
+      var emptyText=deskChart ? deskChart.textContent.trim() : '';
+      container.innerHTML=emptyText ? '<div class="mobileBenchEmpty">'+escHtml(emptyText)+'</div>' : '';
+      return;
+    }
+    var W=360,H=240,padL=8,padR=10,padT=12,padB=30;
+    var plotH=H-padT-padB;
+    var seriesMain, seriesAux, labelMain, labelAux, xOf, tipFor, min, max, span;
+    if(feed.kind==='sim'){
+      var s=feed.benchmarkSeries;
+      var denom=(Number.isFinite(feed.netInvested) && feed.netInvested>0)
+        ? feed.netInvested : (s[s.length-1] && s[s.length-1].invested) || 1;
+      var useHist=Array.isArray(feed.monthlyHistory) && feed.monthlyHistory.length>=3;
+      var realHistory=useHist ? feed.monthlyHistory : [];
+      var realNorm=Number(((feed.currentValue/denom)*100).toFixed(4));
+      var benchNorms=s.map(mobileBenchNormOf);
+      var values=benchNorms.concat(realHistory.map(mobileBenchNormOf)).concat([realNorm]).filter(Number.isFinite);
+      var rawMin=Math.min.apply(null,values), rawMax=Math.max.apply(null,values);
+      var pad=(rawMax-rawMin)*.14 || 4;
+      min=Math.min(rawMin-pad,98); max=Math.max(rawMax+pad,102); span=(max-min)||1;
+      var dates=s.concat(realHistory).map(function(p){ return Date.parse(p.date+'T00:00:00Z'); }).filter(Number.isFinite);
+      var minD=Math.min.apply(null,dates), maxD=Math.max.apply(null,dates);
+      xOf=function(p){ var ms=Date.parse(p.date+'T00:00:00Z');
+        return padL+((Number.isFinite(ms)&&maxD>minD)?(ms-minD)/(maxD-minD):1)*(W-padL-padR); };
+      var toY=function(v){ return padT+(max-v)/span*plotH; };
+      var lineOf=function(arr){ return arr.map(function(p,i){ return (i?'L':'M')+xOf(p).toFixed(1)+','+toY(mobileBenchNormOf(p)).toFixed(1); }).join(' '); };
+      var grid=[0,1,2,3,4].map(function(k){
+        var v=min+span*(k/4), y=toY(v);
+        return '<line x1="'+padL+'" y1="'+y.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+y.toFixed(1)+'" stroke="rgba(255,255,255,.05)"/>'+
+          '<text x="'+padL+'" y="'+(y-4).toFixed(1)+'" fill="rgba(255,255,255,.34)" font-size="10">'+benchmarkPct(v-100)+'</text>';
+      }).join('');
+      var ticks=benchmarkTicks(s,4).map(function(t){
+        return '<text x="'+xOf(t).toFixed(1)+'" y="'+(H-10)+'" fill="var(--muted)" font-size="11" text-anchor="middle">'+escHtml(t.label)+'</text>';
+      }).join('');
+      var realX=xOf(s[s.length-1]), realY=toY(realNorm), benchY=toY(benchNorms[benchNorms.length-1]);
+      var guide=feed.currentValue>=feed.benchmarkFinalValue?'var(--green)':'var(--red)';
+      var realSvg=useHist
+        ? '<path d="'+lineOf(realHistory)+'" fill="none" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>'
+        : '';
+      container.innerHTML='<div class="mobileBenchTip" id="mobileBenchTip"></div>'+
+        '<svg viewBox="0 0 '+W+' '+H+'" id="mobileBenchSvg" role="img" aria-label="'+escHtml(feed.cfg.targetLabel)+' simulada y valor real">'+
+        grid+
+        '<path d="'+lineOf(s)+'" fill="none" stroke="var(--gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>'+
+        realSvg+
+        '<line x1="'+realX.toFixed(1)+'" y1="'+Math.min(realY,benchY).toFixed(1)+'" x2="'+realX.toFixed(1)+'" y2="'+Math.max(realY,benchY).toFixed(1)+'" stroke="'+guide+'" stroke-width="1.3" stroke-dasharray="4 5" opacity=".6"/>'+
+        '<circle cx="'+realX.toFixed(1)+'" cy="'+benchY.toFixed(1)+'" r="4" fill="var(--gold)"/>'+
+        '<circle cx="'+realX.toFixed(1)+'" cy="'+realY.toFixed(1)+'" r="4.6" fill="var(--green)" stroke="var(--bg)" stroke-width="1.4"/>'+
+        '<line id="mobileBenchCross" x1="0" y1="'+padT+'" x2="0" y2="'+(H-padB)+'" stroke="rgba(255,255,255,.25)" style="display:none"/>'+
+        ticks+'</svg>';
+      seriesMain=s; labelMain=feed.cfg.targetLabel; seriesAux=realHistory; labelAux=feed.cfg.realLabel;
+      tipFor=function(i){
+        var p=seriesMain[i];
+        var txt='<strong>'+escHtml(formatBenchmarkMonth(p.date))+'</strong>'+
+          escHtml(labelMain)+' · '+escHtml(benchmarkPct(mobileBenchNormOf(p)-100));
+        var real=seriesAux.filter(function(r){ return r.date===p.date; })[0];
+        if(real) txt+='<br>'+escHtml(labelAux)+' · '+escHtml(benchmarkPct(mobileBenchNormOf(real)-100));
+        if(i===seriesMain.length-1) txt+='<br>'+escHtml(labelAux)+' actual · '+escHtml(benchmarkPct(realNorm-100));
+        return txt;
+      };
+    }else{
+      var A=feed.seriesA, B=feed.seriesB;
+      var valsAB=A.concat(B).map(function(p){ return Number(p.normalized); }).filter(Number.isFinite);
+      var mn=Math.min.apply(null,valsAB), mx=Math.max.apply(null,valsAB);
+      var padAB=(mx-mn)*.14||4; min=mn-padAB; max=mx+padAB; span=(max-min)||1;
+      var n=Math.max(A.length,B.length);
+      var xIdx=function(i){ return padL+(n>1?i/(n-1):1)*(W-padL-padR); };
+      var toY2=function(v){ return padT+(max-v)/span*plotH; };
+      var line2=function(arr){ return arr.map(function(p,i){ return (i?'L':'M')+xIdx(i).toFixed(1)+','+toY2(Number(p.normalized)).toFixed(1); }).join(' '); };
+      var grid2=[0,1,2,3,4].map(function(k){
+        var v=min+span*(k/4), y=toY2(v);
+        return '<line x1="'+padL+'" y1="'+y.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+y.toFixed(1)+'" stroke="rgba(255,255,255,.05)"/>'+
+          '<text x="'+padL+'" y="'+(y-4).toFixed(1)+'" fill="rgba(255,255,255,.34)" font-size="10">'+benchmarkPct(v-100)+'</text>';
+      }).join('');
+      container.innerHTML='<div class="mobileBenchTip" id="mobileBenchTip"></div>'+
+        '<svg viewBox="0 0 '+W+' '+H+'" id="mobileBenchSvg" role="img" aria-label="'+escHtml(feed.labelA)+' frente a '+escHtml(feed.labelB)+'">'+
+        grid2+
+        '<path d="'+line2(A)+'" fill="none" stroke="var(--blue)" stroke-width="2.2" stroke-linecap="round"/>'+
+        '<path d="'+line2(B)+'" fill="none" stroke="var(--gold)" stroke-width="2.2" stroke-linecap="round"/>'+
+        '<line id="mobileBenchCross" x1="0" y1="'+padT+'" x2="0" y2="'+(H-padB)+'" stroke="rgba(255,255,255,.25)" style="display:none"/>'+
+        '</svg>';
+      seriesMain=A; labelMain=feed.labelA; seriesAux=B; labelAux=feed.labelB;
+      xOf=null;
+      tipFor=function(i){
+        var pa=A[i], pb=B[i];
+        var head=pa && pa.label ? pa.label : ('Punto '+(i+1));
+        var txt='<strong>'+escHtml(String(head))+'</strong>';
+        if(pa) txt+=escHtml(labelMain)+' · '+escHtml(benchmarkPct(Number(pa.normalized)-100));
+        if(pb) txt+='<br>'+escHtml(labelAux)+' · '+escHtml(benchmarkPct(Number(pb.normalized)-100));
+        return txt;
+      };
+    }
+    var svg=container.querySelector('#mobileBenchSvg');
+    var cross=container.querySelector('#mobileBenchCross');
+    var tip=container.querySelector('#mobileBenchTip');
+    var xs=seriesMain.map(function(p,i){
+      return feed.kind==='sim' ? xOf(p) : padL+(seriesMain.length>1?i/(seriesMain.length-1):1)*(W-padL-padR);
+    });
+    function showAt(clientX){
+      var rect=svg.getBoundingClientRect();
+      var xu=(clientX-rect.left)/rect.width*W;
+      var best=0, bd=Infinity;
+      xs.forEach(function(x,i){ var d=Math.abs(x-xu); if(d<bd){ bd=d; best=i; } });
+      cross.setAttribute('x1',xs[best].toFixed(1));
+      cross.setAttribute('x2',xs[best].toFixed(1));
+      cross.style.display='block';
+      tip.innerHTML=tipFor(best);
+      tip.classList.add('active');
+    }
+    ['pointerdown','pointermove'].forEach(function(ev){
+      svg.addEventListener(ev,function(e){ if(e.pointerType!=='touch'||e.type==='pointerdown'||e.buttons) showAt(e.clientX); },{passive:true});
+    });
+    ['touchstart','touchmove'].forEach(function(ev){
+      svg.addEventListener(ev,function(e){ if(e.touches.length) showAt(e.touches[0].clientX); },{passive:true});
+    });
+    svg.addEventListener('mousemove',function(e){ showAt(e.clientX); });
+    svg.addEventListener('mouseleave',function(){ cross.style.display='none'; tip.classList.remove('active'); });
+  }
+
+  var benchRenderGuard=false;
+  function renderMobileBench(){
+    if(!mq.matches || benchRenderGuard) return;
+    var section=document.getElementById('benchmark');
+    if(!section) return;
+    benchRenderGuard=true;
+    try{
+      var host=document.getElementById('mobileBench');
+      if(!host){
+        host=document.createElement('section');
+        host.id='mobileBench';
+        host.className='mobileBench';
+        section.insertBefore(host, section.firstElementChild);
+      }
+      var apiS=document.getElementById('benchmarkApiStatus');
+      var apiN=document.getElementById('benchmarkApiNote');
+      var groups=[].slice.call(document.querySelectorAll('#benchmarkGroupTabs button'));
+      var views=[].slice.call(document.querySelectorAll('#benchmarkViewTabs button'));
+      var hint=document.getElementById('benchmarkGroupHint');
+      var metrics=[].slice.call(document.querySelectorAll('#benchmark .benchmarkMetric'));
+      var summary=document.getElementById('benchmarkSummary');
+      var warning=document.getElementById('benchmarkWeightsWarning');
+      var error=document.getElementById('benchmarkError');
+      var legend=document.querySelector('#benchmark .benchmarkLegend');
+      var weights=[].slice.call(document.querySelectorAll('#benchmarkWeightsBody tr'));
+      var checks=[].slice.call(document.querySelectorAll('#benchmark .sheetChecks div'));
+      var loadBtn=document.getElementById('benchmarkLoadBtn');
+      var reloadBtn=document.getElementById('benchmarkReloadBtn');
+
+      host.innerHTML=
+        '<h2>Benchmark</h2>'+
+        '<p class="mobileBenchApi">Estado API · <strong class="'+(apiS?apiS.className:'')+'">'+escHtml(apiS?apiS.textContent.trim():'')+'</strong>'+
+          (apiN&&apiN.textContent.trim()?' <span>'+escHtml(apiN.textContent.trim())+'</span>':'')+'</p>'+
+        '<div class="mobileBenchChips" role="group" aria-label="Grupo">'+groups.map(function(b,i){
+          return '<button type="button" data-bgroup="'+i+'" aria-pressed="'+(b.classList.contains('active')?'true':'false')+'"'+
+            (b.classList.contains('active')?' class="active"':'')+'>'+escHtml(b.textContent.trim())+'</button>';
+        }).join('')+'</div>'+
+        '<div class="mobileBenchChips mobileBenchViews" role="group" aria-label="Vista">'+views.map(function(b,i){
+          return '<button type="button" data-bview="'+i+'" aria-pressed="'+(b.classList.contains('active')?'true':'false')+'"'+
+            (b.disabled?' disabled':'')+(b.classList.contains('active')?' class="active"':'')+'>'+escHtml(b.textContent.trim())+'</button>';
+        }).join('')+'</div>'+
+        (hint&&hint.textContent.trim()?'<p class="mobileBenchHint">'+escHtml(hint.textContent.trim())+'</p>':'')+
+        '<div class="mobileBenchMetrics">'+metrics.map(function(mt){
+          var sp=mt.querySelector('span'), st=mt.querySelector('strong'), em=mt.querySelector('em');
+          return '<div class="mobileBenchMetric"><span>'+escHtml(sp?sp.textContent.trim():'')+'</span>'+
+            '<strong class="'+(st?st.className:'')+'">'+escHtml(st?st.textContent.trim():'')+'</strong>'+
+            (em&&em.textContent.trim()?'<em>'+escHtml(em.textContent.trim())+'</em>':'')+'</div>';
+        }).join('')+'</div>'+
+        '<div class="mobileBenchActions">'+
+          '<button type="button" class="primary" id="mobileBenchLoad"'+(loadBtn&&loadBtn.disabled?' disabled':'')+'>'+escHtml(loadBtn?loadBtn.textContent.trim():'Cargar benchmark')+'</button>'+
+          '<button type="button" id="mobileBenchReload"'+(reloadBtn&&reloadBtn.disabled?' disabled':'')+'>'+escHtml(reloadBtn?reloadBtn.textContent.trim():'Actualizar')+'</button>'+
+        '</div>'+
+        '<div class="mobileBenchChart" id="mobileBenchChartHost"></div>'+
+        (legend?'<div class="mobileBenchLegend">'+legend.innerHTML+'</div>':'')+
+        (warning&&warning.classList.contains('active')?'<div class="mobileBenchWarn">'+escHtml(warning.textContent.trim())+'</div>':'')+
+        (error&&error.classList.contains('active')?'<div class="mobileBenchError">'+escHtml(error.textContent.trim())+'</div>':'')+
+        (summary?'<div class="mobileBenchSummary '+(summary.className.replace('benchmarkSummary','').trim())+'">'+summary.innerHTML+'</div>':'')+
+        '<div class="mobileBenchEv" id="mobileBenchEvW">'+
+          '<button type="button" class="mobileBenchEvBtn" aria-expanded="false" aria-controls="mbEvW">Pesos objetivo y proxies<span class="mhaChev" aria-hidden="true">›</span></button>'+
+          '<div id="mbEvW" hidden>'+weights.map(function(tr){
+            var td=tr.querySelectorAll('td');
+            return '<div class="mobileBenchWRow"><span>'+escHtml(td[0]?td[0].textContent.trim():'')+
+              (td[1]?' · '+escHtml(td[1].textContent.trim()):'')+'</span><strong>'+escHtml(td[2]?td[2].textContent.trim():'')+'</strong></div>';
+          }).join('')+'</div>'+
+        '</div>'+
+        '<div class="mobileBenchEv" id="mobileBenchEvC">'+
+          '<button type="button" class="mobileBenchEvBtn" aria-expanded="false" aria-controls="mbEvC">Criterio técnico<span class="mhaChev" aria-hidden="true">›</span></button>'+
+          '<div id="mbEvC" hidden>'+checks.map(function(d){
+            var st=d.querySelector('strong'), sp=d.querySelector('span');
+            return '<div class="mobileBenchWRow"><span>'+escHtml(st?st.textContent.trim():'')+'</span>'+
+              '<strong class="'+(sp?sp.className:'')+'">'+escHtml(sp?sp.textContent.trim():'')+'</strong></div>';
+          }).join('')+'</div>'+
+        '</div>';
+
+      drawMobileBenchChart(document.getElementById('mobileBenchChartHost'));
+
+      host.querySelectorAll('[data-bgroup]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var real=document.querySelectorAll('#benchmarkGroupTabs button')[Number(btn.dataset.bgroup)];
+          if(real) real.click();
+          renderMobileBench();
+        });
+      });
+      host.querySelectorAll('[data-bview]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var real=document.querySelectorAll('#benchmarkViewTabs button')[Number(btn.dataset.bview)];
+          if(real) real.click();
+          renderMobileBench();
+        });
+      });
+      var lp=document.getElementById('mobileBenchLoad');
+      if(lp) lp.addEventListener('click', function(){ if(loadBtn) loadBtn.click(); });
+      var rp=document.getElementById('mobileBenchReload');
+      if(rp) rp.addEventListener('click', function(){ if(reloadBtn) reloadBtn.click(); });
+      host.querySelectorAll('.mobileBenchEvBtn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var t=document.getElementById(btn.getAttribute('aria-controls'));
+          var open=btn.getAttribute('aria-expanded')==='true';
+          btn.setAttribute('aria-expanded', open?'false':'true');
+          if(t) t.hidden=open;
+        });
+      });
+    }finally{
+      benchRenderGuard=false;
+    }
+  }
+  var benchMirrorPending=false;
+  function scheduleMobileBench(muts){
+    if(!mq.matches) return;
+    var external=false;
+    for(var i=0;i<muts.length;i++){
+      var t=muts[i].target;
+      var el=t.nodeType===1?t:t.parentElement;
+      if(!el || !el.closest('#mobileBench')){ external=true; break; }
+    }
+    if(!external || benchMirrorPending) return;
+    benchMirrorPending=true;
+    setTimeout(function(){ benchMirrorPending=false; renderMobileBench(); }, 40);
+  }
+
+  /* ===== v175.18 · Asesoría móvil =====
+     Espejo priorizado del briefing: estado y lectura principal primero,
+     recomendaciones y vigilancia después, y el contexto (métricas repetidas
+     y confianza) plegado. Todos los textos son literales ya renderizados por
+     updateAsesoria desde el Excel: nada se interpreta ni se genera. */
+  var advisorRenderGuard=false;
+  function renderMobileAsesoria(){
+    if(!mq.matches || advisorRenderGuard) return;
+    var section=document.getElementById('asesoria');
+    if(!section) return;
+    advisorRenderGuard=true;
+    try{
+      var host=document.getElementById('mobileAsesoria');
+      if(!host){
+        host=document.createElement('section');
+        host.id='mobileAsesoria';
+        host.className='mobileAsesoria';
+        section.insertBefore(host, section.firstElementChild);
+      }
+      var g=function(id){ var el=document.getElementById(id); return el?el.textContent.trim():''; };
+      var cls=function(id){ var el=document.getElementById(id); return el?el.className:''; };
+      var stateCls=cls('advisorState');
+      var stateChip=stateCls.indexOf('red')!==-1?'bad':stateCls.indexOf('yellow')!==-1?'warn':stateCls.indexOf('green')!==-1?'ok':'off';
+      var watch=[].slice.call(document.querySelectorAll('#advisorWatchList > div'));
+      var conf=document.getElementById('advisorConfidence');
+      host.innerHTML=
+        '<h2>Asesoría</h2>'+
+        '<p class="mobileAdvSub">Lectura ejecutiva del Excel importado</p>'+
+        '<div class="mobileAdvState"><span class="mobileAssetState '+stateChip+'">'+escHtml(g('advisorState'))+'</span>'+
+          '<span class="mobileAdvStateNote">'+escHtml(g('advisorStateNote'))+'</span></div>'+
+        '<div class="mobileAdvBlock"><span class="mobileAdvLabel">Lectura principal</span>'+
+          '<strong class="mobileAdvReading">'+escHtml(g('advisorMainReading'))+'</strong>'+
+          (g('advisorToday')?'<p>'+escHtml(g('advisorToday'))+'</p>':'')+'</div>'+
+        '<div class="mobileAdvBlock"><span class="mobileAdvLabel">Recomendación</span>'+
+          '<strong class="mobileAdvReading">'+escHtml(g('advisorRecommendationShort'))+'</strong>'+
+          (g('advisorExcelRecommendation') && g('advisorExcelRecommendation')!==g('advisorRecommendationShort')
+            ?'<p class="mobileAdvExcelRec">'+escHtml(g('advisorExcelRecommendation'))+'</p>':'')+
+          (g('advisorExcelNote')?'<p>'+escHtml(g('advisorExcelNote'))+'</p>':'')+'</div>'+
+        '<div class="mobileAdvLabel mobileAdvWatchTitle">Activos a vigilar</div>'+
+        '<div class="mobileAdvWatch">'+watch.map(function(d){
+          var st=d.querySelector('strong'), sp=d.querySelector('span');
+          return '<div class="mobileAdvWatchRow"><strong>'+escHtml(st?st.textContent.trim():'')+'</strong>'+
+            '<span>'+escHtml(sp?sp.textContent.trim():'')+'</span></div>';
+        }).join('')+'</div>'+
+        '<div class="mobileAdvContext">'+
+          '<button type="button" class="mobileBenchEvBtn" aria-expanded="false" aria-controls="mAdvCtx">Contexto y confianza<span class="mhaChev" aria-hidden="true">›</span></button>'+
+          '<div id="mAdvCtx" hidden>'+
+            '<div class="mobileBenchWRow"><span>Valor actual</span><strong class="'+cls('advisorValue')+'">'+escHtml(g('advisorValue'))+'</strong></div>'+
+            '<div class="mobileBenchWRow"><span>G/P real</span><strong class="'+cls('advisorGain')+'">'+escHtml(g('advisorGain'))+'</strong></div>'+
+            '<div class="mobileBenchWRow"><span>XIRR global</span><strong class="'+cls('advisorXirr')+'">'+escHtml(g('advisorXirr'))+'</strong></div>'+
+            (conf?'<p class="mobileAdvConf">'+escHtml(conf.textContent.trim())+'</p>':'')+
+          '</div>'+
+        '</div>';
+      host.querySelector('.mobileBenchEvBtn').addEventListener('click', function(){
+        var t=document.getElementById('mAdvCtx');
+        var open=this.getAttribute('aria-expanded')==='true';
+        this.setAttribute('aria-expanded', open?'false':'true');
+        if(t) t.hidden=open;
+      });
+    }finally{
+      advisorRenderGuard=false;
+    }
+  }
+  var advisorMirrorPending=false;
+  function scheduleMobileAsesoria(muts){
+    if(!mq.matches) return;
+    var external=false;
+    for(var i=0;i<muts.length;i++){
+      var t=muts[i].target;
+      var el=t.nodeType===1?t:t.parentElement;
+      if(!el || !el.closest('#mobileAsesoria')){ external=true; break; }
+    }
+    if(!external || advisorMirrorPending) return;
+    advisorMirrorPending=true;
+    setTimeout(function(){ advisorMirrorPending=false; renderMobileAsesoria(); }, 40);
+  }
+
+  /* ===== v175.19 · Auditoría móvil =====
+     Espejo con jerarquía de confianza: estado global primero, controles
+     problemáticos (rojo/ámbar) después, neutrales a continuación y los
+     correctos agrupados en un plegable. Todo son literales con sus clases
+     reales: el espejo no puede fabricar un OK que la página no tenga. */
+  var auditRenderGuard=false;
+  function collectAuditRows(){
+    var rows=[];
+    var push=function(label,valueEl,noteEl){
+      if(!valueEl) return;
+      var cls=valueEl.className||'';
+      var st=cls.indexOf('red')!==-1?'bad':cls.indexOf('yellow')!==-1?'warn':cls.indexOf('green')!==-1?'ok':'neutral';
+      rows.push({label:label, value:valueEl.textContent.trim(), st:st,
+                 note:noteEl?noteEl.textContent.trim():''});
+    };
+    [].slice.call(document.querySelectorAll('#auditoria .auditWebCard')).forEach(function(card){
+      var label=card.querySelector('span');
+      var strongs=card.querySelectorAll('strong');
+      var small=card.querySelector('small');
+      push(label?label.textContent.trim():'', strongs[0]||null, small);
+    });
+    [].slice.call(document.querySelectorAll('#auditoria .dataStatusCard')).forEach(function(card){
+      var label=card.querySelector('span');
+      var strong=card.querySelector('strong');
+      var small=card.querySelector('small');
+      push(label?label.textContent.trim():'', strong, small);
+    });
+    [].slice.call(document.querySelectorAll('#auditoria .sheetChecks div')).forEach(function(d){
+      push(d.querySelector('strong')?d.querySelector('strong').textContent.trim():'',
+           d.querySelector('span'), null);
+    });
+    [].slice.call(document.querySelectorAll('#auditoria .auditWebPages > div')).forEach(function(d){
+      push(d.querySelector('strong')?d.querySelector('strong').textContent.trim():'',
+           d.querySelector('span'), null);
+    });
+    return rows;
+  }
+  function renderMobileAudit(){
+    if(!mq.matches || auditRenderGuard) return;
+    var section=document.getElementById('auditoria');
+    if(!section) return;
+    auditRenderGuard=true;
+    try{
+      var host=document.getElementById('mobileAudit');
+      if(!host){
+        host=document.createElement('section');
+        host.id='mobileAudit';
+        host.className='mobileAudit';
+        section.insertBefore(host, section.firstElementChild);
+      }
+      var gs=document.querySelector('[data-web-audit="global-status"]');
+      var gn=document.querySelector('[data-web-audit="global-note"]');
+      var gCls=gs?gs.className:'';
+      var gChip=gCls.indexOf('red')!==-1?'bad':gCls.indexOf('yellow')!==-1?'warn':gCls.indexOf('green')!==-1?'ok':'off';
+      var rows=collectAuditRows();
+      var problems=rows.filter(function(r){ return r.st==='bad'||r.st==='warn'; });
+      var neutrals=rows.filter(function(r){ return r.st==='neutral'; });
+      var oks=rows.filter(function(r){ return r.st==='ok'; });
+      var rowHtml=function(r){
+        return '<div class="mobileAuditRow"><div class="marLabel"><strong>'+escHtml(r.label)+'</strong>'+
+          (r.note?'<span>'+escHtml(r.note)+'</span>':'')+'</div>'+
+          '<span class="mobileAssetState '+(r.st==='ok'?'ok':r.st==='bad'?'bad':r.st==='warn'?'warn':'off')+'">'+escHtml(r.value)+'</span></div>';
+      };
+      host.innerHTML=
+        '<h2>Auditoría</h2>'+
+        '<p class="mobileAdvSub">¿Puedes confiar en lo que ves?</p>'+
+        '<div class="mobileAuditHero"><span class="mobileAssetState '+gChip+'">'+escHtml(gs?gs.textContent.trim():'')+'</span>'+
+          (gn?'<span class="mobileAdvStateNote">'+escHtml(gn.textContent.trim())+'</span>':'')+'</div>'+
+        (problems.length?'<div class="mobileAdvLabel mobileAuditTitle">Requiere atención</div>'+problems.map(rowHtml).join(''):'')+
+        (neutrals.length?'<div class="mobileAdvLabel mobileAuditTitle">Pendiente o sin datos</div>'+neutrals.map(rowHtml).join(''):'')+
+        (oks.length?'<div class="mobileAuditOkGroup">'+
+          '<button type="button" class="mobileBenchEvBtn" aria-expanded="false" aria-controls="mAuditOk">'+
+            oks.length+' control'+(oks.length===1?'':'es')+' en orden<span class="mhaChev" aria-hidden="true">›</span></button>'+
+          '<div id="mAuditOk" hidden>'+oks.map(rowHtml).join('')+'</div>'+
+        '</div>':'');
+      var okBtn=host.querySelector('.mobileBenchEvBtn');
+      if(okBtn) okBtn.addEventListener('click', function(){
+        var t=document.getElementById('mAuditOk');
+        var open=this.getAttribute('aria-expanded')==='true';
+        this.setAttribute('aria-expanded', open?'false':'true');
+        if(t) t.hidden=open;
+      });
+    }finally{
+      auditRenderGuard=false;
+    }
+  }
+  var auditMirrorPending=false;
+  function scheduleMobileAudit(muts){
+    if(!mq.matches) return;
+    var external=false;
+    for(var i=0;i<muts.length;i++){
+      var t=muts[i].target;
+      var el=t.nodeType===1?t:t.parentElement;
+      if(!el || !el.closest('#mobileAudit')){ external=true; break; }
+    }
+    if(!external || auditMirrorPending) return;
+    auditMirrorPending=true;
+    setTimeout(function(){ auditMirrorPending=false; renderMobileAudit(); }, 40);
+  }
+
+  var mirrorsReady=false;
+  function setupMobileMirrors(){
+    if(mirrorsReady) return;
+    mirrorsReady=true;
+    var grid=document.querySelector('#dashboard .capitalGrid');
+    if(grid && typeof MutationObserver==='function'){
+      new MutationObserver(updateHeroChip)
+        .observe(grid,{subtree:true,childList:true,characterData:true});
+    }
+    var alerts=document.querySelector('#dashboard .alerts');
+    if(alerts && typeof MutationObserver==='function'){
+      new MutationObserver(consolidateAlerts).observe(alerts,{childList:true});
+    }
+    // v175.12: la gráfica de escritorio se re-renderiza con cada update;
+    // su host sirve de señal de datos nuevos para la versión móvil.
+    var evoHost=document.getElementById('dashboardEvolutionChart');
+    if(evoHost && typeof MutationObserver==='function'){
+      new MutationObserver(updateMobileEvolution).observe(evoHost,{childList:true});
+    }
+    // v175.13: la tabla de Cartera se reescribe con cada update/filtro;
+    // su tbody sirve de señal de datos nuevos para la lista móvil.
+    var carteraBody=document.querySelector('#cartera .assetTable tbody');
+    if(carteraBody && typeof MutationObserver==='function'){
+      new MutationObserver(renderMobileCartera).observe(carteraBody,{childList:true});
+    }
+    // v175.14: la tabla de cierres se reescribe en updateHistoricoMensual;
+    // su tbody sirve de señal para la lista móvil de cierres.
+    var closuresCard=mobileClosuresCard();
+    var closuresBody=closuresCard ? closuresCard.querySelector('tbody') : null;
+    if(closuresBody && typeof MutationObserver==='function'){
+      new MutationObserver(renderMobileClosures).observe(closuresBody,{childList:true});
+    }
+    // v175.15: la tabla de movimientos se reescribe al importar; su tbody es
+    // la señal para reconstruir la lista móvil (los filtros pasan por los
+    // apoderados, que ya re-renderizan explícitamente).
+    var movsBody=document.querySelector('#movementsTable tbody');
+    if(movsBody && typeof MutationObserver==='function'){
+      new MutationObserver(function(){ mobileMovsLimit=MOBILE_MOVS_STEP; renderMobileMovs(); })
+        .observe(movsBody,{childList:true});
+    }
+    // v175.16: la tabla anual se reescribe en updateHistorial; su tbody es la
+    // señal para reconstruir el espejo del Historial.
+    var histBody=document.querySelector('#historial .annualTable tbody');
+    if(histBody && typeof MutationObserver==='function'){
+      new MutationObserver(renderMobileHistorial).observe(histBody,{childList:true});
+    }
+    // v175.17: cualquier cambio real del panel Benchmark (vistas, carga,
+    // resumen, errores) reconstruye el espejo, ignorando las mutaciones
+    // que provoca el propio espejo.
+    var benchSection=document.getElementById('benchmark');
+    if(benchSection && typeof MutationObserver==='function'){
+      new MutationObserver(scheduleMobileBench)
+        .observe(benchSection,{childList:true,characterData:true,subtree:true});
+    }
+    // v175.18: mismo patrón para Asesoría (updateAsesoria reescribe textos).
+    var advSection=document.getElementById('asesoria');
+    if(advSection && typeof MutationObserver==='function'){
+      new MutationObserver(scheduleMobileAsesoria)
+        .observe(advSection,{childList:true,characterData:true,subtree:true});
+    }
+    // v175.19: mismo patrón para Auditoría (updateAuditoria/updateDataStatus).
+    var auditSection=document.getElementById('auditoria');
+    if(auditSection && typeof MutationObserver==='function'){
+      new MutationObserver(scheduleMobileAudit)
+        .observe(auditSection,{childList:true,characterData:true,subtree:true,attributes:true,attributeFilter:['class']});
+    }
+    updateHeroChip();
+    consolidateAlerts();
+    updateMobileEvolution();
+    renderMobileCartera();
+    renderMobileClosures();
+    renderMobileMovs();
+    renderMobileHistorial();
+    renderMobileBench();
+    renderMobileAsesoria();
+    renderMobileAudit();
+  }
+
+  function onViewportChange(matches){
+    if(!matches){ closeSheet(); return; }
+    ensureMobileNav();
+    setupMobileMirrors();
+    if(MOBILE_READY_PAGES.indexOf(activePageId())===-1) fallbackToDashboard();
+    syncTabbar();
+  }
+
+  window.addEventListener('DOMContentLoaded', function(){ onViewportChange(mq.matches); }, {once:true});
+  if(typeof mq.addEventListener==='function'){
+    mq.addEventListener('change', function(e){ onViewportChange(e.matches); });
+  }else if(typeof mq.addListener==='function'){
+    mq.addListener(function(e){ onViewportChange(e.matches); });
   }
 })();
 </script>
@@ -6853,10 +8275,10 @@ try{
 @media (max-width:1320px){.dashboardOps{grid-template-columns:1fr!important}.alertsCard .alert{grid-template-columns:172px minmax(0,1fr)!important}
 }
 @media (max-width:700px){.alertsCard .alert{grid-template-columns:1fr!important;gap:4px!important;padding:9px 0!important}.alertsCard .alertName{white-space:normal!important}
-}#movementsTable{
+}@media(min-width:761px){#movementsTable{
   table-layout:fixed!important;
   min-width:1120px!important;
-}.sideFoot{
+}}.sideFoot{
   background:transparent!important;
   border:0!important;
   box-shadow:none!important;
@@ -6927,10 +8349,10 @@ try{
 }/* v13 · Criterio definitivo de tablas: textos a la izquierda, números a la derecha, sin columnas centradas */
 #movimientos .tableWrap{
   overflow-x:auto!important;
-}#movementsTable{
+}@media(min-width:761px){#movementsTable{
   table-layout:fixed!important;
   min-width:1120px!important;
-}#movementsTable th, #movementsTable td{
+}}#movementsTable th, #movementsTable td{
   vertical-align:middle!important;
   box-sizing:border-box!important;
 }#movementsTable th{
@@ -7051,7 +8473,7 @@ try{
   font-size:12px!important;
   line-height:1.35!important;
 }.alertsCard .alertStatus{min-width:0!important;overflow-wrap:break-word!important;}/* Tablas grandes: el scroll vive dentro de la tabla, no en toda la página */
-.tableWrap{max-width:calc(100% - 40px)!important;overflow-x:auto!important;}#movimientos .tableWrap{max-width:calc(100% - 40px)!important;overflow-x:auto!important;}#movementsTable{min-width:1120px!important;}
+.tableWrap{max-width:calc(100% - 40px)!important;overflow-x:auto!important;}#movimientos .tableWrap{max-width:calc(100% - 40px)!important;overflow-x:auto!important;}@media(min-width:761px){#movementsTable{min-width:1120px!important;}}
 /* Breakpoints limpios */
 @media (max-width:1420px){.capitalGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;}#dashboard > .grid.two.pageBlock:not(.dashboardOps){grid-template-columns:1fr!important;}
 }
@@ -8038,6 +9460,20 @@ a:focus-visible{
 .evoDotProvisional{width:9px;height:9px;background:var(--yellow);display:inline-block;transform:rotate(45deg);}
 .evoProvisionalPoint,.evoReconstructedPoint{cursor:crosshair;stroke:rgba(0,0,0,.4);stroke-width:1.4;}
 
+/* v175.6 · Marcadores de la evolución.
+   El SVG usa preserveAspectRatio="none", así que el trazo también se estiraba en
+   horizontal: el contorno salía más grueso por los lados que por arriba y el punto
+   se veía deformado, tanto más cuanto más ancha la pantalla. non-scaling-stroke lo
+   mantiene uniforme. Y el borde en color de fondo separa dos marcadores que caen
+   pegados, como un cierre real y una valoración provisional a pocos días. */
+.evoRealPoint,.evoReconstructedPoint,.evoProvisionalPoint{
+  stroke:var(--bg);
+  stroke-width:2.4;
+  vector-effect:non-scaling-stroke;
+  paint-order:stroke;
+  stroke-linejoin:round;
+}
+
 /* v162 · Tipografía y contraste: lectura cómoda sin alterar la jerarquía */
 :root{
   --text2:#c0c4cb;
@@ -8268,8 +9704,10 @@ strong.neutral, span.neutral, em.neutral, .pill.neutral, .statusPill.neutral,
   #backupBtn{display:none!important;}
 
   /* --- Solo Dashboard en móvil --- */
-  .section:not(#dashboard){display:none!important;}
-  #dashboard{display:flex!important;flex-direction:column!important;}
+  /* v175.10: la visibilidad vuelve a .section.active (mismo mecanismo que
+     escritorio). Qué destinos existen en móvil lo decide MOBILE_READY_PAGES:
+     un destino sin presentación móvil terminada está ausente, no roto. */
+  #dashboard.active{display:flex!important;flex-direction:column!important;}
   #dashboard .dashboardHeroOnly{order:1;margin-top:24px!important;gap:0!important;grid-template-columns:1fr!important;}
   #dashboard .capitalGrid{order:2;}
   #dashboard .dashboardOps{order:3;}
@@ -8321,12 +9759,13 @@ strong.neutral, span.neutral, em.neutral, .pill.neutral, .statusPill.neutral,
     border-bottom:1px solid rgba(244,241,234,.08)!important;
   }
   /* Orden de lectura: G/P real, XIRR, rentabilidad simple, capital neto.
-     Depende del orden actual de las tarjetas en el HTML del capitalGrid. */
-  #dashboard .capitalCard:nth-child(1){display:none!important;}
-  #dashboard .capitalCard:nth-child(3){order:1;}
-  #dashboard .capitalCard:nth-child(5){order:2;}
-  #dashboard .capitalCard:nth-child(4){order:3;}
-  #dashboard .capitalCard:nth-child(2){order:4;border-bottom:0!important;}
+     v175.10: selección por data-capital (identidad estable), ya no por
+     nth-child: reordenar o insertar tarjetas en el HTML no rompe el móvil. */
+  #dashboard .capitalCard[data-capital="bruto"]{display:none!important;}
+  #dashboard .capitalCard[data-capital="gp"]{order:1;}
+  #dashboard .capitalCard[data-capital="xirr"]{order:2;}
+  #dashboard .capitalCard[data-capital="rentsimple"]{order:3;}
+  #dashboard .capitalCard[data-capital="neto"]{order:4;border-bottom:0!important;}
   #dashboard .capitalCard label{
     flex:1 1 auto;margin:0!important;min-height:0!important;
     font-size:13.5px!important;font-weight:500!important;color:var(--text2)!important;
@@ -8339,7 +9778,7 @@ strong.neutral, span.neutral, em.neutral, .pill.neutral, .statusPill.neutral,
   }
   #dashboard .capitalCard small{display:none!important;}
   #dashboard .capitalCard.capitalCardKey{border:0!important;border-bottom:1px solid rgba(244,241,234,.08)!important;}
-  #dashboard .capitalCard.capitalCardKey:nth-child(4){border-bottom:1px solid rgba(244,241,234,.08)!important;}
+  #dashboard .capitalCard.capitalCardKey[data-capital="rentsimple"]{border-bottom:1px solid rgba(244,241,234,.08)!important;}
 
   /* --- Título de sección: único uso de versalitas --- */
   #dashboard .alertsCard .cardHeader h3,
@@ -8444,6 +9883,568 @@ strong.neutral, span.neutral, em.neutral, .pill.neutral, .statusPill.neutral,
     display:grid!important;grid-template-columns:1fr!important;
     padding:13px 0!important;border:0!important;
   }
+}
+
+/* =========================================================
+   v175.10 · NAVEGACIÓN MÓVIL BASE
+   Barra inferior + hoja "Más". El DOM lo crea ensureMobileNav()
+   solo cuando el viewport es móvil: en escritorio estos nodos
+   no existen. Los destinos sin presentación móvil terminada
+   están ausentes (MOBILE_READY_PAGES), no deshabilitados.
+   ========================================================= */
+@media(max-width:760px){
+  .app{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))!important;}
+  .mobileTabbar{
+    position:fixed;left:0;right:0;bottom:0;z-index:80;
+    display:flex;justify-content:center;
+    background:rgba(11,13,15,.92);
+    -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    border-top:1px solid var(--line);
+  }
+  .mobileTabbarInner{
+    display:grid;grid-auto-flow:column;grid-auto-columns:1fr;
+    width:100%;max-width:520px;
+    padding:6px 10px calc(8px + env(safe-area-inset-bottom,0px));
+  }
+  .mobileTabbar button{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    min-height:48px;padding:6px 4px;
+    background:none;border:0;border-radius:10px;cursor:pointer;
+    color:var(--muted);font:inherit;font-size:10.5px;font-weight:640;
+  }
+  /* v175.11: la regla global de V42 (button.active en ámbar macizo) no aplica
+     a la barra; la referencia aprobada marca la selección con el icono. */
+  .mobileTabbar button.active{
+    color:var(--text)!important;background:none!important;border:0!important;
+    box-shadow:none!important;text-shadow:none!important;
+  }
+  .mobileTabbar button svg{
+    width:21px;height:21px;stroke:currentColor;fill:none;
+    stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+  }
+  .mobileTabbar button.active svg{stroke:var(--active-yellow);}
+  .mobileSheetWrap{position:fixed;inset:0;z-index:90;display:none;}
+  .mobileSheetWrap.open{display:block;}
+  .mobileSheetBack{position:absolute;inset:0;background:rgba(0,0,0,.55);}
+  .mobileSheet{
+    position:absolute;left:0;right:0;bottom:0;max-height:82vh;overflow:auto;
+    background:var(--panel);border:1px solid var(--line);border-bottom:0;
+    border-radius:16px 16px 0 0;
+    padding:10px 20px calc(24px + env(safe-area-inset-bottom,0px));
+  }
+  .mobileSheetHandle{width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,.18);margin:6px auto 14px;}
+  .mobileSheet h3{margin:0 0 2px;font-size:17px;font-weight:700;}
+  .mobileSheetSub{margin:0 0 6px;font-size:12.5px;color:var(--muted);}
+  .mobileSheetGroup{
+    margin:16px 0 8px;font-size:11.5px;font-weight:680;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  }
+  .mobileSheetStatus{margin:0 0 10px;font-size:12.5px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .mobileSheetActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .mobileSheetActions button{
+    display:flex;align-items:center;justify-content:center;min-height:46px;
+    border-radius:8px;border:1px solid var(--line);background:var(--panel3);
+    color:var(--text);font:inherit;font-size:13px;font-weight:650;cursor:pointer;
+  }
+  .mobileSheetActions button.primary{background:var(--active-yellow);border-color:var(--active-yellow);color:#141414;}
+  .mobileSheetActions button[disabled]{opacity:1;color:var(--muted2);background:rgba(255,255,255,.02);cursor:default;}
+  .mobileSheetCloseBtn{
+    display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;
+    margin-top:14px;border-radius:8px;border:1px solid var(--line);
+    background:transparent;color:var(--text2);font:inherit;font-size:13px;font-weight:620;cursor:pointer;
+  }
+}
+/* =========================================================
+   v175.11 · DASHBOARD MÓVIL FINAL
+   Chip de variación bajo el patrimonio (espejo presentacional
+   de G/P real y rentabilidad simple), dos KPIs (XIRR y capital
+   neto), Atención consolidada por identidad estable de control
+   y Plan de Pensiones separado. El chip y la consolidación los
+   crea JS solo en móvil y solo cuando hay datos.
+   ========================================================= */
+@media(max-width:760px){
+  /* Chip de variación: G/P real y rentabilidad simple viven aquí,
+     no en la rejilla de KPIs (una cifra, un hogar). */
+  .mobileHeroChip{
+    order:2;align-self:flex-start;
+    display:inline-flex;align-items:baseline;gap:8px;
+    margin:10px 0 0;padding:5px 12px;border-radius:999px;
+    background:rgba(255,255,255,.06);
+    font-variant-numeric:tabular-nums;
+  }
+  .mobileHeroChip strong{font-size:13.5px;font-weight:650;letter-spacing:-.1px;}
+  .mobileHeroChip span{font-size:12px;font-weight:560;opacity:.85;}
+  .mobileHeroChip.pos{background:rgba(95,211,155,.10);}
+  .mobileHeroChip.pos strong, .mobileHeroChip.pos span{color:var(--green);}
+  .mobileHeroChip.neg{background:rgba(240,116,106,.10);}
+  .mobileHeroChip.neg strong, .mobileHeroChip.neg span{color:var(--red);}
+  #dashboard .dashDataAge{order:3!important;}
+
+  /* Dos KPIs: XIRR y capital neto. G/P y rentabilidad simple ya están
+     en el chip; repetirlas sería duplicación. */
+  #dashboard .capitalCard[data-capital="gp"],
+  #dashboard .capitalCard[data-capital="rentsimple"]{display:none!important;}
+  #dashboard .capitalCard[data-capital="xirr"]{order:1;}
+  #dashboard .capitalCard[data-capital="neto"]{order:2;border-bottom:0!important;}
+
+  /* Atención consolidada: la lista original se oculta solo cuando la
+     consolidación está activa (con datos y con incidencias). */
+  #dashboard .alerts.mobileConsolidated .alert:not(.alertAllOk){display:none!important;}
+  .mobileAttention{margin:2px 0 0;}
+  .mobileAttnSummary{
+    display:flex;align-items:center;gap:10px;width:100%;min-height:48px;
+    padding:13px 0;text-align:left;background:none;border:0;cursor:pointer;
+    border-bottom:1px solid rgba(244,241,234,.08);
+    color:var(--text);font:inherit;
+  }
+  .mAttLights{display:flex;gap:4px;flex:0 0 auto;}
+  .mAttLights i{width:8px;height:8px;border-radius:50%;}
+  .mAttLights i.mAttBad{background:var(--state-bad,#f0746a);}
+  .mAttLights i.mAttWarn{background:var(--state-warn,#e8b14a);}
+  .mAttTxt{flex:1;font-size:14px;font-weight:620;}
+  .mAttChev{color:var(--muted2);transition:none;}
+  .mobileAttention.open .mAttChev{transform:rotate(90deg);}
+  .mobileAttnList{display:none;}
+  .mobileAttention.open .mobileAttnList{display:block;}
+  .mAttGroup{padding:12px 0;border-bottom:1px solid rgba(244,241,234,.08);}
+  .mAttHead{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .mAttHead strong{font-size:14px;font-weight:640;}
+  .mAttState{font-size:11px;font-weight:680;padding:3px 9px;border-radius:999px;}
+  .mAttState.bad{background:rgba(240,116,106,.13);color:var(--red);}
+  .mAttState.warn{background:rgba(232,177,74,.14);color:var(--yellow);}
+  .mAttItem{margin:7px 0 0;font-size:13px;line-height:1.45;color:var(--text2);}
+  .mAttCtrl{display:block;font-size:11px;font-weight:650;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+
+  /* Plan de Pensiones: sección visualmente separada dentro del resumen */
+  #dashboard #assetSummaryDash .assetSummaryItem[data-asset="pension"]{
+    margin-top:18px!important;padding-top:18px!important;
+    border-top:1px solid rgba(244,241,234,.16)!important;
+  }
+
+  /* v175.11: cerrada la duplicación transitoria de v175.10. Las operaciones
+     de datos viven en la hoja "Más"; el topbar se oculta SOLO visualmente y
+     SOLO en móvil: sus controles reales siguen en el DOM como destinatarios
+     de los apoderados de la hoja. Escritorio no cambia. */
+  .main > .topbar{display:none!important;}
+
+  /* =========================================================
+     v175.12 · GRÁFICA DE EVOLUCIÓN MÓVIL
+     Presentación propia sobre parseMonthlyEvolution() (mismo
+     parser y misma semántica de estados que escritorio). La
+     crea JS solo en móvil y solo con datos suficientes; la
+     gráfica de escritorio no se toca.
+     ========================================================= */
+  .mobileEvolution{order:1;margin:22px 0 0;}
+  .mobileEvolution svg{display:block;width:100%;height:auto;}
+  .mobileEvoTip{
+    display:none;margin:0 0 8px;padding:8px 11px;
+    border:1px solid var(--line);border-radius:8px;
+    background:rgba(19,22,25,.96);
+    font-size:12px;line-height:1.45;color:var(--text2);
+    font-variant-numeric:tabular-nums;
+  }
+  .mobileEvoTip.active{display:block;}
+  .mobileEvoTip strong{display:block;color:var(--text);font-size:12.5px;font-weight:640;}
+  .mobileEvoFoot{
+    margin:10px 0 0;font-size:11.5px;line-height:1.5;color:var(--muted);
+  }
+  .mobileEvoFoot .mev-line{display:block;}
+  .mobileEvoFoot i{
+    display:inline-block;width:8px;height:8px;border-radius:50%;
+    margin:0 4px 0 0;vertical-align:0;
+  }
+  .mobileEvoFoot i.mevReal{background:var(--green);}
+  .mobileEvoFoot i.mevRec{background:var(--gold);opacity:.7;}
+  .mobileEvoFoot i.mevProv{background:var(--yellow);border-radius:1px;transform:rotate(45deg);width:7px;height:7px;}
+  .mobileEvoFoot i.mevCap{background:var(--blue);height:2px;width:12px;border-radius:1px;vertical-align:2px;}
+
+  /* =========================================================
+     v175.13 · CARTERA MÓVIL
+     Lista propia de posiciones + hoja de detalle. La tabla de
+     escritorio queda intacta y solo se oculta en móvil; los
+     datos llegan de parseCartera()/getAssetXirrMap(), los
+     mismos orígenes que la tabla.
+     ========================================================= */
+  #cartera.active > .card{display:none!important;}
+  .mobileCartera{padding:2px 0 0;}
+  .mobileCartera h2{
+    margin:18px 0 4px;font-size:20px;font-weight:700;letter-spacing:-.3px;
+  }
+  .mobileCarteraSub{margin:0 0 8px;font-size:12.5px;color:var(--muted);}
+  .mobileCarteraEmpty{
+    padding:16px 0;font-size:13.5px;color:var(--muted);
+    border-top:1px solid rgba(244,241,234,.08);
+  }
+  .mobileCarteraRow{
+    display:grid;width:100%;min-height:64px;
+    grid-template-columns:10px minmax(0,1fr) auto;
+    grid-template-areas:'dot name valor' 'dot peso xirr';
+    column-gap:11px;row-gap:3px;align-items:center;
+    padding:13px 0;margin:0;background:none;border:0;cursor:pointer;
+    border-bottom:1px solid rgba(244,241,234,.08);
+    text-align:left;color:var(--text);font:inherit;
+  }
+  .mobileCarteraRow .bullet{grid-area:dot;width:9px;height:9px;}
+  .mobileCarteraRow .mcName{grid-area:name;font-size:14.5px;font-weight:620;letter-spacing:-.01em;}
+  .mobileCarteraRow .mcVal{
+    grid-area:valor;justify-self:end;font-size:15px;font-weight:620;
+    letter-spacing:-.1px;font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .mobileCarteraRow .mcPeso{grid-area:peso;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .mobileCarteraRow .mcXirr{
+    grid-area:xirr;justify-self:end;font-size:12px;font-weight:640;
+    font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .mobileCarteraRow[data-asset="pension"]{
+    margin-top:18px;padding-top:18px;
+    border-top:1px solid rgba(244,241,234,.16);
+  }
+  .mobileCarteraMore{
+    display:flex;align-items:center;justify-content:center;width:100%;min-height:46px;
+    margin-top:10px;border-radius:8px;border:1px solid var(--line);
+    background:var(--panel3);color:var(--text2);font:inherit;font-size:13px;font-weight:640;cursor:pointer;
+  }
+  .mobileAssetSheetRow{
+    display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    padding:12px 0;border-bottom:1px solid rgba(244,241,234,.08);font-size:14px;
+  }
+  .mobileAssetSheetRow span{color:var(--text2);font-weight:500;}
+  .mobileAssetSheetRow strong{font-size:14.5px;font-weight:620;font-variant-numeric:tabular-nums;text-align:right;}
+  .mobileAssetState{font-size:11px;font-weight:680;padding:3px 9px;border-radius:999px;}
+  .mobileAssetState.ok{background:rgba(95,211,155,.12);color:var(--green);}
+  .mobileAssetState.warn{background:rgba(232,177,74,.14);color:var(--yellow);}
+  .mobileAssetState.bad{background:rgba(240,116,106,.13);color:var(--red);}
+
+  /* =========================================================
+     v175.14 · XIRR MÓVIL
+     La página reutiliza el DOM y la capa v175.2 (hero, nota
+     "qué significa" y XIRR por activo ya son responsive).
+     Solo la tabla de cierres se sustituye por una lista.
+     ========================================================= */
+  #xirr.active .tableWrap{display:none!important;}
+  .mobileClosures{padding:4px 18px 16px;}
+  .mobileClosuresEmpty{padding:12px 0;font-size:13px;color:var(--muted);}
+  .mobileClosuresCount{
+    padding:10px 0 4px;font-size:11.5px;font-weight:650;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  }
+  .mobileClosureRow{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:'main side' 'state side';
+    row-gap:4px;align-items:center;
+    padding:13px 0;min-height:56px;
+    border-bottom:1px solid rgba(244,241,234,.08);
+  }
+  .mobileClosureRow:last-child{border-bottom:0;}
+  .mclMain{grid-area:main;display:flex;flex-direction:column;gap:2px;}
+  .mclMain strong{font-size:14.5px;font-weight:620;}
+  .mclDate{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .mclSide{grid-area:side;display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+  .mclSide strong{font-size:15px;font-weight:620;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .mclXirr{font-size:12px;font-weight:640;font-variant-numeric:tabular-nums;}
+  .mclState{
+    grid-area:state;justify-self:start;
+    font-size:11px;font-weight:680;padding:2px 8px;border-radius:999px;
+    background:rgba(95,211,155,.12);color:var(--green);
+  }
+
+  /* =========================================================
+     v175.15 · MOVIMIENTOS MÓVIL
+     Lista espejo de las filas visibles de #movementsTable.
+     La tabla de escritorio queda intacta y solo se oculta.
+     ========================================================= */
+  #movimientos.active > .card{display:none!important;}
+  .mobileSheetNav button{
+    display:flex;align-items:center;justify-content:space-between;width:100%;
+    min-height:48px;padding:12px 2px;background:none;border:0;cursor:pointer;
+    border-bottom:1px solid rgba(244,241,234,.08);
+    color:var(--text);font:inherit;font-size:15px;font-weight:600;text-align:left;
+  }
+  .mobileSheetNavChev{color:var(--muted2);}
+  .mobileMovs{padding:2px 0 0;}
+  .mobileMovs h2{margin:18px 0 4px;font-size:20px;font-weight:700;letter-spacing:-.3px;}
+  .mobileMovsSub{margin:0 0 12px;font-size:12.5px;color:var(--muted);}
+  .mobileMovsModes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 10px;}
+  .mobileMovsModes button{
+    min-height:44px;border-radius:8px;border:1px solid var(--line);
+    background:var(--panel2);color:var(--muted);font:inherit;font-size:12.5px;font-weight:640;cursor:pointer;
+  }
+  .mobileMovsModes button.active{
+    background:var(--active-yellow)!important;border-color:var(--active-yellow)!important;
+    color:#141414!important;box-shadow:none!important;
+  }
+  .mobileMovsFilter{
+    display:flex;align-items:center;gap:10px;margin:0 0 6px;
+    font-size:12px;font-weight:620;color:var(--muted);
+  }
+  .mobileMovsFilter select{
+    flex:1;min-height:44px;padding:0 10px;border-radius:8px;
+    border:1px solid var(--line);background:var(--panel2);color:var(--text);
+    font:inherit;font-size:13px;
+  }
+  .mobileMovsEmpty{
+    padding:16px 0;font-size:13.5px;color:var(--muted);
+    border-top:1px solid rgba(244,241,234,.08);
+  }
+  .mobileMovRow{border-bottom:1px solid rgba(244,241,234,.08);}
+  .mobileMovMain{
+    display:grid;width:100%;min-height:60px;
+    grid-template-columns:10px minmax(0,1fr) auto 14px;
+    grid-template-areas:'dot activo importe chev' 'dot tipo tipo chev';
+    column-gap:11px;row-gap:2px;align-items:center;
+    padding:12px 0;background:none;border:0;cursor:pointer;
+    text-align:left;color:var(--text);font:inherit;
+  }
+  .mobileMovMain .bullet{grid-area:dot;width:9px;height:9px;}
+  .mmvActivo{grid-area:activo;font-size:14.5px;font-weight:620;}
+  .mmvImporte{
+    grid-area:importe;justify-self:end;font-size:15px;font-weight:620;
+    font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .mmvTipo{grid-area:tipo;font-size:12.5px;color:var(--muted);}
+  .mmvChev{grid-area:chev;color:var(--muted2);transition:none;}
+  .mobileMovMain[aria-expanded="true"] .mmvChev{transform:rotate(90deg);}
+  .mobileMovDetail{padding:0 0 12px 21px;}
+  .mobileMovDetail div{
+    display:flex;justify-content:space-between;gap:12px;
+    padding:7px 0;font-size:13px;
+  }
+  .mobileMovDetail span{color:var(--muted);}
+  .mobileMovDetail strong{font-weight:600;text-align:right;}
+  .mobileMovsMore{
+    display:flex;align-items:center;justify-content:center;width:100%;min-height:46px;
+    margin-top:10px;border-radius:8px;border:1px solid var(--line);
+    background:var(--panel3);color:var(--text2);font:inherit;font-size:13px;font-weight:640;cursor:pointer;
+  }
+
+  /* =========================================================
+     v175.16 · HISTORIAL MÓVIL
+     Espejo del resumen anual, activos del año y diagnóstico.
+     Los bloques de escritorio quedan intactos y ocultos.
+     ========================================================= */
+  #historial.active .historyClean{display:none!important;}
+  .mobileHistorial{padding:2px 0 0;}
+  .mobileHistorial h2{margin:18px 0 4px;font-size:20px;font-weight:700;letter-spacing:-.3px;}
+  .mobileHistSub{margin:0 0 12px;font-size:12.5px;color:var(--muted);}
+  .mobileHistYears{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 14px;}
+  .mobileHistYears button{
+    min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);
+    background:var(--panel2);color:var(--muted);font:inherit;font-size:12.5px;font-weight:640;cursor:pointer;
+  }
+  .mobileHistYears button.active{
+    background:var(--active-yellow)!important;border-color:var(--active-yellow)!important;
+    color:#141414!important;box-shadow:none!important;
+  }
+  .mobileHistEmpty{padding:16px 0;font-size:13.5px;color:var(--muted);border-top:1px solid rgba(244,241,234,.08);}
+  .mobileHistHero{margin:6px 0 4px;}
+  .mobileHistEyebrow{
+    display:block;font-size:11.5px;font-weight:680;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .mobileHistValue{
+    display:block;margin-top:4px;font-size:32px;font-weight:420;letter-spacing:-1px;
+    font-variant-numeric:tabular-nums;
+  }
+  .mobileHistSide{margin:10px 0 0;border-top:1px solid rgba(244,241,234,.08);}
+  .mobileHistRow{
+    display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    min-height:48px;padding:13px 0;border-bottom:1px solid rgba(244,241,234,.08);font-size:14px;
+  }
+  .mobileHistRow span{color:var(--text2);font-weight:500;}
+  .mobileHistRow strong{font-size:15px;font-weight:620;font-variant-numeric:tabular-nums;}
+  .mobileHistGroup{
+    margin:22px 0 4px;font-size:11.5px;font-weight:680;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  }
+  .mobileHistAsset{border-bottom:1px solid rgba(244,241,234,.08);}
+  .mobileHistMain{
+    display:grid;width:100%;min-height:60px;
+    grid-template-columns:10px minmax(0,1fr) auto 14px;
+    grid-template-areas:'dot name valor chev' 'dot name pl chev';
+    column-gap:11px;row-gap:2px;align-items:center;
+    padding:12px 0;background:none;border:0;cursor:pointer;
+    text-align:left;color:var(--text);font:inherit;
+  }
+  .mobileHistMain .bullet{grid-area:dot;width:9px;height:9px;}
+  .mhaName{grid-area:name;font-size:14.5px;font-weight:620;}
+  .mhaValor{grid-area:valor;justify-self:end;font-size:15px;font-weight:620;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .mhaPl{grid-area:pl;justify-self:end;font-size:12.5px;font-weight:640;font-variant-numeric:tabular-nums;}
+  .mhaChev{grid-area:chev;color:var(--muted2);transition:none;}
+  .mobileHistMain[aria-expanded="true"] .mhaChev,
+  .mobileHistDiagBtn[aria-expanded="true"] .mhaChev{transform:rotate(90deg);}
+  .mobileHistDetail{padding:0 0 12px 21px;}
+  .mobileHistDetail div{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:13px;}
+  .mobileHistDetail span{color:var(--muted);}
+  .mobileHistDetail strong{font-weight:600;text-align:right;}
+  .mobileHistTotal{
+    display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    margin-top:6px;padding:14px 0;border-top:1px solid rgba(244,241,234,.16);
+    font-size:14px;font-weight:640;
+  }
+  .mobileHistTotal .mhtSide{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+  .mobileHistTotal strong{font-size:15px;font-variant-numeric:tabular-nums;}
+  .mobileHistTotal em{font-style:normal;font-size:12.5px;font-weight:640;font-variant-numeric:tabular-nums;}
+  .mobileHistDiag{margin-top:14px;}
+  .mobileHistDiagBtn{
+    display:flex;align-items:center;justify-content:space-between;width:100%;min-height:48px;
+    padding:12px 0;background:none;border:0;cursor:pointer;
+    border-top:1px solid rgba(244,241,234,.08);
+    color:var(--text2);font:inherit;font-size:13.5px;font-weight:620;text-align:left;
+  }
+  .mobileHistDiag p{margin:0;padding:0 0 12px;font-size:13px;line-height:1.5;color:var(--text2);}
+
+  /* =========================================================
+     v175.17 · BENCHMARK MÓVIL
+     Espejo del panel real; la gráfica se redibuja legible desde
+     los argumentos capturados de la última llamada. El panel de
+     escritorio queda intacto y oculto solo en móvil.
+     ========================================================= */
+  /* v175.20 (corrección de revisión final): el espejo también es una sección
+     hija directa; la regla anterior lo ocultaba junto al escritorio. */
+  #benchmark.active > section:not(#mobileBench){display:none!important;}
+  #benchmark.active > #mobileBench{display:block!important;}
+  .mobileBench{padding:2px 0 0;}
+  .mobileBench h2{margin:18px 0 6px;font-size:20px;font-weight:700;letter-spacing:-.3px;}
+  .mobileBenchApi{margin:0 0 12px;font-size:12.5px;color:var(--muted);}
+  .mobileBenchApi strong{font-weight:650;}
+  .mobileBenchApi strong.green{color:var(--green);}
+  .mobileBenchApi strong.red{color:var(--red);}
+  .mobileBenchApi span{display:block;margin-top:2px;color:var(--muted2);font-size:12px;}
+  .mobileBenchChips{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 8px;}
+  .mobileBenchChips button{
+    min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line);
+    background:var(--panel2);color:var(--muted);font:inherit;font-size:12.5px;font-weight:640;cursor:pointer;
+  }
+  .mobileBenchChips button.active{
+    background:var(--active-yellow)!important;border-color:var(--active-yellow)!important;
+    color:#141414!important;box-shadow:none!important;
+  }
+  .mobileBenchChips button[disabled]{opacity:.5;cursor:default;}
+  .mobileBenchHint{margin:2px 0 12px;font-size:12.5px;color:var(--muted);}
+  .mobileBenchMetrics{border-top:1px solid rgba(244,241,234,.08);margin:6px 0 12px;}
+  .mobileBenchMetric{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;
+    row-gap:2px;padding:12px 0;min-height:48px;
+    border-bottom:1px solid rgba(244,241,234,.08);
+  }
+  .mobileBenchMetric span{font-size:13px;color:var(--text2);}
+  .mobileBenchMetric strong{
+    grid-column:2;grid-row:1;justify-self:end;
+    font-size:15px;font-weight:620;font-variant-numeric:tabular-nums;
+  }
+  .mobileBenchMetric strong.green{color:var(--green);}
+  .mobileBenchMetric strong.red{color:var(--red);}
+  .mobileBenchMetric em{grid-column:1 / -1;font-style:normal;font-size:11.5px;color:var(--muted2);}
+  .mobileBenchActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px;}
+  .mobileBenchActions button{
+    min-height:46px;border-radius:8px;border:1px solid var(--line);
+    background:var(--panel3);color:var(--text);font:inherit;font-size:13px;font-weight:650;cursor:pointer;
+  }
+  .mobileBenchActions button.primary{background:var(--active-yellow);border-color:var(--active-yellow);color:#141414;}
+  .mobileBenchChart svg{display:block;width:100%;height:auto;}
+  .mobileBenchEmpty{
+    padding:18px 14px;font-size:13px;color:var(--muted);line-height:1.5;
+    border:1px solid var(--line2);border-radius:8px;background:rgba(0,0,0,.28);
+  }
+  .mobileBenchTip{
+    display:none;margin:0 0 8px;padding:8px 11px;
+    border:1px solid var(--line);border-radius:8px;background:rgba(19,22,25,.96);
+    font-size:12px;line-height:1.45;color:var(--text2);font-variant-numeric:tabular-nums;
+  }
+  .mobileBenchTip.active{display:block;}
+  .mobileBenchTip strong{display:block;color:var(--text);font-size:12.5px;font-weight:640;}
+  .mobileBenchLegend{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0 0;font-size:11.5px;color:var(--text2);}
+  .mobileBenchLegend span{display:inline-flex;align-items:center;gap:7px;}
+  .mobileBenchWarn, .mobileBenchError{
+    margin:10px 0 0;padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.45;
+  }
+  .mobileBenchWarn{border:1px solid rgba(232,177,74,.32);background:rgba(232,177,74,.07);color:var(--yellow);}
+  .mobileBenchError{border:1px solid rgba(240,116,106,.32);background:rgba(240,116,106,.06);color:var(--red);}
+  .mobileBenchSummary{margin:14px 0 0;padding:14px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);}
+  .mobileBenchSummary span{
+    display:block;font-size:11px;font-weight:680;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:4px;
+  }
+  .mobileBenchSummary strong{display:block;font-size:14px;font-weight:650;line-height:1.35;}
+  .mobileBenchSummary p{margin:7px 0 0;font-size:12.5px;line-height:1.5;color:var(--text2);}
+  .mobileBenchSummary.good strong{color:var(--green);}
+  .mobileBenchSummary.bad strong{color:var(--red);}
+  .mobileBenchEv{margin-top:2px;}
+  .mobileBenchEvBtn{
+    display:flex;align-items:center;justify-content:space-between;width:100%;min-height:48px;
+    padding:12px 0;background:none;border:0;cursor:pointer;
+    border-bottom:1px solid rgba(244,241,234,.08);
+    color:var(--text2);font:inherit;font-size:13.5px;font-weight:620;text-align:left;
+  }
+  .mobileBenchEvBtn[aria-expanded="true"] .mhaChev{transform:rotate(90deg);}
+  .mobileBenchWRow{
+    display:flex;justify-content:space-between;gap:12px;
+    padding:9px 0;font-size:13px;border-bottom:1px solid rgba(244,241,234,.05);
+  }
+  .mobileBenchWRow span{color:var(--muted);}
+  .mobileBenchWRow strong{font-weight:620;font-variant-numeric:tabular-nums;text-align:right;}
+  .mobileBenchWRow strong.green{color:var(--green);}
+  .mobileBenchWRow strong.neutral{color:var(--text2);}
+
+  /* =========================================================
+     v175.18 · ASESORÍA MÓVIL
+     Briefing priorizado: estado y lectura primero, contexto
+     plegado. Bloques de escritorio intactos y ocultos.
+     ========================================================= */
+  #asesoria.active > section:not(#mobileAsesoria){display:none!important;}
+  #asesoria.active > #mobileAsesoria{display:block!important;}
+  .mobileAsesoria{padding:2px 0 0;}
+  .mobileAsesoria h2{margin:18px 0 4px;font-size:20px;font-weight:700;letter-spacing:-.3px;}
+  .mobileAdvSub{margin:0 0 14px;font-size:12.5px;color:var(--muted);}
+  .mobileAdvState{display:flex;align-items:center;gap:10px;margin:0 0 16px;flex-wrap:wrap;}
+  .mobileAdvStateNote{font-size:12.5px;color:var(--text2);}
+  .mobileAdvBlock{
+    margin:0 0 14px;padding:14px;border:1px solid var(--line);
+    border-radius:8px;background:var(--panel2);
+  }
+  .mobileAdvLabel{
+    display:block;font-size:11px;font-weight:680;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:5px;
+  }
+  .mobileAdvReading{display:block;font-size:14.5px;font-weight:640;line-height:1.4;}
+  .mobileAdvBlock p{margin:7px 0 0;font-size:12.5px;line-height:1.5;color:var(--text2);}
+  .mobileAdvExcelRec{font-weight:600;color:var(--text)!important;}
+  .mobileAdvWatchTitle{margin:18px 0 2px;}
+  .mobileAdvWatch{border-top:1px solid rgba(244,241,234,.08);}
+  .mobileAdvWatchRow{
+    display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+    min-height:48px;padding:12px 0;border-bottom:1px solid rgba(244,241,234,.08);font-size:13.5px;
+  }
+  .mobileAdvWatchRow strong{font-weight:620;}
+  .mobileAdvWatchRow span{color:var(--text2);text-align:right;}
+  .mobileAdvContext{margin-top:12px;}
+  .mobileAdvConf{margin:8px 0 0;font-size:12px;line-height:1.5;color:var(--muted);}
+
+  /* =========================================================
+     v175.19 · AUDITORÍA MÓVIL
+     Estado global primero, problemas antes que correctos y los
+     verdes plegados. Escritorio intacto y oculto solo en móvil.
+     ========================================================= */
+  #auditoria.active > section:not(#mobileAudit){display:none!important;}
+  #auditoria.active > #mobileAudit{display:block!important;}
+  .mobileAudit{padding:2px 0 0;}
+  .mobileAudit h2{margin:18px 0 4px;font-size:20px;font-weight:700;letter-spacing:-.3px;}
+  .mobileAuditHero{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap;}
+  .mobileAuditTitle{margin:16px 0 2px;}
+  .mobileAuditRow{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    min-height:52px;padding:11px 0;border-bottom:1px solid rgba(244,241,234,.08);
+  }
+  .marLabel strong{display:block;font-size:13.5px;font-weight:620;}
+  .marLabel span{display:block;margin-top:2px;font-size:11.5px;color:var(--muted);}
+  .mobileAuditRow .mobileAssetState{flex:0 0 auto;}
+  .mobileAssetState.off{background:rgba(255,255,255,.06);color:var(--muted);}
+  .mobileAuditOkGroup{margin-top:14px;}
+}
+/* Si los nodos móviles quedaran en el DOM al ensanchar la ventana, no deben verse */
+@media(min-width:761px){
+  .mobileTabbar, .mobileSheetWrap, .mobileHeroChip, .mobileAttention, .mobileEvolution, .mobileCartera, #mobileAssetSheetWrap, .mobileClosures, .mobileMovs, .mobileHistorial, .mobileBench, .mobileAsesoria, .mobileAudit{display:none!important;}
 }
 </style>
 <style>
