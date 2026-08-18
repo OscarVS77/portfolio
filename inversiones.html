@@ -7231,8 +7231,15 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
     };
     var money=function(v){ return Number.isFinite(Number(v))?fmtMoney(v):'—'; };
     var pct=function(v){ return Number.isFinite(Number(v))?fmtPct(v):'—'; };
-    var body=''
-      +line('Valor actual','<strong>'+escHtml(money(row.valor))+'</strong>')
+    var body='';
+    // v175.23: precio de Bitcoin en directo, solo en su detalle. Reutiliza el
+    // ticker V70 existente: el nodo data-btc-live-price lo actualiza cada dato
+    // recibido (WebSocket o REST); sin conexión queda '--', nunca un precio
+    // inventado. Es informativo: no alimenta ninguna cifra del Excel.
+    if(key==='btc'){
+      body+=line('Bitcoin en directo','<strong data-btc-live-price>'+escHtml(window.__btcLiveEurFormatted||'--')+'</strong>');
+    }
+    body+=line('Valor actual','<strong>'+escHtml(money(row.valor))+'</strong>')
       +line('Invertido','<strong>'+escHtml(money(row.invertido))+'</strong>')
       +line('P&amp;L','<strong class="'+clsByValue(row.pl)+'">'+escHtml(money(row.pl))+'</strong>')
       +line('Rentabilidad','<strong class="'+clsByValue(row.rent)+'">'+escHtml(pct(row.rent))+'</strong>')
@@ -8271,6 +8278,9 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
     document.querySelectorAll('#cartera .carteraBtcLiveBadge .btcLivePulse').forEach(el=>{ el.classList.remove('warn','bad'); });
     setStatus((source||'Directo')+' · '+formatTime(lastUpdate), 'ok');
   }
+  // v175.23: costura determinista para pruebas (la misma función interna;
+  // no crea conexiones, peticiones ni cálculos).
+  window.__btcLiveSetPrice=setPrice;
   async function fetchFallback(){
     try{
       const res=await fetch(REST_URL,{cache:'no-store'});
