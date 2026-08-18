@@ -6726,16 +6726,20 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
 (function(){
   // Registro de páginas con presentación móvil terminada. Se amplía fase a
   // fase. Un destino fuera de esta lista está ausente en móvil.
-  var MOBILE_READY_PAGES=['dashboard','cartera','xirr','movimientos','historial','benchmark','asesoria','auditoria'];
-  // La barra queda fija en cuatro destinos (decisión de Óscar, v175.15):
-  // las demás páginas listas viven en la hoja "Más", grupo Secciones.
-  var BAR_PAGES=['dashboard','cartera','xirr'];
+  // v175.21 · Móvil compañero (modelo B aprobado por Óscar y Codex):
+  // una sola entrada "Hoy" con toda la consulta diaria, y "Más" como puerta
+  // a la profundidad. Cartera deja de ser destino móvil: sus activos y su
+  // hoja de detalle viven integrados en Hoy (el código de la página queda
+  // intacto y sigue completo en escritorio).
+  var MOBILE_READY_PAGES=['dashboard','xirr','movimientos','historial','benchmark','asesoria','auditoria'];
+  var BAR_PAGES=['dashboard'];
   var SHEET_PAGES=[
-    {id:'benchmark', label:'Benchmark'},
-    {id:'movimientos', label:'Movimientos'},
-    {id:'historial', label:'Historial'},
-    {id:'asesoria', label:'Asesoría'},
-    {id:'auditoria', label:'Auditoría'}
+    {id:'xirr', label:'XIRR', group:'Análisis'},
+    {id:'benchmark', label:'Benchmark', group:'Análisis'},
+    {id:'movimientos', label:'Movimientos', group:'Actividad'},
+    {id:'historial', label:'Historial', group:'Actividad'},
+    {id:'asesoria', label:'Asesoría', group:'Control'},
+    {id:'auditoria', label:'Auditoría', group:'Control'}
   ];
   var mq=window.matchMedia('(max-width: 760px)');
 
@@ -6765,7 +6769,9 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
     xirr:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19l6-7 4 3 6-8"/><path d="M4 19h16" opacity=".4"/></svg>',
     mas:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>'
   };
-  var TAB_LABELS={dashboard:'Dashboard', cartera:'Cartera', xirr:'XIRR'};
+  // "Hoy" es denominación exclusivamente móvil: la situación disponible hoy
+  // según la última actualización. El escritorio conserva "Dashboard".
+  var TAB_LABELS={dashboard:'Hoy'};
 
   window.syncMobileTabbar=syncTabbar;
   function syncTabbar(){
@@ -6886,14 +6892,23 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
       '<div class="mobileSheet" id="mobileSheet" role="dialog" aria-modal="true" aria-label="Más" tabindex="-1">'+
         '<div class="mobileSheetHandle"></div>'+
         '<h3>Más</h3>'+
-        '<p class="mobileSheetSub">Las demás áreas se incorporarán cuando su presentación móvil esté terminada.</p>'+
-        '<div class="mobileSheetGroup">Secciones</div>'+
-        '<div class="mobileSheetNav">'+SHEET_PAGES.filter(function(p){
-          return MOBILE_READY_PAGES.indexOf(p.id)!==-1;
-        }).map(function(p){
-          return '<button type="button" data-sheet-page="'+p.id+'">'+p.label+
-            '<span class="mobileSheetNavChev" aria-hidden="true">›</span></button>';
-        }).join('')+'</div>'+
+        '<p class="mobileSheetSub">Profundidad y operaciones del portfolio.</p>'+
+        (function(){
+          // v175.21: las páginas profundas se ordenan por grupos de intención.
+          var groups=[], seen={};
+          SHEET_PAGES.forEach(function(p){
+            if(MOBILE_READY_PAGES.indexOf(p.id)===-1) return;
+            if(!seen[p.group]){ seen[p.group]=[]; groups.push(p.group); }
+            seen[p.group].push(p);
+          });
+          return groups.map(function(gname){
+            return '<div class="mobileSheetGroup">'+gname+'</div>'+
+              '<div class="mobileSheetNav">'+seen[gname].map(function(p){
+                return '<button type="button" data-sheet-page="'+p.id+'">'+p.label+
+                  '<span class="mobileSheetNavChev" aria-hidden="true">›</span></button>';
+              }).join('')+'</div>';
+          }).join('');
+        })()+
         '<div class="mobileSheetGroup">Datos</div>'+
         '<p class="mobileSheetStatus" id="mobileSheetStatus"></p>'+
         '<div class="mobileSheetActions">'+
@@ -7963,6 +7978,8 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
         this.setAttribute('aria-expanded', open?'false':'true');
         if(t) t.hidden=open;
       });
+      // v175.22: el chip de confianza espeja el mismo estado global.
+      updateTrustChip();
     }finally{
       auditRenderGuard=false;
     }
@@ -7981,6 +7998,112 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
     setTimeout(function(){ auditMirrorPending=false; renderMobileAudit(); }, 40);
   }
 
+  /* ===== v175.21 · Hoy consolidado =====
+     Fusión Dashboard+Cartera en móvil: las filas del resumen por activo
+     abren la hoja de detalle aprobada en v175.13 (mismos datos, misma hoja,
+     cero cálculos nuevos), y el KPI de XIRR abre la página XIRR profunda.
+     Regla de escala pactada: si la cartera supera seis posiciones, se
+     muestran las seis principales por valor y "Ver todos" (hoy inerte). */
+  function setupHoyConsolidado(){
+    var grid=document.getElementById('assetSummaryDash');
+    if(grid && !grid.dataset.hoyWired){
+      grid.dataset.hoyWired='1';
+      grid.addEventListener('click', function(e){
+        var item=e.target.closest ? e.target.closest('.assetSummaryItem') : null;
+        if(item && item.dataset.asset) openAssetSheet(item.dataset.asset, item);
+      });
+      grid.addEventListener('keydown', function(e){
+        if(e.key!=='Enter' && e.key!==' ') return;
+        var item=e.target.closest ? e.target.closest('.assetSummaryItem') : null;
+        if(item && item.dataset.asset){ e.preventDefault(); openAssetSheet(item.dataset.asset, item); }
+      });
+    }
+    var xirrKpi=document.querySelector('#dashboard .capitalCard[data-capital="xirr"]');
+    if(xirrKpi && !xirrKpi.dataset.hoyWired){
+      xirrKpi.dataset.hoyWired='1';
+      xirrKpi.addEventListener('click', function(){ if(mq.matches) show('xirr'); });
+      xirrKpi.addEventListener('keydown', function(e){
+        if(mq.matches && (e.key==='Enter' || e.key===' ')){ e.preventDefault(); show('xirr'); }
+      });
+    }
+  }
+  function refreshHoyAffordances(){
+    if(!mq.matches) return;
+    [].slice.call(document.querySelectorAll('#assetSummaryDash .assetSummaryItem')).forEach(function(item){
+      if(item.dataset.asset && !item.hasAttribute('role')){
+        item.setAttribute('role','button');
+        item.setAttribute('tabindex','0');
+      }
+    });
+    var xirrKpi=document.querySelector('#dashboard .capitalCard[data-capital="xirr"]');
+    if(xirrKpi && !xirrKpi.hasAttribute('role')){
+      xirrKpi.setAttribute('role','button');
+      xirrKpi.setAttribute('tabindex','0');
+      xirrKpi.setAttribute('aria-label','XIRR global · abrir detalle');
+    }
+    // Regla de escala: >6 posiciones → 6 principales por valor + "Ver todos".
+    var items=[].slice.call(document.querySelectorAll('#assetSummaryDash .assetSummaryItem'));
+    var old=document.getElementById('hoyVerTodos');
+    if(items.length>6 && !window.__hoyExpandido){
+      var sorted=items.slice().sort(function(a,b){
+        var va=parseFloat((a.querySelector('.asRow strong')||{textContent:'0'}).textContent.replace(/[^\d,.-]/g,'').replace(/\./g,'').replace(',','.'))||0;
+        var vb=parseFloat((b.querySelector('.asRow strong')||{textContent:'0'}).textContent.replace(/[^\d,.-]/g,'').replace(/\./g,'').replace(',','.'))||0;
+        return vb-va;
+      });
+      var keep=sorted.slice(0,6);
+      items.forEach(function(it){ it.classList.toggle('hoyOculto', keep.indexOf(it)===-1); });
+      if(!old){
+        var btn=document.createElement('button');
+        btn.type='button'; btn.id='hoyVerTodos'; btn.className='mobileCarteraMore';
+        btn.textContent='Ver todos ('+items.length+')';
+        btn.addEventListener('click', function(){ window.__hoyExpandido=true; refreshHoyAffordances(); btn.remove(); });
+        document.getElementById('assetSummaryDash').appendChild(btn);
+      }
+    }else{
+      items.forEach(function(it){ it.classList.remove('hoyOculto'); });
+      if(old && items.length<=6) old.remove();
+    }
+  }
+
+  /* ===== v175.22 · Chip de confianza =====
+     "Datos {fecha} · Verificados/Revisar": la fecha es la valoración efectiva
+     del Excel (XIRR GLOBAL, fila 4) y el estado es espejo literal del global
+     de Auditoría — OK se presenta como "Verificados"; cualquier otro estado
+     se muestra tal cual. Nunca un OK que la página no tenga. Tocar el chip
+     abre Auditoría. */
+  function mobileTrustDate(){
+    try{
+      var raw=cell(sheetRows('XIRR GLOBAL'),4,1);
+      if(raw==='' || raw==null) return '';
+      var d=raw instanceof Date ? raw : typeof raw==='number' ? dateFromSerial(raw) : new Date(raw);
+      if(!d || isNaN(d)) return '';
+      return d.getDate()+' '+d.toLocaleDateString('es-ES',{month:'short'}).replace('.','');
+    }catch(e){ return ''; }
+  }
+  function updateTrustChip(){
+    if(!mq.matches) return;
+    var holder=document.querySelector('.sideFoot.sideUpdate');
+    if(!holder) return;
+    var chip=document.getElementById('mobileTrustChip');
+    if(!chip){
+      chip=document.createElement('button');
+      chip.type='button';
+      chip.id='mobileTrustChip';
+      chip.className='mobileTrustChip';
+      chip.setAttribute('aria-label','Estado de los datos · abrir Auditoría');
+      chip.addEventListener('click', function(){ show('auditoria'); });
+      holder.appendChild(chip);
+    }
+    var gs=document.querySelector('[data-web-audit="global-status"]');
+    var stText=gs ? gs.textContent.trim() : '';
+    var gCls=gs ? gs.className : '';
+    var st=gCls.indexOf('red')!==-1?'bad':gCls.indexOf('yellow')!==-1?'warn':gCls.indexOf('green')!==-1?'ok':'off';
+    var label=(st==='ok' && stText==='OK') ? 'Verificados' : stText;
+    var fecha=mobileTrustDate();
+    chip.innerHTML='<i class="mtc-'+st+'"></i>'+
+      escHtml(fecha ? 'Datos '+fecha+' · '+label : (stText || 'Sin datos'));
+  }
+
   var mirrorsReady=false;
   function setupMobileMirrors(){
     if(mirrorsReady) return;
@@ -7990,6 +8113,15 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
       new MutationObserver(updateHeroChip)
         .observe(grid,{subtree:true,childList:true,characterData:true});
     }
+    // v175.21: el resumen por activo se reescribe con cada update; las
+    // affordances (role/tabindex y regla de escala) se reponen al vuelo.
+    var summaryGrid=document.getElementById('assetSummaryGrid');
+    if(summaryGrid && typeof MutationObserver==='function'){
+      new MutationObserver(refreshHoyAffordances).observe(summaryGrid,{childList:true});
+    }
+    setupHoyConsolidado();
+    refreshHoyAffordances();
+    updateTrustChip();
     var alerts=document.querySelector('#dashboard .alerts');
     if(alerts && typeof MutationObserver==='function'){
       new MutationObserver(consolidateAlerts).observe(alerts,{childList:true});
@@ -10022,6 +10154,33 @@ strong.neutral, span.neutral, em.neutral, .pill.neutral, .statusPill.neutral,
     border-top:1px solid rgba(244,241,234,.16)!important;
   }
 
+  /* v175.22 · Chip de confianza en la cabecera: fecha de valoración + estado
+     de Auditoría, pulsable hacia la página. */
+  .mobileTrustChip{
+    display:inline-flex;align-items:center;gap:7px;
+    margin:8px 0 0;padding:6px 11px;min-height:30px;
+    border:1px solid var(--line);border-radius:999px;background:var(--panel2);
+    color:var(--text2);font:inherit;font-size:12px;font-weight:620;cursor:pointer;
+    font-variant-numeric:tabular-nums;
+  }
+  .mobileTrustChip i{width:7px;height:7px;border-radius:50%;display:inline-block;}
+  .mobileTrustChip i.mtc-ok{background:var(--green);}
+  .mobileTrustChip i.mtc-warn{background:var(--yellow);}
+  .mobileTrustChip i.mtc-bad{background:var(--red);}
+  .mobileTrustChip i.mtc-off{background:var(--muted2);}
+
+  /* v175.21 · Hoy consolidado: las filas de activos abren la hoja de detalle
+     y el KPI XIRR abre su página; indicación discreta, no botón llamativo. */
+  #dashboard #assetSummaryDash .assetSummaryItem[data-asset]{cursor:pointer;position:relative;}
+  #dashboard #assetSummaryDash .assetSummaryItem[data-asset] .asName::after{
+    content:'›';margin-left:7px;color:var(--muted2);font-weight:600;
+  }
+  #dashboard .capitalCard[data-capital="xirr"]{cursor:pointer;}
+  #dashboard .capitalCard[data-capital="xirr"] strong::after{
+    content:'›';margin-left:7px;color:var(--muted2);font-weight:600;
+  }
+  #assetSummaryDash .assetSummaryItem.hoyOculto{display:none!important;}
+
   /* v175.11: cerrada la duplicación transitoria de v175.10. Las operaciones
      de datos viven en la hoja "Más"; el topbar se oculta SOLO visualmente y
      SOLO en móvil: sus controles reales siguen en el DOM como destinatarios
@@ -10444,7 +10603,7 @@ strong.neutral, span.neutral, em.neutral, .pill.neutral, .statusPill.neutral,
 }
 /* Si los nodos móviles quedaran en el DOM al ensanchar la ventana, no deben verse */
 @media(min-width:761px){
-  .mobileTabbar, .mobileSheetWrap, .mobileHeroChip, .mobileAttention, .mobileEvolution, .mobileCartera, #mobileAssetSheetWrap, .mobileClosures, .mobileMovs, .mobileHistorial, .mobileBench, .mobileAsesoria, .mobileAudit{display:none!important;}
+  .mobileTabbar, .mobileSheetWrap, .mobileHeroChip, .mobileAttention, .mobileEvolution, .mobileCartera, #mobileAssetSheetWrap, .mobileClosures, .mobileMovs, .mobileHistorial, .mobileBench, .mobileAsesoria, .mobileAudit, .mobileTrustChip{display:none!important;}
 }
 </style>
 <style>
