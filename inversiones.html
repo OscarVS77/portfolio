@@ -2137,9 +2137,9 @@ html{
               <tbody id="benchmarkWeightsBody">
                 <tr><td>MSCI World</td><td>URTH</td><td>--</td></tr>
                 <tr><td>Emerging Markets</td><td>EEM</td><td>--</td></tr>
-                <tr><td>Small Cap</td><td>IWM</td><td>--</td></tr>
+                <tr><td>Small Cap</td><td title="Símbolo Edge: IUSN.XETRA">IUSN</td><td>--</td></tr>
                 <tr><td>Oro</td><td>GLD</td><td>--</td></tr>
-                <tr><td>Bitcoin</td><td>BTC-USD</td><td>--</td></tr>
+                <tr><td>Bitcoin</td><td>BTC-EUR</td><td>--</td></tr>
               </tbody>
             </table>
           </div>
@@ -2453,60 +2453,58 @@ movementSearch?.addEventListener('input',applyMovementFilters);
 const BENCHMARK_FUNCTION_NAME = 'benchmark-market-data';
 let benchmarkCache = null;
 let benchmarkActiveView = 'global';
-const BENCHMARK_WEIGHTS_CACHE_KEY = 'portfolioOscar:lastValidBenchmarkWeights:v1';
-let benchmarkWeightsSource = 'missing';
+// v175.25 (B-01): identificador monotónico de petición del Benchmark. Cada
+// loadBenchmarkData() lo incrementa; una respuesta solo se aplica si sigue
+// siendo la última petición lanzada y la vista activa no ha cambiado.
+let benchmarkRequestSeq = 0;
+// v175.34: el respaldo de pesos en localStorage queda ELIMINADO. Los pesos
+// objetivo solo pueden proceder del Excel actualmente activo y validado; si
+// la lectura estricta falla, se devuelve [] y la vista se bloquea con fallo
+// cerrado visible. La antigua clave se purga en el arranque como única
+// migración permitida: no puede volver a leerse ni escribirse jamás.
+function benchmarkPurgeLegacyWeightsKey(){
+  try{ localStorage.removeItem('portfolioOscar:lastValidBenchmarkWeights:v1'); }catch(_e){}
+}
+benchmarkPurgeLegacyWeightsKey();
 
 // v150: los pesos objetivo se leen del Excel (hoja OBJETIVOS Y PROYECCIÓN, Bloque A),
 // que es la fuente de verdad. Antes estaban fijos en el código y se habían quedado
 // desfasados (p. ej. Bitcoin 15,04% cuando el objetivo real es 7,14%), lo que
-// falseaba la Cartera objetivo del Benchmark. Como respaldo solo se admiten los
-// últimos pesos válidos que hayan sido leídos previamente de un Excel real.
+// falseaba la Cartera objetivo del Benchmark. Desde v175.34 no existe ningún
+// respaldo: sin Excel válido no hay pesos.
 
 // Mapa activo del Excel -> clave y proxy de mercado.
 const BENCHMARK_PROXY_MAP = {
   'msci world':      { key:'msci',     proxy:'URTH' },
   'emerging markets':{ key:'emerging', proxy:'EEM' },
-  'small cap':       { key:'small',    proxy:'IWM' },
+  // v175.33 (contrato Edge v56): el proxy de Small Cap es IUSN (cotización
+  // Xetra en EUR; símbolo interno de la Edge: IUSN.XETRA) y el de Bitcoin es
+  // BTC-EUR (Coinbase). Los proxies estadounidenses anteriores quedan retirados.
+  'small cap':       { key:'small',    proxy:'IUSN' },
   'oro':             { key:'gold',     proxy:'GLD' },
-  'bitcoin':         { key:'btc',      proxy:'BTC-USD' }
+  'bitcoin':         { key:'btc',      proxy:'BTC-EUR' }
 };
 
-function benchmarkSetWeightsWarning(active){
-  let el=document.getElementById('benchmarkWeightsWarning');
-  if(active && !el){
-    el=document.createElement('div');
-    el.id='benchmarkWeightsWarning';
-    el.className='benchmarkWeightsWarning';
-    document.getElementById('benchmarkError')?.before(el);
-  }
-  if(el){
-    el.textContent=active ? 'Atención: se están usando los últimos pesos válidos guardados; no proceden del Excel actual.' : '';
-    el.classList.toggle('active',!!active);
-  }
-}
-function getCachedBenchmarkTargetWeights(){
-  try{
-    const parsed=JSON.parse(localStorage.getItem(BENCHMARK_WEIGHTS_CACHE_KEY) || '[]');
-    if(!Array.isArray(parsed) || parsed.length!==5) return [];
-    const valid=parsed.every(x=>BENCHMARK_PROXY_MAP[x.name?.toLowerCase()]?.key===x.key && Number.isFinite(Number(x.weight)) && Number(x.weight)>0);
-    const total=parsed.reduce((sum,x)=>sum+Number(x.weight||0),0);
-    if(!valid || Math.abs(total-1)>0.0001) return [];
-    return parsed.map(x=>({key:x.key,name:x.name,proxy:BENCHMARK_PROXY_MAP[x.name.toLowerCase()].proxy,weight:Number(x.weight)}));
-  }catch(e){ return []; }
-}
-function useCachedBenchmarkTargetWeights(){
-  const cached=getCachedBenchmarkTargetWeights();
-  benchmarkWeightsSource=cached.length ? 'cache' : 'missing';
-  benchmarkSetWeightsWarning(cached.length>0);
-  return cached;
-}
-
-// Lee los pesos objetivo del Excel. Si falla, solo admite los últimos pesos válidos
-// guardados desde una lectura anterior del propio Excel.
+// v175.34: lectura ESTRICTA de los pesos objetivo (Bloque A de OBJETIVOS Y
+// PROYECCIÓN). Devuelve exactamente los cinco activos reconocidos o []:
+// - cabecera contractual 'Activo | Peso objetivo' obligatoria;
+// - los cinco activos reconocidos exactamente una vez: un duplicado
+//   reconocido invalida la lectura ENTERA (jamás se ignora) y un activo
+//   ausente jamás se completa;
+// - pesos REALMENTE numéricos (typeof number, finitos y positivos, como
+//   contractNumber() del contrato de importación): un texto "0.0714", un
+//   booleano, un vacío, NaN, cero o un negativo invalidan la lectura entera;
+// - total igual a 1 dentro de la MISMA tolerancia contractual del contrato
+//   de importación (WORKBOOK_CONTRACT.rateTolerance, única fuente): un
+//   total fuera de ella bloquea, JAMÁS se normaliza en silencio;
+// - proxies del contrato v56 (URTH, EEM, IUSN, GLD, BTC-EUR) vía
+//   BENCHMARK_PROXY_MAP.
+// Sin respaldos de ninguna clase: ni pesos guardados, ni lecturas
+// anteriores independientes del Excel activo.
 function getBenchmarkTargetWeights(){
   try{
     const rows = sheetRows('OBJETIVOS Y PROYECCIÓN');
-    if(!rows || !rows.length) return useCachedBenchmarkTargetWeights();
+    if(!rows || !rows.length) return [];
     // Acotar al Bloque A: empieza tras la cabecera 'Activo | Peso objetivo' y
     // termina en la primera fila de totales. El Bloque B repite los activos y
     // debe ignorarse (si no, se leen los pesos dos veces).
@@ -2517,36 +2515,43 @@ function getBenchmarkTargetWeights(){
       if(start<0 && a==='activo' && bcol==='peso objetivo'){ start=i+1; continue; }
       if(start>=0 && (a.startsWith('aportación mensual total') || a.startsWith('total pesos objetivo'))){ end=i; break; }
     }
-    if(start<0) return useCachedBenchmarkTargetWeights();
+    if(start<0) return [];
     const out=[]; const seen=new Set();
     for(let i=start;i<end;i++){
       const name = String(rows[i]?.[0] ?? '').trim();
       if(!name) continue;
       const map = BENCHMARK_PROXY_MAP[name.toLowerCase()];
-      if(!map || seen.has(map.key)) continue;    // ignora Plan Pensiones y repetidos
-      const w = Number(rows[i]?.[1]);
-      if(!Number.isFinite(w) || w<=0) continue;
+      if(!map) continue;                    // filas ajenas al mapa (p. ej. Plan de Pensiones)
+      if(seen.has(map.key)) return [];      // duplicado reconocido: lectura inválida entera
+      // v175.34 (corrección C1): mismo criterio que contractNumber() — solo
+      // números reales; jamás se convierte un texto, booleano u otro tipo.
+      const w = rows[i]?.[1];
+      if(typeof w!=='number' || !Number.isFinite(w) || w<=0) return [];
       seen.add(map.key);
       out.push({ key:map.key, name, proxy:map.proxy, weight:w });
     }
-    if(out.length < 5) return useCachedBenchmarkTargetWeights();
+    if(out.length !== 5) return [];         // falta un activo reconocido: no se completa
     const total = out.reduce((s,x)=>s+x.weight,0);
-    if(total>0 && Math.abs(total-1)>0.0001) out.forEach(x=>{ x.weight = x.weight/total; });
-    localStorage.setItem(BENCHMARK_WEIGHTS_CACHE_KEY,JSON.stringify(out));
-    benchmarkWeightsSource='excel';
-    benchmarkSetWeightsWarning(false);
+    // v175.34 (corrección C1): ÚNICA tolerancia, la del contrato de
+    // importación. Un total que validateWorkbookDetailed rechazaría jamás
+    // puede aceptarse aquí, y viceversa. Sin normalización silenciosa.
+    if(Math.abs(total-1)>WORKBOOK_CONTRACT.rateTolerance) return [];
     return out;
   }catch(e){
-    return useCachedBenchmarkTargetWeights();
+    return [];
   }
 }
 // Pesos de la vista Renta variable (MSCI + Emerging + Small), derivados de los pesos
 // objetivo del Excel y renormalizados a 100% entre esos tres activos. Antes estaban
 // fijos en el código (80/12,5/7,5) y se habrían quedado desfasados si cambiaba el Excel.
+// v175.34: la renormalización es EXCLUSIVA de estos tres pesos y solo se aplica
+// cuando los cinco pesos originales del Excel han superado íntegra la validación.
 function getBenchmarkRvWeights(){
-  const eq = getBenchmarkTargetWeights().filter(w=>['msci','emerging','small'].includes(w.key));
+  const all = getBenchmarkTargetWeights();
+  if(all.length !== 5) return [];
+  const eq = all.filter(w=>['msci','emerging','small'].includes(w.key));
   const total = eq.reduce((s,x)=>s+x.weight,0);
-  if(!(total>0)) return eq;
+  if(!(total>0)) return [];
   return eq.map(x=>({...x, weight:x.weight/total}));
 }
 
@@ -2614,12 +2619,12 @@ const BENCHMARK_VIEW_CONFIG = {
   },
   btc: {
     title:'Bitcoin · Real vs BTC',
-    subtitle:'Compara tus movimientos reales de Bitcoin contra la evolución de BTC-USD.',
+    subtitle:'Compara tus movimientos reales de Bitcoin contra la evolución de BTC-EUR.',
     realLabel:'Tu Bitcoin',
     targetLabel:'BTC benchmark',
     targetSmall:'BTC simulado',
     empty:'Pulsa “Cargar benchmark” para comparar tus movimientos de Bitcoin contra BTC.',
-    weights:()=>[{ key:'btc', name:'Bitcoin', proxy:'BTC-USD', weight:1 }],
+    weights:()=>[{ key:'btc', name:'Bitcoin', proxy:'BTC-EUR', weight:1 }],
     assetTest:(asset)=> {
       const a=normalizeText(asset);
       return a.includes('bitcoin') || a.includes('btc');
@@ -2740,6 +2745,179 @@ function benchmarkSetError(message){
   if(!el) return;
   el.textContent=message || '';
   el.classList.toggle('active', !!message);
+}
+// v175.30 (seguridad): AUTH_REQUIRED y FORBIDDEN de la Edge se presentan
+// como estado de sesión/autorización, nunca como fallo del mercado.
+function benchmarkAuthStatusFromError(err){
+  const status=err?.context?.status;
+  if(status===401){
+    benchmarkSetStatus('Sesión requerida','yellow','La sesión no es válida o ha caducado. Inicia sesión de nuevo.');
+    benchmarkSetError('Benchmark: sesión requerida o caducada (AUTH_REQUIRED).');
+    return true;
+  }
+  if(status===403){
+    benchmarkSetStatus('No autorizado','red','Tu usuario no está autorizado para el Benchmark.');
+    benchmarkSetError('Benchmark: usuario no autorizado (FORBIDDEN).');
+    return true;
+  }
+  return false;
+}
+// v175.33: ante cualquier error o respuesta incompatible, las cifras
+// anteriores desaparecen: nunca se muestra la última cifra como si
+// perteneciera a la petición fallida. Borra métricas, caché de la vista,
+// feed móvil, gráfica, resumen e indicadores secundarios (Edge/proveedor);
+// el espejo móvil se rerenderiza solo desde este DOM ya limpio (observer).
+function benchmarkClearViewData(requestView){
+  ['benchmarkPortfolioReturn','benchmarkOscarReturn','benchmarkDiffReturn'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){ el.textContent='--'; el.className=id==='benchmarkDiffReturn'?'neutral':''; }
+  });
+  const noteP=document.getElementById('benchmarkPortfolioNote');
+  const noteO=document.getElementById('benchmarkOscarNote');
+  if(noteP) noteP.textContent='Sin datos.';
+  if(noteO) noteO.textContent='Sin datos.';
+  if(!benchmarkCache || benchmarkCache.view===requestView) benchmarkCache=null;
+  window.__benchmarkMobileFeed=null;
+  const chart=document.getElementById('benchmarkChart');
+  if(chart) chart.innerHTML='<div class="chartEmpty">Benchmark no disponible: sin cifras para esta vista.</div>';
+  const summary=document.getElementById('benchmarkSummary');
+  if(summary){
+    summary.className='benchmarkSummary neutral';
+    summary.innerHTML='<span>Lectura del resultado</span><strong>No disponible.</strong><p>No se muestran cifras hasta obtener una respuesta válida y completa de la Edge Function.</p>';
+  }
+  // v175.33 (corrección D2): los indicadores secundarios no pueden quedar
+  // en verde bajo un estado de error.
+  const edge=document.getElementById('benchmarkEdgeCheck');
+  if(edge){ edge.textContent='--'; edge.className=''; }
+  const provider=document.getElementById('benchmarkProviderCheck');
+  if(provider){ provider.textContent='--'; provider.className=''; }
+}
+function benchmarkFail(requestView, statusText, cls, note, errorMsg){
+  benchmarkClearViewData(requestView);
+  benchmarkSetStatus(statusText, cls, note);
+  benchmarkSetError(errorMsg);
+}
+// v175.33 (corrección D2): fallo LOCAL unificado. Todo retorno temprano
+// (sin Supabase, sin sesión, pesos/flujos/valor ausentes, fechas inválidas,
+// movimiento posterior a A4) pasa por aquí: comprueba la vigencia de la
+// petición, limpia la vista entera y solo entonces muestra estado y mensaje.
+// Ninguna cifra anterior sobrevive bajo un estado de error.
+function benchmarkLocalFail(requestView, vigente, statusText, cls, note, errorMsg, showCloud){
+  if(typeof vigente==='function' && !vigente()) return;
+  benchmarkFail(requestView, statusText, cls, note, errorMsg);
+  if(showCloud) cloudShow();
+}
+// v175.33 (corrección D2): 401/403 capturados por CUALQUIER ruta también
+// limpian la vista antes de presentar el estado de sesión/autorización.
+function benchmarkAuthFail(requestView, err){
+  benchmarkClearViewData(requestView);
+  return benchmarkAuthStatusFromError(err);
+}
+// v175.33: lectura segura del error de la Edge (FunctionsHttpError):
+// estado HTTP + code + details del envelope v56. Jamás se muestran cuerpos
+// técnicos, URLs, rutas ni mensajes externos sin mapear.
+async function benchmarkEdgeErrorInfo(err){
+  const status=Number(err?.context?.status);
+  let body=null;
+  try{
+    if(err?.context && typeof err.context.json==='function') body=await err.context.json();
+  }catch(_e){ body=null; }
+  const code=(body && typeof body.code==='string' && /^[A-Z_]{3,40}$/.test(body.code)) ? body.code : null;
+  const details=(body && body.details && typeof body.details==='object') ? body.details : {};
+  return {status, code, details};
+}
+function benchmarkSafeDay(v){ return benchmarkDayFromDate(v) || ''; }
+// v175.33 (corrección D3): conjuntos CERRADOS. Solo se reflejan en mensajes
+// los símbolos y fuentes propios del contrato v56; cualquier otra cadena
+// (aunque parezca un símbolo) se descarta y no aparece jamás en pantalla.
+const BENCHMARK_ALLOWED_SYMBOLS=Object.freeze([
+  'URTH','EEM','SPY','GLD','IUSN',
+  'URTH.US','EEM.US','SPY.US','GLD.US','IUSN.XETRA',
+  'BTC-EUR','USD/EUR'
+]);
+const BENCHMARK_ALLOWED_SOURCES=Object.freeze(
+  BENCHMARK_ALLOWED_SYMBOLS.concat(['ECB USD/EUR'])
+);
+function benchmarkSafeSymbol(v){
+  const s=String(v||'');
+  return BENCHMARK_ALLOWED_SYMBOLS.indexOf(s)!==-1 ? s : '';
+}
+function benchmarkSafeSource(v){
+  const s=String(v||'');
+  return BENCHMARK_ALLOWED_SOURCES.indexOf(s)!==-1 ? s : '';
+}
+// v175.33: presentación cerrada por código v56. Devuelve true si el error
+// quedó presentado (siempre, salvo autorización, que delega en el estado de
+// sesión). Textos propios y comprensibles; los details solo se citan tras
+// validarlos (fechas de día, símbolos de la allowlist).
+function benchmarkPresentEdgeFailure(requestView, info){
+  if(info.status===401 || info.status===403){
+    benchmarkClearViewData(requestView);
+    return benchmarkAuthStatusFromError({context:{status:info.status}});
+  }
+  const d=info.details || {};
+  const sym=benchmarkSafeSymbol(d.symbol);
+  const dia=benchmarkSafeDay(d.date);
+  const MAPA={
+    UPDATE_IN_PROGRESS:['Actualización en curso','yellow','Otra actualización del Benchmark está publicando ahora mismo.','Benchmark: actualización en curso. Reintenta en unos segundos.'],
+    UPDATE_DEADLINE_EXCEEDED:['Actualización cancelada','yellow','La actualización superó su tiempo máximo y se canceló de forma controlada.','Benchmark: la actualización se canceló por tiempo. Reintenta.'],
+    QUOTA_EXHAUSTED:['Cuota agotada','yellow',
+      'Cuota diaria del proveedor de datos agotada.'+(typeof d.windowResetAt==='string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(d.windowResetAt)?(' Se libera hacia '+d.windowResetAt.slice(0,16).replace('T',' ')+' UTC.'):''),
+      'Benchmark: cuota diaria de datos agotada. Inténtalo más tarde.'],
+    PRICE_NOT_YET_AVAILABLE:['Cierre no disponible','yellow',
+      'El cierre'+(sym?(' de '+sym):'')+(dia?(' del '+dia):'')+' aún no está publicado por el proveedor.',
+      'Benchmark: el último cierre aún no está disponible. Inténtalo más tarde.'],
+    FX_DATA_MISSING:['Sin tipo BCE','yellow',
+      d.targetClosed===true
+        ? ('El BCE no publica tipo EUR/USD'+(dia?(' el '+dia):'')+' (día de cierre TARGET).')
+        : ('Falta el tipo oficial BCE EUR/USD'+(dia?(' del '+dia):'')+'.'),
+      'Benchmark: falta el tipo oficial EUR/USD del BCE para valorar en euros.'],
+    PROVIDER_TIMEOUT:['Mercado no disponible','yellow','El proveedor de datos no responde (timeout).','Benchmark: datos de mercado temporalmente no disponibles. No se muestran cifras.'],
+    PROVIDER_HTTP_ERROR:['Mercado no disponible','yellow','El proveedor de datos devolvió un error temporal.','Benchmark: datos de mercado temporalmente no disponibles. No se muestran cifras.'],
+    PROVIDER_NETWORK_ERROR:['Mercado no disponible','yellow','No se pudo contactar con el proveedor de datos.','Benchmark: datos de mercado temporalmente no disponibles. No se muestran cifras.'],
+    PROVIDER_RESPONSE_INVALID:['Mercado no disponible','yellow','La respuesta del proveedor de datos no es utilizable.','Benchmark: datos de mercado temporalmente no disponibles. No se muestran cifras.'],
+    PROVIDER_DATA_INCOMPLETE:['Mercado no disponible','yellow','El proveedor entregó datos incompletos'+(sym?(' para '+sym):'')+'; no se aceptan series parciales.','Benchmark: datos de mercado incompletos. No se muestran cifras.'],
+    INSUFFICIENT_MARKET_DATA:['Mercado no disponible','yellow','Datos de mercado insuficientes para esta ventana.','Benchmark: datos de mercado insuficientes. No se muestran cifras.'],
+    TERMINAL_DATE_UNAVAILABLE:['Mercado no disponible','yellow','La fecha de valoración solicitada no está disponible en el proveedor.','Benchmark: la fecha de valoración no está disponible. No se muestran cifras.'],
+    SNAPSHOT_MISSING:['Snapshot pendiente','red','El snapshot inicial de datos del servidor aún no está construido.','Benchmark: el snapshot inicial del servidor está pendiente de construcción autorizada.'],
+    SNAPSHOT_CORRUPT:['Snapshot bloqueado','red','El almacén de datos del servidor no supera su validación de integridad.','Benchmark: snapshot bloqueado por validación. Requiere intervención manual.'],
+    HISTORY_RECONCILIATION_FAILED:['Snapshot bloqueado','red','La unión histórica de datos no está conciliada y aprobada.','Benchmark: unión histórica sin conciliar. Requiere intervención manual.'],
+    CALENDAR_NOT_COVERED:['Calendario no cubierto','red','El calendario oficial versionado del servidor no cubre la fecha solicitada.','Benchmark: calendario oficial no cubierto para esta fecha.'],
+    CONFIG_ERROR:['Configuración pendiente','red','La configuración del servidor del Benchmark está incompleta.','Benchmark: configuración del servidor pendiente.']
+  };
+  const fila=info.code ? MAPA[info.code] : null;
+  if(fila){
+    benchmarkFail(requestView, fila[0], fila[1], fila[2], fila[3]);
+    return true;
+  }
+  benchmarkFail(requestView, 'Error','red','No se han podido cargar los datos.','Benchmark no disponible: la respuesta del servidor no es utilizable.');
+  return true;
+}
+// v175.33: nota de éxito honesta — origen de la respuesta (caché verificada
+// o datos actualizados), cierres efectivos por mercado cerrado y estado
+// exacto del refresco forzado por fuente.
+function benchmarkSuccessNote(data, weights){
+  const partes=[];
+  partes.push(data.meta.dataStatus==='cache' ? 'Caché verificada' : 'Datos actualizados');
+  const cerrados=(weights||[]).map(w=>({w, t:data.terminal.components[w.key]}))
+    .filter(x=>x.t && x.t.effectiveReason==='market_closed');
+  if(cerrados.length){
+    partes.push(cerrados.map(x=>`${benchmarkSafeSymbol(x.w.proxy)||x.w.key} valorado el ${benchmarkSafeDay(x.t.effectiveDate)} (mercado cerrado)`).join(' · '));
+  }
+  const fr=data.meta.forcedRefresh;
+  if(fr && typeof fr==='object'){
+    // v175.33 (corrección D3): las fuentes se cotejan contra el conjunto
+    // cerrado; una cadena ajena no se refleja jamás.
+    const refrescadas=(Array.isArray(fr.refreshed)?fr.refreshed:[]).map(r=>benchmarkSafeSource(r?.source)).filter(Boolean);
+    if(refrescadas.length) partes.push('Fuentes actualizadas: '+refrescadas.join(', '));
+    const denegadas=(Array.isArray(fr.denied)?fr.denied:[]).map(r=>{
+      const s=benchmarkSafeSource(r?.source);
+      const hasta=(typeof r?.nextAllowedAt==='string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(r.nextAllowedAt)) ? r.nextAllowedAt.slice(0,16).replace('T',' ')+' UTC' : '';
+      return s ? (s+(hasta?(' hasta '+hasta):'')) : '';
+    }).filter(Boolean);
+    if(denegadas.length) partes.push('Sin refrescar (cooldown): '+denegadas.join(' · '));
+  }
+  return partes.join(' · ')+'.';
 }
 function benchmarkPct(value){
   const n=Number(value);
@@ -3060,89 +3238,360 @@ function aggregateMonthlyHistory(assetTest=null, includePension=false){
     }));
 }
 
+// v175.27 (revisión de fuente de fecha): sin sustitutos de fecha. `to`
+// procede exclusivamente de XIRR GLOBAL!A4 y `from` exclusivamente del primer
+// flujo válido; ambos se validan con benchmarkDayFromDate (calendario
+// estricto). Si falta cualquiera, se devuelve vacío y loadBenchmarkData
+// bloquea ANTES de invocar la Edge Function. Nunca se usa la fecha del
+// sistema; una A4 vacía tampoco puede degenerar en la época de Excel
+// (dateFromSerial('') convertía el vacío en el serial 0 = 1899-12-30).
 function getBenchmarkDateRange(flows){
   const xirr=sheetRows?.('XIRR GLOBAL') || [];
-  const to=isoDateFromAny(cell(xirr,4,1)) || new Date().toISOString().slice(0,10);
-  const from=flows[0]?.date || '2025-01-01';
+  const raw=cell(xirr,4,1);
+  const to=(raw==null || String(raw).trim()==='') ? '' : (benchmarkDayFromDate(isoDateFromAny(raw)) || '');
+  const from=benchmarkDayFromDate(flows?.[0]?.date || '') || '';
   return {from,to};
 }
+// v175.33 (corrección D1): devuelve EXCLUSIVAMENTE el primer punto real en o
+// después de la fecha. Si no existe punto posterior, devuelve null: nunca el
+// último anterior — ese respaldo simulaba compras retroactivas imposibles
+// (un flujo del sábado comprado al precio del viernes).
 function priceAtOrAfter(series, date){
   if(!Array.isArray(series) || !series.length) return null;
-  const found=series.find(p=>p.date>=date && Number.isFinite(Number(p.normalized)));
-  return found || series[series.length-1] || null;
+  return series.find(p=>p.date>=date && Number.isFinite(Number(p.normalized)) && Number(p.normalized)>0) || null;
 }
-function simulateBenchmarkFromFlows(components, flows, weights){
+// v175.26 (B-06): validación contractual de las series de la Edge Function.
+// Una respuesta incompleta o corrupta se rechaza ANTES de simular, renderizar,
+// cachear o alimentar el feed móvil. Sin esta guarda, un componente ausente
+// dejaba de comprar unidades pero su dinero seguía contado en el neto
+// invertido, y el resultado parcial se presentaba con estado OK.
+// Devuelve null si la serie es válida, o la causa exacta (sin importes) si no.
+// v175.26 (revisión de fecha): admite exactamente AAAA-MM-DD o un timestamp
+// ISO real y completo (T HH:MM:SS, milisegundos opcionales, Z u offset
+// opcionales). Rechaza sufijos arbitrarios. El calendario se valida
+// reconstruyendo el día en UTC y exigiendo que año, mes y día coincidan con
+// los capturados (2026-02-30 no existe: Date lo normalizaría a marzo, aquí se
+// rechaza). Devuelve el día normalizado AAAA-MM-DD, o null si no es válido.
+function benchmarkDayFromDate(value){
+  if(typeof value!=='string') return null;
+  const m=value.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{1,3})?(?:Z|[+-](?:[01]\d|2[0-3]):[0-5]\d)?)?$/);
+  if(!m) return null;
+  const year=Number(m[1]), month=Number(m[2]), day=Number(m[3]);
+  const rebuilt=new Date(Date.UTC(year, month-1, day));
+  if(rebuilt.getUTCFullYear()!==year || rebuilt.getUTCMonth()!==month-1 || rebuilt.getUTCDate()!==day) return null;
+  return `${m[1]}-${m[2]}-${m[3]}`;
+}
+function benchmarkSeriesIssue(series){
+  if(!Array.isArray(series) || !series.length) return 'serie ausente o vacía';
+  let prevDay=null;
+  for(let i=0;i<series.length;i++){
+    const p=series[i] || {};
+    const day=benchmarkDayFromDate(p.date);
+    if(!day) return `fecha inválida en el punto ${i+1}`;
+    const price=Number(p.normalized);
+    if(!Number.isFinite(price) || price<=0) return `precio no válido en ${day}`;
+    // Las series son diarias: orden y duplicados se comparan por el día
+    // normalizado, no por la cadena completa (dos timestamps distintos del
+    // mismo día son un duplicado).
+    if(prevDay!==null && day===prevDay) return `fecha duplicada ${day}`;
+    if(prevDay!==null && day<prevDay) return `fechas desordenadas en ${day}`;
+    prevDay=day;
+  }
+  return null;
+}
+// Exige una serie válida por cada componente requerido por los pesos de la
+// vista. El error nombra el componente por su proxy; nunca incluye importes.
+function benchmarkComponentsIssue(components, weights){
+  if(!components || typeof components!=='object') return 'faltan los componentes del benchmark';
+  for(const w of (weights || [])){
+    const issue=benchmarkSeriesIssue(components[w.key]);
+    if(issue) return `componente ${benchmarkSafeSymbol(w.proxy) || w.key}: ${issue}`;
+  }
+  return null;
+}
+// v175.33 (contrato Edge v56): envelope estable obligatorio. Ninguna cifra
+// se usa sin ok/state/code/functionVersion/dataStatus correctos y sin los
+// objetos terminal, chart, series y metadatos de componentes.
+// v175.33 (corrección · contrato de chart): además se exige basis
+// 'interseccion', fechas no invertidas, from/to de la respuesta coherentes
+// con chart y terminal, la serie maestra (benchmark, o MSCI y S&P 500 en la
+// externa) cubriendo exactamente el rango de chart, y que cada componente
+// requerido contenga el primer día común. Cualquier incoherencia bloquea
+// antes de usar cifras. kind: 'sim' (vistas simuladas) | 'two' (externa).
+function benchmarkEnvelopeIssue(data, weights, kind){
+  if(!data || data.ok!==true) return 'la respuesta no declara ok:true';
+  if(data.state!=='available') return 'state distinto de available';
+  if(data.code!=='OK') return 'code distinto de OK';
+  if(data.functionVersion!=='v56') return 'functionVersion incompatible (se exige v56)';
+  const ds=data.meta && data.meta.dataStatus;
+  if(ds!=='cache' && ds!=='updated') return 'meta.dataStatus no es cache ni updated';
+  if(!data.terminal || typeof data.terminal!=='object' || !data.terminal.components || typeof data.terminal.components!=='object') return 'falta el objeto terminal por componente';
+  if(!data.chart || !benchmarkDayFromDate(data.chart.firstDate) || !benchmarkDayFromDate(data.chart.lastDate)) return 'falta el objeto chart con fechas válidas';
+  if(!data.series || typeof data.series!=='object') return 'faltan las series';
+  if(!data.meta.components || typeof data.meta.components!=='object') return 'faltan los metadatos de componentes';
+  const chartFirst=benchmarkDayFromDate(data.chart.firstDate);
+  const chartLast=benchmarkDayFromDate(data.chart.lastDate);
+  if(data.chart.basis!=='interseccion') return 'chart.basis distinto de interseccion';
+  if(chartFirst>chartLast) return 'chart con fechas invertidas (firstDate posterior a lastDate)';
+  if(benchmarkDayFromDate(data.from)!==chartFirst) return 'from de la respuesta no coincide con chart.firstDate';
+  const requested=benchmarkDayFromDate(data.terminal.requestedDate);
+  if(!requested) return 'terminal.requestedDate no válida';
+  if(benchmarkDayFromDate(data.to)!==requested) return 'to de la respuesta no coincide con terminal.requestedDate';
+  const extremos=(serie)=>({
+    first:benchmarkDayFromDate(serie[0] && serie[0].date),
+    last:benchmarkDayFromDate(serie[serie.length-1] && serie[serie.length-1].date)
+  });
+  if(kind==='two'){
+    const etiquetas={msci:'MSCI World (URTH)', sp500:'S&P 500 (SPY)'};
+    for(const k of ['msci','sp500']){
+      const serie=data.series[k];
+      if(!Array.isArray(serie) || !serie.length) continue; // la valida benchmarkSeriesIssue con su propio nombre
+      const e=extremos(serie);
+      if(e.first && e.last && (e.first!==chartFirst || e.last!==chartLast)){
+        return `la serie ${etiquetas[k]} no cubre exactamente el rango de chart`;
+      }
+    }
+    // v175.33 (corrección 2): las dos series externas deben compartir
+    // EXACTAMENTE las mismas fechas (la intersección declarada), no solo
+    // los extremos: ninguna fecha ajena a la intersección puede dibujarse.
+    const m=data.series.msci, s=data.series.sp500;
+    if(Array.isArray(m) && m.length && Array.isArray(s) && s.length
+       && !benchmarkSeriesIssue(m) && !benchmarkSeriesIssue(s)){
+      const diasS=new Set(s.map(p=>benchmarkDayFromDate(p.date)));
+      const diasM=new Set(m.map(p=>benchmarkDayFromDate(p.date)));
+      if(m.length!==s.length
+         || m.some(p=>!diasS.has(benchmarkDayFromDate(p.date)))
+         || s.some(p=>!diasM.has(benchmarkDayFromDate(p.date)))){
+        return 'las series de la vista externa no comparten exactamente las mismas fechas comunes';
+      }
+    }
+  }else{
+    const serie=data.series.benchmark;
+    const issue=benchmarkSeriesIssue(serie);
+    if(issue) return `serie benchmark: ${issue}`;
+    const e=extremos(serie);
+    if(e.first!==chartFirst || e.last!==chartLast) return 'la serie benchmark no cubre exactamente el rango de chart';
+    // v175.33 (corrección 2): CADA fecha de la intersección declarada
+    // (series.benchmark) debe existir EXACTAMENTE en todos los componentes
+    // requeridos — no basta con el primer día. La gráfica solo puede
+    // construirse sobre esas fechas; una fecha común sin punto real en un
+    // componente invalida la respuesta entera antes de simular, renderizar
+    // o cachear. Un componente puede tener fechas EXTRA fuera de la
+    // intersección (p. ej. la vela de BTC del sábado): jamás entran en la
+    // gráfica, pero no invalidan.
+    const diasComunes=serie.map(p=>benchmarkDayFromDate(p.date));
+    for(const w of (weights || [])){
+      const comp=data.series.components && data.series.components[w.key];
+      if(!Array.isArray(comp) || !comp.length) continue; // ausencia la nombra benchmarkComponentsIssue
+      if(benchmarkSeriesIssue(comp)) continue; // corrupción la nombra benchmarkComponentsIssue
+      const diasComp=new Set(comp.map(p=>benchmarkDayFromDate(p.date)));
+      for(const dia of diasComunes){
+        if(!diasComp.has(dia)){
+          return `componente ${benchmarkSafeSymbol(w.proxy)||w.key}: su serie no contiene la fecha común ${dia}`;
+        }
+      }
+    }
+  }
+  return null;
+}
+// v175.33: exclusiones estructurales TARGET declaradas por la Edge. Deben
+// ser listas válidas de días AAAA-MM-DD con razón textual.
+function benchmarkExclusionsIssue(meta, weights){
+  for(const w of (weights || [])){
+    const etiqueta=benchmarkSafeSymbol(w.proxy) || w.key;
+    const m=meta?.components?.[w.key];
+    if(!m || typeof m!=='object') return `componente ${etiqueta}: faltan sus metadatos`;
+    const exc=m.exclusions;
+    if(!Array.isArray(exc)) return `componente ${etiqueta}: exclusiones ausentes o no válidas`;
+    for(const e of exc){
+      if(!e || !benchmarkDayFromDate(e.date) || typeof e.reason!=='string' || !e.reason){
+        return `componente ${etiqueta}: exclusión con fecha o razón no válidas`;
+      }
+    }
+  }
+  return null;
+}
+// v175.33: si un flujo real cae exactamente en una fecha excluida (sesión
+// sin tipo oficial EUR/USD) del componente al que se asignaría dinero, la
+// vista entera se bloquea. Jamás se traslada el movimiento al siguiente
+// punto ni se omite el componente.
+function benchmarkFlowInExclusion(flows, meta, weights){
+  for(const w of (weights || [])){
+    if(!(Number(w.weight)>0)) continue;
+    const exc=meta?.components?.[w.key]?.exclusions || [];
+    if(!exc.length) continue;
+    const dias=new Set(exc.map(e=>benchmarkDayFromDate(e.date)));
+    for(const f of (flows || [])){
+      const dia=benchmarkDayFromDate(f.date);
+      if(dia && dias.has(dia)) return {date:dia, proxy:benchmarkSafeSymbol(w.proxy)||String(w.key)};
+    }
+  }
+  return null;
+}
+// v175.33 (corrección D1): tras validar terminal y exclusiones, cada flujo
+// debe poder comprarse DE VERDAD: para cada componente con peso positivo
+// debe existir un punto real de su serie en o después de la fecha del flujo
+// y no posterior a su cierre efectivo. Sin ese punto, la vista se bloquea
+// entera: jamás se compra retroactivamente ni se omite un componente.
+function benchmarkFlowPriceIssue(flows, components, weights, terminalComponents){
+  for(const w of (weights || [])){
+    if(!(Number(w.weight)>0)) continue;
+    const etiqueta=benchmarkSafeSymbol(w.proxy) || String(w.key);
+    const serie=components?.[w.key] || [];
+    const eff=benchmarkDayFromDate(terminalComponents?.[w.key]?.effectiveDate);
+    if(!eff) return {date:'', proxy:etiqueta};
+    for(const f of (flows || [])){
+      const dia=benchmarkDayFromDate(f.date);
+      if(!dia) return {date:'', proxy:etiqueta};
+      const px=priceAtOrAfter(serie, dia);
+      const pxDia=px ? benchmarkDayFromDate(px.date) : null;
+      if(!px || !pxDia || pxDia>eff) return {date:dia, proxy:etiqueta};
+    }
+  }
+  return null;
+}
+// v175.33 (contrato Edge v56): terminal POR COMPONENTE. Sustituye a la
+// exigencia antigua de que cada serie terminara exactamente en A4: ahora un
+// mercado oficialmente cerrado entrega su último cierre real declarado con
+// effectiveDate y market_closed, y BTC entrega su propia vela del día. Cada
+// terminal se valida contra la serie real (rebasada al primer día común de
+// chart) antes de usar ninguna cifra.
+function benchmarkTerminalIssue(data, weights, to){
+  const expected=benchmarkDayFromDate(to);
+  if(!expected) return 'fecha de valoración del Excel no reconocible';
+  const chartFirst=benchmarkDayFromDate(data?.chart?.firstDate);
+  if(!chartFirst) return 'chart.firstDate no válida';
+  for(const w of (weights || [])){
+    const etiqueta=`componente ${benchmarkSafeSymbol(w.proxy) || w.key}`;
+    const t=data?.terminal?.components?.[w.key];
+    if(!t || typeof t!=='object') return `${etiqueta}: falta su terminal`;
+    if(benchmarkDayFromDate(t.requestedDate)!==expected) return `${etiqueta}: requestedDate distinta de la valoración del Excel (${expected})`;
+    const eff=benchmarkDayFromDate(t.effectiveDate);
+    if(!eff) return `${etiqueta}: effectiveDate no válida`;
+    if(eff>expected) return `${etiqueta}: effectiveDate posterior a la fecha solicitada`;
+    if(t.effectiveReason!=='session' && t.effectiveReason!=='market_closed') return `${etiqueta}: effectiveReason desconocida`;
+    if(t.effectiveReason==='session' && eff!==expected) return `${etiqueta}: session exige effectiveDate igual a la solicitada`;
+    if(t.effectiveReason==='market_closed' && eff>=expected) return `${etiqueta}: market_closed exige effectiveDate anterior a la solicitada`;
+    const n=Number(t.normalizedAtEffective);
+    if(!Number.isFinite(n) || n<=0) return `${etiqueta}: normalizedAtEffective no válido`;
+    const series=data?.series?.components?.[w.key] || [];
+    const effPoint=series.find(p=>benchmarkDayFromDate(p.date)===eff);
+    if(!effPoint) return `${etiqueta}: la serie no tiene punto en la fecha efectiva ${eff}`;
+    const basePoint=series.find(p=>benchmarkDayFromDate(p.date)===chartFirst);
+    if(!basePoint) return `${etiqueta}: la serie no cubre el primer día común de chart`;
+    const esperado=Number((Number(effPoint.normalized)/Number(basePoint.normalized)*100).toFixed(4));
+    if(!Number.isFinite(esperado) || Math.abs(esperado-n)>0.01) return `${etiqueta}: normalizedAtEffective no coincide con la serie en ${eff}`;
+  }
+  return null;
+}
+// v175.33 (contrato Edge v56): la valoración terminal usa el CIERRE EFECTIVO
+// INDIVIDUAL de cada componente (terminal.components[key]), nunca el primer
+// endDate común entre series: un mercado cerrado (ETF en sábado) se valora a
+// su último cierre real y BTC a su propia vela del día, sin retroceder la
+// cartera entera a la fecha común más antigua.
+function simulateBenchmarkFromFlows(components, flows, weights, terminalComponents, requestedDay){
   const totalWeight=weights.reduce((s,w)=>s+Number(w.weight||0),0) || 1;
   const units={};
   weights.forEach(w=>units[w.key]=0);
 
   const sorted=[...flows].sort((a,b)=>a.date.localeCompare(b.date));
+  // v175.33 (corrección D1): CIERRE ESTRICTO. Si pese a la validación previa
+  // falta un precio de compra o de valoración, la simulación entera devuelve
+  // null y la vista se bloquea: está prohibido omitir un componente en
+  // silencio mientras su dinero sigue contado en el neto invertido.
   for(const f of sorted){
     for(const w of weights){
       const series=components?.[w.key] || [];
       const px=priceAtOrAfter(series, f.date);
       const price=Number(px?.normalized);
-      if(!Number.isFinite(price) || price<=0) continue;
+      if(!Number.isFinite(price) || price<=0) return null;
       const allocation=f.cash * (Number(w.weight||0)/totalWeight);
       units[w.key] += allocation / price;
     }
   }
 
-  const lastDates=weights.map(w=>{
-    const s=components?.[w.key] || [];
-    return s[s.length-1]?.date;
-  }).filter(Boolean).sort();
-  const endDate=lastDates[0] || '';
-
   let finalValue=0;
+  const endDates={};
   for(const w of weights){
     const series=components?.[w.key] || [];
-    const px=endDate ? (series.find(p=>p.date===endDate) || priceAtOrAfter(series,endDate)) : series[series.length-1];
+    const eff=benchmarkDayFromDate(terminalComponents?.[w.key]?.effectiveDate);
+    endDates[w.key]=eff;
+    const px=eff ? series.find(p=>benchmarkDayFromDate(p.date)===eff) : null;
     const price=Number(px?.normalized);
-    if(Number.isFinite(price)) finalValue += (units[w.key] || 0) * price;
+    if(!Number.isFinite(price) || price<=0) return null;
+    finalValue += (units[w.key] || 0) * price;
   }
 
   const netInvested=sorted.reduce((s,f)=>s+f.cash,0);
   const returnPct=netInvested>0 ? Number((((finalValue/netInvested)-1)*100).toFixed(2)) : null;
 
-  return {finalValue, netInvested, returnPct, units, endDate};
+  // endDate: fecha de valoración solicitada (A4). endDates: cierre efectivo
+  // real por componente (puede ser anterior con market_closed).
+  return {finalValue, netInvested, returnPct, units, endDate:requestedDay, endDates};
 }
-function buildBenchmarkValueSeries(components, flows, weights){
-  const firstKey=weights[0]?.key || 'msci';
-  const benchmarkDates=(components?.[firstKey] || []).map(p=>p.date);
-  if(!benchmarkDates.length) return [];
+// v175.33 (corrección 2): la gráfica se construye EXCLUSIVAMENTE sobre las
+// fechas de la intersección declarada por la Edge (series.benchmark), nunca
+// sobre las fechas del primer componente. Cada fecha común se valora con el
+// punto EXACTO de cada componente en ese día; priceAtOrAfter queda reservado
+// para el precio de compra de los flujos (primera sesión real disponible en
+// o después del flujo) y está PROHIBIDO para valorar un punto histórico: sin
+// esta regla, un lunes con Xetra cerrada publicaría el precio del martes de
+// IUSN bajo la fecha del lunes. Un punto ausente en una fecha común, o una
+// intersección vacía, devuelve null y la vista entera se bloquea. Las fechas
+// comunes anteriores al primer flujo (sin dinero invertido aún) se recortan
+// del inicio, como siempre; en producción chart.firstDate >= from = primer
+// flujo real, así que no hay recorte.
+function buildBenchmarkValueSeries(components, flows, weights, benchmarkPoints){
+  const benchmarkDates=(Array.isArray(benchmarkPoints)?benchmarkPoints:[])
+    .map(p=>benchmarkDayFromDate(p && p.date))
+    .filter(Boolean);
+  if(!benchmarkDates.length) return null;
   const totalWeight=weights.reduce((s,w)=>s+Number(w.weight||0),0) || 1;
   const units={};
-  weights.forEach(w=>units[w.key]=0);
+  const preciosPorDia={};
+  for(const w of weights){
+    units[w.key]=0;
+    const mapa=new Map();
+    for(const p of (components?.[w.key] || [])){
+      const dia=benchmarkDayFromDate(p && p.date);
+      if(dia && !mapa.has(dia)) mapa.set(dia, Number(p.normalized));
+    }
+    preciosPorDia[w.key]=mapa;
+  }
   const sorted=[...flows].sort((a,b)=>a.date.localeCompare(b.date));
   let flowIndex=0;
+  let empezado=false;
   const out=[];
 
   for(const date of benchmarkDates){
-    while(flowIndex<sorted.length && sorted[flowIndex].date<=date){
+    while(flowIndex<sorted.length && (benchmarkDayFromDate(sorted[flowIndex].date)||'')<=date){
       const f=sorted[flowIndex];
       for(const w of weights){
         const series=components?.[w.key] || [];
-        const px=priceAtOrAfter(series, f.date);
+        const px=priceAtOrAfter(series, f.date); // compra del flujo: primera sesión real disponible
         const price=Number(px?.normalized);
-        if(Number.isFinite(price) && price>0){
-          const allocation=f.cash * (Number(w.weight||0)/totalWeight);
-          units[w.key] += allocation / price;
-        }
+        if(!Number.isFinite(price) || price<=0) return null;
+        const allocation=f.cash * (Number(w.weight||0)/totalWeight);
+        units[w.key] += allocation / price;
       }
       flowIndex++;
     }
+    const invested=sorted.filter(f=>(benchmarkDayFromDate(f.date)||'')<=date).reduce((s,f)=>s+f.cash,0);
+    if(!(invested>0)){
+      if(empezado) return null; // el neto no puede desaparecer a mitad de gráfica
+      continue; // fecha común anterior al primer flujo: aún no hay cartera
+    }
+    empezado=true;
     let value=0;
     for(const w of weights){
-      const series=components?.[w.key] || [];
-      const px=series.find(p=>p.date===date) || priceAtOrAfter(series,date);
-      const price=Number(px?.normalized);
-      if(Number.isFinite(price)) value += (units[w.key] || 0) * price;
+      const price=preciosPorDia[w.key].get(date); // punto EXACTO del día común; jamás una sesión posterior
+      if(!Number.isFinite(price) || price<=0) return null;
+      value += (units[w.key] || 0) * price;
     }
-    const invested=sorted.filter(f=>f.date<=date).reduce((s,f)=>s+f.cash,0);
-    if(value>0 && invested>0) out.push({date, close:value, normalized:Number(((value/invested)*100).toFixed(4)), value, invested});
+    if(!(value>0)) return null;
+    out.push({date, close:value, normalized:Number(((value/invested)*100).toFixed(4)), value, invested});
   }
-  return out;
+  return out.length ? out : null;
 }
 function updateBenchmarkWeightsTable(weights=null){
   const body=document.getElementById('benchmarkWeightsBody');
@@ -3153,7 +3602,7 @@ function updateBenchmarkWeightsTable(weights=null){
     return;
   }
   if(!list.length) return;
-  body.innerHTML=list.map(x=>`<tr><td>${x.name}</td><td>${x.proxy}</td><td>${benchmarkPct(x.weight*100).replace('+','')}</td></tr>`).join('');
+  body.innerHTML=list.map(x=>`<tr><td>${x.name}</td><td ${x.key==='small'?'title="Símbolo Edge: IUSN.XETRA"':''}>${x.proxy}</td><td>${benchmarkPct(x.weight*100).replace('+','')}</td></tr>`).join('');
 }
 function applyBenchmarkView(view){
   benchmarkActiveView=view || 'global';
@@ -3199,76 +3648,272 @@ function applyBenchmarkView(view){
   benchmarkSetError('');
 }
 async function loadBenchmarkData(force=false){
+  // v175.25 (B-01): se captura la vista solicitada y un identificador
+  // monotónico. Una respuesta (o un error) solo puede aplicarse si sigue
+  // siendo la última petición lanzada Y la vista activa coincide con la
+  // capturada al iniciarla. Sin esta guarda, una respuesta lenta de otra
+  // vista pintaba sus cifras, resumen, gráfica, caché y feed móvil bajo
+  // las etiquetas de la vista vigente.
+  const requestId = ++benchmarkRequestSeq;
+  const requestView = benchmarkActiveView;
+  const benchmarkRequestVigente = () => requestId === benchmarkRequestSeq && benchmarkActiveView === requestView;
   benchmarkSetError('');
-  const cfg=BENCHMARK_VIEW_CONFIG[benchmarkActiveView] || BENCHMARK_VIEW_CONFIG.global;
+  const cfg=BENCHMARK_VIEW_CONFIG[requestView] || BENCHMARK_VIEW_CONFIG.global;
   updateBenchmarkWeightsTable();
+  // v175.33 (corrección D2): TODOS los retornos locales pasan por
+  // benchmarkLocalFail: limpian la vista entera antes de mostrar el estado.
   if(!portfolioSupabase){
-    benchmarkSetStatus('Sin sesión','yellow','Primero inicia Cloud para poder invocar Supabase.');
-    cloudShow();
+    benchmarkLocalFail(requestView, benchmarkRequestVigente, 'Sin sesión','yellow',
+      'Primero inicia Cloud para poder invocar Supabase.',
+      'Benchmark: inicia Cloud para poder consultar los datos de mercado.', true);
     return;
   }
-  if(benchmarkActiveView==='msci_sp500'){
-    return loadMsciVsSp500(force);
+  // v175.30 (seguridad): la Edge exige un JWT de usuario autorizado; la
+  // clave pública ya no basta. Sin sesión activa no se invoca nada.
+  if(!portfolioCloudSession?.user){
+    benchmarkLocalFail(requestView, benchmarkRequestVigente, 'Sesión requerida','yellow',
+      'Inicia sesión en Cloud para consultar el Benchmark.',
+      'Benchmark: se requiere tu sesión de usuario para consultar los datos de mercado.', true);
+    return;
+  }
+  if(requestView==='msci_sp500'){
+    return loadMsciVsSp500(force, benchmarkRequestVigente);
   }
 
   const weights=cfg.weights();
   if(!Array.isArray(weights) || !weights.length){
-    benchmarkSetStatus('Excel inválido','red','No se han podido leer los pesos objetivo del Excel.');
-    benchmarkSetError('Benchmark detenido: faltan pesos objetivo válidos en OBJETIVOS Y PROYECCIÓN. No se usarán valores de respaldo.');
+    benchmarkLocalFail(requestView, benchmarkRequestVigente, 'Excel inválido','red',
+      'No se han podido leer los pesos objetivo del Excel.',
+      'Benchmark detenido: faltan pesos objetivo válidos en OBJETIVOS Y PROYECCIÓN. No se usarán valores de respaldo.');
     return;
   }
   // v142: el Bloque 2 (vs_msci / vs_sp500) incluye el Plan de Pensiones en flujos y valor.
   const withPension = !!cfg.includePension;
   const flows=parseBenchmarkFlowsFromXirr(cfg.assetTest, withPension);
   if(flows.length<1){
-    benchmarkSetStatus('Sin flujos','yellow','Faltan movimientos reales para esta vista.');
-    benchmarkSetError(`Benchmark: no se han encontrado movimientos reales válidos para “${cfg.realLabel}” en XIRR GLOBAL.`);
+    benchmarkLocalFail(requestView, benchmarkRequestVigente, 'Sin flujos','yellow',
+      'Faltan movimientos reales para esta vista.',
+      `Benchmark: no se han encontrado movimientos reales válidos para “${cfg.realLabel}” en XIRR GLOBAL.`);
     return;
   }
   const currentValue=getCurrentPortfolioValueNoPension(cfg.assetTest, withPension);
   if(!Number.isFinite(currentValue) || currentValue<=0){
-    benchmarkSetStatus('Sin cartera','yellow','No se ha podido leer el valor actual de esta vista.');
-    benchmarkSetError(`Benchmark: falta el valor actual de “${cfg.realLabel}” en CARTERA ACTUAL.`);
+    benchmarkLocalFail(requestView, benchmarkRequestVigente, 'Sin cartera','yellow',
+      'No se ha podido leer el valor actual de esta vista.',
+      `Benchmark: falta el valor actual de “${cfg.realLabel}” en CARTERA ACTUAL.`);
     return;
   }
   const monthlyHistory=aggregateMonthlyHistory(cfg.assetTest, withPension);
   const {from,to}=getBenchmarkDateRange(flows);
+  // v175.27 (revisión): sin fecha de valoración válida no se consulta nada.
+  // Ni fecha del sistema ni ningún otro sustituto.
+  if(!to){
+    benchmarkLocalFail(requestView, benchmarkRequestVigente, 'Excel inválido','red',
+      'Falta una fecha de valoración válida en XIRR GLOBAL!A4.',
+      'Benchmark detenido: XIRR GLOBAL!A4 no contiene una fecha de valoración válida. No se usa la fecha del sistema como sustituto.');
+    return;
+  }
+  if(!from){
+    benchmarkLocalFail(requestView, benchmarkRequestVigente, 'Excel inválido','red',
+      'El primer movimiento de XIRR GLOBAL no tiene fecha válida.',
+      'Benchmark detenido: el primer flujo de la tabla MOVIMIENTOS de XIRR GLOBAL no tiene una fecha de día válida.');
+    return;
+  }
+  // v175.33 (corrección D1): un movimiento posterior a la fecha de
+  // valoración de A4 no puede simularse: bloqueo local, cero invocaciones.
+  const flujoTardio=flows.map(f=>benchmarkDayFromDate(f.date)).find(d=>d && d>to);
+  if(flujoTardio){
+    benchmarkLocalFail(requestView, benchmarkRequestVigente, 'Excel inválido','red',
+      'Hay un movimiento posterior a la fecha de valoración de XIRR GLOBAL!A4.',
+      `Benchmark detenido: el movimiento del ${flujoTardio} es posterior a la fecha de valoración ${to} (XIRR GLOBAL!A4). Revisa el Excel antes de comparar.`);
+    return;
+  }
   benchmarkSetStatus('Cargando','neutral','Consultando Edge Function y simulando tus flujos...');
   try{
     const { data, error } = await portfolioSupabase.functions.invoke(BENCHMARK_FUNCTION_NAME, {
-      body: { benchmark:'benchmark_oscar_global', range:'custom', from, to, weights, force }
+      body: { benchmark:'benchmark_oscar_global', from, to, weights, force }
     });
-    if(error) throw error;
-    if(!data || !data.series || !data.series.components) throw new Error('Respuesta incompleta de la Edge Function. Faltan componentes del benchmark.');
+    if(!benchmarkRequestVigente()) return; // v175.25 (B-01): respuesta obsoleta, se descarta íntegra
+    if(error){
+      // v175.33: presentación cerrada por código v56; jamás err.message crudo.
+      const info=await benchmarkEdgeErrorInfo(error);
+      if(!benchmarkRequestVigente()) return;
+      benchmarkPresentEdgeFailure(requestView, info);
+      return;
+    }
+    // v175.33: envelope v56 obligatorio ANTES de usar cualquier cifra
+    // (incluida la coherencia completa de chart, from/to y serie benchmark).
+    const envIssue=benchmarkEnvelopeIssue(data, weights, 'sim');
+    if(envIssue){
+      benchmarkFail(requestView,'Error','red','No se han podido cargar los datos.','Error benchmark: Respuesta inválida de la Edge Function. '+envIssue+'.');
+      return;
+    }
+    // v175.26 (B-06): rechazo contractual de series antes de simular,
+    // renderizar, cachear o alimentar el feed móvil. Nada parcial sigue.
+    const contractIssue=benchmarkComponentsIssue(data.series.components, weights);
+    if(contractIssue){
+      benchmarkFail(requestView,'Error','red','No se han podido cargar los datos.','Error benchmark: Respuesta inválida de la Edge Function. '+contractIssue+'.');
+      return;
+    }
+    // v175.33: exclusiones estructurales declaradas y terminal POR
+    // COMPONENTE (session/market_closed) validado contra la serie real.
+    const excIssue=benchmarkExclusionsIssue(data.meta, weights);
+    if(excIssue){
+      benchmarkFail(requestView,'Error','red','No se han podido cargar los datos.','Error benchmark: Respuesta inválida de la Edge Function. '+excIssue+'.');
+      return;
+    }
+    const terminalIssue=benchmarkTerminalIssue(data, weights, to);
+    if(terminalIssue){
+      benchmarkFail(requestView,'Error','red','No se han podido cargar los datos.','Error benchmark: Respuesta inválida de la Edge Function. '+terminalIssue+'.');
+      return;
+    }
+    // v175.33: un flujo real en una fecha excluida (sesión sin tipo oficial
+    // EUR/USD) bloquea la vista entera; nunca se traslada la compra.
+    const choque=benchmarkFlowInExclusion(flows, data.meta, weights);
+    if(choque){
+      benchmarkFail(requestView,'No disponible','yellow',
+        `Un movimiento real coincide con una fecha sin tipo oficial EUR/USD. Fecha: ${choque.date} · Proxy: ${choque.proxy}.`,
+        `Benchmark temporalmente no disponible: un movimiento real coincide con una fecha sin tipo oficial EUR/USD. Fecha: ${choque.date} · Proxy: ${choque.proxy}.`);
+      return;
+    }
+    // v175.33 (corrección D1): cada flujo debe tener precio real en o
+    // después de su fecha, dentro del cierre efectivo de CADA componente
+    // con peso. Sin ese precio no hay compra posible: bloqueo integral,
+    // jamás compra retroactiva ni componente omitido.
+    const sinPrecio=benchmarkFlowPriceIssue(flows, data.series.components, weights, data.terminal.components);
+    if(sinPrecio){
+      benchmarkFail(requestView,'No disponible','yellow',
+        `No existe precio de ${sinPrecio.proxy} en o después del movimiento del ${sinPrecio.date} dentro de su cierre efectivo.`,
+        `Benchmark temporalmente no disponible: no existe precio real de ${sinPrecio.proxy} en o después del movimiento del ${sinPrecio.date} dentro de su cierre efectivo. No se simula ninguna compra retroactiva ni se omite el componente.`);
+      return;
+    }
 
-    const simulation=simulateBenchmarkFromFlows(data.series.components, flows, weights);
-    const benchmarkSeries=buildBenchmarkValueSeries(data.series.components, flows, weights);
-    benchmarkCache={...data, simulation, flows, benchmarkSeries, monthlyHistory, view:benchmarkActiveView};
+    const simulation=simulateBenchmarkFromFlows(data.series.components, flows, weights, data.terminal.components, benchmarkDayFromDate(to));
+    // v175.33 (corrección 2): la gráfica usa EXCLUSIVAMENTE las fechas de la
+    // intersección declarada por la Edge (series.benchmark).
+    const benchmarkSeries=simulation ? buildBenchmarkValueSeries(data.series.components, flows, weights, data.series.benchmark) : null;
+    // v175.33 (corrección D1/2): cierre estricto. Si pese a las validaciones
+    // faltó un precio o la serie de la gráfica queda vacía o incompleta, no
+    // se muestra NINGUNA cifra parcial.
+    if(!simulation || !Array.isArray(benchmarkSeries) || !benchmarkSeries.length){
+      benchmarkFail(requestView,'Error','red','No se han podido cargar los datos.',
+        'Benchmark detenido: falta un precio necesario para valorar la simulación o la gráfica completas. No se muestran cifras parciales.');
+      return;
+    }
+    benchmarkCache={...data, simulation, flows, benchmarkSeries, monthlyHistory, view:requestView}; // v175.25 (B-01): etiquetada con la vista capturada
     renderBenchmarkData(data, flows, currentValue, simulation, benchmarkSeries, cfg, monthlyHistory);
-    benchmarkSetStatus('OK','green','Datos recibidos vía Edge Function.');
+    benchmarkSetStatus('OK','green',benchmarkSuccessNote(data, weights));
     const edge=document.getElementById('benchmarkEdgeCheck');
     const provider=document.getElementById('benchmarkProviderCheck');
     if(edge){ edge.textContent='Activa'; edge.className='green'; }
-    if(provider){ provider.textContent=data.provider || 'Yahoo Finance'; provider.className='green'; }
+    // v175.33 (corrección 2): texto local FIJO; data.provider no se refleja.
+    if(provider){ provider.textContent='EODHD + ECB + Coinbase · Yahoo histórico congelado'; provider.className='green'; }
     setNavStatus?.('benchmark','ok');
   }catch(err){
-    const msg = err?.message || String(err);
-    benchmarkSetStatus('Error','red','No se han podido cargar los datos.');
-    benchmarkSetError('Error benchmark: ' + msg);
+    if(!benchmarkRequestVigente()) return; // v175.25 (B-01): un error obsoleto no toca la vista vigente
+    // v175.30 + v175.33 (corrección D2): sesión/autorización, no "mercado
+    // caído" — pero también limpia la vista antes de presentar el estado.
+    if(benchmarkAuthFail(requestView, err)) return;
+    // v175.33: error inesperado del propio cliente — mensaje genérico, sin
+    // volcar err.message (podría contener texto técnico sin sanear).
+    benchmarkFail(requestView,'Error','red','No se han podido cargar los datos.','Benchmark no disponible: error inesperado al procesar la respuesta.');
   }
 }
-async function loadMsciVsSp500(force=false){
+// v175.25 (B-01): recibe de loadBenchmarkData el guardián de vigencia de la
+// petición; la vista externa comparte la misma protección que las internas.
+// v175.33: la vista externa envía SIEMPRE from/to exactos (to = XIRR
+// GLOBAL!A4, from = primer flujo real de la cartera completa). Nunca 'range',
+// nunca la fecha del sistema. Si falta cualquiera de las dos, se bloquea
+// localmente sin invocar la Edge.
+async function loadMsciVsSp500(force=false, requestVigente=()=>true){
+  const requestView='msci_sp500';
+  const flows=parseBenchmarkFlowsFromXirr(BENCHMARK_VIEW_CONFIG.vs_msci.assetTest, true);
+  const {from,to}=getBenchmarkDateRange(flows);
+  // v175.33 (corrección D2): también aquí, todo retorno local limpia la
+  // vista entera antes de mostrar el estado.
+  if(!to){
+    benchmarkLocalFail(requestView, requestVigente, 'Excel inválido','red',
+      'Falta una fecha de valoración válida en XIRR GLOBAL!A4.',
+      'Benchmark detenido: XIRR GLOBAL!A4 no contiene una fecha de valoración válida. No se usa la fecha del sistema como sustituto.');
+    return;
+  }
+  if(!from){
+    benchmarkLocalFail(requestView, requestVigente, 'Excel inválido','red',
+      'El primer movimiento de XIRR GLOBAL no tiene fecha válida.',
+      'Benchmark detenido: el primer flujo de la tabla MOVIMIENTOS de XIRR GLOBAL no tiene una fecha de día válida.');
+    return;
+  }
+  // v175.33 (corrección D1): un movimiento posterior a A4 delata un Excel
+  // incoherente; se bloquea también la vista externa sin invocar la Edge.
+  const flujoTardio=flows.map(f=>benchmarkDayFromDate(f.date)).find(d=>d && d>to);
+  if(flujoTardio){
+    benchmarkLocalFail(requestView, requestVigente, 'Excel inválido','red',
+      'Hay un movimiento posterior a la fecha de valoración de XIRR GLOBAL!A4.',
+      `Benchmark detenido: el movimiento del ${flujoTardio} es posterior a la fecha de valoración ${to} (XIRR GLOBAL!A4). Revisa el Excel antes de comparar.`);
+    return;
+  }
+  // Componentes de la vista externa (los fija la Edge: URTH y SPY). Solo
+  // sirven para reutilizar los validadores por componente; no viajan a la
+  // Edge, no ponderan nada y no hay simulación de flujos en esta vista.
+  const extWeights=[
+    { key:'msci', name:'MSCI World', proxy:'URTH', weight:1 },
+    { key:'sp500', name:'S&P 500', proxy:'SPY', weight:1 }
+  ];
   benchmarkSetStatus('Cargando','neutral','Consultando MSCI World y S&P 500...');
   try{
     const { data, error } = await portfolioSupabase.functions.invoke(BENCHMARK_FUNCTION_NAME, {
-      body: { benchmark:'msci_world_vs_sp500', range:'1y', force }
+      body: { benchmark:'msci_world_vs_sp500', from, to, force }
     });
-    if(error) throw error;
-    if(!data?.series?.msci || !data?.series?.sp500) throw new Error('Respuesta incompleta de la Edge Function.');
+    if(!requestVigente()) return; // v175.25 (B-01): respuesta obsoleta, se descarta íntegra
+    if(error){
+      const info=await benchmarkEdgeErrorInfo(error);
+      if(!requestVigente()) return;
+      benchmarkPresentEdgeFailure(requestView, info);
+      return;
+    }
+    // v175.33: envelope v56 obligatorio también en la vista externa. La
+    // coherencia de chart (basis, fechas, from/to y extremos de MSCI y
+    // S&P 500 exactamente sobre el rango común) se valida aquí: un rango
+    // desalineado entre ambas series es imposible si las dos cubren chart.
+    const envIssue=benchmarkEnvelopeIssue(data, extWeights, 'two');
+    if(envIssue){
+      benchmarkFail(requestView,'Error','red','No se han podido cargar los datos.','Error benchmark: Respuesta inválida de la Edge Function. '+envIssue+'.');
+      return;
+    }
+    // v175.26 (B-06): mismas garantías contractuales que las vistas simuladas,
+    // más estadísticas numéricas finitas (alimentan tarjetas y resumen).
+    const issueMsci=benchmarkSeriesIssue(data.series.msci);
+    if(issueMsci){
+      benchmarkFail(requestView,'Error','red','No se han podido cargar los datos.',`Error benchmark: Respuesta inválida de la Edge Function. Serie MSCI World (URTH): ${issueMsci}.`);
+      return;
+    }
+    const issueSp=benchmarkSeriesIssue(data.series.sp500);
+    if(issueSp){
+      benchmarkFail(requestView,'Error','red','No se han podido cargar los datos.',`Error benchmark: Respuesta inválida de la Edge Function. Serie S&P 500 (SPY): ${issueSp}.`);
+      return;
+    }
+    // v175.33: exclusiones declaradas y terminal por componente validados con
+    // los mismos ayudantes que las vistas simuladas (las series externas ya
+    // vienen rebasadas al primer día común, que es chart.firstDate).
+    const excIssue=benchmarkExclusionsIssue(data.meta, extWeights);
+    if(excIssue){
+      benchmarkFail(requestView,'Error','red','No se han podido cargar los datos.','Error benchmark: Respuesta inválida de la Edge Function. '+excIssue+'.');
+      return;
+    }
+    const dataForTerminal={...data, series:{components:{msci:data.series.msci, sp500:data.series.sp500}}};
+    const terminalIssue=benchmarkTerminalIssue(dataForTerminal, extWeights, to);
+    if(terminalIssue){
+      benchmarkFail(requestView,'Error','red','No se han podido cargar los datos.','Error benchmark: Respuesta inválida de la Edge Function. '+terminalIssue+'.');
+      return;
+    }
 
     const msci=Number(data.stats?.msciReturnPct);
     const sp=Number(data.stats?.sp500ReturnPct);
     const diff=Number(data.stats?.diffPct);
+    if(![msci, sp, diff].every(Number.isFinite)){
+      benchmarkFail(requestView,'Error','red','No se han podido cargar los datos.','Error benchmark: Respuesta inválida de la Edge Function. Estadísticas de rentabilidad no numéricas.');
+      return;
+    }
     document.getElementById('benchmarkPortfolioReturn').textContent=benchmarkPct(msci);
     document.getElementById('benchmarkPortfolioReturn').className=benchmarkValueClass(msci);
     document.getElementById('benchmarkOscarReturn').textContent=benchmarkPct(sp);
@@ -3281,14 +3926,20 @@ async function loadMsciVsSp500(force=false){
     if(diffCard) diffCard.textContent='MSCI World menos S&P 500';
     renderTwoLineBenchmarkChart(data.series.msci, data.series.sp500, 'MSCI World', 'S&P 500');
     renderMsciSummary(msci, sp, diff);
-    benchmarkSetStatus('OK','green','Datos recibidos vía Edge Function.');
+    benchmarkSetStatus('OK','green',benchmarkSuccessNote(data, extWeights));
     const edge=document.getElementById('benchmarkEdgeCheck');
     const provider=document.getElementById('benchmarkProviderCheck');
     if(edge){ edge.textContent='Activa'; edge.className='green'; }
-    if(provider){ provider.textContent=data.provider || 'Yahoo Finance'; provider.className='green'; }
+    // v175.33 (corrección 2): texto local FIJO; data.provider no se refleja.
+    if(provider){ provider.textContent='EODHD + ECB + Coinbase · Yahoo histórico congelado'; provider.className='green'; }
   }catch(err){
-    benchmarkSetStatus('Error','red','No se han podido cargar los datos.');
-    benchmarkSetError('Error benchmark: ' + (err?.message || String(err)));
+    if(!requestVigente()) return; // v175.25 (B-01): un error obsoleto no toca la vista vigente
+    // v175.30 + v175.33 (corrección D2): sesión/autorización con limpieza
+    // previa de la vista, también en la ruta externa.
+    if(benchmarkAuthFail(requestView, err)) return;
+    // v175.33: error inesperado del propio cliente — mensaje genérico, sin
+    // volcar err.message (podría contener texto técnico sin sanear).
+    benchmarkFail(requestView,'Error','red','No se han podido cargar los datos.','Benchmark no disponible: error inesperado al procesar la respuesta.');
   }
 }
 function renderBenchmarkData(data, flows, currentValue, simulation, benchmarkSeries, cfg, monthlyHistory=[]){
@@ -6629,7 +7280,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
       global:['Composición de la Cartera objetivo','Pesos objetivo actuales sin Plan de Pensiones.'],
       rv:['Composición del objetivo de renta variable','Reparto interno usado para comparar tus fondos de renta variable.'],
       msci_sp500:['Referencias comparadas','Comparación externa. No usa tus movimientos ni tu cartera real.'],
-      btc:['Referencia Bitcoin','La comparación de Bitcoin usa una referencia única: BTC-USD al 100%.'],
+      btc:['Referencia Bitcoin','La comparación de Bitcoin usa una referencia única: BTC-EUR al 100%.'],
       gold:['Referencia Oro','La comparación de Oro usa una referencia única: GLD al 100%.']
     })[view || benchmarkActiveView] || ['Composición de la referencia','Pesos usados en esta comparación.'];
   }
@@ -6647,8 +7298,8 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
     if(!window.BENCHMARK_VIEW_CONFIG) return;
     if(BENCHMARK_VIEW_CONFIG.btc){
       BENCHMARK_VIEW_CONFIG.btc.targetLabel='Referencia BTC';
-      BENCHMARK_VIEW_CONFIG.btc.targetSmall='BTC-USD';
-      BENCHMARK_VIEW_CONFIG.btc.subtitle='Compara tus movimientos reales de Bitcoin contra BTC-USD. La referencia es 100% Bitcoin.';
+      BENCHMARK_VIEW_CONFIG.btc.targetSmall='BTC-EUR';
+      BENCHMARK_VIEW_CONFIG.btc.subtitle='Compara tus movimientos reales de Bitcoin contra BTC-EUR. La referencia es 100% Bitcoin.';
     }
     if(BENCHMARK_VIEW_CONFIG.gold){
       BENCHMARK_VIEW_CONFIG.gold.targetLabel='Referencia Oro';
@@ -7727,7 +8378,6 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
       var hint=document.getElementById('benchmarkGroupHint');
       var metrics=[].slice.call(document.querySelectorAll('#benchmark .benchmarkMetric'));
       var summary=document.getElementById('benchmarkSummary');
-      var warning=document.getElementById('benchmarkWeightsWarning');
       var error=document.getElementById('benchmarkError');
       var legend=document.querySelector('#benchmark .benchmarkLegend');
       var weights=[].slice.call(document.querySelectorAll('#benchmarkWeightsBody tr'));
@@ -7760,7 +8410,6 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
         '</div>'+
         '<div class="mobileBenchChart" id="mobileBenchChartHost"></div>'+
         (legend?'<div class="mobileBenchLegend">'+legend.innerHTML+'</div>':'')+
-        (warning&&warning.classList.contains('active')?'<div class="mobileBenchWarn">'+escHtml(warning.textContent.trim())+'</div>':'')+
         (error&&error.classList.contains('active')?'<div class="mobileBenchError">'+escHtml(error.textContent.trim())+'</div>':'')+
         (summary?'<div class="mobileBenchSummary '+(summary.className.replace('benchmarkSummary','').trim())+'">'+summary.innerHTML+'</div>':'')+
         '<div class="mobileBenchEv" id="mobileBenchEvW">'+
@@ -9586,17 +10235,6 @@ a:focus-visible{
   outline:2px solid var(--gold)!important;
   outline-offset:2px!important;
 }
-.benchmarkWeightsWarning{
-  display:none;
-  margin:10px 0 0;
-  padding:10px 12px;
-  border:1px solid rgba(242,201,76,.45);
-  border-radius:5px;
-  background:rgba(242,201,76,.08);
-  color:var(--yellow);
-  font-size:12px;
-  line-height:1.4;
-}.benchmarkWeightsWarning.active{display:block;}
 .evoHeadState{font-size:11.5px;color:var(--yellow);font-weight:650;}
 .evoDotReconstructed{width:9px;height:9px;border-radius:50%;background:var(--gold);opacity:.55;display:inline-block;}
 .evoDotProvisional{width:9px;height:9px;background:var(--yellow);display:inline-block;transform:rotate(45deg);}
@@ -9668,7 +10306,7 @@ html, body{font-size:14.5px!important;}
 }
 #benchmark .benchmarkGroupTabs button, #benchmark .benchmarkTabs button{font-size:12px!important;}
 #benchmark .benchmarkGroupHint, .benchmarkLegend, .benchmarkError,
-.benchmarkNote, .benchmarkWeightsWarning{font-size:12px!important;line-height:1.42!important;}
+.benchmarkNote{font-size:12px!important;line-height:1.42!important;}
 #benchmark .benchmarkSoonPill{font-size:10.5px!important;}
 .chartRange, .chartBadge, .evoLegendItem, .evoHeadState{font-size:11.5px!important;}
 
@@ -10527,11 +11165,10 @@ strong.neutral, span.neutral, em.neutral, .pill.neutral, .statusPill.neutral,
   .mobileBenchTip strong{display:block;color:var(--text);font-size:12.5px;font-weight:640;}
   .mobileBenchLegend{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0 0;font-size:11.5px;color:var(--text2);}
   .mobileBenchLegend span{display:inline-flex;align-items:center;gap:7px;}
-  .mobileBenchWarn, .mobileBenchError{
+  .mobileBenchError{
     margin:10px 0 0;padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.45;
+    border:1px solid rgba(240,116,106,.32);background:rgba(240,116,106,.06);color:var(--red);
   }
-  .mobileBenchWarn{border:1px solid rgba(232,177,74,.32);background:rgba(232,177,74,.07);color:var(--yellow);}
-  .mobileBenchError{border:1px solid rgba(240,116,106,.32);background:rgba(240,116,106,.06);color:var(--red);}
   .mobileBenchSummary{margin:14px 0 0;padding:14px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);}
   .mobileBenchSummary span{
     display:block;font-size:11px;font-weight:680;letter-spacing:.08em;
