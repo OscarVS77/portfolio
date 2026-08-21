@@ -2019,8 +2019,8 @@ html{
             <div class="bigValue"><div><span class="dot"></span><strong>--</strong><span></span></div><div class="gain">Valor total actual de la cartera</div></div>
             <div class="dashDataAge" data-data-status="dash-age">Importa el Excel para ver la fecha de los datos.</div>
             <div class="heroMetrics">
-              <div class="heroMetric"><label>P&amp;L plataforma</label><strong>--</strong><small>Resultado que aparece al sumar los activos según plataforma.</small></div>
-              <div class="heroMetric"><label>Rentabilidad plataforma</label><strong>--</strong><small>Rentabilidad simple mostrada por los activos/plataformas.</small></div>
+              <div class="heroMetric"><label>Ganancia sobre coste</label><strong>--</strong><small>Resultado que aparece al sumar los activos según plataforma.</small></div>
+              <div class="heroMetric"><label>Rentabilidad sobre coste</label><strong>--</strong><small>Rentabilidad simple mostrada por los activos/plataformas.</small></div>
             </div>
           </div>
         </article>
@@ -2029,7 +2029,7 @@ html{
       <section class="pageBlock evolutionBlock" id="evolutionBlock">
         <article class="card evolutionCard">
           <div class="cardHeader evolutionHeader">
-            <div><h3>Evolución de la cartera</h3><p>Cierres y valoraciones comparados con el capital invertido neto.</p></div>
+            <div><h3>Evolución de la cartera</h3><p>Cierres y valoraciones comparados con el capital aportado neto.</p></div>
           </div>
           <div class="chartHost" id="dashboardEvolutionChart"><div class="chartEmpty">Importa el Excel para ver la evolución real de la cartera.</div></div>
         </article>
@@ -2037,8 +2037,8 @@ html{
 
       <section class="capitalGrid">
         <article class="capitalCard" data-capital="bruto"><label>Total aportado histórico bruto</label><strong>--</strong><small>Todo el dinero aportado desde el inicio, antes de retiradas.</small></article>
-        <article class="capitalCard" data-capital="neto"><label>Capital invertido neto actual</label><strong>--</strong><small>Aportado histórico menos retiradas.</small></article>
-        <article class="capitalCard" data-capital="gp"><label>Ganancia / pérdida real</label><strong>--</strong><small>Valor actual menos capital invertido neto.</small></article>
+        <article class="capitalCard" data-capital="neto"><label>Capital aportado neto</label><strong>--</strong><small>Aportado histórico menos retiradas.</small></article>
+        <article class="capitalCard" data-capital="gp"><label>Ganancia sobre lo aportado</label><strong>--</strong><small>Valor actual menos capital aportado neto.</small></article>
         <article class="capitalCard capitalCardKey" data-capital="rentsimple"><label>Rentabilidad simple real</label><strong>--</strong><small>Desde el primer día. Simple, no anualizada.</small></article>
         <article class="capitalCard capitalCardKey" data-capital="xirr"><label>XIRR global</label><strong>--</strong><small>Desde el primer día. Rentabilidad anualizada.</small></article>
       </section>
@@ -2087,9 +2087,9 @@ html{
               <tr>
                 <th>Activo</th>
                 <th>Valor actual</th>
-                <th>Invertido</th>
-                <th>P&amp;L</th>
-                <th>Rent.</th>
+                <th>Coste en plataforma</th>
+                <th>Ganancia sobre coste</th>
+                <th>Rent. sobre coste</th>
                 <th>Peso real</th>
                 <th>Objetivo</th>
                 <th>Desv.</th>
@@ -2194,7 +2194,7 @@ html{
               <p>Valor total de cierre anual</p>
             </div>
             <div class="yearSummarySide">
-              <div><span>Invertido</span><strong>--</strong></div>
+              <div><span>Capital aportado</span><strong>--</strong></div>
               <div><span>P&L</span><strong>--</strong></div>
               <div><span>Rentabilidad</span><strong>--</strong></div>
               <div><span>XIRR</span><strong>--</strong></div>
@@ -2213,7 +2213,7 @@ html{
                 <thead>
                   <tr>
                     <th>Activo</th>
-                    <th>Invertido</th>
+                    <th>Capital aportado</th>
                     <th>Valor cierre</th>
                     <th>P&amp;L</th>
                     <th>Peso</th>
@@ -4357,8 +4357,8 @@ function updateDashboard(){
     big.innerHTML = `<div><span class="dot"></span><strong>${parts[0]}</strong><span>,${parts[1] || '00'} €</span></div><div class="gain">Valor total actual de la cartera</div>`;
   }
   const hero = document.querySelectorAll('#dashboard .heroMetric');
-  if(hero[0]) hero[0].innerHTML = `<label>P&amp;L plataforma</label><strong class="${clsByValue(plPlataforma)}">${fmtMoney(plPlataforma,2,true)}</strong><small>Resultado que aparece al sumar los activos según plataforma.</small>`;
-  if(hero[1]) hero[1].innerHTML = `<label>Rentabilidad plataforma</label><strong class="${clsByValue(rentPlat)}">${fmtPct(rentPlat,2,true)}</strong><small>Rentabilidad simple mostrada por los activos/plataformas.</small>`;
+  if(hero[0]) hero[0].innerHTML = `<label>Ganancia sobre coste</label><strong class="${clsByValue(plPlataforma)}">${fmtMoney(plPlataforma,2,true)}</strong><small>Resultado que aparece al sumar los activos según plataforma.</small>`;
+  if(hero[1]) hero[1].innerHTML = `<label>Rentabilidad sobre coste</label><strong class="${clsByValue(rentPlat)}">${fmtPct(rentPlat,2,true)}</strong><small>Rentabilidad simple mostrada por los activos/plataformas.</small>`;
   const cap = document.querySelectorAll('#dashboard .capitalCard');
   const capVals = [fmtMoney(aportado), fmtMoney(neto), fmtMoney(gpReal), fmtPct(simple), fmtPct(xirr)];
   cap.forEach((card,i)=>{
@@ -4531,7 +4531,7 @@ function renderEvolutionLine(el, aportado, valor, fullSeries){
       <span class="evoLegendItem"><span class="evoDotReconstructed"></span>Valoración reconstruida</span>
       <span class="evoLegendItem"><span class="evoDotProvisional"></span>Valoración provisional</span>
       <span class="evoLegendItem"><span class="evoDotUnconfirmed"></span>Tramo no confirmado</span>
-      <span class="evoLegendItem"><span class="evoDotMuted"></span>Capital invertido neto</span>
+      <span class="evoLegendItem"><span class="evoDotMuted"></span>Capital aportado neto</span>
     </div>
     <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Evolución de la cartera">
       <defs>
@@ -4784,6 +4784,7 @@ function renderCarteraFocus(cartera){
     <div class="carteraFocusMain"><span>${mainLabel}</span><strong>${mainValue}</strong><small>${note}</small></div>
   </article>
   <article class="carteraFocusMetrics">
+    <div class="metricsCaption">Sobre el coste en plataforma</div>
     <div class="carteraMetric"><span>Invertido</span><strong>${fmtMoney(target.invertido)}</strong></div>
     <div class="carteraMetric"><span>P&amp;L</span><strong class="${clsByValue(target.pl)}">${fmtMoney(target.pl,2,true)}</strong></div>
     <div class="carteraMetric"><span>Rent.</span><strong class="${clsByValue(target.rent)}">${fmtPct(target.rent,2,true)}</strong></div>
@@ -5032,7 +5033,7 @@ function updateHistorial(){
   const main=document.querySelector('#historial .yearSummaryMain');
   if(main) main.innerHTML=`<span class="eyebrow">Cierre ${year}</span><h2>${fmtMoney(summary['Valor total'])}</h2><p>Valor total de cierre anual</p>`;
   const side=document.querySelector('#historial .yearSummarySide');
-  if(side) side.innerHTML=`<div><span>Invertido</span><strong>${fmtMoney(summary['Invertido total'])}</strong></div><div><span>P&L</span><strong class="${clsByValue(summary['P&L total'])}">${fmtMoney(summary['P&L total'])}</strong></div><div><span>Rentabilidad</span><strong class="${clsByValue(summary['Rentabilidad total'])}">${fmtPct(summary['Rentabilidad total'])}</strong></div><div><span>XIRR</span><strong class="${clsByValue(xirrVal)}">${fmtPct(xirrVal)}</strong></div>`;
+  if(side) side.innerHTML=`<div><span>Capital aportado</span><strong>${fmtMoney(summary['Invertido total'])}</strong></div><div><span>P&L</span><strong class="${clsByValue(summary['P&L total'])}">${fmtMoney(summary['P&L total'])}</strong></div><div><span>Rentabilidad</span><strong class="${clsByValue(summary['Rentabilidad total'])}">${fmtPct(summary['Rentabilidad total'])}</strong></div><div><span>XIRR</span><strong class="${clsByValue(xirrVal)}">${fmtPct(xirrVal)}</strong></div>`;
   const tbody=document.querySelector('#historial .annualTable tbody');
   if(tbody){
     const out=[];
@@ -6026,8 +6027,8 @@ function renderDashboardScope(scope){
     big.innerHTML = `<div><span class="dot"></span><strong>${parts[0]}</strong><span>,${parts[1] || '00'} €</span></div><div class="gain">${scope === 'global' ? 'Valor total actual de la cartera' : 'Lectura filtrada por fuente'}</div>`;
   }
   const hero = document.querySelectorAll('#dashboard .heroMetric');
-  if(hero[0]) hero[0].innerHTML = `<label>P&amp;L plataforma</label><strong class="${clsByValue(data.pl)}">${fmtMoney(data.pl,2,true)}</strong><small>Resultado filtrado según la pestaña seleccionada.</small>`;
-  if(hero[1]) hero[1].innerHTML = `<label>Rentabilidad plataforma</label><strong class="${clsByValue(data.rent)}">${fmtPct(data.rent,2,true)}</strong><small>Rentabilidad simple de los activos mostrados.</small>`;
+  if(hero[0]) hero[0].innerHTML = `<label>Ganancia sobre coste</label><strong class="${clsByValue(data.pl)}">${fmtMoney(data.pl,2,true)}</strong><small>Resultado filtrado según la pestaña seleccionada.</small>`;
+  if(hero[1]) hero[1].innerHTML = `<label>Rentabilidad sobre coste</label><strong class="${clsByValue(data.rent)}">${fmtPct(data.rent,2,true)}</strong><small>Rentabilidad simple de los activos mostrados.</small>`;
 }
 function getAllocationGroups(mode, cartera){
   const rows = carteraRowsOperational(cartera);
@@ -6240,8 +6241,8 @@ updateDashboard = function(){
       box.className='heroTopMetrics';
       box.innerHTML=`
         <div class="heroTopMetric primary" id="heroMetricValue"><label>Valor de mercado real</label><strong><span class="dot"></span>--</strong><small>Valor total actual de la cartera</small></div>
-        <div class="heroTopMetric" id="heroMetricPL"><label>P&amp;L plataforma</label><strong>--</strong><small>Resultado filtrado según la pestaña seleccionada.</small></div>
-        <div class="heroTopMetric" id="heroMetricRent"><label>Rentabilidad plataforma</label><strong>--</strong><small>Rentabilidad simple de los activos mostrados.</small></div>
+        <div class="heroTopMetric" id="heroMetricPL"><label>Ganancia sobre coste</label><strong>--</strong><small>Resultado filtrado según la pestaña seleccionada.</small></div>
+        <div class="heroTopMetric" id="heroMetricRent"><label>Rentabilidad sobre coste</label><strong>--</strong><small>Rentabilidad simple de los activos mostrados.</small></div>
         <div class="heroTopMetric" id="heroMetricBtcLive"><label>Bitcoin en directo</label><strong>--</strong><small><span class="btcLivePulse warn"></span>Conectando · BTC/EUR</small></div>`;
       const chart=document.getElementById('dashboardChart');
       if(chart) heroBody.insertBefore(box, chart); else heroBody.appendChild(box);
@@ -6273,8 +6274,8 @@ updateDashboard = function(){
     const p=document.getElementById('heroMetricPL');
     const r=document.getElementById('heroMetricRent');
     if(v) v.innerHTML = `<label>${labelForScope(scope)}</label><strong><span class="dot"></span>${safeMoney(d.valor)}</strong><small>${subtitleForScope(scope)}</small>`;
-    if(p) p.innerHTML = `<label>P&amp;L plataforma</label><strong class="${safeCls(d.pl)}">${safeMoney(d.pl,2,true)}</strong><small>Resultado filtrado según la pestaña seleccionada.</small>`;
-    if(r) r.innerHTML = `<label>Rentabilidad plataforma</label><strong class="${safeCls(d.rent)}">${safePct(d.rent,2,true)}</strong><small>Rentabilidad simple de los activos mostrados.</small>`;
+    if(p) p.innerHTML = `<label>Ganancia sobre coste</label><strong class="${safeCls(d.pl)}">${safeMoney(d.pl,2,true)}</strong><small>Resultado filtrado según la pestaña seleccionada.</small>`;
+    if(r) r.innerHTML = `<label>Rentabilidad sobre coste</label><strong class="${safeCls(d.rent)}">${safePct(d.rent,2,true)}</strong><small>Rentabilidad simple de los activos mostrados.</small>`;
   };
 
   window.renderLineChart = function(el, points, opts={}){
@@ -6436,8 +6437,8 @@ updateDashboard = function(){
     if(allocationP) allocationP.textContent='Distribución actual de la cartera.';
     document.querySelectorAll('#dashboard .donutCenter span').forEach(el=>{el.textContent='Valor cartera';});
     document.querySelectorAll('#dashboard .heroTopMetric label').forEach(el=>{
-      if(el.textContent.trim()==='P&L plataforma'||el.textContent.trim()==='P&L mostrado') el.textContent='Plusvalía latente';
-      if(el.textContent.trim()==='Rentabilidad plataforma'||el.textContent.trim()==='Rentabilidad mostrada') el.textContent='Rentabilidad latente';
+      if(['P&L plataforma','P&L mostrado','Plusvalía latente','Ganancia sobre coste'].includes(el.textContent.trim())) el.textContent='Ganancia sobre coste';
+      if(['Rentabilidad plataforma','Rentabilidad mostrada','Rentabilidad latente','Rentabilidad sobre coste'].includes(el.textContent.trim())) el.textContent='Rentabilidad sobre coste';
     });
     const sc = scope || (typeof currentDashboardScope!=='undefined' ? currentDashboardScope : 'global');
     document.querySelectorAll('#dashboard .heroTopMetric small').forEach(el=>{
@@ -7906,9 +7907,9 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
       body+=line('Bitcoin en directo','<strong data-btc-live-price>'+escHtml(window.__btcLiveEurFormatted||'--')+'</strong>');
     }
     body+=line('Valor actual','<strong>'+escHtml(money(row.valor))+'</strong>')
-      +line('Invertido','<strong>'+escHtml(money(row.invertido))+'</strong>')
-      +line('P&amp;L','<strong class="'+clsByValue(row.pl)+'">'+escHtml(money(row.pl))+'</strong>')
-      +line('Rentabilidad','<strong class="'+clsByValue(row.rent)+'">'+escHtml(pct(row.rent))+'</strong>')
+      +line('Coste en plataforma','<strong>'+escHtml(money(row.invertido))+'</strong>')
+      +line('Ganancia sobre coste','<strong class="'+clsByValue(row.pl)+'">'+escHtml(money(row.pl))+'</strong>')
+      +line('Rentabilidad sobre coste','<strong class="'+clsByValue(row.rent)+'">'+escHtml(pct(row.rent))+'</strong>')
       +line('XIRR individual','<strong class="'+clsByValue(xi&&xi.xirr)+'">'+escHtml(xi&&xi.xirr!==''&&xi.xirr!=null?fmtPct(xi.xirr):'—')+'</strong>')
       +line('Peso real','<strong>'+(Number.isFinite(pesoNum)?escHtml(fmtPct(row.peso)):'Separado')+'</strong>');
     if(Number.isFinite(objNum)){
@@ -8204,7 +8205,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
           '<span class="mhaChev" aria-hidden="true">›</span>'+
         '</button>'+
         '<div class="mobileHistDetail" id="mhist-'+i+'" hidden>'+
-          '<div><span>Invertido</span><strong>'+escHtml(td[1].textContent.trim())+'</strong></div>'+
+          '<div><span>Capital aportado</span><strong>'+escHtml(td[1].textContent.trim())+'</strong></div>'+
           '<div><span>Peso</span><strong>'+escHtml(td[4].textContent.trim())+'</strong></div>'+
           (platEl?'<div><span>Detalle</span><strong>'+escHtml(platEl.textContent.trim())+'</strong></div>':'')+
         '</div>'+
@@ -11401,6 +11402,22 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   #dashboard .distTableWrap td{
     font-variant-numeric:tabular-nums!important;
   }
+}
+
+/* v175.46 · 1-A · la base va UNA VEZ en el encabezado de la tira, no en cada
+   rótulo: la rejilla de Cartera actual es de 4 columnas de 122 px y «Coste en
+   plataforma» mide 156, así que se recortaba. Criterio aprobado por Óscar el
+   21/08/2026 y aplicable a cualquier otro caso de espacio: base en la sección,
+   métricas cortas debajo. */
+#cartera .carteraFocusMetrics .metricsCaption{
+  grid-column:1/-1!important;
+  font-size:10.5px!important;
+  font-weight:700!important;
+  letter-spacing:1.3px!important;
+  text-transform:uppercase!important;
+  color:var(--muted)!important;
+  margin:0 0 2px!important;
+  line-height:1.35!important;
 }
 </style>
 </body>
