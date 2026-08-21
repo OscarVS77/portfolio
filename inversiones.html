@@ -319,6 +319,8 @@
      A MANO. Es el unico color de la web que vive fuera de este bloque. */
 
   /* ---- v175.41 · tokens propios del tema oscuro mejorado ---- */
+  --sp500:#f587f5;  /* activo · S&P 500. Tono 300°, centro del unico hueco libre:
+                       79° y ΔL* 6,3 del azul del MSCI, con el que se enfrenta. */
   --capital-line:#8b97a8;  /* activo · capital invertido. Token PROPIO: ya no es --blue (MSCI/S&P). R-F2: su serie se dibuja SIEMPRE discontinua, nunca continua. */
   --tooltip-line:#7d8897;  /* gráfica · borde del tooltip. El cuerpo del tooltip es del color de la tarjeta; su perceptibilidad depende de este borde. */
 }*{box-sizing:border-box}html, body{
@@ -1231,7 +1233,8 @@ html{
   font-weight:650;
   z-index:2;
 }/* Bloque evolución de la cartera (Dashboard) */
-.evolutionBlock{margin-top:20px;}.evolutionCard{padding:24px 26px 30px;position:relative;}.evolutionHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;}.evoHeadline{display:flex;align-items:baseline;gap:14px;margin:14px 0 2px;flex-wrap:wrap;}.evoHeadValue{font-size:30px;font-weight:560;letter-spacing:-.8px;color:var(--text);margin-left:4px;}.evoHeadGp{font-size:14px;font-weight:650;}.evoHeadGp.green{color:var(--green);}.evoHeadGp.red{color:var(--red,var(--hue-bad-01));}.chartHost{position:relative;margin-top:18px;min-height:270px;padding:0 20px;}.chartHost svg{width:100%;height:270px;display:block;}.evoLegend{display:flex;gap:18px;align-items:center;margin-bottom:6px;flex-wrap:wrap;}.evoLegendItem{display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-size:11.5px;font-weight:600;}.evoDotReal{width:14px;height:3px;border-radius:4px;background:var(--green);display:inline-block;}.evoDotMuted{width:14px;height:0;border-top:2px dashed var(--capital-line);display:inline-block;opacity:.95;}.evoPointMuted{cursor:crosshair;}.evoRealPoint{cursor:crosshair;stroke:var(--blk-a13);stroke-width:1.5;}.evoHitArea{cursor:crosshair;pointer-events:auto;}.evoTooltipFloating .tipGreen{color:var(--green)!important;font-weight:700;}.evoTooltipFloating .tipRed{color:var(--red,var(--hue-bad-01))!important;font-weight:700;}
+.evolutionBlock{margin-top:20px;}.evolutionCard{padding:24px 26px 30px;position:relative;}.evolutionHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;}.evoHeadline{display:flex;align-items:baseline;gap:14px;margin:14px 0 2px;flex-wrap:wrap;}.evoHeadValue{font-size:30px;font-weight:560;letter-spacing:-.8px;color:var(--text);margin-left:4px;}.evoHeadGp{font-size:14px;font-weight:650;}.evoHeadGp.green{color:var(--green);}.evoHeadGp.red{color:var(--red,var(--hue-bad-01));}.chartHost{position:relative;margin-top:18px;min-height:270px;padding:0 20px;}.chartHost svg{width:100%;height:270px;display:block;}.evoLegend{display:flex;gap:18px;align-items:center;margin-bottom:6px;flex-wrap:wrap;}.evoLegendItem{display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-size:11.5px;font-weight:600;}.evoDotReal{width:10px;height:10px;border-radius:50%;background:var(--accent);display:inline-block;}.evoDotUnconfirmed{width:14px;height:0;border-top:1.8px solid var(--accent);opacity:.62;display:inline-block;}
+.evoDotMuted{width:14px;height:0;border-top:2px dashed var(--capital-line);display:inline-block;opacity:.95;}.evoPointMuted{cursor:crosshair;}.evoRealPoint{cursor:crosshair;stroke:var(--blk-a13);stroke-width:1.5;}.evoHitArea{cursor:crosshair;pointer-events:auto;}.evoTooltipFloating .tipGreen{color:var(--green)!important;font-weight:700;}.evoTooltipFloating .tipRed{color:var(--red,var(--hue-bad-01))!important;font-weight:700;}
 @media(max-width:680px){.evolutionCard{padding:18px 16px 26px;}.evolutionHeader{gap:12px;}.evoHeadValue{font-size:24px;margin-left:3px;}.chartHost, .chartHost svg{min-height:210px;height:210px;}.chartHost{padding:0 17px;}
 }/* V38 · XIRR sin gráfica: se elimina visualización confusa y se mantiene tabla de cierres *//* V39 · XIRR: rentabilidades con color semántico como Dashboard */
 #xirr .kpi strong.green{color:var(--green)!important;}#xirr .kpi strong.red{color:var(--red)!important;}#xirr .xirrValue.green, #xirr .xirrSub strong.green{color:var(--green)!important;}#xirr .xirrValue.red, #xirr .xirrSub strong.red{color:var(--red)!important;}/* V41 · Movimientos: sin buscador, filtros claros y estables */
@@ -2717,6 +2720,7 @@ function getBenchmarkRvWeights(){
 
 const BENCHMARK_VIEW_CONFIG = {
   global: {
+    serie:{ real:'--accent', comp:'--capital-line', trazoComp:'ref' },
     title:'Cartera global · Real vs objetivo',
     subtitle:'Tu cartera real frente a lo que habría pasado siguiendo exactamente tu asignación objetivo, con los mismos movimientos. Mide si desviarte de tus pesos ideales te ha costado o dado dinero. Plan de Pensiones aparte.',
     realLabel:'Tu cartera real',
@@ -2733,6 +2737,7 @@ const BENCHMARK_VIEW_CONFIG = {
   // El Plan de Pensiones no tiene proxy propio: se simula contra el índice de la vista,
   // coherente con su objetivo (replicar el crecimiento de la renta variable mundial).
   vs_msci: {
+    serie:{ real:'--accent', comp:'--blue', trazoComp:'solido' },
     title:'Cartera completa · vs MSCI World',
     subtitle:'Tu cartera entera, incluido el Plan de Pensiones, frente a haber invertido ese mismo dinero, en las mismas fechas, en el MSCI World (proxy URTH).',
     realLabel:'Tu cartera completa',
@@ -2749,6 +2754,7 @@ const BENCHMARK_VIEW_CONFIG = {
     }
   },
   vs_sp500: {
+    serie:{ real:'--accent', comp:'--sp500', trazoComp:'solido' },
     title:'Cartera completa · vs S&P 500',
     subtitle:'Tu cartera entera, incluido el Plan de Pensiones, frente a haber invertido ese mismo dinero, en las mismas fechas, en el S&P 500 (proxy SPY).',
     realLabel:'Tu cartera completa',
@@ -2765,6 +2771,7 @@ const BENCHMARK_VIEW_CONFIG = {
     }
   },
   rv: {
+    serie:{ real:'--accent', comp:'--capital-line', trazoComp:'ref' },
     title:'Renta variable · Real vs objetivo',
     subtitle:'Compara tus fondos reales de renta variable contra el reparto objetivo interno (MSCI World, Emerging Markets y Small Cap), calculado a partir de tus pesos objetivo del Excel.',
     realLabel:'Tu renta variable',
@@ -2778,6 +2785,7 @@ const BENCHMARK_VIEW_CONFIG = {
     }
   },
   btc: {
+    serie:{ real:'--accent', comp:'--btc', trazoComp:'solido' },
     title:'Bitcoin · Real vs BTC',
     subtitle:'Compara tus movimientos reales de Bitcoin contra la evolución de BTC-EUR.',
     realLabel:'Tu Bitcoin',
@@ -2791,6 +2799,7 @@ const BENCHMARK_VIEW_CONFIG = {
     }
   },
   gold: {
+    serie:{ real:'--accent', comp:'--gold', trazoComp:'solido' },
     title:'Oro · Real vs Oro',
     subtitle:'Compara tus movimientos reales de oro contra la evolución de GLD como proxy de oro.',
     realLabel:'Tu Oro',
@@ -2804,6 +2813,7 @@ const BENCHMARK_VIEW_CONFIG = {
     }
   },
   msci_sp500: {
+    serie:{ a:'--blue', b:'--sp500' },
     title:'MSCI World vs S&P 500',
     subtitle:'Comparación externa de referencias: MSCI World aproximado por URTH frente a S&P 500 aproximado por SPY. No usa tus movimientos.',
     realLabel:'MSCI World',
@@ -4084,7 +4094,7 @@ async function loadMsciVsSp500(force=false, requestVigente=()=>true){
     document.getElementById('benchmarkOscarNote').textContent=`SPY · ${data.stats?.points || '--'} sesiones`;
     const diffCard=document.querySelector('#benchmarkDiffReturn')?.closest('.benchmarkMetric')?.querySelector('em');
     if(diffCard) diffCard.textContent='MSCI World menos S&P 500';
-    renderTwoLineBenchmarkChart(data.series.msci, data.series.sp500, 'MSCI World', 'S&P 500');
+    renderTwoLineBenchmarkChart(data.series.msci, data.series.sp500, 'MSCI World', 'S&P 500', BENCHMARK_VIEW_CONFIG.msci_sp500);
     renderMsciSummary(msci, sp, diff);
     benchmarkSetStatus('OK','green',benchmarkSuccessNote(data, extWeights));
     const edge=document.getElementById('benchmarkEdgeCheck');
@@ -4461,7 +4471,7 @@ function renderEvolutionLine(el, aportado, valor, fullSeries){
   const valuationSegments=vlXY.slice(1).map((pt,i)=>{
     const prev=vlXY[i];
     const bothReal=prev.p.estado==='cierre real' && pt.p.estado==='cierre real';
-    return `<line x1="${prev.x.toFixed(1)}" y1="${prev.y.toFixed(1)}" x2="${pt.x.toFixed(1)}" y2="${pt.y.toFixed(1)}" stroke="${bothReal?'var(--green)':'var(--gold)'}" stroke-width="${bothReal?'2.8':'2.2'}" ${bothReal?'':'stroke-dasharray="6 5" opacity=".58"'} stroke-linecap="round"/>`;
+    return `<line x1="${prev.x.toFixed(1)}" y1="${prev.y.toFixed(1)}" x2="${pt.x.toFixed(1)}" y2="${pt.y.toFixed(1)}" stroke="var(--accent)" stroke-width="${bothReal?'2.8':'1.8'}" ${bothReal?'':'opacity=".62"'} stroke-linecap="round"/>`;
   }).join('');
   const yTicks=[yMin+(yMax-yMin)*.25,yMin+(yMax-yMin)*.5,yMin+(yMax-yMin)*.75];
   const tickLines=yTicks.map(v=>`<line x1="${L}" y1="${yFor(v).toFixed(1)}" x2="${W-R}" y2="${yFor(v).toFixed(1)}" stroke="var(--wht-a13)"/>`).join('');
@@ -4492,11 +4502,11 @@ function renderEvolutionLine(el, aportado, valor, fullSeries){
     let mark='';
     if(pt.p.estado==='provisional'){
       const dx=Number(exFor(7));
-      mark=`<polygon class="evoProvisionalPoint" points="${(pt.x).toFixed(1)},${(pt.y-7).toFixed(1)} ${(pt.x+dx).toFixed(1)},${y} ${x},${(pt.y+7).toFixed(1)} ${(pt.x-dx).toFixed(1)},${y}" fill="var(--yellow)"/>`;
+      mark=`<polygon class="evoProvisionalPoint" points="${(pt.x).toFixed(1)},${(pt.y-7).toFixed(1)} ${(pt.x+dx).toFixed(1)},${y} ${x},${(pt.y+7).toFixed(1)} ${(pt.x-dx).toFixed(1)},${y}" fill="var(--accent)"/>`;
     }else if(pt.p.estado==='reconstruido'){
-      mark=`<ellipse class="evoReconstructedPoint" cx="${x}" cy="${y}" rx="${exFor(5)}" ry="5" fill="var(--gold)" opacity=".55"/>`;
+      mark=`<ellipse class="evoReconstructedPoint" cx="${x}" cy="${y}" rx="${exFor(5)}" ry="5" fill="var(--panel)" stroke="var(--accent)" stroke-width="1.8"/>`;
     }else{
-      mark=`<ellipse class="evoRealPoint" cx="${x}" cy="${y}" rx="${exFor(5)}" ry="5" fill="var(--green)"/>`;
+      mark=`<ellipse class="evoRealPoint" cx="${x}" cy="${y}" rx="${exFor(5)}" ry="5" fill="var(--accent)"/>`;
     }
     return `<g data-evo-tip="${escHtml(tip)}">${mark}<circle class="evoHitArea" cx="${x}" cy="${y}" r="18" fill="transparent"/></g>`;
   }).join('');
@@ -4520,6 +4530,7 @@ function renderEvolutionLine(el, aportado, valor, fullSeries){
       <span class="evoLegendItem"><span class="evoDotReal"></span>Cierre mensual real</span>
       <span class="evoLegendItem"><span class="evoDotReconstructed"></span>Valoración reconstruida</span>
       <span class="evoLegendItem"><span class="evoDotProvisional"></span>Valoración provisional</span>
+      <span class="evoLegendItem"><span class="evoDotUnconfirmed"></span>Tramo no confirmado</span>
       <span class="evoLegendItem"><span class="evoDotMuted"></span>Capital invertido neto</span>
     </div>
     <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Evolución de la cartera">
@@ -7040,7 +7051,8 @@ function __v60TitleDate(date){ return formatBenchmarkMonth(date || ''); }
 }.benchmarkHitArea{
   cursor:crosshair;
   pointer-events:auto;
-}.benchmarkVisiblePoint.greenPoint{fill:var(--green)!important;}.benchmarkVisiblePoint.goldPoint{fill:var(--gold)!important;}.benchmarkVisiblePoint.bluePoint{fill:var(--blue)!important;}.benchmarkTooltipFloating{
+}/* v175.43 · retiradas: coloreaban el punto con un token fijo. El color de
+   la serie viene ahora de BENCHMARK_VIEW_CONFIG y se pinta en linea. */.benchmarkTooltipFloating{
   position:fixed;
   z-index:99999;
   display:none;
@@ -7091,11 +7103,20 @@ function __v61TooltipInit(){
 function __v61Tip(label, value, meta=''){
   return `<strong>${escHtml(label)}</strong><br><span>${escHtml(value)}${meta?` · ${escHtml(meta)}`:''}</span>`;
 }
-function __v61Point(x,y,r,colorClass,label,value,meta='',visible=true,hit=14){
-  const dot = visible ? `<circle class="benchmarkVisiblePoint ${colorClass}" cx="${x}" cy="${y}" r="${r}"/>` : '';
+function __v61Point(x,y,r,colorClass,label,value,meta='',visible=true,hit=14,color){
+  // v175.43 · el color es OBLIGATORIO: la regla base .benchmarkVisiblePoint
+  // define stroke pero no fill, asi que una llamada sin color pintaria un punto
+  // negro en silencio. Se exige, no se rellena por defecto.
+  if(visible && !color) throw new Error('__v61Point: falta el color de la serie ('+colorClass+')');
+  // v175.43 · si la serie trae color (viene de BENCHMARK_VIEW_CONFIG) se pinta
+  // en linea; la clase queda solo como identificador. Asi el punto nunca
+  // depende de una regla CSS con un token fijo.
+  const pintura = color ? ` fill="${color}"` : '';
+  const dot = visible ? `<circle class="benchmarkVisiblePoint ${colorClass}" cx="${x}" cy="${y}" r="${r}"${pintura}/>` : '';
   return `<g data-benchmark-tip="${escHtml(__v61Tip(label,value,meta))}">${dot}<circle class="benchmarkHitArea" cx="${x}" cy="${y}" r="${hit}" fill="transparent"/></g>`;
 }
-function __v61PointSeries(arr,toX,toY,colorClass,label,formatter,meta='',normFn=null){
+function __v61PointSeries(arr,toX,toY,colorClass,label,formatter,meta='',normFn=null,color){
+  if(!color) throw new Error('__v61PointSeries: falta el color de la serie ('+colorClass+')');
   const nz=normFn || (p=>Number(p.normalized));
   return (arr||[]).map((p,i)=>{
     const v=Number(nz(p));
@@ -7104,7 +7125,7 @@ function __v61PointSeries(arr,toX,toY,colorClass,label,formatter,meta='',normFn=
     const y=toY(v).toFixed(1);
     const date=__v60TitleDate(p.date);
     const value=formatter ? formatter(v) : fmtNumber(v,2);
-    return __v61Point(x,y,3.2,colorClass,label,value,date + (meta?` · ${meta}`:''),false,11);
+    return __v61Point(x,y,3.2,colorClass,label,value,date + (meta?` · ${meta}`:''),false,11,color);
   }).join('');
 }
 function __benchAreaPath(arr, toX, toY, n, h, padB, normFn=null){
@@ -7123,6 +7144,22 @@ function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries
   // redibuja a escala legible con la misma transformación de presentación.
   window.__benchmarkMobileFeed={kind:'sim', currentValue:currentValue, benchmarkFinalValue:benchmarkFinalValue,
     benchmarkSeries:benchmarkSeries, cfg:cfg, monthlyHistory:monthlyHistory, netInvested:netInvested};
+  // v175.43 · el color de cada serie viene de la configuracion de la vista.
+  // Prohibido un token fijo aqui: una vista nueva sin `serie` debe fallar de
+  // forma visible, no heredar un color por defecto.
+  const S = cfg && cfg.serie;
+  if(!S || !S.real || !S.comp){
+    // v175.43 · FALLO CERRADO. Sin color declarado no se dibuja: un fallback
+    // haria que una vista futura renderizase con aspecto correcto y en
+    // silencio, que es exactamente el defecto que esta version elimina.
+    console.error('Benchmark: la vista no declara sus colores de serie', cfg && cfg.targetLabel);
+    box.innerHTML='<div class="chartEmpty">Esta vista no declara sus colores de serie.</div>';
+    return;
+  }
+  const colReal = `var(${S.real})`;
+  const colComp = `var(${S.comp})`;
+  const compRef = S.trazoComp === 'ref';
+  const dashComp = compRef ? ' stroke-dasharray="7 5"' : '';
   const w=1200, h=320, padL=14, padR=20, padT=26, padB=44;
   const plotH=h-padT-padB;
   const denom=(Number.isFinite(netInvested) && netInvested>0)
@@ -7169,34 +7206,44 @@ function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries
   const benchArea=__benchAreaPath(benchmarkSeries,xForSeries(benchmarkSeries),toY,benchmarkSeries.length,h,padB,normOf);
   const realArea=useMonthlyHistory?__benchAreaPath(realHistory,xForSeries(realHistory),toY,realHistory.length,h,padB,normOf):'';
   const realLineSvg = useMonthlyHistory
-    ? `<path d="${realArea}" fill="url(#benchRealGrad)"/><path d="${line(realHistory)}" fill="none" stroke="var(--green)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>${__v61PointSeries(realHistory,xForSeries(realHistory),toY,'greenPoint',cfg.realLabel,v=>benchmarkPct(v-100),'dato real mensual',normOf)}`
+    ? `<path d="${realArea}" fill="url(#benchRealGrad)"/><path d="${line(realHistory)}" fill="none" stroke="${colReal}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>${__v61PointSeries(realHistory,xForSeries(realHistory),toY,'realPoint',cfg.realLabel,v=>benchmarkPct(v-100),'dato real mensual',normOf,colReal)}`
     : '';
   const realValue = `${fmtMoney(currentValue)} · ${benchmarkPct(realNorm-100)}`;
   const targetValue = `${fmtMoney(benchmarkFinalValue)} · ${benchmarkPct(benchFinalNorm-100)}`;
   const realMeta = useMonthlyHistory ? 'último cierre real del Excel' : 'valor real actual';
   const targetMeta = 'simulación con tus movimientos';
-  const targetHits=__v61PointSeries(benchmarkSeries,xForSeries(benchmarkSeries),toY,'goldPoint',cfg.targetLabel,v=>benchmarkPct(v-100),'simulación',normOf);
+  const targetHits=__v61PointSeries(benchmarkSeries,xForSeries(benchmarkSeries),toY,'compPoint',cfg.targetLabel,v=>benchmarkPct(v-100),'simulación',normOf,colComp);
   const guideColor = currentValue >= benchmarkFinalValue ? 'var(--green)' : 'var(--red)';
   box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${escHtml(cfg.targetLabel)} simulada y valor real actual">
     <defs>
-      <linearGradient id="benchTargetGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--js-area-gold-01)"/><stop offset="1" stop-color="var(--js-area-gold-00)"/></linearGradient>
-      <linearGradient id="benchRealGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--js-area-ok-02)"/><stop offset="1" stop-color="var(--js-area-ok-00)"/></linearGradient>
+      <linearGradient id="benchTargetGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${colComp}" stop-opacity=".12"/><stop offset="1" stop-color="${colComp}" stop-opacity="0"/></linearGradient>
+      <linearGradient id="benchRealGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${colReal}" stop-opacity=".14"/><stop offset="1" stop-color="${colReal}" stop-opacity="0"/></linearGradient>
     </defs>
     ${grid}
     <path d="${benchArea}" fill="url(#benchTargetGrad)"/>
-    <path d="${line(benchmarkSeries)}" fill="none" stroke="var(--gold)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+    <path d="${line(benchmarkSeries)}" fill="none" stroke="${colComp}"${dashComp} stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
     ${realLineSvg}
     <line x1="${realX}" y1="${Math.min(realY,benchY).toFixed(1)}" x2="${realX}" y2="${Math.max(realY,benchY).toFixed(1)}" stroke="${guideColor}" stroke-width="1.4" stroke-dasharray="4 5" opacity=".6" vector-effect="non-scaling-stroke"/>
     ${targetHits}
-    ${__v61Point(realX,realY.toFixed(1),5.6,'greenPoint',cfg.realLabel,realValue,realMeta,true,18)}
-    ${__v61Point(realX,benchY.toFixed(1),4.8,'goldPoint',cfg.targetLabel,targetValue,targetMeta,true,18)}
+    ${__v61Point(realX,realY.toFixed(1),5.6,'realPoint',cfg.realLabel,realValue,realMeta,true,18,colReal)}
+    ${__v61Point(realX,benchY.toFixed(1),4.8,'compPoint',cfg.targetLabel,targetValue,targetMeta,true,18,colComp)}
     ${tickSvg}
   </svg>`;
 }
-function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
+function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   const box=document.getElementById('benchmarkChart');
   if(!box) return;
   __v61TooltipInit();
+  // v175.43 · los dos colores vienen de la configuracion de la vista.
+  const S2 = cfg && cfg.serie;
+  if(!S2 || !S2.a || !S2.b){
+    // v175.43 · FALLO CERRADO, igual que arriba.
+    console.error('Benchmark: la vista de dos series no declara sus colores', labelA, labelB);
+    box.innerHTML='<div class="chartEmpty">Esta vista no declara sus colores de serie.</div>';
+    return;
+  }
+  const colA = `var(${S2.a})`;
+  const colB = `var(${S2.b})`;
   const a=seriesA || [], b=seriesB || [];
   if(!a.length || !b.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la comparación.</div>'; return; }
   // v175.17: alimentación de la gráfica móvil (ver renderBenchmarkChart).
@@ -7220,18 +7267,18 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
     return `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${w-padR}" y2="${y.toFixed(1)}" stroke="var(--wht-a13)"/><text x="${padL}" y="${(y-5).toFixed(1)}" fill="var(--js-axis-text)" font-size="10">${benchmarkPct(v-100)}</text>`;
   }).join('');
   const aEnd=a[a.length-1], bEnd=b[b.length-1];
-  const aPoints=__v61PointSeries(a,toX,toY,'bluePoint',labelA,v=>benchmarkPct(v-100),'referencia');
-  const bPoints=__v61PointSeries(b,toX,toY,'goldPoint',labelB,v=>benchmarkPct(v-100),'referencia');
+  const aPoints=__v61PointSeries(a,toX,toY,'serieAPoint',labelA,v=>benchmarkPct(v-100),'referencia',null,colA);
+  const bPoints=__v61PointSeries(b,toX,toY,'serieBPoint',labelB,v=>benchmarkPct(v-100),'referencia',null,colB);
   const aArea=__benchAreaPath(a,toX,toY,a.length,h,padB);
   box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${escHtml(labelA)} frente a ${escHtml(labelB)}">
-    <defs><linearGradient id="benchAGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--js-bench-fill)"/><stop offset="1" stop-color="var(--js-bench-fill-00)"/></linearGradient></defs>
+    <defs><linearGradient id="benchAGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${colA}" stop-opacity=".12"/><stop offset="1" stop-color="${colA}" stop-opacity="0"/></linearGradient></defs>
     ${grid}
     <path d="${aArea}" fill="url(#benchAGrad)"/>
-    <path d="${line(a)}" fill="none" stroke="var(--blue)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
-    <path d="${line(b)}" fill="none" stroke="var(--gold)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+    <path d="${line(a)}" fill="none" stroke="${colA}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+    <path d="${line(b)}" fill="none" stroke="${colB}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
     ${aPoints}${bPoints}
-    ${__v61Point(toX(a.length-1,a.length).toFixed(1),toY(Number(aEnd.normalized)).toFixed(1),4.8,'bluePoint',labelA,benchmarkPct(Number(aEnd.normalized)-100),'último dato',true,16)}
-    ${__v61Point(toX(b.length-1,b.length).toFixed(1),toY(Number(bEnd.normalized)).toFixed(1),4.8,'goldPoint',labelB,benchmarkPct(Number(bEnd.normalized)-100),'último dato',true,16)}
+    ${__v61Point(toX(a.length-1,a.length).toFixed(1),toY(Number(aEnd.normalized)).toFixed(1),4.8,'serieAPoint',labelA,benchmarkPct(Number(aEnd.normalized)-100),'último dato',true,16,colA)}
+    ${__v61Point(toX(b.length-1,b.length).toFixed(1),toY(Number(bEnd.normalized)).toFixed(1),4.8,'serieBPoint',labelB,benchmarkPct(Number(bEnd.normalized)-100),'último dato',true,16,colB)}
     ${tickSvg}
   </svg>`;
 }
@@ -7703,18 +7750,18 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
       var prev=vl[i];
       var bothReal=prev.p.estado==='cierre real' && pt.p.estado==='cierre real';
       return '<line x1="'+prev.x.toFixed(1)+'" y1="'+prev.y.toFixed(1)+'" x2="'+pt.x.toFixed(1)+'" y2="'+pt.y.toFixed(1)+
-        '" stroke="'+(bothReal?'var(--green)':'var(--gold)')+'" stroke-width="'+(bothReal?'2.4':'2')+'"'+
-        (bothReal?'':' stroke-dasharray="6 5" opacity=".58"')+' stroke-linecap="round"/>';
+        '" stroke="var(--accent)" stroke-width="'+(bothReal?'2.4':'1.6')+'"'+
+        (bothReal?'':' opacity=".62"')+' stroke-linecap="round"/>';
     }).join('');
     var marks=vl.map(function(pt){
       var x=pt.x.toFixed(1), y=pt.y.toFixed(1);
       if(pt.p.estado==='provisional'){
-        return '<polygon class="mevProvPoint" points="'+pt.x.toFixed(1)+','+(pt.y-5.4).toFixed(1)+' '+(pt.x+5.4).toFixed(1)+','+y+' '+x+','+(pt.y+5.4).toFixed(1)+' '+(pt.x-5.4).toFixed(1)+','+y+'" fill="var(--yellow)"/>';
+        return '<polygon class="mevProvPoint" points="'+pt.x.toFixed(1)+','+(pt.y-5.4).toFixed(1)+' '+(pt.x+5.4).toFixed(1)+','+y+' '+x+','+(pt.y+5.4).toFixed(1)+' '+(pt.x-5.4).toFixed(1)+','+y+'" fill="var(--accent)"/>';
       }
       if(pt.p.estado==='reconstruido'){
-        return '<circle class="mevRecPoint" cx="'+x+'" cy="'+y+'" r="4" fill="var(--gold)" opacity=".6"/>';
+        return '<circle class="mevRecPoint" cx="'+x+'" cy="'+y+'" r="4" fill="var(--panel)" stroke="var(--accent)" stroke-width="1.8"/>';
       }
-      return '<circle class="mevRealPoint" cx="'+x+'" cy="'+y+'" r="4" fill="var(--green)"/>';
+      return '<circle class="mevRealPoint" cx="'+x+'" cy="'+y+'" r="4" fill="var(--accent)"/>';
     }).join('');
     // Meses legibles: hasta 4 marcas sobre fechas reales de la serie, con
     // separación mínima para que no se rocen cuando las fechas se agrupan;
@@ -7760,7 +7807,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB){
         ticks+
       '</svg>'+
       '<div class="mobileEvoFoot">'+
-        '<span class="mev-line"><i class="mevReal"></i>Cierre real · <i class="mevRec"></i>Reconstruida · <i class="mevProv"></i>Provisional · <i class="mevCap"></i>Capital invertido</span>'+
+        '<span class="mev-line"><i class="mevReal"></i>Cierre real · <i class="mevRec"></i>Reconstruida · <i class="mevProv"></i>Provisional · <i class="mevUnc"></i>Tramo no confirmado · <i class="mevCap"></i>Capital invertido</span>'+
         '<span class="mev-line">Última valoración: '+escHtml(stateLabels[last.p.estado]||'Valoración')+' · '+escHtml(last.p.fecha)+
         (lastCap?' · Capital neto actual '+escHtml(fmtMoney(lastCap.v)):'')+'</span>'+
       '</div>';
@@ -10055,8 +10102,8 @@ a:focus-visible{
   outline-offset:2px!important;
 }
 .evoHeadState{font-size:11.5px;color:var(--yellow);font-weight:650;}
-.evoDotReconstructed{width:9px;height:9px;border-radius:50%;background:var(--gold);opacity:.55;display:inline-block;}
-.evoDotProvisional{width:9px;height:9px;background:var(--yellow);display:inline-block;transform:rotate(45deg);}
+.evoDotReconstructed{width:10px;height:10px;border-radius:50%;background:var(--panel);border:1.8px solid var(--accent);box-sizing:border-box;display:inline-block;}
+.evoDotProvisional{width:9px;height:9px;background:var(--accent);display:inline-block;transform:rotate(45deg);}
 .evoProvisionalPoint,.evoReconstructedPoint{cursor:crosshair;stroke:var(--blk-a15);stroke-width:1.4;}
 
 /* v175.6 · Marcadores de la evolución.
@@ -10683,10 +10730,12 @@ strong.neutral, span.neutral, em.neutral, .pill.neutral, .statusPill.neutral,
     display:inline-block;width:8px;height:8px;border-radius:50%;
     margin:0 4px 0 0;vertical-align:0;
   }
-  .mobileEvoFoot i.mevReal{background:var(--green);}
-  .mobileEvoFoot i.mevRec{background:var(--gold);opacity:.7;}
-  .mobileEvoFoot i.mevProv{background:var(--yellow);border-radius:1px;transform:rotate(45deg);width:7px;height:7px;}
-  .mobileEvoFoot i.mevCap{background:var(--capital-line);height:2px;width:12px;border-radius:1px;vertical-align:2px;}
+  .mobileEvoFoot i.mevReal{background:var(--accent);width:9px;height:9px;border-radius:50%;}
+  .mobileEvoFoot i.mevRec{background:var(--panel);border:1.8px solid var(--accent);box-sizing:border-box;width:9px;height:9px;border-radius:50%;}
+  .mobileEvoFoot i.mevProv{background:var(--accent);border-radius:1px;transform:rotate(45deg);width:7px;height:7px;}
+  .mobileEvoFoot i.mevUnc{background:var(--accent);opacity:.62;height:1.8px;width:12px;border-radius:1px;vertical-align:2px;}
+i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;width:14px;border-radius:0;vertical-align:3px;}  /* v175.43 · la leyenda refleja la FORMA real:
+     la linea de capital invertido es discontinua (R-F2), y asi se dibuja aqui. */
 
   /* =========================================================
      v175.13 · CARTERA MÓVIL
