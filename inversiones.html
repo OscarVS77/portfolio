@@ -1805,134 +1805,6 @@ html{
 }
 </style>
 
-<!-- V97 · Asesoría ejecutiva desktop -->
-<style>#asesoria .advisorHero{
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr) 230px!important;
-  gap:18px!important;
-  align-items:end!important;
-  padding:20px 22px!important;
-}#asesoria .advisorHero h2{
-  margin:0!important;
-  font-size:24px!important;
-  font-weight:570!important;
-  letter-spacing:-.65px!important;
-  line-height:1.08!important;
-}#asesoria .advisorHero p{
-  margin:8px 0 0!important;
-  color:var(--muted)!important;
-  font-size:12px!important;
-  line-height:1.35!important;
-  max-width:820px!important;
-}#asesoria .advisorState{
-  background:var(--blk-a11)!important;
-  border:1px solid var(--line2)!important;
-  border-radius:6px!important;
-  padding:14px!important;
-  text-align:right!important;
-}#asesoria .advisorState span, #asesoria .advisorMetric span, #asesoria .advisorBlock span{
-  display:block!important;
-  color:var(--muted)!important;
-  font-size:10px!important;
-  font-weight:700!important;
-  text-transform:uppercase!important;
-  letter-spacing:.06em!important;
-}#asesoria .advisorState strong{
-  display:block!important;
-  margin-top:7px!important;
-  font-size:28px!important;
-  font-weight:360!important;
-  letter-spacing:-.9px!important;
-}#asesoria .advisorState em{
-  display:block!important;
-  margin-top:6px!important;
-  color:var(--muted)!important;
-  font-size:10.5px!important;
-  font-style:normal!important;
-  line-height:1.25!important;
-}#asesoria .advisorMetrics{
-  display:grid!important;
-  grid-template-columns:repeat(4,minmax(0,1fr))!important;
-  gap:14px!important;
-}#asesoria .advisorMetric{
-  min-height:88px!important;
-  padding:16px!important;
-  display:flex!important;
-  flex-direction:column!important;
-  justify-content:center!important;
-}#asesoria .advisorMetric strong{
-  display:block!important;
-  margin-top:8px!important;
-  font-size:22px!important;
-  font-weight:390!important;
-  letter-spacing:-.55px!important;
-  line-height:1.05!important;
-  font-variant-numeric:tabular-nums!important;
-}#asesoria .advisorMetric small{
-  display:block!important;
-  margin-top:6px!important;
-  color:var(--muted)!important;
-  font-size:10.5px!important;
-  line-height:1.3!important;
-}#asesoria .advisorLayout{
-  display:grid!important;
-  grid-template-columns:minmax(0,1.2fr) minmax(360px,.8fr)!important;
-  gap:18px!important;
-}#asesoria .advisorBlock{
-  padding:18px 20px!important;
-}#asesoria .advisorBlock strong{
-  display:block!important;
-  margin-top:9px!important;
-  color:var(--text)!important;
-  font-size:18px!important;
-  font-weight:560!important;
-  letter-spacing:-.42px!important;
-  line-height:1.22!important;
-}#asesoria .advisorBlock p{
-  margin:9px 0 0!important;
-  color:var(--text2)!important;
-  font-size:12px!important;
-  line-height:1.45!important;
-}#asesoria .advisorList{
-  display:grid!important;
-  gap:8px!important;
-  padding:14px 17px 17px!important;
-}#asesoria .advisorList div{
-  min-height:42px!important;
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr) auto!important;
-  gap:14px!important;
-  align-items:center!important;
-  border:1px solid var(--line2)!important;
-  border-radius:6px!important;
-  background:var(--blk-a10)!important;
-  padding:10px 12px!important;
-}#asesoria .advisorList strong{
-  color:var(--text)!important;
-  font-size:11.5px!important;
-  font-weight:560!important;
-  overflow:hidden!important;
-  text-overflow:ellipsis!important;
-  white-space:nowrap!important;
-}#asesoria .advisorList span{
-  font-size:10.8px!important;
-  font-weight:700!important;
-  white-space:nowrap!important;
-}#asesoria .advisorConfidence{
-  margin:0 17px 17px!important;
-  padding:11px 13px!important;
-  border-radius:6px!important;
-  border:1px solid var(--line2)!important;
-  background:var(--blk-a06)!important;
-  color:var(--muted)!important;
-  font-size:10.8px!important;
-  line-height:1.35!important;
-}#asesoria .advisorConfidence strong{color:var(--text)!important;font-weight:560!important}
-@media(max-width:1150px){#asesoria .advisorHero{grid-template-columns:1fr!important;align-items:start!important}#asesoria .advisorState{text-align:left!important}#asesoria .advisorMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}#asesoria .advisorLayout{grid-template-columns:1fr!important}
-}
-/* v175.10: retirado el bloqueo móvil de #asesoria; su acceso lo gobierna el
-   registro de páginas móviles listas hasta que tenga presentación propia. */
-</style>
 
 <style>
 /* V98 · Mobile fix: Distribución operativa con scroll lateral real */
@@ -1988,7 +1860,7 @@ html{
 <div class="app">
   <aside class="sidebar">
     <div class="brand"><div class="brandName">Portfolio Oscar</div></div>
-    <div class="nav" id="nav" role="navigation" aria-label="Páginas del portfolio"><button class="active" aria-current="page" data-page="dashboard"><span>Dashboard</span><span class="navStatus off"></span></button><button data-page="cartera"><span>Cartera actual</span><span class="navStatus off"></span></button><button data-page="xirr"><span>XIRR</span><span class="navStatus off"></span></button><button data-page="benchmark"><span>Benchmark</span><span class="navStatus off"></span></button><button data-page="movimientos"><span>Movimientos</span><span class="navStatus off"></span></button><button data-page="historial"><span>Historial</span><span class="navStatus off"></span></button><button data-page="asesoria"><span>Asesoría</span><span class="navStatus off"></span></button><button data-page="auditoria"><span>Auditoría</span><span class="navStatus off"></span></button></div>
+    <div class="nav" id="nav" role="navigation" aria-label="Páginas del portfolio"><button class="active" aria-current="page" data-page="dashboard"><span>Dashboard</span><span class="navStatus off"></span></button><button data-page="cartera"><span>Cartera actual</span><span class="navStatus off"></span></button><button data-page="xirr"><span>XIRR</span><span class="navStatus off"></span></button><button data-page="benchmark"><span>Benchmark</span><span class="navStatus off"></span></button><button data-page="movimientos"><span>Movimientos</span><span class="navStatus off"></span></button><button data-page="historial"><span>Historial</span><span class="navStatus off"></span></button><button data-page="auditoria"><span>Auditoría</span><span class="navStatus off"></span></button></div>
     <div class="sideFoot sideUpdate"><span class="brandDate">Última actualización · sin datos</span></div>
   </aside>
 
@@ -2010,6 +1882,12 @@ html{
     </div>
 
     <section class="section active" id="dashboard">
+        <article class="card alertsCard">
+          <div class="cardHeader"><div><h3>Requiere tu atención</h3><p>Solo lo que necesita una decisión. Sale de la hoja RESUMEN del Excel.</p></div></div>
+          <div class="alerts">
+            <div class="alert"><div class="alertName">Estado financiero</div><div class="alertStatus"><span class="bullet bOff"></span>Sin datos · importa o carga el Excel.</div></div>
+          </div>
+        </article>
       <div class="grid pageBlock dashboardHeroOnly">
         <article class="card hero">
           <div class="cardHeader"><div><h2>Visión global</h2><p>Valor actual y lectura por plataforma.</p></div></div>
@@ -2059,13 +1937,6 @@ html{
             </div>
           </article>
         </div>
-
-        <article class="card alertsCard">
-          <div class="cardHeader"><div><h3>Alertas principales</h3><p>Lectura directa de la hoja RESUMEN / AUDITORÍA del Excel.</p></div></div>
-          <div class="alerts">
-            <div class="alert"><div class="alertName">Estado financiero</div><div class="alertStatus"><span class="bullet bOff"></span>Sin datos · importa o carga el Excel.</div></div>
-          </div>
-        </article>
       </div>
     </section>
 
@@ -2335,74 +2206,6 @@ html{
       </section>
     </section>
 
-    <section class="section" id="asesoria">
-      <section class="advisorHero card pageBlock">
-        <div>
-          <span class="eyebrow">Asesoría</span>
-          <h2>Oscar, esto es lo importante hoy de tu cartera.</h2>
-          <p>Lectura ejecutiva basada en el Excel importado. Sin controles técnicos, sin auditoría y sin repetir el funcionamiento interno de la web.</p>
-        </div>
-        <div class="advisorState">
-          <span>Estado general</span>
-          <strong id="advisorState">Sin datos</strong>
-          <em id="advisorStateNote">Importa o carga el Excel para evaluar la cartera.</em>
-        </div>
-      </section>
-
-      <section class="advisorMetrics pageBlock">
-        <article class="card advisorMetric">
-          <span>Valor actual</span>
-          <strong id="advisorValue">--</strong>
-          <small>Cartera total actual.</small>
-        </article>
-        <article class="card advisorMetric">
-          <span>G/P real</span>
-          <strong id="advisorGain">--</strong>
-          <small>Valor actual menos capital neto invertido.</small>
-        </article>
-        <article class="card advisorMetric">
-          <span>XIRR global</span>
-          <strong id="advisorXirr">--</strong>
-          <small>Rentabilidad anualizada desde el inicio.</small>
-        </article>
-        <article class="card advisorMetric">
-          <span>Recomendación</span>
-          <strong id="advisorRecommendationShort">Sin datos</strong>
-          <small>Lectura práctica desde el Excel.</small>
-        </article>
-      </section>
-
-      <section class="advisorLayout pageBlock">
-        <article class="card">
-          <div class="advisorBlock">
-            <span>Lectura principal</span>
-          <strong id="advisorMainReading">Importa o carga el Excel para obtener una lectura financiera.</strong>
-          <p id="advisorToday">No se mostrará ningún diagnóstico sin datos reales.</p>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="cardHeader">
-            <div>
-              <h3>Activos a vigilar</h3>
-              <p>Solo aparecen los puntos relevantes hoy.</p>
-            </div>
-          </div>
-          <div class="advisorList" id="advisorWatchList">
-            <div><strong>Estado financiero</strong><span>Sin datos</span></div>
-          </div>
-        </article>
-      </section>
-
-      <section class="card pageBlock">
-        <div class="advisorBlock">
-          <span>Recomendación del Excel</span>
-          <strong id="advisorExcelRecommendation">Sin datos</strong>
-          <p id="advisorExcelNote">La recomendación aparecerá únicamente cuando haya un Excel cargado.</p>
-        </div>
-        <div class="advisorConfidence" id="advisorConfidence"><strong>Confianza de datos:</strong> sin Excel cargado.</div>
-      </section>
-    </section>
 
     <section class="section" id="auditoria">
       <section class="auditWebHero card pageBlock">
@@ -2515,8 +2318,7 @@ const pages=[
   ["movimientos","Movimientos","Movimientos conectados con el cálculo XIRR.","off"],
   ["historial","Historial","Resumen anual y años anteriores.","off"],
   ["benchmark","Benchmark","Tu cartera real frente a cartera objetivo y referencias externas.","off"],
-  ["asesoria","Asesoría","Lectura ejecutiva de lo importante hoy de la cartera.","off"],
-  ["auditoria","Auditoría","Estado técnico de la web y funciones activas.","off"]
+    ["auditoria","Auditoría","Estado técnico de la web y funciones activas.","off"]
 ];
 const nav=document.getElementById("nav");
 // v141: los botones ya están escritos en el HTML para que el menú se vea desde el primer
@@ -4628,17 +4430,43 @@ function updateAllocation(cartera){
   }
 }
 function updateAlerts(){
+  // v175.47 · «Requiere tu atención». Antes listaba las SIETE filas de RESUMEN,
+  // los OK incluidos, con el aviso de Bitcoin repetido tres veces. Ahora:
+  //
+  //  · Solo lo que requiere una decisión. Los OK no se listan, pero se CUENTAN:
+  //    si desaparecieran sin dejar rastro no se podría distinguir «todo bien»
+  //    de «el bloque ha fallado».
+  //  · Deduplicado POR CONTENIDO, nunca por fila. Comprobado en las fórmulas:
+  //    la fila 10 (Bitcoin) y la 15 (BTC techo absoluto) son controles DISTINTOS
+  //    que solo coinciden cuando el peso pasa del 10 %; con BTC al 9,5 % dirían
+  //    cosas distintas y las dos harían falta. Borrar la fila 15 a ciegas
+  //    perdería un aviso real.
+  //  · La fila 16 (Diagnóstico global) queda fuera de la lista: es el resumen
+  //    de las anteriores —verificado en su fórmula, que solo reacciona a lo que
+  //    ya dicen 10-15— y su texto difiere lo justo para escapar del deduplicado.
   const resumen = sheetRows('RESUMEN');
   const container = document.querySelector('#dashboard .alerts');
   if(!container) return;
-  const alerts=[];
-  for(let r=10;r<=16;r++){
+  const alerts=[]; const vistos=new Set();
+  let controles=0, enOrden=0;
+  for(let r=10;r<=15;r++){
     const name=cell(resumen,r,1), status=cell(resumen,r,2);
-    if(name && status) alerts.push({name, text:cleanText(status), st:statusFromText(status)});
+    if(!name || !status) continue;
+    controles++;
+    const st=statusFromText(status);
+    if(st==='ok'){ enOrden++; continue; }
+    const text=cleanText(status);
+    if(vistos.has(text)) continue;
+    vistos.add(text);
+    alerts.push({name, text, st});
   }
   let html = alerts.map(a=>`<div class="alert"><div class="alertName">${escHtml(a.name)}</div><div class="alertStatus ${a.st}"><span class="bullet ${bulletForStatus(a.st)}"></span>${escHtml(a.text)}</div></div>`).join('');
-  if(alerts.length && alerts.every(a=>a.st==='ok')){
-    html += `<div class="alert alertAllOk"><div class="alertStatus"><span class="bullet bOk"></span>Todo en orden · ${alerts.length} controles en OK</div></div>`;
+  if(!controles){
+    html = `<div class="alert alertAllOk"><div class="alertStatus"><span class="bullet bOff"></span>Sin datos · importa o carga el Excel.</div></div>`;
+  } else if(!alerts.length){
+    html = `<div class="alert alertAllOk"><div class="alertStatus"><span class="bullet bOk"></span>Nada requiere tu atención · ${controles} controles en orden</div></div>`;
+  } else if(enOrden){
+    html += `<div class="alert alertAllOk"><div class="alertStatus"><span class="bullet bOk"></span>${enOrden} ${enOrden===1?'control':'controles'} más, en orden</div></div>`;
   }
   container.innerHTML = html;
 }
@@ -5222,94 +5050,8 @@ function clearWorkbookCache(){
   localStorage.removeItem(CACHE_META_KEY);
 }
 
-function updateAsesoria(){
-  const set=(id,val,cls)=>{ const el=document.getElementById(id); if(el){ el.textContent=val; if(cls!==undefined) el.className=cls||''; } };
-  if(!importedWorkbook){
-    set('advisorState', 'Sin datos', 'neutral');
-    set('advisorStateNote', 'Importa o carga el Excel para evaluar la cartera.');
-    set('advisorValue', '--', 'neutral');
-    set('advisorGain', '--', 'neutral');
-    set('advisorXirr', '--', 'neutral');
-    set('advisorRecommendationShort', 'Sin datos', 'neutral');
-    set('advisorMainReading', 'Importa o carga el Excel para obtener una lectura financiera.', 'neutral');
-    set('advisorToday', 'No se mostrará ningún diagnóstico sin datos reales.');
-    const emptyList=document.getElementById('advisorWatchList');
-    if(emptyList) emptyList.innerHTML='<div><strong>Estado financiero</strong><span>Sin datos</span></div>';
-    set('advisorExcelRecommendation', 'Sin datos', 'neutral');
-    set('advisorExcelNote', 'La recomendación aparecerá únicamente cuando haya un Excel cargado.');
-    const emptyConfidence=document.getElementById('advisorConfidence');
-    if(emptyConfidence) emptyConfidence.innerHTML='<strong>Confianza de datos:</strong> sin Excel cargado.';
-    setNavStatus('asesoria', 'off');
-    return;
-  }
-  const resumen = sheetRows('RESUMEN');
-  const cartera = parseCartera();
-  const valueTotal = cell(resumen,5,2);
-  const gpReal = cell(resumen,6,6);
-  const xirr = cell(resumen,7,2);
-  const simple = cell(resumen,7,4);
-  const date = fmtDate(cell(sheetRows('XIRR GLOBAL'),4,1));
-  const watch=[];
-  for(let r=10;r<=15;r++){
-    const name=String(cell(resumen,r,1) || '').trim();
-    const raw=String(cell(resumen,r,2) || '').trim();
-    const state=statusFromText(raw);
-    if(name && raw && (state==='bad' || state==='warn')){
-      watch.push({name,reason:cleanText(raw),cls:state==='bad'?'red':'yellow'});
-    }
-  }
-
-  const globalReading=cleanText(cell(resumen,16,2));
-  const globalState=statusFromText(cell(resumen,16,2));
-  const st=!globalReading
-    ? {label:'Sin datos',cls:'neutral',note:'El Excel no contiene un diagnóstico global.'}
-    : globalState==='bad'
-      ? {label:'Revisar',cls:'red',note:globalReading}
-      : globalState==='warn'
-        ? {label:'Vigilar',cls:'yellow',note:globalReading}
-        : {label:'Correcto',cls:'green',note:globalReading};
-  set('advisorState', st.label, st.cls);
-  set('advisorStateNote', st.note);
-  set('advisorValue', fmtMoney(valueTotal));
-  set('advisorGain', fmtMoney(gpReal,2,true), clsByValue(gpReal));
-  set('advisorXirr', fmtPct(xirr,2,true), clsByValue(xirr));
-
-  const firstWatch = watch[0];
-  const recommendationShort = st.cls==='red' ? 'Revisar cartera' : firstWatch ? `Vigilar ${firstWatch.name}` : globalReading ? 'Sin alertas' : 'Sin datos';
-  set('advisorRecommendationShort', recommendationShort, firstWatch ? firstWatch.cls : globalReading ? 'green' : 'neutral');
-
-  const main = document.getElementById('advisorMainReading');
-  if(main){
-    main.className = st.cls;
-    main.textContent=globalReading || st.note;
-  }
-  const today=document.getElementById('advisorToday');
-  if(today){
-    today.textContent = cleanText(cell(resumen,15,2)) || globalReading || 'Sin recomendación adicional registrada en el Excel.';
-  }
-  const list=document.getElementById('advisorWatchList');
-  if(list){
-    list.innerHTML = watch.length
-      ? watch.map(x=>`<div><strong>${escHtml(x.name)}</strong><span class="${x.cls}">${escHtml(x.reason)}</span></div>`).join('')
-      : '<div><strong>Cartera global</strong><span>Sin alertas registradas en el Excel</span></div>';
-  }
-  const reco=document.getElementById('advisorExcelRecommendation');
-  if(reco){
-    reco.textContent = globalReading || 'Sin recomendación registrada en el Excel.';
-  }
-  const note=document.getElementById('advisorExcelNote');
-  if(note){
-    note.textContent = `Rentabilidad simple real ${fmtPct(simple,2,true)}, XIRR global ${fmtPct(xirr,2,true)} y G/P real ${fmtMoney(gpReal,2,true)}.`;
-  }
-  const conf=document.getElementById('advisorConfidence');
-  if(conf){
-    conf.innerHTML = `<strong>Confianza de datos:</strong> Excel cargado · ${escHtml(importedData?.fileName || 'fuente importada')}${date ? ` · valoración ${escHtml(date)}` : ''}.`;
-  }
-  setNavStatus('asesoria', st.cls==='red' ? 'bad' : st.cls==='yellow' ? 'warn' : st.cls==='green' ? 'ok' : 'off');
-}
 
 document.addEventListener('DOMContentLoaded',()=>{
-  updateAsesoria();
   updateAuditoria();
   updateDataStatus?.();
 });
@@ -5331,9 +5073,9 @@ function applyWorkbookAfterRead(fileName, fromCache=false, candidate=importedWor
   importedWorkbook = candidate;
   importedData = {fileName:fileName || 'Excel importado'};
   lastRejectedImport = null; // v175.8: una importación válida limpia el rechazo anterior
-  updateDashboard(); updateCartera(); updateXirr(); updateHistorial(); updateAsesoria(); updateAuditoria(); updateDataStatus?.();
+  updateDashboard(); updateCartera(); updateXirr(); updateHistorial(); updateAuditoria(); updateDataStatus?.();
   setStatus(true, fromCache ? `${fileName || 'Excel'} recuperado` : `${fileName || 'Excel'} importado`);
-  setNavStatus('dashboard','ok'); setNavStatus('cartera','ok'); setNavStatus('xirr','ok'); setNavStatus('movimientos','ok'); setNavStatus('historial','ok'); setNavStatus('asesoria','ok');
+  setNavStatus('dashboard','ok'); setNavStatus('cartera','ok'); setNavStatus('xirr','ok'); setNavStatus('movimientos','ok'); setNavStatus('historial','ok');
   return true;
 }
 function loadWorkbookCache(){
@@ -6433,7 +6175,9 @@ updateDashboard = function(){
   function polishDashboardTexts(scope){
     const heroP=document.querySelector('#dashboard .hero .cardHeader p');
     if(heroP) heroP.textContent='Valor actual y lectura por plataforma.';
-    const allocationP=document.querySelector('#dashboard article.card:not(.hero):not(.evolutionCard) .cardHeader p');
+    // v175.47 · la tarjeta de avisos pasó a ser la primera .card del Dashboard y
+  // este selector la capturaba, pisándole el subtítulo con el de la distribución.
+  const allocationP=document.querySelector('#dashboard article.card:not(.hero):not(.evolutionCard):not(.alertsCard) .cardHeader p');
     if(allocationP) allocationP.textContent='Distribución actual de la cartera.';
     document.querySelectorAll('#dashboard .donutCenter span').forEach(el=>{el.textContent='Valor cartera';});
     document.querySelectorAll('#dashboard .heroTopMetric label').forEach(el=>{
@@ -7398,14 +7142,13 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   // a la profundidad. Cartera deja de ser destino móvil: sus activos y su
   // hoja de detalle viven integrados en Hoy (el código de la página queda
   // intacto y sigue completo en escritorio).
-  var MOBILE_READY_PAGES=['dashboard','xirr','movimientos','historial','benchmark','asesoria','auditoria'];
+  var MOBILE_READY_PAGES=['dashboard','xirr','movimientos','historial','benchmark','auditoria'];
   var BAR_PAGES=['dashboard'];
   var SHEET_PAGES=[
     {id:'xirr', label:'XIRR', group:'Análisis'},
     {id:'benchmark', label:'Benchmark', group:'Análisis'},
     {id:'movimientos', label:'Movimientos', group:'Actividad'},
     {id:'historial', label:'Historial', group:'Actividad'},
-    {id:'asesoria', label:'Asesoría', group:'Control'},
     {id:'auditoria', label:'Auditoría', group:'Control'}
   ];
   var mq=window.matchMedia('(max-width: 760px)');
@@ -8491,82 +8234,6 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
     setTimeout(function(){ benchMirrorPending=false; renderMobileBench(); }, 40);
   }
 
-  /* ===== v175.18 · Asesoría móvil =====
-     Espejo priorizado del briefing: estado y lectura principal primero,
-     recomendaciones y vigilancia después, y el contexto (métricas repetidas
-     y confianza) plegado. Todos los textos son literales ya renderizados por
-     updateAsesoria desde el Excel: nada se interpreta ni se genera. */
-  var advisorRenderGuard=false;
-  function renderMobileAsesoria(){
-    if(!mq.matches || advisorRenderGuard) return;
-    var section=document.getElementById('asesoria');
-    if(!section) return;
-    advisorRenderGuard=true;
-    try{
-      var host=document.getElementById('mobileAsesoria');
-      if(!host){
-        host=document.createElement('section');
-        host.id='mobileAsesoria';
-        host.className='mobileAsesoria';
-        section.insertBefore(host, section.firstElementChild);
-      }
-      var g=function(id){ var el=document.getElementById(id); return el?el.textContent.trim():''; };
-      var cls=function(id){ var el=document.getElementById(id); return el?el.className:''; };
-      var stateCls=cls('advisorState');
-      var stateChip=stateCls.indexOf('red')!==-1?'bad':stateCls.indexOf('yellow')!==-1?'warn':stateCls.indexOf('green')!==-1?'ok':'off';
-      var watch=[].slice.call(document.querySelectorAll('#advisorWatchList > div'));
-      var conf=document.getElementById('advisorConfidence');
-      host.innerHTML=
-        '<h2>Asesoría</h2>'+
-        '<p class="mobileAdvSub">Lectura ejecutiva del Excel importado</p>'+
-        '<div class="mobileAdvState"><span class="mobileAssetState '+stateChip+'">'+escHtml(g('advisorState'))+'</span>'+
-          '<span class="mobileAdvStateNote">'+escHtml(g('advisorStateNote'))+'</span></div>'+
-        '<div class="mobileAdvBlock"><span class="mobileAdvLabel">Lectura principal</span>'+
-          '<strong class="mobileAdvReading">'+escHtml(g('advisorMainReading'))+'</strong>'+
-          (g('advisorToday')?'<p>'+escHtml(g('advisorToday'))+'</p>':'')+'</div>'+
-        '<div class="mobileAdvBlock"><span class="mobileAdvLabel">Recomendación</span>'+
-          '<strong class="mobileAdvReading">'+escHtml(g('advisorRecommendationShort'))+'</strong>'+
-          (g('advisorExcelRecommendation') && g('advisorExcelRecommendation')!==g('advisorRecommendationShort')
-            ?'<p class="mobileAdvExcelRec">'+escHtml(g('advisorExcelRecommendation'))+'</p>':'')+
-          (g('advisorExcelNote')?'<p>'+escHtml(g('advisorExcelNote'))+'</p>':'')+'</div>'+
-        '<div class="mobileAdvLabel mobileAdvWatchTitle">Activos a vigilar</div>'+
-        '<div class="mobileAdvWatch">'+watch.map(function(d){
-          var st=d.querySelector('strong'), sp=d.querySelector('span');
-          return '<div class="mobileAdvWatchRow"><strong>'+escHtml(st?st.textContent.trim():'')+'</strong>'+
-            '<span>'+escHtml(sp?sp.textContent.trim():'')+'</span></div>';
-        }).join('')+'</div>'+
-        '<div class="mobileAdvContext">'+
-          '<button type="button" class="mobileBenchEvBtn" aria-expanded="false" aria-controls="mAdvCtx">Contexto y confianza<span class="mhaChev" aria-hidden="true">›</span></button>'+
-          '<div id="mAdvCtx" hidden>'+
-            '<div class="mobileBenchWRow"><span>Valor actual</span><strong class="'+cls('advisorValue')+'">'+escHtml(g('advisorValue'))+'</strong></div>'+
-            '<div class="mobileBenchWRow"><span>G/P real</span><strong class="'+cls('advisorGain')+'">'+escHtml(g('advisorGain'))+'</strong></div>'+
-            '<div class="mobileBenchWRow"><span>XIRR global</span><strong class="'+cls('advisorXirr')+'">'+escHtml(g('advisorXirr'))+'</strong></div>'+
-            (conf?'<p class="mobileAdvConf">'+escHtml(conf.textContent.trim())+'</p>':'')+
-          '</div>'+
-        '</div>';
-      host.querySelector('.mobileBenchEvBtn').addEventListener('click', function(){
-        var t=document.getElementById('mAdvCtx');
-        var open=this.getAttribute('aria-expanded')==='true';
-        this.setAttribute('aria-expanded', open?'false':'true');
-        if(t) t.hidden=open;
-      });
-    }finally{
-      advisorRenderGuard=false;
-    }
-  }
-  var advisorMirrorPending=false;
-  function scheduleMobileAsesoria(muts){
-    if(!mq.matches) return;
-    var external=false;
-    for(var i=0;i<muts.length;i++){
-      var t=muts[i].target;
-      var el=t.nodeType===1?t:t.parentElement;
-      if(!el || !el.closest('#mobileAsesoria')){ external=true; break; }
-    }
-    if(!external || advisorMirrorPending) return;
-    advisorMirrorPending=true;
-    setTimeout(function(){ advisorMirrorPending=false; renderMobileAsesoria(); }, 40);
-  }
 
   /* ===== v175.19 · Auditoría móvil =====
      Espejo con jerarquía de confianza: estado global primero, controles
@@ -8839,12 +8506,6 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
       new MutationObserver(scheduleMobileBench)
         .observe(benchSection,{childList:true,characterData:true,subtree:true});
     }
-    // v175.18: mismo patrón para Asesoría (updateAsesoria reescribe textos).
-    var advSection=document.getElementById('asesoria');
-    if(advSection && typeof MutationObserver==='function'){
-      new MutationObserver(scheduleMobileAsesoria)
-        .observe(advSection,{childList:true,characterData:true,subtree:true});
-    }
     // v175.19: mismo patrón para Auditoría (updateAuditoria/updateDataStatus).
     var auditSection=document.getElementById('auditoria');
     if(auditSection && typeof MutationObserver==='function'){
@@ -8859,7 +8520,6 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
     renderMobileMovs();
     renderMobileHistorial();
     renderMobileBench();
-    renderMobileAsesoria();
     renderMobileAudit();
   }
 
@@ -9020,16 +8680,6 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
 })();
 </script>
 
-<script>
-/* V97 · mantener Asesoría sincronizada sin alterar páginas existentes */
-try{
-  const __portfolioV97UpdateDashboard = updateDashboard;
-  updateDashboard = function(){
-    __portfolioV97UpdateDashboard();
-    if(typeof updateAsesoria === 'function') updateAsesoria();
-  };
-}catch(e){ console.warn('Asesoría no pudo engancharse al dashboard:', e); }
-</script>
 
 <style>
 /* V24: Ajuste final Dashboard · alertas limpias y sin solapes */
@@ -10199,9 +9849,6 @@ html, body{font-size:14.5px!important;}
 #benchmark .benchmarkTable td{font-size:12.5px!important;}
 #benchmark .benchmarkSummary p, #benchmark .benchmarkSummary em{font-size:12px!important;line-height:1.4!important;}
 #benchmark .sheetChecks strong, #benchmark .sheetChecks span{font-size:12px!important;}
-#asesoria .advisorState span, #asesoria .advisorMetric span, #asesoria .advisorBlock span{font-size:12px!important;}
-#asesoria .advisorState em, #asesoria .advisorMetric small{font-size:12px!important;line-height:1.38!important;}
-#asesoria .advisorList strong, #asesoria .advisorList span, #asesoria .advisorConfidence{font-size:12px!important;}
 #auditoria .auditWebState span, #auditoria .auditWebCard span, #auditoria .dataStatusCard label{font-size:12px!important;}
 #auditoria .auditWebState em, #auditoria .auditWebCard em, #auditoria .dataStatusCard small{font-size:12px!important;line-height:1.38!important;}
 #auditoria .auditWebChecks div, #auditoria .auditWebChecks strong, #auditoria .auditWebChecks span,
@@ -11067,39 +10714,17 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   .mobileBenchWRow strong.green{color:var(--green);}
   .mobileBenchWRow strong.neutral{color:var(--text2);}
 
-  /* =========================================================
-     v175.18 · ASESORÍA MÓVIL
-     Briefing priorizado: estado y lectura primero, contexto
-     plegado. Bloques de escritorio intactos y ocultos.
-     ========================================================= */
-  #asesoria.active > section:not(#mobileAsesoria){display:none!important;}
-  #asesoria.active > #mobileAsesoria{display:block!important;}
-  .mobileAsesoria{padding:2px 0 0;}
-  .mobileAsesoria h2{margin:18px 0 4px;font-size:20px;font-weight:700;letter-spacing:-.3px;}
+
+  /* v175.47 · estas tres clases vivían en el bloque de Asesoría móvil, que se
+     retiró con la página. NO eran exclusivas suyas: renderMobileAudit las usa
+     por nombre, así que borrarlas dejó el espejo de Auditoría sin estilo
+     —color, tamaño y versalitas—. Se restauran aquí, junto a quien las usa. */
   .mobileAdvSub{margin:0 0 14px;font-size:12.5px;color:var(--muted);}
-  .mobileAdvState{display:flex;align-items:center;gap:10px;margin:0 0 16px;flex-wrap:wrap;}
   .mobileAdvStateNote{font-size:12.5px;color:var(--text2);}
-  .mobileAdvBlock{
-    margin:0 0 14px;padding:14px;border:1px solid var(--line);
-    border-radius:8px;background:var(--panel2);
-  }
   .mobileAdvLabel{
     display:block;font-size:11px;font-weight:680;letter-spacing:.08em;
     text-transform:uppercase;color:var(--muted);margin-bottom:5px;
   }
-  .mobileAdvReading{display:block;font-size:14.5px;font-weight:640;line-height:1.4;}
-  .mobileAdvBlock p{margin:7px 0 0;font-size:12.5px;line-height:1.5;color:var(--text2);}
-  .mobileAdvExcelRec{font-weight:600;color:var(--text)!important;}
-  .mobileAdvWatchTitle{margin:18px 0 2px;}
-  .mobileAdvWatch{border-top:1px solid var(--bone-a08);}
-  .mobileAdvWatchRow{
-    display:flex;justify-content:space-between;gap:12px;align-items:baseline;
-    min-height:48px;padding:12px 0;border-bottom:1px solid var(--bone-a08);font-size:13.5px;
-  }
-  .mobileAdvWatchRow strong{font-weight:620;}
-  .mobileAdvWatchRow span{color:var(--text2);text-align:right;}
-  .mobileAdvContext{margin-top:12px;}
-  .mobileAdvConf{margin:8px 0 0;font-size:12px;line-height:1.5;color:var(--muted);}
 
   /* =========================================================
      v175.19 · AUDITORÍA MÓVIL
@@ -11124,7 +10749,7 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
 }
 /* Si los nodos móviles quedaran en el DOM al ensanchar la ventana, no deben verse */
 @media(min-width:761px){
-  .mobileTabbar, .mobileSheetWrap, .mobileHeroChip, .mobileAttention, .mobileEvolution, .mobileCartera, #mobileAssetSheetWrap, .mobileClosures, .mobileMovs, .mobileHistorial, .mobileBench, .mobileAsesoria, .mobileAudit, .mobileTrustChip{display:none!important;}
+  .mobileTabbar, .mobileSheetWrap, .mobileHeroChip, .mobileAttention, .mobileEvolution, .mobileCartera, #mobileAssetSheetWrap, .mobileClosures, .mobileMovs, .mobileHistorial, .mobileBench, .mobileAudit, .mobileTrustChip{display:none!important;}
 }
 </style>
 <style>
