@@ -1885,7 +1885,6 @@ html{
       <div class="grid pageBlock dashboardHeroOnly">
         <article class="card hero">
           <div class="cardHeader"><div><h2>Visión global</h2><p>Valor actual y lectura por plataforma.</p></div></div>
-          <div class="tabs"><span class="active">Global</span><span>MyInvestor</span><span>Trade Republic</span><span>Bitcoin</span><span>Plan Pensiones</span></div>
           <div class="heroBody">
             <div style="color:var(--muted);font-size:14px;margin-bottom:8px">Valor de mercado real</div>
             <div class="bigValue"><div><span class="dot"></span><strong>--</strong><span></span></div><div class="gain">Valor total actual de la cartera</div></div>
@@ -4641,6 +4640,38 @@ function renderCarteraFocus(cartera){
   if(diagnosis) diagnosis.innerHTML=carteraDiagnosisText(row, xirrRow);
   if(tableTitle) tableTitle.textContent=row ? `Detalle de ${title}` : 'Tabla completa de posiciones';
 }
+/* v175.49 · SUBTOTAL DE RENTA VARIABLE
+   Al retirar las pestañas del Dashboard se perdía una cifra que no estaba en
+   ninguna otra parte: los tres fondos de MyInvestor sumados. Óscar la pidió
+   como fila aquí.
+
+   EL EXCEL YA LA TIENE, y no la llama «MyInvestor»: `CARTERA ACTUAL` I11 es
+   `=SUM(I6:I8)` y J11 `=SUM(J6:J8)`, rotulados «Renta variable» en I12. Peso
+   y objetivo se LEEN de ahí, no se calculan. Las columnas de dinero se suman,
+   que es la misma operación que la fila TOTAL hace en el propio libro.
+
+   Y NO SE PINTA A CIEGAS: si la selección de filas no reproduce el peso que
+   dice el Excel, la fila no se muestra. Es una conciliación de control, de
+   las que la Regla 3 sí permite: sirve para aceptar o rechazar, no para
+   sustituir la cifra del libro. */
+function carteraRentaVariableRow(cartera){
+  const hoja = sheetRows('CARTERA ACTUAL');
+  const pesoXls = Number(cell(hoja,11,9));
+  const objXls  = Number(cell(hoja,11,10));
+  if(!Number.isFinite(pesoXls) || !Number.isFinite(objXls)) return null;
+  const fondos = cartera.filter(x =>
+    String(x.activo).toUpperCase()!=='TOTAL' &&
+    normalizeKey(x.plataforma).includes('myinvestor') &&
+    !normalizeKey(x.activo).includes('plan pensiones'));
+  if(fondos.length < 2) return null;
+  const suma = k => fondos.reduce((t,x)=>t + (Number(x[k])||0), 0);
+  if(Math.abs(suma('peso') - pesoXls) > 0.0001) return null;   // no cuadra: no se pinta
+  const invertido = suma('invertido'), valor = suma('valor'), pl = suma('pl');
+  return {activo:'Renta variable', plataforma:'MyInvestor', subtotal:true,
+          invertido, valor, pl, rent: invertido ? pl/invertido : 0,
+          peso: pesoXls, objetivo: objXls, desv: pesoXls - objXls};
+}
+
 function updateCartera(){
   const cartera = parseCartera();
   renderCarteraTabs(cartera);
@@ -4650,13 +4681,22 @@ function updateCartera(){
   let tableRows = cartera;
   if(carteraActiveKey!=='all'){
     tableRows = cartera.filter(x=>String(x.activo).toUpperCase()!=='TOTAL' && carteraKeyFromName(x.activo)===carteraActiveKey);
+  }else{
+    const rv = carteraRentaVariableRow(cartera);
+    if(rv){
+      const iTotal = tableRows.findIndex(x=>String(x.activo).toUpperCase()==='TOTAL');
+      tableRows = tableRows.slice();
+      tableRows.splice(iTotal>=0 ? iTotal : tableRows.length, 0, rv);
+    }
   }
   tbody.innerHTML = tableRows.map(x=>{
     const total = String(x.activo).toUpperCase()==='TOTAL';
     const name = total ? 'TOTAL' : x.activo;
-    const meta = total ? 'Cartera completa' : `${shortAssetName(x.activo)} · ${x.plataforma}`;
+    const meta = total ? 'Cartera completa'
+      : x.subtotal ? 'Los tres fondos · MyInvestor'
+      : `${shortAssetName(x.activo)} · ${x.plataforma}`;
     const fmtWeight = v => Number.isFinite(Number(v)) ? fmtPct(v) : (v || '-');
-    return `<tr class="${total?'totalRow':''}"><td><div class="assetName"><span class="bullet ${assetClass(x.activo)}"></span><div><span class="assetNameText">${escHtml(name)}</span><span class="assetMeta">${escHtml(meta)}</span></div></div></td><td>${fmtMoney(x.valor)}</td><td>${fmtMoney(x.invertido)}</td><td class="${clsByValue(x.pl)}">${fmtMoney(x.pl)}</td><td class="${clsByValue(x.rent)}">${fmtPct(x.rent)}</td><td>${fmtWeight(x.peso)}</td><td>${fmtWeight(x.objetivo)}</td><td class="${clsByValue(x.desv)}">${Number.isFinite(Number(x.desv))?fmtPct(x.desv):x.desv}</td></tr>`;
+    return `<tr class="${total?'totalRow':''}${x.subtotal?'subtotalRow':''}"><td><div class="assetName"><span class="bullet ${assetClass(x.activo)}"></span><div><span class="assetNameText">${escHtml(name)}</span><span class="assetMeta">${escHtml(meta)}</span></div></div></td><td>${fmtMoney(x.valor)}</td><td>${fmtMoney(x.invertido)}</td><td class="${clsByValue(x.pl)}">${fmtMoney(x.pl)}</td><td class="${clsByValue(x.rent)}">${fmtPct(x.rent)}</td><td>${fmtWeight(x.peso)}</td><td>${fmtWeight(x.objetivo)}</td><td class="${clsByValue(x.desv)}">${Number.isFinite(Number(x.desv))?fmtPct(x.desv):x.desv}</td></tr>`;
   }).join('');
 }
 
@@ -5621,7 +5661,7 @@ async function handleExcelImport(file){
 
 /* Dashboard interactivo: pestañas reales para visión global y allocation.
    v17: MyInvestor excluye Plan Pensiones; Plan Pensiones tiene pestaña propia. */
-let currentDashboardScope = 'global';
+const currentDashboardScope = 'global';   // v175.49 · sin pestañas, no cambia nunca
 let currentAllocationScope = 'assets';
 
 function normalizeKey(value){
@@ -5640,13 +5680,11 @@ function aggregateRows(rows){
   const rent = invertido ? pl / invertido : 0;
   return {valor,invertido,pl,rent};
 }
+// v175.49 · sin pestañas, el único alcance es la cartera entera. Se han
+// quitado los cuatro filtros por plataforma porque ya no los alcanza nadie;
+// dejarlos ahí haría creer que la función filtra cuando no.
 function getDashboardRows(scope, cartera){
-  const rows = carteraRowsAll(cartera);
-  if(scope === 'myinvestor') return rows.filter(x => normalizeKey(x.plataforma).includes('myinvestor') && !normalizeKey(x.activo).includes('plan pensiones'));
-  if(scope === 'trade republic') return rows.filter(x => normalizeKey(x.plataforma).includes('trade republic'));
-  if(scope === 'bitcoin') return rows.filter(x => normalizeKey(x.activo).includes('bitcoin') || normalizeKey(x.activo).includes('btc'));
-  if(scope === 'plan pensiones') return rows.filter(x => normalizeKey(x.activo).includes('plan pensiones'));
-  return rows;
+  return carteraRowsAll(cartera);
 }
 
 // v175.5: los cierres reales salen de NÚCLEO CIERRES, que se regenera solo desde
@@ -5907,23 +5945,16 @@ function getScopeAssetClosures(scope='global'){
     .sort((a,b)=>(Number(a.fecha)||0)-(Number(b.fecha)||0));
 }
 
-(function initDashboardTabs(){
-  const heroTabs = document.querySelectorAll('#dashboard .hero .tabs span');
-  heroTabs.forEach(tab=>{
-    tab.addEventListener('click',()=>{
-      currentDashboardScope = normalizeKey(tab.textContent);
-      renderDashboardScope(currentDashboardScope);
-    });
-  });
-  const allocationCard = document.querySelector('#dashboard .donutWrap')?.closest('.card');
-  const allocationTabs = allocationCard ? allocationCard.querySelectorAll('.tabs span') : [];
-  allocationTabs.forEach(tab=>{
-    tab.addEventListener('click',()=>{
-      currentAllocationScope = normalizeKey(tab.textContent);
-      renderAllocationScope(currentAllocationScope);
-    });
-  });
-})();
+/* v175.49 · initDashboardTabs() retirada entera. Enganchaba dos grupos de
+   pestañas y HOY YA no existía ninguno de los dos: el del hero se retira en
+   esta versión, y el de la tarjeta de asignación buscaba `#dashboard
+   .donutWrap`, que desapareció con la v175.48 — era código muerto sin que
+   nadie se hubiera dado cuenta.
+
+   `renderDashboardScope` NO se toca: es lo único que rellena la cifra
+   protagonista y las de ganancia y rentabilidad sobre coste. Borrarla las
+   dejaría en «--». Sus cuatro capas de sobrescritura siguen intactas: solo
+   se le han quitado las ramas que ya no puede alcanzar nadie. */
 
 const __portfolioOriginalUpdateDashboard = updateDashboard;
 updateDashboard = function(){
@@ -6008,11 +6039,10 @@ updateDashboard = function(){
     }
     return box;
   }
-  function labelForScope(scope){
-    const labels={global:'Valor de mercado real',myinvestor:'Valor de mercado MyInvestor','trade republic':'Valor de mercado Trade Republic',bitcoin:'Valor de mercado Bitcoin','plan pensiones':'Valor de mercado Plan Pensiones'};
-    return labels[scope]||labels.global;
-  }
-  function subtitleForScope(scope){ return scope==='global' ? 'Valor total actual de la cartera' : 'Lectura filtrada por fuente'; }
+  // v175.49 · un solo alcance: los cuatro rótulos por plataforma se han ido
+  // con las pestañas.
+  function labelForScope(){ return 'Valor de mercado real'; }
+  function subtitleForScope(){ return 'Valor total actual de la cartera'; }
 
   const oldRenderScope = window.renderDashboardScope;
   window.renderDashboardScope = function(scope){
@@ -6184,14 +6214,13 @@ updateDashboard = function(){
 </style>
 <script>
 (function(){
-  function rentSubtitleForScope(scope){
-    return scope==='myinvestor'
-      ? 'Sobre coste fiscal (con traspasos). No es tu XIRR.'
-      : 'Rentabilidad simple no realizada. No es tu XIRR.';
+  // v175.49 · la variante de MyInvestor se ha ido con las pestañas.
+  function rentSubtitleForScope(){
+    return 'Rentabilidad simple no realizada. No es tu XIRR.';
   }
   function polishDashboardTexts(scope){
     const heroP=document.querySelector('#dashboard .hero .cardHeader p');
-    if(heroP) heroP.textContent='Valor actual y lectura por plataforma.';
+    if(heroP) heroP.textContent='Valor actual de la cartera completa.';   // v175.49 · ya no hay lectura por plataforma
     // v175.47 · la tarjeta de avisos pasó a ser la primera .card del Dashboard y
   // este selector la capturaba, pisándole el subtítulo con el de la distribución.
   const allocationP=document.querySelector('#dashboard article.card:not(.hero):not(.evolutionCard):not(.alertsCard) .cardHeader p');
@@ -7377,25 +7406,17 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
      Todo es presentación: se leen valores YA renderizados desde el Excel y se
      reflejan en móvil. Ningún cálculo, ninguna cifra propia. */
 
-  // Chip de variación: espejo de G/P real y rentabilidad simple (texto y
-  // signo tal cual los pintó updateDashboard). Solo existe con datos.
-  function updateHeroChip(){
-    var heroBody=document.querySelector('#dashboard .hero .heroBody');
-    var gp=document.querySelector('#dashboard .capitalCard[data-capital="gp"] strong');
-    var rs=document.querySelector('#dashboard .capitalCard[data-capital="rentsimple"] strong');
-    if(!heroBody || !gp || !rs) return;
-    var chip=document.getElementById('mobileHeroChip');
-    var gpTxt=gp.textContent.trim(), rsTxt=rs.textContent.trim();
-    if(!gpTxt || gpTxt==='--'){ if(chip) chip.remove(); return; }
-    if(!chip){
-      chip=document.createElement('div');
-      chip.id='mobileHeroChip';
-      heroBody.appendChild(chip);
-    }
-    var sign=gp.classList.contains('red') ? 'neg' : gp.classList.contains('green') ? 'pos' : '';
-    chip.className='mobileHeroChip'+(sign ? ' '+sign : '');
-    chip.innerHTML='<strong>'+escHtml(gpTxt)+'</strong><span>'+escHtml(rsTxt)+'</span>';
-  }
+  /* v175.49c · updateHeroChip() RETIRADA. Pintaba una píldora en el móvil con
+     la ganancia y la rentabilidad total, y existía por una razón que dejó de
+     ser cierta: v170 ESCONDÍA esas dos tarjetas en el móvil, así que la
+     píldora era el único sitio donde se veían.
+
+     La v175.48 las sacó a la luz como cifras de apoyo y no me llevé la
+     píldora, así que las dos cifras salían DOS VECES en la misma pantalla.
+     Duplicación pura, justo lo que este ciclo elimina.
+
+     La línea «Valoración … · Excel recuperado» NO venía de aquí: es
+     `.dashDataAge`, un elemento estático propio, y se queda. */
 
   // Atención consolidada: agrupa las alertas renderizadas por la identidad
   // estable de su control (carteraKeyFromName sobre el NOMBRE fijo del
@@ -8470,11 +8491,9 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   function setupMobileMirrors(){
     if(mirrorsReady) return;
     mirrorsReady=true;
-    var grid=document.querySelector('#dashboard .capitalGrid');
-    if(grid && typeof MutationObserver==='function'){
-      new MutationObserver(updateHeroChip)
-        .observe(grid,{subtree:true,childList:true,characterData:true});
-    }
+    /* v175.49c · con la píldora se va su MutationObserver, que vigilaba
+       #dashApoyo en subtree+characterData. No era gratis: ensureHints()
+       reescribe esas tarjetas en cada pintada y lo despertaba cada vez. */
     // v175.21: el resumen por activo se reescribe con cada update; las
     // affordances (role/tabindex y regla de escala) se reponen al vuelo.
     var summaryGrid=document.getElementById('assetSummaryGrid');
@@ -8535,7 +8554,6 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
       new MutationObserver(scheduleMobileAudit)
         .observe(auditSection,{childList:true,characterData:true,subtree:true,attributes:true,attributeFilter:['class']});
     }
-    updateHeroChip();
     consolidateAlerts();
     updateMobileEvolution();
     renderMobileCartera();
@@ -11285,6 +11303,36 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   margin:0 0 2px!important;
   line-height:1.35!important;
 }
+
+/* v175.49b · «Requiere tu atención» era la ÚNICA tarjeta del Dashboard sin
+   la clase .pageBlock, que es la que reparte el aire entre bloques. El hueco
+   con «Visión global» medía 0 px en LOS DOS alcances: en escritorio no se
+   notaba porque cada panel lleva 22 px de aire interior y parecen separados,
+   pero en móvil v170 quita fondos y bordes y los dos se funden en uno.
+   Se le da el mismo margen por CSS y no por la clase, para no meterla en el
+   selector de paneles de verify_surfaces, que la excluye a propósito.
+   Usa el mismo token que .pageBlock, así sigue a la escala en cada tamaño. */
+#dashboard > .alertsCard{
+  margin-top:var(--topGap)!important;
+}
+
+/* la fila de subtotal de renta variable. Se distingue de una fila
+   de activo sin llegar a pesar como la de TOTAL: el mismo fondo hundido que
+   ya usa el sistema (--bg) y el nombre en el peso de los datos, no en negrita
+   de total. No inventa nivel: reutiliza la escalera canónica. */
+#cartera .assetTable .subtotalRow td{
+  background:var(--bg)!important;
+  border-top:1px solid var(--line)!important;
+}
+#cartera .assetTable .subtotalRow .assetNameText{
+  font-weight:620!important;
+}
+/* v175.49b · NO hay subtotal en la lista móvil de Cartera, y no es un
+   olvido: MOBILE_READY_PAGES excluye 'cartera' desde v175.21, que fusionó
+   Dashboard y Cartera en móvil. `show('cartera')` cae al Dashboard y el menú
+   «Más» no la ofrece, así que #mobileCartera no se muestra nunca. Añadir ahí
+   la fila era código imposible de ver: se retiró. Si algún día se quiere el
+   subtotal en móvil, su sitio es «Resumen por activo» del Dashboard. */
 
 /* ═══════════════════════════════════════════════════════════════════════
    v175.48 · JERARQUÍA DEL DASHBOARD Y AYUDAS EN SU SITIO
