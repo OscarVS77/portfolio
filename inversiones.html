@@ -1882,12 +1882,6 @@ html{
     </div>
 
     <section class="section active" id="dashboard">
-        <article class="card alertsCard">
-          <div class="cardHeader"><div><h3>Requiere tu atención</h3><p>Solo lo que necesita una decisión. Sale de la hoja RESUMEN del Excel.</p></div></div>
-          <div class="alerts">
-            <div class="alert"><div class="alertName">Estado financiero</div><div class="alertStatus"><span class="bullet bOff"></span>Sin datos · importa o carga el Excel.</div></div>
-          </div>
-        </article>
       <div class="grid pageBlock dashboardHeroOnly">
         <article class="card hero">
           <div class="cardHeader"><div><h2>Visión global</h2><p>Valor actual y lectura por plataforma.</p></div></div>
@@ -1900,9 +1894,34 @@ html{
               <div class="heroMetric"><label>Ganancia sobre coste</label><strong>--</strong><small>Resultado que aparece al sumar los activos según plataforma.</small></div>
               <div class="heroMetric"><label>Rentabilidad sobre coste</label><strong>--</strong><small>Rentabilidad simple mostrada por los activos/plataformas.</small></div>
             </div>
+            <!-- v175.48 · #heroTopMetrics lo inyecta ensureHeroTopMetrics() JUSTO AQUÍ,
+                 antes de #dashApoyo. Solo lleva la cifra protagonista; las tres de
+                 apoyo y las cinco de contexto son estáticas y viven debajo. -->
+            <section class="capitalGrid dashApoyoGrid" id="dashApoyo">
+              <article class="capitalCard" data-capital="gp" data-hint="gp"><label>Ganancia sobre lo aportado</label><strong>--</strong></article>
+              <article class="capitalCard capitalCardKey" data-capital="rentsimple" data-hint="rtotal"><label>Rentabilidad total</label><strong>--</strong></article>
+              <article class="capitalCard capitalCardKey" data-capital="xirr" data-hint="xirr"><label>Rentabilidad anual · XIRR</label><strong>--</strong></article>
+            </section>
+            <div class="ctxFold" id="dashCtxFold">
+              <button class="ctxToggle" type="button" id="dashCtxToggle" aria-expanded="false" aria-controls="dashCtxBody"><span class="ctxChev" aria-hidden="true"></span><span class="ctxToggleText">Ver el detalle · aportado, coste de bróker y precio de bitcoin</span></button>
+              <div class="ctxBody" id="dashCtxBody" hidden>
+                <article class="capitalCard ctxItem" data-capital="neto" data-hint="neto"><label>Capital aportado neto</label><strong>--</strong></article>
+                <article class="capitalCard ctxItem" data-capital="bruto" data-hint="bruto"><label>Total aportado bruto</label><strong>--</strong></article>
+                <div class="heroTopMetric ctxItem" id="heroMetricPL" data-hint="gpc"><label>Ganancia sobre coste</label><strong>--</strong><small>Resultado filtrado según la pestaña seleccionada.</small></div>
+                <div class="heroTopMetric ctxItem" id="heroMetricRent" data-hint="rcoste"><label>Rentabilidad sobre coste</label><strong>--</strong><small>Rentabilidad simple de los activos mostrados.</small></div>
+                <div class="heroTopMetric ctxItem" id="heroMetricBtcLive" data-hint="btc"><label>Bitcoin en directo</label><strong>--</strong><small><span class="btcLivePulse warn"></span>Conectando · BTC/EUR</small></div>
+              </div>
+            </div>
           </div>
         </article>
       </div>
+
+      <article class="card alertsCard">
+        <div class="cardHeader"><div><h3>Requiere tu atención</h3><p>Solo lo que necesita una decisión. Sale de la hoja RESUMEN del Excel.</p></div></div>
+        <div class="alerts">
+          <div class="alert"><div class="alertName">Estado financiero</div><div class="alertStatus"><span class="bullet bOff"></span>Sin datos · importa o carga el Excel.</div></div>
+        </div>
+      </article>
 
       <section class="pageBlock evolutionBlock" id="evolutionBlock">
         <article class="card evolutionCard">
@@ -1913,31 +1932,11 @@ html{
         </article>
       </section>
 
-      <section class="capitalGrid">
-        <article class="capitalCard" data-capital="bruto"><label>Total aportado histórico bruto</label><strong>--</strong><small>Todo el dinero aportado desde el inicio, antes de retiradas.</small></article>
-        <article class="capitalCard" data-capital="neto"><label>Capital aportado neto</label><strong>--</strong><small>Aportado histórico menos retiradas.</small></article>
-        <article class="capitalCard" data-capital="gp"><label>Ganancia sobre lo aportado</label><strong>--</strong><small>Valor actual menos capital aportado neto.</small></article>
-        <article class="capitalCard capitalCardKey" data-capital="rentsimple"><label>Rentabilidad simple real</label><strong>--</strong><small>Desde el primer día. Simple, no anualizada.</small></article>
-        <article class="capitalCard capitalCardKey" data-capital="xirr"><label>XIRR global</label><strong>--</strong><small>Desde el primer día. Rentabilidad anualizada.</small></article>
-      </section>
-
       <section class="card pageBlock assetSummaryCard" id="assetSummaryDash">
         <div class="cardHeader"><div><h3>Resumen por activo</h3><p>Valor actual, peso real y XIRR individual de cada activo.</p></div></div>
         <div class="assetSummaryGrid" id="assetSummaryGrid"></div>
       </section>
 
-      <div class="grid two pageBlock dashboardOps dashboardDistributionAlerts">
-        <div class="dashboardDistributionBlock">
-          <article class="card distributionCard">
-            <div class="cardHeader"><div><h3>Distribución operativa</h3><p>Peso real, objetivo, desviación y estado por activo.</p></div></div>
-            <div class="legend">
-              <div class="distTableWrap"><table class="distTable"><thead><tr><th>Activo</th><th>Valor actual</th><th>Peso real</th><th>Objetivo</th><th>Desviación</th><th>Estado</th></tr></thead><tbody>
-                <tr><td colspan="6">Sin datos · importa o carga el Excel para ver la distribución.</td></tr>
-              </tbody></table></div>
-            </div>
-          </article>
-        </div>
-      </div>
     </section>
 
     <section class="section" id="cartera">
@@ -4161,11 +4160,25 @@ function updateDashboard(){
   const hero = document.querySelectorAll('#dashboard .heroMetric');
   if(hero[0]) hero[0].innerHTML = `<label>Ganancia sobre coste</label><strong class="${clsByValue(plPlataforma)}">${fmtMoney(plPlataforma,2,true)}</strong><small>Resultado que aparece al sumar los activos según plataforma.</small>`;
   if(hero[1]) hero[1].innerHTML = `<label>Rentabilidad sobre coste</label><strong class="${clsByValue(rentPlat)}">${fmtPct(rentPlat,2,true)}</strong><small>Rentabilidad simple mostrada por los activos/plataformas.</small>`;
-  const cap = document.querySelectorAll('#dashboard .capitalCard');
-  const capVals = [fmtMoney(aportado), fmtMoney(neto), fmtMoney(gpReal), fmtPct(simple), fmtPct(xirr)];
-  cap.forEach((card,i)=>{
-    const strong=card.querySelector('strong');
-    if(strong && capVals[i]){ strong.textContent=capVals[i]; strong.className = i>=2 ? clsByValue([gpReal,simple,xirr][i-2]) : ''; }
+  // v175.48 · relleno POR CLAVE, no por índice. Hasta aquí se rellenaba con
+  // `cap.forEach((card,i)=>capVals[i])`, que dependía del orden del DOM: al
+  // repartir las cinco tarjetas entre el bloque de apoyo y el pliegue de
+  // contexto, el índice habría metido cada cifra en la tarjeta equivocada
+  // SIN ERROR NINGUNO. Es la misma trampa que documenta CLAUDE.md sobre la
+  // lectura posicional del Excel, y aquí ya estaba dentro del código.
+  const capVals = {
+    bruto:      {txt:fmtMoney(aportado), signo:null},
+    neto:       {txt:fmtMoney(neto),     signo:null},
+    gp:         {txt:fmtMoney(gpReal),   signo:gpReal},
+    rentsimple: {txt:fmtPct(simple),     signo:simple},
+    xirr:       {txt:fmtPct(xirr),       signo:xirr}
+  };
+  document.querySelectorAll('#dashboard .capitalCard[data-capital]').forEach(card=>{
+    const v = capVals[card.dataset.capital];
+    const strong = card.querySelector('strong');
+    if(!v || !strong || !v.txt) return;
+    strong.textContent = v.txt;
+    strong.className = v.signo===null ? '' : clsByValue(v.signo);
   });
   const center = document.querySelector('.donutCenter strong');
   if(center) center.textContent = fmtMoney(valueTotal);
@@ -4321,7 +4334,10 @@ function renderEvolutionLine(el, aportado, valor, fullSeries){
       const gp=last.v-inv;
       const cls=gp>=0?'green':'red';
       const stateLabel=last.p.estado==='provisional'?'Valoración provisional':last.p.estado==='reconstruido'?'Valoración reconstruida':'Cierre mensual real';
-      headline=`<div class="evoHeadline"><span class="evoHeadValue">${escHtml(fmtMoney(last.v))}</span><span class="evoHeadGp ${cls}">${gp>=0?'+':''}${escHtml(fmtMoney(gp))} G/P real</span><span class="evoHeadState">${stateLabel} · ${escHtml(last.p.fecha)}</span></div>`;
+      // v175.48 · fuera el valor de mercado: es el MISMO número que ya está a
+      // 42 px arriba, en la misma pantalla. Se quedan la G/P del tramo y el
+      // estado, que sí dicen algo que la cifra protagonista no dice.
+      headline=`<div class="evoHeadline"><span class="evoHeadGp ${cls}">${gp>=0?'+':''}${escHtml(fmtMoney(gp))} G/P real</span><span class="evoHeadState">${stateLabel} · ${escHtml(last.p.fecha)}</span></div>`;
     }
   }
   const apN=apXY[apXY.length-1], vlN=vlXY[vlXY.length-1];
@@ -5981,13 +5997,14 @@ updateDashboard = function(){
       box=document.createElement('div');
       box.id='heroTopMetrics';
       box.className='heroTopMetrics';
+      // v175.48 · aquí solo queda la cifra PROTAGONISTA. Ganancia sobre coste,
+      // Rentabilidad sobre coste y Bitcoin en directo bajaron al pliegue de
+      // contexto y son estáticas en el HTML: conservan sus ids, así que
+      // renderDashboardScope y ensureBtcCard las siguen encontrando.
       box.innerHTML=`
-        <div class="heroTopMetric primary" id="heroMetricValue"><label>Valor de mercado real</label><strong><span class="dot"></span>--</strong><small>Valor total actual de la cartera</small></div>
-        <div class="heroTopMetric" id="heroMetricPL"><label>Ganancia sobre coste</label><strong>--</strong><small>Resultado filtrado según la pestaña seleccionada.</small></div>
-        <div class="heroTopMetric" id="heroMetricRent"><label>Rentabilidad sobre coste</label><strong>--</strong><small>Rentabilidad simple de los activos mostrados.</small></div>
-        <div class="heroTopMetric" id="heroMetricBtcLive"><label>Bitcoin en directo</label><strong>--</strong><small><span class="btcLivePulse warn"></span>Conectando · BTC/EUR</small></div>`;
-      const chart=document.getElementById('dashboardChart');
-      if(chart) heroBody.insertBefore(box, chart); else heroBody.appendChild(box);
+        <div class="heroTopMetric primary" id="heroMetricValue" data-hint="valor"><label>Valor de mercado real</label><strong><span class="dot"></span>--</strong><small>Valor total actual de la cartera</small></div>`;
+      const ancla=document.getElementById('dashApoyo');
+      if(ancla) heroBody.insertBefore(box, ancla); else heroBody.appendChild(box);
     }
     return box;
   }
@@ -7476,7 +7493,13 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
       host=document.createElement('section');
       host.id='mobileEvolution';
       host.className='mobileEvolution';
-      section.insertBefore(host, section.querySelector('.capitalGrid'));
+      // v175.48 · el ancla era section.querySelector('.capitalGrid'), que dejó
+      // de ser HIJA DIRECTA de #dashboard al meterse en el panel de cifras:
+      // insertBefore lanzaba «not a child of this node» en cada carga móvil.
+      // Ahora se ancla a #evolutionBlock, que sí lo es, y con salida segura.
+      var ancla=document.getElementById('evolutionBlock');
+      if(ancla && ancla.parentNode===section) section.insertBefore(host, ancla);
+      else section.appendChild(host);
     }
     var dates=series.map(mobileEvoDateMs).filter(Number.isFinite);
     var minD=Math.min.apply(null,dates), maxD=Math.max.apply(null,dates);
@@ -8677,6 +8700,224 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   window.startBtcLivePrice=connectWebSocket;
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
   else boot();
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════
+   v175.48 · AYUDAS EN SU SITIO — mecanismo genérico y reutilizable
+
+   Criterio de Óscar, 22/08/2026: «un icono de ayuda junto a cada rótulo que
+   despliegue dos líneas donde estoy mirando — qué es y sobre qué se calcula».
+
+   NO SABE NADA DEL DASHBOARD. Cualquier elemento con [data-hint="clave"] y
+   una entrada en HINTS recibe su disco y su caja. Las cajas «qué estás
+   comparando» del Benchmark usarán esto sin una línea nueva de JS.
+
+   POR QUÉ ensureHints() EXISTE en vez de escribir los botones en el HTML:
+   renderDashboardScope y updateDashboard reescriben el innerHTML de estas
+   tarjetas en cada pintada, y se llevarían por delante cualquier botón
+   estático. ensureHints() los repone después. La maqueta podía permitirse
+   marcado estático; el archivo real no.
+
+   PRESUPUESTO DE COSTE — scripts/verify_hints_cost.py lo vigila:
+   2 escuchadores delegados en document, 1 reflow por apertura, <16,7 ms.
+   Si añades un addEventListener por botón, lo rompes.
+
+   LAS CIFRAS DE LOS TEXTOS SE PLANTILLAN desde el Excel (Regla 3). Ni una
+   sola va escrita fija: si el libro cambia, el texto cambia con él.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function(){
+  function money(v){ return (typeof fmtMoney==='function') ? fmtMoney(v) : String(v ?? '--'); }
+
+  // Fecha del primer flujo real: se busca la cabecera de la tabla MOVIMIENTOS
+  // igual que hace updateMovimientosFromXirr, no por número de fila fijo.
+  function primeraFecha(){
+    try{
+      const rows = sheetRows('XIRR GLOBAL');
+      let h=-1;
+      for(let i=0;i<rows.length;i++){
+        if(normalizeText(rows[i]?.[0]||'')==='fecha' && normalizeText(rows[i]?.[2]||'')==='tipo'){ h=i; break; }
+      }
+      if(h<0) return null;
+      let min=null;
+      for(let i=h+1;i<rows.length;i++){
+        const f=rows[i]?.[0], t=String(rows[i]?.[2]||'').trim();
+        if(!f || !t || t.toLowerCase()==='valor actual') continue;
+        const n=Number(f);
+        if(Number.isFinite(n) && (min===null || n<min)) min=n;
+      }
+      return min===null ? null : fmtDate(min);
+    }catch(e){ return null; }
+  }
+
+  function datos(){
+    const r = sheetRows('RESUMEN');
+    if(!r || !r.length) return null;
+    const valor=cell(r,5,2), invPlat=cell(r,5,4), plPlat=cell(r,5,6);
+    const bruto=cell(r,6,2), neto=cell(r,6,4), gp=cell(r,6,6);
+    if(!Number.isFinite(Number(valor))) return null;
+    let btcPos=null;
+    try{
+      const fila=(parseCartera()||[]).find(x=>/bitcoin|btc/i.test(String(x.activo)));
+      if(fila) btcPos=fila.valor;
+    }catch(e){}
+    return {
+      valor, neto, bruto, gp, invPlat, plPlat,
+      retirado: Number(bruto)-Number(neto),
+      difBases: Number(invPlat)-Number(neto),
+      btcPos,
+      fecha: fmtDate(cell(sheetRows('XIRR GLOBAL'),4,1)),
+      desde: primeraFecha()
+    };
+  }
+
+  // Los nueve textos aprobados por Óscar el 22/08/2026. Ver
+  // docs/textos_ayuda_v175_48.md, que guarda la fórmula del Excel de la que
+  // sale cada afirmación. NO se reescriben sin su visto bueno.
+  const HINTS = {
+    valor: {
+      q: 'Lo que valdrían tus seis activos si los vendieras hoy.',
+      s: d => `La suma de las seis valoraciones que anotaste el ${d.fecha}. No es un precio en directo: cambia cuando actualizas el Excel.`
+    },
+    gp: {
+      q: 'Lo que has ganado con tu propio dinero.',
+      s: d => `Valor de mercado menos capital aportado neto: ${money(d.valor)} − ${money(d.neto)}.`
+    },
+    rtotal: {
+      q: 'Lo que ha rendido tu dinero en todo el periodo, sin anualizar.',
+      s: d => `La ganancia dividida entre el capital aportado neto: ${money(d.gp)} ÷ ${money(d.neto)}.`
+    },
+    xirr: {
+      q: 'El equivalente por año, teniendo en cuenta cuándo metiste cada euro.',
+      s: d => `Todos tus movimientos con su fecha${d.desde?', desde el '+d.desde:''}. Sale más alta que la total porque la mayoría de tus euros llevan dentro mucho menos que el primero, y esta cifra los anualiza.`
+    },
+    neto: {
+      q: 'Tu dinero que sigue dentro, después de restar lo que has sacado.',
+      s: d => `Todo lo aportado menos las ventas y retiradas: ${money(d.bruto)} − ${money(d.retirado)}. Es la base de la ganancia y de la rentabilidad total.`
+    },
+    bruto: {
+      q: 'Todo el dinero que ha salido de tu bolsillo desde el primer día.',
+      s: () => 'La suma de tus aportaciones y compras, sin descontar nada de lo que ha vuelto.'
+    },
+    gpc: {
+      q: 'La misma ganancia, medida como la miden tus plataformas.',
+      s: d => `El coste que informa cada bróker (${money(d.invPlat)}), no tu aportación neta. Sale ${money(d.difBases)} menos, exactamente lo que difieren las dos bases.`
+    },
+    rcoste: {
+      q: 'La rentabilidad que ves al entrar en MyInvestor o Trade Republic.',
+      s: () => 'El coste de bróker. Es la única de las tres que puedes contrastar con sus pantallas.'
+    },
+    btc: {
+      q: 'El precio de un bitcoin ahora mismo, en directo desde Coinbase.',
+      s: d => `El mercado, no tu cartera. Tu posición en bitcoin ${d.btcPos!=null?'son '+money(d.btcPos)+', y esa sí está':'está'} en Cartera actual.`
+    }
+  };
+
+  function ensureHints(){
+    const d = datos();
+    document.querySelectorAll('[data-hint]').forEach(host=>{
+      const clave = host.dataset.hint;
+      const txt = HINTS[clave];
+      if(!txt) return;
+      const label = host.querySelector('label');
+      if(!label) return;
+
+      // el disco: sin texto propio, el «?» lo pinta ::after, así el
+      // textContent del rótulo no cambia y verify_type/verify_values no ven
+      // ninguna diferencia
+      if(!label.querySelector('.hintBtn')){
+        const b=document.createElement('button');
+        b.type='button';
+        b.className='hintBtn';
+        b.setAttribute('data-hint-btn', clave);
+        b.setAttribute('aria-expanded','false');
+        b.setAttribute('aria-controls','hint-'+clave);
+        b.setAttribute('aria-label','Qué es '+label.textContent.trim());
+        label.appendChild(b);
+      }
+      let body=host.querySelector('.hintBody');
+      if(!body){
+        body=document.createElement('div');
+        body.className='hintBody';
+        body.id='hint-'+clave;
+        body.hidden=true;
+        host.appendChild(body);
+      }
+      if(d){
+        body.innerHTML='<p><b>Qué es</b>'+escHtml(txt.q)+'</p><p><b>Sobre qué se calcula</b>'+escHtml(txt.s(d))+'</p>';
+      }else{
+        body.innerHTML='<p><b>Qué es</b>'+escHtml(txt.q)+'</p><p><b>Sobre qué se calcula</b>Importa el Excel para ver sobre qué cifras se calcula.</p>';
+      }
+    });
+  }
+  window.ensureHints=ensureHints;
+
+  function cerrarTodas(salvo){
+    document.querySelectorAll('.hintBtn[aria-expanded="true"]').forEach(b=>{
+      if(b===salvo) return;
+      b.setAttribute('aria-expanded','false');
+      const c=document.getElementById(b.getAttribute('aria-controls'));
+      if(c) c.hidden=true;
+    });
+  }
+
+  // ESCUCHADOR 1 de 2 · delegado, y UNO SOLO para las ayudas Y el pliegue.
+  // Empezaron siendo dos handlers de click separados y verify_hints_cost lo
+  // marcó: el presupuesto son 2 escuchadores en total, no 2 por cosa.
+  // FASE DE CAPTURA a propósito: en móvil la tarjeta de XIRR lleva su propio
+  // click que navega a la página XIRR, y el disco de ayuda vive dentro. En
+  // burbujeo, stopPropagation() llegaría DESPUÉS de que esa tarjeta ya
+  // hubiera navegado. En captura se ejecuta antes y el disco no arrastra.
+  document.addEventListener('click', function(e){
+    const fold=e.target.closest('#dashCtxToggle');
+    if(fold){
+      const body=document.getElementById('dashCtxBody');
+      if(!body) return;
+      const abierto=fold.getAttribute('aria-expanded')==='true';
+      fold.setAttribute('aria-expanded', abierto?'false':'true');
+      body.hidden=abierto;
+      const rot=fold.querySelector('.ctxToggleText');
+      if(rot) rot.textContent = abierto
+        ? 'Ver el detalle · aportado, coste de bróker y precio de bitcoin'
+        : 'Ocultar el detalle';
+      return;
+    }
+    const btn=e.target.closest('.hintBtn');
+    if(!btn){ cerrarTodas(null); return; }
+    e.preventDefault(); e.stopPropagation();
+    const body=document.getElementById(btn.getAttribute('aria-controls'));
+    if(!body) return;
+    const abierta=btn.getAttribute('aria-expanded')==='true';
+    cerrarTodas(btn);
+    btn.setAttribute('aria-expanded', abierta?'false':'true');
+    body.hidden=abierta;
+    // «donde estoy mirando» tiene que ser literal: en el móvil una caja que
+    // se abre bajo el pliegue no la ve nadie. Solo se desplaza si no cabe.
+    if(!abierta){
+      const r=body.getBoundingClientRect();
+      if(r.bottom>window.innerHeight || r.top<0) body.scrollIntoView({block:'nearest', behavior:'smooth'});
+    }
+  }, true);
+
+  // ESCUCHADOR 2 de 2 · Escape cierra
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') cerrarTodas(null); });
+
+  /* ── enganche · capa MÁS EXTERNA, que es la operación segura ────────
+     CLAUDE.md avisa de que tocar una capa INTERMEDIA de la cadena de
+     updateDashboard deja las de encima impredecibles. Esto no toca ninguna:
+     añade una nueva por fuera, que llama a la anterior y repone las ayudas
+     después. Mismo patrón con renderDashboardScope. */
+  function envolver(nombre){
+    const previo = window[nombre];
+    if(typeof previo !== 'function') return;
+    window[nombre] = function(){
+      const out = previo.apply(this, arguments);
+      try{ ensureHints(); }catch(e){}
+      return out;
+    };
+  }
+  function enganchar(){ envolver('updateDashboard'); envolver('renderDashboardScope'); ensureHints(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', enganchar);
+  else enganchar();
 })();
 </script>
 
@@ -11043,6 +11284,232 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   color:var(--muted)!important;
   margin:0 0 2px!important;
   line-height:1.35!important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   v175.48 · JERARQUÍA DEL DASHBOARD Y AYUDAS EN SU SITIO
+
+   Va al final de la ÚLTIMA capa de estilo a propósito: necesita ganar a las
+   de v175.45 y a las reglas móviles de v170. El recuento de bloques sigue en
+   29 y no sube.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── la protagonista ocupa el panel entera ─────────────────────────────── */
+#dashboard .heroTopMetrics{
+  grid-template-columns:minmax(0,1fr)!important;
+  margin:14px 0 14px!important;
+}
+
+/* ── apoyo · tres tarjetas a 30 ────────────────────────────────────────
+   align-items:start es lo que impide que abrir una ayuda estire las otras
+   dos tarjetas de la fila. Sin esto, la rejilla iguala alturas y las tres
+   crecen a la vez. */
+#dashboard .dashApoyoGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:start!important;
+  gap:12px!important;
+  margin:0!important;
+}
+
+/* ── el pliegue de contexto ────────────────────────────────────────────── */
+#dashboard .ctxFold{
+  margin-top:14px;
+  border-top:1px solid var(--line2);
+  padding-top:4px;
+}
+#dashboard .ctxToggle{
+  width:100%;
+  background:transparent;
+  border:0;
+  color:var(--muted);
+  font:inherit;
+  font-size:12px;
+  padding:9px 2px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  text-align:left;
+  border-radius:8px;
+  min-height:44px;           /* área táctil, igual que el disco de ayuda */
+  -webkit-tap-highlight-color:transparent;
+}
+#dashboard .ctxToggle:hover{color:var(--text2);}
+#dashboard .ctxToggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+#dashboard .ctxChev{
+  width:0;height:0;
+  border-left:5px solid currentColor;
+  border-top:4px solid transparent;
+  border-bottom:4px solid transparent;
+  transition:transform .18s;
+  flex:0 0 auto;
+}
+#dashboard .ctxToggle[aria-expanded="true"] .ctxChev{transform:rotate(90deg);}
+#dashboard .ctxBody{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:start!important;
+  gap:10px;
+  margin-top:8px;
+}
+#dashboard .ctxBody[hidden]{display:none!important;}
+
+/* ── el contexto SIGUE SIENDO tarjeta de dato ──────────────────────────
+   Se mantiene su superficie canónica (degradado --panel→--panel2, borde
+   --line, radio 12): lo que lo subordina es el TAMAÑO, que es justo el
+   principio de esta versión. Cambiarle además la superficie diría lo mismo
+   dos veces, y verify_surfaces lo mide como tarjeta. */
+#dashboard .ctxItem{
+  min-height:0!important;
+  padding:13px 14px!important;
+}
+#dashboard .ctxItem > strong{
+  font-size:15px!important;      /* escalón √2 por debajo de 21 */
+  font-weight:500!important;
+  letter-spacing:-.3px!important;
+  line-height:1.2!important;
+}
+/* El <small> del contexto sobra: su explicación la da ahora la ayuda. Se
+   conserva el de Bitcoin porque ahí NO es descripción sino estado vivo del
+   WebSocket, y setStatus() escribe en él. */
+#dashboard .ctxItem > small{display:none!important;}
+#dashboard #heroMetricBtcLive.ctxItem > small{
+  display:block!important;
+  font-size:10.5px!important;
+  margin-top:5px!important;
+}
+
+/* ═══ EL MECANISMO DE AYUDA ═══════════════════════════════════════════ */
+.hintBtn{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:15px;height:15px;
+  margin-left:7px;
+  vertical-align:-2px;
+  padding:0;
+  border:1px solid currentColor;
+  border-radius:50%;
+  background:transparent;
+  color:inherit;
+  /* 0,72 es el mínimo que pasa 4,5:1 sobre --panel, la superficie más clara
+     donde se apoya. Medido: al 0,45 daba 2,63:1 y no llegaba ni al umbral
+     de elemento gráfico. Discreto porque el disco es pequeño, no porque el
+     color sea débil. */
+  opacity:.72;
+  cursor:pointer;
+  transition:opacity .15s, background .15s, color .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+/* El signo lo pinta el CSS: el botón NO tiene texto, así el textContent del
+   rótulo no cambia y ni verify_type ni verify_values ven nada distinto. */
+.hintBtn::after{
+  content:"?";
+  font-size:9.5px;
+  font-weight:700;
+  line-height:1;
+  letter-spacing:0;
+  text-transform:none;
+  font-family:inherit;
+}
+/* MÓVIL PRIMERO · el área táctil son 44px reales. El icono no crece; crece
+   la zona que responde al dedo. */
+.hintBtn::before{
+  content:"";
+  position:absolute;
+  top:50%;left:50%;
+  width:44px;height:44px;
+  transform:translate(-50%,-50%);
+}
+.hintBtn:hover{opacity:1;}
+.hintBtn[aria-expanded="true"]{
+  opacity:1;
+  background:var(--accent);
+  color:var(--active-solid-ink);
+  border-color:var(--accent);
+}
+.hintBtn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;opacity:1;}
+
+.hintBody{
+  margin-top:11px;
+  background:var(--bg);
+  border:1px solid var(--line);
+  border-left:2px solid var(--accent);
+  border-radius:10px;
+  padding:11px 13px;
+  font-size:12.5px;
+  line-height:1.55;
+  color:var(--text2);
+  text-transform:none;
+  letter-spacing:normal;
+  font-weight:400;
+  /* sin esto, scrollIntoView deja la caja 3px fuera por abajo en WebKit */
+  scroll-margin:14px;
+}
+.hintBody[hidden]{display:none!important;}
+.hintBody p{margin:0;}
+.hintBody p + p{margin-top:6px;padding-top:6px;border-top:1px solid var(--line2);}
+/* El encabezado de cada línea ES una micro-etiqueta y lleva su tratamiento
+   canónico (10,5 / 700 / +1,3 / versalitas). No es decoración: verify_type
+   busca «la hoja de menor cuerpo en versalitas» dentro de la tarjeta, así
+   que si esto fuera un tamaño distinto secuestraría la medición del rótulo.
+   Con el tratamiento canónico, elija la que elija, la medida sale bien. */
+.hintBody b{
+  display:block;
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:1.3px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:2px;
+}
+
+/* ═══ MÓVIL ══════════════════════════════════════════════════════════
+   El móvil conserva SU escala (sistema v170): aquí solo se corrige QUÉ se
+   ve, no a qué tamaño. Las reglas de v170 escondían «Ganancia sobre lo
+   aportado» y «Rentabilidad total» porque entonces competían con todo lo
+   demás; ahora son las tres cifras de apoyo y tienen que verse. */
+@media(max-width:760px){
+  #dashboard #dashApoyo .capitalCard,
+  #dashboard #dashCtxBody .capitalCard{display:block!important;}
+  /* v170 escondía en móvil todo .heroTopMetric que no fuera la protagonista.
+     Seguía siendo correcto cuando competían en la cabecera; ahora esas tres
+     viven dentro del pliegue, que ya está cerrado por defecto. Esconderlas
+     otra vez las dejaría inalcanzables en el móvil. */
+  #dashboard #dashCtxBody .heroTopMetric{display:flex!important;}
+
+  /* ORDEN. En móvil `.heroBody` y `#dashboard` son flex y v170 reparte
+     `order` entre sus hijos. Lo que no lo declara se queda en 0 y se va
+     ARRIBA DEL TODO: sin estas cuatro líneas, el pliegue salía antes que la
+     cifra protagonista y la tarjeta de avisos antes que todo, que es
+     exactamente lo contrario de lo que pidió Óscar. La firma no lo habría
+     cantado —son posiciones, no propiedades de un elemento contra sí mismo—;
+     lo cazó mirar la captura. */
+  /* ALINEACIÓN. v170 mandaba la cifra de .capitalCard a la derecha
+     (`text-align:right`, línea ~10315) mientras el rótulo quedaba a la
+     izquierda: el ojo saltaba de lado en cada línea. Óscar el 23/08/2026:
+     «alineadas bajo su rótulo se leen de un vistazo».
+
+     Y dentro del propio pliegue ya era incoherente: las dos .capitalCard
+     iban a la derecha y las tres .heroTopMetric ya venían a la izquierda.
+     Esto las deja a todas igual, incluida la cifra protagonista.
+
+     Solo alineación: ni un tamaño, ni un valor, ni una superficie. */
+  #dashboard #dashApoyo .capitalCard > strong,
+  #dashboard #dashCtxBody .capitalCard > strong{
+    text-align:left!important;
+  }
+  #dashboard #dashApoyo{order:2!important;}
+  #dashboard #dashCtxFold{order:5!important;}   /* el detalle, al final del panel */
+  #dashboard > .alertsCard{order:2!important;}  /* justo debajo de las cifras */
+  #dashboard > #mobileEvolution{order:3!important;}
+  #dashboard #dashApoyo{grid-template-columns:1fr!important;gap:0!important;}
+  #dashboard #dashCtxBody{grid-template-columns:1fr!important;gap:0!important;}
+  #dashboard #dashApoyo .capitalCard,
+  #dashboard #dashCtxBody .capitalCard,
+  #dashboard #dashCtxBody .heroTopMetric{order:0!important;}
 }
 </style>
 </body>
