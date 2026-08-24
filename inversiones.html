@@ -2105,12 +2105,25 @@ html{
       <section class="benchmarkHero card pageBlock">
         <div>
           <span class="eyebrow">Benchmark</span>
-          <h2>Tu cartera real vs Cartera objetivo</h2>
-          <p>Cambia de vista y carga automáticamente la comparativa si ya hay datos disponibles.</p>
+          <!-- v175.50 · fuera el <h2> «Tu cartera real vs Cartera objetivo» y su
+               párrafo: nombraban UNA vista y se quedaban fijos en las siete. Lo
+               que se compara lo dice el título del panel, que sí es dinámico. -->
         </div>
+        <!-- v175.50 · el encabezado pasa a barra. Al retirar el titular fijo, la
+             columna izquierda se quedaba vacía y el panel medía 190 px de casi
+             nada. Los tres indicadores van en fila y la nota, que puede ser
+             larga («URTH valorado el … (mercado cerrado)»), en su propia línea.
+             Los dos últimos vienen de la tarjeta «Criterio técnico» retirada:
+             NO se borran, son el observable del invariante de v175.33 —los
+             indicadores secundarios no pueden quedar en verde bajo un estado de
+             error— y test_functional los lee en seis sitios, tres en rutas de
+             error. -->
         <div class="benchmarkState">
-          <span>Estado API</span>
-          <strong id="benchmarkApiStatus">Sin datos</strong>
+          <div class="benchmarkStateRow">
+            <div><span>Estado API</span><strong id="benchmarkApiStatus">Sin datos</strong></div>
+            <div><span>Edge Function</span><strong id="benchmarkEdgeCheck" class="neutral">Pendiente</strong></div>
+            <div><span>API externa</span><strong id="benchmarkProviderCheck" class="neutral">No conectada</strong></div>
+          </div>
           <em id="benchmarkApiNote">Carga el Excel antes de solicitar la comparativa.</em>
         </div>
       </section>
@@ -2118,22 +2131,36 @@ html{
       <section class="card pageBlock">
         <div class="cardHeader">
           <div>
-            <h3 id="benchmarkPanelTitle">Cartera global · Real vs objetivo</h3>
-            <p id="benchmarkPanelSubtitle">Tu cartera real frente a lo que habría pasado siguiendo exactamente tu asignación objetivo, con los mismos movimientos. Mide si desviarte de tus pesos ideales te ha costado o dado dinero. Plan de Pensiones aparte.</p>
+            <h3 id="benchmarkPanelTitle">Tu reparto real vs tu reparto objetivo · sin el Plan de Pensiones</h3>
+            <!-- v175.50 · el subtítulo es la PREGUNTA de la vista. Lo reescribe
+                 applyBenchmarkView; esto es solo el estado inicial. -->
+            <p id="benchmarkPanelSubtitle">¿Me está costando dinero desviarme de mi reparto objetivo?</p>
           </div>
         </div>
         <div class="benchmarkNav" id="benchmarkTabs">
           <div class="benchmarkNavBar">
             <div class="benchmarkGroupTabs" id="benchmarkGroupTabs">
-              <button class="active" type="button" data-benchmark-group="estrategia">Estrategia</button>
-              <button type="button" data-benchmark-group="mercado">Mercado</button>
-              <button type="button" data-benchmark-group="activos">Activos</button>
+              <!-- v175.50 · las etiquetas van escritas aquí (nada las reescribe);
+                   las claves siguen siendo las de siempre, que son internas. -->
+              <button class="active" type="button" data-benchmark-group="estrategia">Mi reparto</button>
+              <button type="button" data-benchmark-group="mercado">Un solo índice</button>
+              <button type="button" data-benchmark-group="activos">Mis activos</button>
             </div>
           </div>
           <div class="benchmarkNavBar">
             <div class="benchmarkTabs" id="benchmarkViewTabs"></div>
           </div>
-          <p class="benchmarkGroupHint" id="benchmarkGroupHint">¿Sigo bien mi asignación objetivo?</p>
+          <!-- v175.50 · aquí vivía la pregunta del GRUPO, que en tres de las
+               siete vistas era falsa. La pregunta de la vista la escribe
+               applyBenchmarkView en #benchmarkPanelSubtitle. -->
+        </div>
+        <!-- v175.50 · «Qué estás comparando». Siempre visible, no detrás de un
+             disco: en el Dashboard la ayuda responde «qué es este número» y hay
+             nueve; aquí hay una por pantalla y es el encabezado de la lectura.
+             Los dos textos los rellena applyBenchmarkView desde la vista. -->
+        <div class="benchmarkCompare" id="benchmarkCompare">
+          <p><b>Qué estás comparando</b><span id="benchmarkCompareA"></span></p>
+          <p><b>Qué significa la diferencia</b><span id="benchmarkCompareB"></span></p>
         </div>
         <div class="benchmarkApiActions">
           <button class="btn primary" id="benchmarkLoadBtn" type="button">Cargar benchmark</button>
@@ -2141,34 +2168,38 @@ html{
         </div>
         <div class="benchmarkGrid pageBlock">
           <article class="benchmarkMetric card">
-            <span>Tu cartera real</span>
+            <span>Tu cartera · sin el Plan</span>
             <strong id="benchmarkPortfolioReturn">--</strong>
-            <em id="benchmarkPortfolioNote">Sin Plan de Pensiones · Excel</em>
+            <em id="benchmarkPortfolioNote">Excel · movimientos reales</em>
           </article>
           <article class="benchmarkMetric card">
-            <span>Cartera objetivo</span>
+            <span>Tu reparto objetivo</span>
             <strong id="benchmarkOscarReturn">--</strong>
-            <em id="benchmarkOscarNote">Pesos objetivo · pendiente</em>
+            <em id="benchmarkOscarNote">Mismos movimientos simulados</em>
           </article>
           <article class="benchmarkMetric card">
             <span>Diferencia</span>
             <strong id="benchmarkDiffReturn" class="neutral">--</strong>
-            <em>Tu cartera menos Cartera objetivo</em>
+            <em>Tu cifra menos la de la referencia</em>
           </article>
         </div>
         <div class="benchmarkPanelStable" id="benchmarkPanelStable">
-        <div class="benchmarkChartReal" id="benchmarkChart"><div class="chartEmpty">Pulsa “Cargar benchmark” para simular tus mismos movimientos contra tu Cartera objetivo.</div></div>
-        <div class="benchmarkLegend"><span><span class="legendDot bGreen"></span>Tu cartera actual</span><span><span class="legendDot bGold"></span>Cartera objetivo simulada</span></div>
-        <div class="benchmarkSummary" id="benchmarkSummary"><span>Lectura del resultado</span><strong>Pendiente de cargar</strong><p>Cuando cargues el benchmark, aquí verás una explicación simple del resultado: si tu cartera real va por delante o por detrás de tu Cartera objetivo.</p></div>
+        <div class="benchmarkChartReal" id="benchmarkChart"><div class="chartEmpty">Pulsa “Cargar benchmark” para simular tus mismos movimientos contra tu reparto objetivo.</div></div>
+        <div class="benchmarkLegend"><span><span class="legendDot bGreen"></span>Tu cartera · sin el Plan</span><span><span class="legendDot bGold"></span>Tu reparto objetivo simulado</span></div>
+        <div class="benchmarkSummary" id="benchmarkSummary"><span>Lectura del resultado</span><strong>Pendiente de cargar</strong><p>Cuando cargues el benchmark, aquí verás una explicación simple del resultado: si tu reparto real va por delante o por detrás de tu reparto objetivo.</p></div>
         </div>
         <div class="benchmarkError" id="benchmarkError"></div>
       </section>
 
-      <section class="grid two pageBlock">
+      <!-- v175.50 · era `grid two`: la segunda tarjeta era «Criterio técnico»,
+           idéntica en las siete vistas y con una nota «Lectura:» que hablaba de
+           la Cartera objetivo también en la vista de Bitcoin, donde era falsa.
+           Retirada; sus dos indicadores vivos están ahora en el encabezado. -->
+      <section class="grid pageBlock">
         <article class="card">
           <div class="cardHeader">
             <div>
-              <h3>Composición de la Cartera objetivo</h3>
+              <h3>Composición de tu reparto objetivo</h3>
               <p>Pesos objetivo actuales sin Plan de Pensiones.</p>
             </div>
           </div>
@@ -2186,21 +2217,6 @@ html{
           </div>
         </article>
 
-        <article class="card">
-          <div class="cardHeader">
-            <div>
-              <h3>Criterio técnico</h3>
-              <p>Cartera objetivo con los movimientos del Excel. El Excel sigue siendo la fuente real.</p>
-            </div>
-          </div>
-          <div class="sheetChecks auditWebChecks">
-            <div><strong>Excel como fuente real</strong><span class="green">Sí</span></div>
-            <div><strong>Plan Pensiones</strong><span class="neutral">Separado</span></div>
-            <div><strong>Edge Function</strong><span id="benchmarkEdgeCheck" class="neutral">Pendiente</span></div>
-            <div><strong>API externa</strong><span id="benchmarkProviderCheck" class="neutral">No conectada</span></div>
-          </div>
-          <div class="benchmarkNote"><strong>Lectura:</strong> la comparación usa tus movimientos reales de XIRR GLOBAL y simula esos mismos flujos contra Cartera objetivo. La línea verde ya no dibuja una rentabilidad falsa: marca tu valor actual frente a la Cartera objetivo.</div>
-        </article>
       </section>
     </section>
 
@@ -2315,7 +2331,10 @@ const pages=[
   ["xirr","XIRR global","Rentabilidad ponderada y flujos de inversión.","off"],
   ["movimientos","Movimientos","Movimientos conectados con el cálculo XIRR.","off"],
   ["historial","Historial","Resumen anual y años anteriores.","off"],
-  ["benchmark","Benchmark","Tu cartera real frente a cartera objetivo y referencias externas.","off"],
+  // v175.50 · decía «frente a cartera objetivo y referencias externas», con el
+  // rótulo retirado y nombrando una sola de las tres comparaciones. Ahora son
+  // los tres grupos, tal como se llaman en la barra.
+  ["benchmark","Benchmark","Mi reparto, un solo índice y mis activos.","off"],
     ["auditoria","Auditoría","Estado técnico de la web y funciones activas.","off"]
 ];
 const nav=document.getElementById("nav");
@@ -2518,15 +2537,29 @@ function getBenchmarkRvWeights(){
   return eq.map(x=>({...x, weight:x.weight/total}));
 }
 
+// v175.50 · cada vista declara su PREGUNTA y su caja «qué estás comparando».
+// Antes la pregunta era del GRUPO y por eso mentía en tres de las siete vistas:
+// «¿Acerté con el timing de mis compras?» cubría Bitcoin, Oro y MSCI vs S&P 500,
+// y el timing no es evaluable en ninguna —la simulación compra en las mismas
+// fechas de los movimientos reales—. Con una pregunta por vista no puede volver.
+// Los siete textos los aprobó Óscar el 23/08/2026; están en
+// docs/textos_benchmark_v175_50.md con la celda del Excel o la función del
+// código de la que sale cada afirmación. NO se reescriben sin su visto bueno.
 const BENCHMARK_VIEW_CONFIG = {
   global: {
     serie:{ real:'--accent', comp:'--capital-line', trazoComp:'ref' },
-    title:'Cartera global · Real vs objetivo',
-    subtitle:'Tu cartera real frente a lo que habría pasado siguiendo exactamente tu asignación objetivo, con los mismos movimientos. Mide si desviarte de tus pesos ideales te ha costado o dado dinero. Plan de Pensiones aparte.',
-    realLabel:'Tu cartera real',
-    targetLabel:'Cartera objetivo',
-    targetSmall:'Cartera objetivo simulada',
-    empty:'Pulsa “Cargar benchmark” para simular tus mismos movimientos contra tu Cartera objetivo.',
+    title:'Tu reparto real vs tu reparto objetivo · sin el Plan de Pensiones',
+    pregunta:'¿Me está costando dinero desviarme de mi reparto objetivo?',
+    caja:[
+      'Tus cinco activos, sin el Plan de Pensiones, contra la misma cartera si cada euro hubiera entrado repartido según tus pesos objetivo del Excel. Mismo dinero, mismos movimientos y mismas fechas: lo único que cambia es el reparto.',
+      'Lo que vale hoy tu reparto real frente al objetivo. No es todo mérito ni culpa del reparto: la referencia se simula con ETFs que publican precio diario, y tus fondos no lo publican, así que parte de la diferencia es del instrumento. La tabla de composición te dice cuánto te has desviado de verdad.'
+    ],
+    realLabel:'Tu cartera · sin el Plan',
+    targetLabel:'Tu reparto objetivo',
+    // targetSmall alimenta la leyenda, que ya añade «(evolución simulada)»:
+    // decir «simulado» aquí lo repetía dos veces en la misma línea.
+    targetSmall:'Tu reparto objetivo',
+    empty:'Pulsa “Cargar benchmark” para simular tus mismos movimientos contra tu reparto objetivo.',
     weights:()=>getBenchmarkTargetWeights(),
     assetTest:(asset)=> {
       const a=normalizeText(asset);
@@ -2538,12 +2571,16 @@ const BENCHMARK_VIEW_CONFIG = {
   // coherente con su objetivo (replicar el crecimiento de la renta variable mundial).
   vs_msci: {
     serie:{ real:'--accent', comp:'--blue', trazoComp:'solido' },
-    title:'Cartera completa · vs MSCI World',
-    subtitle:'Tu cartera entera, incluido el Plan de Pensiones, frente a haber invertido ese mismo dinero, en las mismas fechas, en el MSCI World (proxy URTH).',
-    realLabel:'Tu cartera completa',
-    targetLabel:'MSCI World',
-    targetSmall:'MSCI World / URTH',
-    empty:'Pulsa “Cargar benchmark” para comparar tu cartera completa contra el MSCI World.',
+    title:'Tu cartera, con el Plan, vs todo en MSCI World',
+    pregunta:'¿Habría ido mejor con todo en MSCI World?',
+    caja:[
+      'Tu cartera entera, esta vez con el Plan de Pensiones, contra haber puesto ese mismo dinero, en las mismas fechas, todo en MSCI World. El índice se simula con el ETF URTH, y el Plan de Pensiones también se compara contra él.',
+      'Lo que tendrías de más o de menos con un solo fondo global en vez de tu reparto. Ojo con leerlo como la rentabilidad del índice: no lo es. Es lo que habría rendido tu dinero, entrando cuando entró y en las cantidades en que entró.'
+    ],
+    realLabel:'Tu cartera · con el Plan',
+    targetLabel:'Todo en MSCI World',
+    targetSmall:'Todo en MSCI World · URTH',
+    empty:'Pulsa “Cargar benchmark” para comparar tu cartera contra todo en MSCI World.',
     includePension:true,
     weights:()=>[
       { key:'msci', name:'MSCI World', proxy:'URTH', weight:1 }
@@ -2555,12 +2592,16 @@ const BENCHMARK_VIEW_CONFIG = {
   },
   vs_sp500: {
     serie:{ real:'--accent', comp:'--sp500', trazoComp:'solido' },
-    title:'Cartera completa · vs S&P 500',
-    subtitle:'Tu cartera entera, incluido el Plan de Pensiones, frente a haber invertido ese mismo dinero, en las mismas fechas, en el S&P 500 (proxy SPY).',
-    realLabel:'Tu cartera completa',
-    targetLabel:'S&P 500',
-    targetSmall:'S&P 500 / SPY',
-    empty:'Pulsa “Cargar benchmark” para comparar tu cartera completa contra el S&P 500.',
+    title:'Tu cartera, con el Plan, vs todo en el S&P 500',
+    pregunta:'¿Habría ido mejor con todo en el S&P 500?',
+    caja:[
+      'Lo mismo que la vista anterior, cambiando el índice: tu cartera entera, con el Plan de Pensiones, contra haber puesto ese mismo dinero, en las mismas fechas, todo en el S&P 500 (se simula con el ETF SPY).',
+      'Lo que tendrías de más o de menos concentrándolo todo en Estados Unidos. Igual que antes: no es la rentabilidad del índice, es lo que habría rendido tu dinero con tus fechas.'
+    ],
+    realLabel:'Tu cartera · con el Plan',
+    targetLabel:'Todo en el S&P 500',
+    targetSmall:'Todo en el S&P 500 · SPY',
+    empty:'Pulsa “Cargar benchmark” para comparar tu cartera contra todo en el S&P 500.',
     includePension:true,
     weights:()=>[
       { key:'sp500', name:'S&P 500', proxy:'SPY', weight:1 }
@@ -2572,12 +2613,16 @@ const BENCHMARK_VIEW_CONFIG = {
   },
   rv: {
     serie:{ real:'--accent', comp:'--capital-line', trazoComp:'ref' },
-    title:'Renta variable · Real vs objetivo',
-    subtitle:'Compara tus fondos reales de renta variable contra el reparto objetivo interno (MSCI World, Emerging Markets y Small Cap), calculado a partir de tus pesos objetivo del Excel.',
-    realLabel:'Tu renta variable',
-    targetLabel:'Objetivo RV',
-    targetSmall:'Renta variable objetivo',
-    empty:'Pulsa “Cargar benchmark” para simular tus movimientos de renta variable contra su objetivo interno.',
+    title:'Tus tres fondos vs su reparto objetivo',
+    pregunta:'Dentro de la renta variable, ¿mi reparto va mejor o peor que el objetivo?',
+    caja:[
+      'Tus tres fondos indexados —MSCI World, Emerging Markets y Small Cap— contra el mismo dinero repartido entre esos tres en su proporción objetivo, reescalada al 100 % entre ellos. El oro, el bitcoin y el Plan de Pensiones quedan fuera de esta vista.',
+      'Cuánto separa a tu reparto real del objetivo dentro de la renta variable. Mira primero la composición: si tus pesos están pegados al objetivo, la diferencia no puede venir del reparto, y entonces viene del instrumento simulado y del momento de cada aportación.'
+    ],
+    realLabel:'Tus tres fondos',
+    targetLabel:'Reparto objetivo de RV',
+    targetSmall:'Reparto objetivo de RV',
+    empty:'Pulsa “Cargar benchmark” para simular tus movimientos de renta variable contra su reparto objetivo.',
     weights:()=>getBenchmarkRvWeights(),
     assetTest:(asset)=> {
       const a=normalizeText(asset);
@@ -2586,12 +2631,16 @@ const BENCHMARK_VIEW_CONFIG = {
   },
   btc: {
     serie:{ real:'--accent', comp:'--btc', trazoComp:'solido' },
-    title:'Bitcoin · Real vs BTC',
-    subtitle:'Compara tus movimientos reales de Bitcoin contra la evolución de BTC-EUR.',
-    realLabel:'Tu Bitcoin',
-    targetLabel:'BTC benchmark',
-    targetSmall:'BTC simulado',
-    empty:'Pulsa “Cargar benchmark” para comparar tus movimientos de Bitcoin contra BTC.',
+    title:'Tu bitcoin vs el precio de BTC',
+    pregunta:'¿Mi bitcoin vale lo que valdría el mismo dinero comprado al precio de mercado?',
+    caja:[
+      'Tu bitcoin real contra el mismo dinero comprado en las mismas fechas al precio de mercado de BTC-EUR. Es el mismo activo en los dos lados, así que esta vista no mide si acertaste con el momento de comprar: las fechas simuladas son las tuyas.',
+      'Lo que se queda por el camino: comisiones y diferencial de tus compras, y la distancia entre la valoración de tu plataforma y el precio de referencia. Si sale una diferencia grande, sospecha del dato antes que de tu operativa.'
+    ],
+    realLabel:'Tu bitcoin',
+    targetLabel:'BTC al precio de mercado',
+    targetSmall:'BTC-EUR',
+    empty:'Pulsa “Cargar benchmark” para comparar tu bitcoin contra el precio de BTC-EUR.',
     weights:()=>[{ key:'btc', name:'Bitcoin', proxy:'BTC-EUR', weight:1 }],
     assetTest:(asset)=> {
       const a=normalizeText(asset);
@@ -2600,12 +2649,16 @@ const BENCHMARK_VIEW_CONFIG = {
   },
   gold: {
     serie:{ real:'--accent', comp:'--gold', trazoComp:'solido' },
-    title:'Oro · Real vs Oro',
-    subtitle:'Compara tus movimientos reales de oro contra la evolución de GLD como proxy de oro.',
-    realLabel:'Tu Oro',
-    targetLabel:'Oro benchmark',
-    targetSmall:'Oro simulado',
-    empty:'Pulsa “Cargar benchmark” para comparar tus movimientos de oro contra oro.',
+    title:'Tu ETC de oro vs GLD',
+    pregunta:'¿Mi ETC de oro ha seguido al oro?',
+    caja:[
+      'Tu ETC de oro físico —iShares Physical Gold, en Trade Republic— contra el mismo dinero puesto en GLD, el ETF de oro que se usa como referencia, en tus mismas fechas.',
+      'Cuánto se ha separado tu producto de la referencia. Son dos productos distintos sobre el mismo metal: la diferencia es de instrumento, de comisiones y de conversión de divisa. Tampoco aquí se mide tu momento de compra, que es el mismo en los dos lados.'
+    ],
+    realLabel:'Tu ETC de oro',
+    targetLabel:'GLD',
+    targetSmall:'GLD',
+    empty:'Pulsa “Cargar benchmark” para comparar tu ETC de oro contra GLD.',
     weights:()=>[{ key:'gold', name:'Oro', proxy:'GLD', weight:1 }],
     assetTest:(asset)=> {
       const a=normalizeText(asset);
@@ -2614,10 +2667,18 @@ const BENCHMARK_VIEW_CONFIG = {
   },
   msci_sp500: {
     serie:{ a:'--blue', b:'--sp500' },
-    title:'MSCI World vs S&P 500',
-    subtitle:'Comparación externa de referencias: MSCI World aproximado por URTH frente a S&P 500 aproximado por SPY. No usa tus movimientos.',
-    realLabel:'MSCI World',
-    targetLabel:'S&P 500',
+    title:'MSCI World vs S&P 500 · sólo mercado',
+    pregunta:'De los dos índices, ¿cuál ha ido mejor?',
+    caja:[
+      'Los dos índices entre ellos, medidos por sus ETFs URTH y SPY sobre el mismo periodo. Esta vista no usa tu dinero, ni tus fechas, ni tu cartera.',
+      'Cuál de los dos ha ido mejor en el periodo, y por cuántos puntos. Sirve para decidir entre las dos vistas anteriores; no dice nada sobre cómo va tu cartera.'
+    ],
+    // Única vista que puede rotular «MSCI World» a secas: aquí la cifra SÍ es la
+    // rentabilidad del índice (data.stats.msciReturnPct de la Edge). En vs_msci
+    // es el dinero de Óscar simulado en URTH, y por eso allí se llama «Todo en
+    // MSCI World». Mismo rótulo para dos medidas distintas era el hallazgo H-B2.
+    realLabel:'MSCI World · índice',
+    targetLabel:'S&P 500 · índice',
     targetSmall:'S&P 500 / SPY',
     empty:'Pulsa “Cargar benchmark” para comparar MSCI World contra S&P 500.',
     weights:()=>[]
@@ -2626,30 +2687,35 @@ const BENCHMARK_VIEW_CONFIG = {
 
 // v139: navegación en dos barras. Cada grupo agrupa varias vistas.
 // 'soon:true' = pestaña del Bloque 2 aún en construcción (Fase B).
+//
+// v175.50 · SIN `hint`. La pregunta bajó de grupo a vista: una pregunta por
+// grupo mentía en tres de las siete vistas y volvería a mentir en cuanto se
+// moviera una. Y se mueve exactamente una, `msci_sp500`, de «Activos» al grupo
+// del índice único: allí responde a la duda siguiente —cuál de los dos
+// índices— en vez de contradecir a un grupo de activos propios.
+// Las CLAVES no cambian (`estrategia|mercado|activos`): son internas y las usan
+// los atributos data-benchmark-group del HTML. Lo que cambia son las etiquetas.
 const BENCHMARK_GROUPS = {
   estrategia: {
-    label:'Estrategia',
-    hint:'¿Sigo bien mi asignación objetivo?',
+    label:'Mi reparto',
     views:[
-      { view:'global', label:'Cartera global' },
-      { view:'rv', label:'Renta variable' }
+      { view:'global', label:'Mi cartera' },
+      { view:'rv', label:'Solo renta variable' }
     ]
   },
   mercado: {
-    label:'Mercado',
-    hint:'¿Mi cartera completa bate a los índices?',
+    label:'Un solo índice',
     views:[
-      { view:'vs_msci', label:'vs MSCI World' },
-      { view:'vs_sp500', label:'vs S&P 500' }
+      { view:'vs_msci', label:'100 % MSCI World' },
+      { view:'vs_sp500', label:'100 % S&P 500' },
+      { view:'msci_sp500', label:'MSCI vs S&P 500' }
     ]
   },
   activos: {
-    label:'Activos',
-    hint:'¿Acerté con el timing de mis compras?',
+    label:'Mis activos',
     views:[
       { view:'btc', label:'Bitcoin' },
-      { view:'gold', label:'Oro' },
-      { view:'msci_sp500', label:'MSCI vs S&P 500' }
+      { view:'gold', label:'Oro' }
     ]
   }
 };
@@ -2663,12 +2729,11 @@ function benchmarkGroupOfView(view){
   return 'estrategia';
 }
 
-// Redibuja la segunda barra (vistas) según el grupo activo y actualiza la pregunta.
+// Redibuja la segunda barra (vistas) según el grupo activo. La pregunta ya no
+// es del grupo: la escribe applyBenchmarkView desde la vista (v175.50).
 function renderBenchmarkViewTabs(group){
   const cfg=BENCHMARK_GROUPS[group] || BENCHMARK_GROUPS.estrategia;
   const row=document.getElementById('benchmarkViewTabs');
-  const hint=document.getElementById('benchmarkGroupHint');
-  if(hint) hint.textContent=cfg.hint;
   if(!row) return;
   row.innerHTML=cfg.views.map(v=>{
     const soonCls=v.soon?' benchmarkTabSoon':'';
@@ -3581,8 +3646,6 @@ function applyBenchmarkView(view){
   const grp=benchmarkGroupOfView(benchmarkActiveView);
   benchmarkActiveGroup=grp;
   document.querySelectorAll('#benchmarkGroupTabs button').forEach(b=>b.classList.toggle('active', b.dataset.benchmarkGroup===grp));
-  const hint=document.getElementById('benchmarkGroupHint');
-  if(hint) hint.textContent=(BENCHMARK_GROUPS[grp]||BENCHMARK_GROUPS.estrategia).hint;
   const viewRow=document.getElementById('benchmarkViewTabs');
   if(viewRow){
     const hasBtn=viewRow.querySelector(`button[data-benchmark-view="${benchmarkActiveView}"]`);
@@ -3592,7 +3655,14 @@ function applyBenchmarkView(view){
   const title=document.getElementById('benchmarkPanelTitle');
   const sub=document.getElementById('benchmarkPanelSubtitle');
   if(title) title.textContent=cfg.title;
-  if(sub) sub.textContent=cfg.subtitle;
+  // v175.50 · el subtítulo pasa a ser LA PREGUNTA de la vista, y las dos líneas
+  // aprobadas van a la caja «qué estás comparando». Los textos vienen de la
+  // configuración de la vista: ni uno escrito aquí.
+  if(sub) sub.textContent=cfg.pregunta || '';
+  const cajaA=document.getElementById('benchmarkCompareA');
+  const cajaB=document.getElementById('benchmarkCompareB');
+  if(cajaA) cajaA.textContent=(cfg.caja && cfg.caja[0]) || '';
+  if(cajaB) cajaB.textContent=(cfg.caja && cfg.caja[1]) || '';
   document.querySelectorAll('#benchmark .benchmarkMetric span')[0].textContent=cfg.realLabel;
   document.querySelectorAll('#benchmark .benchmarkMetric span')[1].textContent=cfg.targetLabel;
   const legend=document.querySelector('#benchmark .benchmarkLegend');
@@ -3613,7 +3683,11 @@ function applyBenchmarkView(view){
   document.getElementById('benchmarkPortfolioNote').textContent = benchmarkActiveView==='msci_sp500' ? 'URTH · referencia externa' : 'Excel · movimientos reales';
   document.getElementById('benchmarkOscarNote').textContent = benchmarkActiveView==='msci_sp500' ? 'SPY · referencia externa' : 'Mismos movimientos simulados';
   const diffCard=document.querySelector('#benchmarkDiffReturn')?.closest('.benchmarkMetric')?.querySelector('em');
-  if(diffCard) diffCard.textContent = benchmarkActiveView==='msci_sp500' ? 'MSCI World menos S&P 500' : `${cfg.realLabel} menos ${cfg.targetLabel}`;
+  // v175.50 · antes componía «{realLabel} menos {targetLabel}», que con los
+  // rótulos nuevos daba frases como «Tu cartera · sin el Plan menos Tu reparto
+  // objetivo». Texto fijo y legible; solo se ve antes de cargar, porque al
+  // cargar renderBenchmarkData lo sustituye por los euros de diferencia.
+  if(diffCard) diffCard.textContent = benchmarkActiveView==='msci_sp500' ? 'MSCI World menos S&P 500' : 'Tu cifra menos la de la referencia';
   updateBenchmarkWeightsTable();
   benchmarkSetError('');
 }
@@ -7084,8 +7158,11 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
 (function(){
   function viewLabel(view){
     return ({
-      global:['Composición de la Cartera objetivo','Pesos objetivo actuales sin Plan de Pensiones.'],
-      rv:['Composición del objetivo de renta variable','Reparto interno usado para comparar tus fondos de renta variable.'],
+      // v175.50 · los rótulos que nombraban «Cartera objetivo» pasan a nombrar
+      // el reparto objetivo, que es como se llama en toda la pantalla desde
+      // esta versión. Mismo contenido, mismo número de filas.
+      global:['Composición de tu reparto objetivo','Pesos objetivo actuales sin Plan de Pensiones.'],
+      rv:['Composición del reparto objetivo de renta variable','Reparto interno usado para comparar tus fondos de renta variable.'],
       msci_sp500:['Referencias comparadas','Comparación externa. No usa tus movimientos ni tu cartera real.'],
       btc:['Referencia Bitcoin','La comparación de Bitcoin usa una referencia única: BTC-EUR al 100%.'],
       gold:['Referencia Oro','La comparación de Oro usa una referencia única: GLD al 100%.']
@@ -7101,28 +7178,14 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
     if(h3) h3.textContent=title;
     if(p) p.textContent=sub;
   }
-  function tuneConfig(){
-    if(!window.BENCHMARK_VIEW_CONFIG) return;
-    if(BENCHMARK_VIEW_CONFIG.btc){
-      BENCHMARK_VIEW_CONFIG.btc.targetLabel='Referencia BTC';
-      BENCHMARK_VIEW_CONFIG.btc.targetSmall='BTC-EUR';
-      BENCHMARK_VIEW_CONFIG.btc.subtitle='Compara tus movimientos reales de Bitcoin contra BTC-EUR. La referencia es 100% Bitcoin.';
-    }
-    if(BENCHMARK_VIEW_CONFIG.gold){
-      BENCHMARK_VIEW_CONFIG.gold.targetLabel='Referencia Oro';
-      BENCHMARK_VIEW_CONFIG.gold.targetSmall='GLD';
-      BENCHMARK_VIEW_CONFIG.gold.subtitle='Compara tus movimientos reales de Oro contra GLD como referencia de oro. La referencia es 100% Oro.';
-    }
-    if(BENCHMARK_VIEW_CONFIG.rv){
-      BENCHMARK_VIEW_CONFIG.rv.targetLabel='Objetivo RV';
-      BENCHMARK_VIEW_CONFIG.rv.targetSmall='Objetivo RV';
-    }
-    if(BENCHMARK_VIEW_CONFIG.global){
-      BENCHMARK_VIEW_CONFIG.global.targetLabel='Cartera objetivo';
-      BENCHMARK_VIEW_CONFIG.global.targetSmall='Cartera objetivo';
-    }
-  }
-  tuneConfig();
+  // v175.50 · aquí vivía tuneConfig(), que reescribía los rótulos y subtítulos
+  // de btc, gold, rv y global… y NUNCA se ejecutó: arrancaba con
+  // `if(!window.BENCHMARK_VIEW_CONFIG) return;` y ese objeto está declarado con
+  // `const`, que no crea propiedad en window. Comprobado: undefined. Era la
+  // causa de que se siguiera viendo «ORO BENCHMARK» (reparación 1-D de la cola)
+  // con un arreglo ya escrito. Su intención vive ahora en la configuración de
+  // cada vista, que sí se aplica. Ver AGENTS.md · «un arreglo que falla en
+  // silencio es indistinguible de no haberlo escrito».
   const oldApply=window.applyBenchmarkView;
   if(typeof oldApply==='function'){
     window.applyBenchmarkView=function(view){
@@ -8178,13 +8241,19 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
       var apiN=document.getElementById('benchmarkApiNote');
       var groups=[].slice.call(document.querySelectorAll('#benchmarkGroupTabs button'));
       var views=[].slice.call(document.querySelectorAll('#benchmarkViewTabs button'));
-      var hint=document.getElementById('benchmarkGroupHint');
+      // v175.50 · la pregunta ya no es del grupo: se espeja la de la VISTA, que
+      // vive en #benchmarkPanelSubtitle. El elemento anterior desapareció, y
+      // dejar el espejo leyéndolo habría dejado el móvil sin ninguna
+      // orientación; leer el nuevo cuesta lo mismo que borrar la línea.
+      var titulo=document.getElementById('benchmarkPanelTitle');
+      var hint=document.getElementById('benchmarkPanelSubtitle');
+      var cajaA=document.getElementById('benchmarkCompareA');
+      var cajaB=document.getElementById('benchmarkCompareB');
       var metrics=[].slice.call(document.querySelectorAll('#benchmark .benchmarkMetric'));
       var summary=document.getElementById('benchmarkSummary');
       var error=document.getElementById('benchmarkError');
       var legend=document.querySelector('#benchmark .benchmarkLegend');
       var weights=[].slice.call(document.querySelectorAll('#benchmarkWeightsBody tr'));
-      var checks=[].slice.call(document.querySelectorAll('#benchmark .sheetChecks div'));
       var loadBtn=document.getElementById('benchmarkLoadBtn');
       var reloadBtn=document.getElementById('benchmarkReloadBtn');
 
@@ -8200,7 +8269,17 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
           return '<button type="button" data-bview="'+i+'" aria-pressed="'+(b.classList.contains('active')?'true':'false')+'"'+
             (b.disabled?' disabled':'')+(b.classList.contains('active')?' class="active"':'')+'>'+escHtml(b.textContent.trim())+'</button>';
         }).join('')+'</div>'+
+        (titulo&&titulo.textContent.trim()?'<p class="mobileBenchView">'+escHtml(titulo.textContent.trim())+'</p>':'')+
         (hint&&hint.textContent.trim()?'<p class="mobileBenchHint">'+escHtml(hint.textContent.trim())+'</p>':'')+
+        // v175.50 · la caja «qué estás comparando», en texto plano. Es la única
+        // ambición móvil de esta versión y entra porque son dos lecturas más de
+        // un DOM que ya se estaba leyendo (criterio de prioridad de AGENTS.md).
+        ((cajaA&&cajaA.textContent.trim())||(cajaB&&cajaB.textContent.trim())
+          ? '<div class="mobileBenchCompare">'+
+            (cajaA&&cajaA.textContent.trim()?'<p><b>Qué estás comparando</b>'+escHtml(cajaA.textContent.trim())+'</p>':'')+
+            (cajaB&&cajaB.textContent.trim()?'<p><b>Qué significa la diferencia</b>'+escHtml(cajaB.textContent.trim())+'</p>':'')+
+            '</div>'
+          : '')+
         '<div class="mobileBenchMetrics">'+metrics.map(function(mt){
           var sp=mt.querySelector('span'), st=mt.querySelector('strong'), em=mt.querySelector('em');
           return '<div class="mobileBenchMetric"><span>'+escHtml(sp?sp.textContent.trim():'')+'</span>'+
@@ -8222,15 +8301,12 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
             return '<div class="mobileBenchWRow"><span>'+escHtml(td[0]?td[0].textContent.trim():'')+
               (td[1]?' · '+escHtml(td[1].textContent.trim()):'')+'</span><strong>'+escHtml(td[2]?td[2].textContent.trim():'')+'</strong></div>';
           }).join('')+'</div>'+
-        '</div>'+
-        '<div class="mobileBenchEv" id="mobileBenchEvC">'+
-          '<button type="button" class="mobileBenchEvBtn" aria-expanded="false" aria-controls="mbEvC">Criterio técnico<span class="mhaChev" aria-hidden="true">›</span></button>'+
-          '<div id="mbEvC" hidden>'+checks.map(function(d){
-            var st=d.querySelector('strong'), sp=d.querySelector('span');
-            return '<div class="mobileBenchWRow"><span>'+escHtml(st?st.textContent.trim():'')+'</span>'+
-              '<strong class="'+(sp?sp.className:'')+'">'+escHtml(sp?sp.textContent.trim():'')+'</strong></div>';
-          }).join('')+'</div>'+
         '</div>';
+        // v175.50 · aquí se espejaba el desplegable «Criterio técnico». Su
+        // tarjeta se retiró del escritorio, así que este bloque se habría
+        // quedado como un desplegable VACÍO: un componente a medias también es
+        // «roto», y eso sí se arregla en móvil. El estado de la Edge sigue
+        // arriba, en la línea «Estado API» de este mismo espejo.
 
       drawMobileBenchChart(document.getElementById('mobileBenchChartHost'));
 
@@ -9953,6 +10029,59 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   color:var(--text2)!important;
   font-style:italic!important;
   min-height:15px!important;
+/* v175.50 · la caja «qué estás comparando». Superficie hundida (--bg + 1px
+   --line + radio 12), que es el nivel canónico para una superficie de lectura
+   dentro de un panel; el mismo que usa el pliegue de contexto del Dashboard.
+   Estas reglas van dentro de un bloque de estilo que YA existía: el techo son
+   29 bloques y no sube. Y ojo con nombrar la etiqueta de estilo en un
+   comentario: validate.py cuenta apariciones y una mención rompe el balance. */
+/* v175.50 · el encabezado se queda sin titular —nombraba una sola vista— y con
+   los dos indicadores de la tarjeta retirada. Sin esto, el hueco del titular
+   dejaba un panel de 190 px medio vacío: se compacta a barra de una fila. */
+}#benchmark .benchmarkHero{
+  grid-template-columns:auto minmax(0,1fr)!important;
+  align-items:center!important;
+  padding:13px 20px!important;
+}#benchmark .benchmarkState{
+  text-align:left!important;
+  padding:11px 14px!important;
+}#benchmark .benchmarkStateRow{
+  display:flex!important;
+  gap:22px!important;
+  flex-wrap:wrap!important;
+  align-items:baseline!important;
+}#benchmark .benchmarkStateRow > div{
+  min-width:0!important;
+}#benchmark .benchmarkStateRow strong{
+  font-size:15px!important;
+  font-weight:600!important;
+  letter-spacing:-.2px!important;
+  margin-top:3px!important;
+}#benchmark .benchmarkState em{
+  min-height:0!important;
+  margin-top:7px!important;
+}#benchmark .benchmarkCompare{
+  margin:12px 18px 4px!important;
+  padding:14px 16px!important;
+  background:var(--bg)!important;
+  border:1px solid var(--line)!important;
+  border-radius:12px!important;
+}#benchmark .benchmarkCompare p{
+  margin:0!important;
+  font-size:12.5px!important;
+  line-height:1.6!important;
+  color:var(--text2)!important;
+  max-width:1180px!important;
+}#benchmark .benchmarkCompare p + p{
+  margin-top:9px!important;
+}#benchmark .benchmarkCompare b{
+  display:block!important;
+  font-size:10.5px!important;
+  font-weight:700!important;
+  letter-spacing:1.3px!important;
+  text-transform:uppercase!important;
+  color:var(--muted)!important;
+  margin-bottom:3px!important;
 }#benchmark .benchmarkSoonPill{
   font-size:8.5px!important;
   font-weight:700!important;
@@ -10909,6 +11038,15 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   }
   .mobileBenchChips button[disabled]{opacity:.5;cursor:default;}
   .mobileBenchHint{margin:2px 0 12px;font-size:12.5px;color:var(--muted);}
+  /* v175.50 · título de la vista y caja «qué estás comparando» en el espejo.
+     Sin ambición: reutiliza tamaños que ya existen en este bloque. */
+  .mobileBenchView{margin:8px 0 2px;font-size:14px;font-weight:600;letter-spacing:-.2px;color:var(--text);}
+  .mobileBenchCompare{margin:0 0 12px;padding:12px 13px;background:var(--bg);
+    border:1px solid var(--line);border-radius:10px;}
+  .mobileBenchCompare p{margin:0;font-size:12px;line-height:1.55;color:var(--text2);}
+  .mobileBenchCompare p + p{margin-top:8px;}
+  .mobileBenchCompare b{display:block;font-size:9.5px;font-weight:700;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
   .mobileBenchMetrics{border-top:1px solid var(--bone-a08);margin:6px 0 12px;}
   .mobileBenchMetric{
     display:grid;grid-template-columns:minmax(0,1fr) auto;
