@@ -2166,7 +2166,18 @@ html{
           <button class="btn primary" id="benchmarkLoadBtn" type="button">Cargar benchmark</button>
           <button class="btn" id="benchmarkReloadBtn" type="button">Actualizar</button>
         </div>
+        <!-- v175.51 · LA PROTAGONISTA ES LA DIFERENCIA, Y VA PRIMERA. Es la
+             respuesta a la pregunta de la vista; los dos porcentajes son de
+             dónde sale. Hasta v175.50 era al revés: los orígenes a 30 px y la
+             respuesta —los euros— en una nota de 12. Las tres cifras al mismo
+             tamaño eran los 7 incumplimientos que declaraba verify_hierarchy. -->
         <div class="benchmarkGrid pageBlock">
+          <article class="benchmarkMetric benchmarkMetricProta card">
+            <span>Diferencia</span>
+            <strong id="benchmarkDiffReturn" class="neutral">--</strong>
+            <em>Tu cifra menos la de la referencia</em>
+          </article>
+          <div class="benchmarkApoyos">
           <article class="benchmarkMetric card">
             <span>Tu cartera · sin el Plan</span>
             <strong id="benchmarkPortfolioReturn">--</strong>
@@ -2177,11 +2188,7 @@ html{
             <strong id="benchmarkOscarReturn">--</strong>
             <em id="benchmarkOscarNote">Mismos movimientos simulados</em>
           </article>
-          <article class="benchmarkMetric card">
-            <span>Diferencia</span>
-            <strong id="benchmarkDiffReturn" class="neutral">--</strong>
-            <em>Tu cifra menos la de la referencia</em>
-          </article>
+          </div>
         </div>
         <div class="benchmarkPanelStable" id="benchmarkPanelStable">
         <div class="benchmarkChartReal" id="benchmarkChart"><div class="chartEmpty">Pulsa “Cargar benchmark” para simular tus mismos movimientos contra tu reparto objetivo.</div></div>
@@ -3663,8 +3670,15 @@ function applyBenchmarkView(view){
   const cajaB=document.getElementById('benchmarkCompareB');
   if(cajaA) cajaA.textContent=(cfg.caja && cfg.caja[0]) || '';
   if(cajaB) cajaB.textContent=(cfg.caja && cfg.caja[1]) || '';
-  document.querySelectorAll('#benchmark .benchmarkMetric span')[0].textContent=cfg.realLabel;
-  document.querySelectorAll('#benchmark .benchmarkMetric span')[1].textContent=cfg.targetLabel;
+  // v175.51 · POR ID, NO POR POSICIÓN. Antes eran `span`[0] y `span`[1] del
+  // conjunto de tarjetas: al poner la protagonista primera, el índice 0 pasaba
+  // a ser la tarjeta de diferencia y los dos rótulos se escribían en el sitio
+  // equivocado. El id no depende del orden.
+  const rotuloDe=(id)=>document.getElementById(id)?.closest('.benchmarkMetric')?.querySelector('span');
+  const rotReal=rotuloDe('benchmarkPortfolioReturn');
+  const rotRef=rotuloDe('benchmarkOscarReturn');
+  if(rotReal) rotReal.textContent=cfg.realLabel;
+  if(rotRef) rotRef.textContent=cfg.targetLabel;
   const legend=document.querySelector('#benchmark .benchmarkLegend');
   if(legend){
     if(benchmarkActiveView==='msci_sp500') legend.innerHTML='<span><span class="legendDot bBlue"></span>MSCI World / URTH</span><span><span class="legendDot bGold"></span>S&amp;P 500 / SPY</span>';
@@ -3962,7 +3976,11 @@ async function loadMsciVsSp500(force=false, requestVigente=()=>true){
     document.getElementById('benchmarkPortfolioReturn').className=benchmarkValueClass(msci);
     document.getElementById('benchmarkOscarReturn').textContent=benchmarkPct(sp);
     document.getElementById('benchmarkOscarReturn').className=benchmarkValueClass(sp);
-    document.getElementById('benchmarkDiffReturn').textContent=benchmarkPct(diff);
+    // v175.51 · LA EXCEPCIÓN DECLARADA: aquí la protagonista va en PUNTOS y no
+    // en euros, porque en esta vista no hay dinero de Óscar. Una vista, una
+    // excepción, y la caja de la vista ya dice que no usa sus datos.
+    document.getElementById('benchmarkDiffReturn').textContent=
+      `${diff>0?'+':''}${fmtNumber(diff,2)} puntos`;
     document.getElementById('benchmarkDiffReturn').className=benchmarkValueClass(diff);
     document.getElementById('benchmarkPortfolioNote').textContent=`URTH · ${data.stats?.points || '--'} sesiones`;
     document.getElementById('benchmarkOscarNote').textContent=`SPY · ${data.stats?.points || '--'} sesiones`;
@@ -3998,7 +4016,11 @@ function renderBenchmarkData(data, flows, currentValue, simulation, benchmarkSer
   const diffEl=document.getElementById('benchmarkDiffReturn');
   if(portfolioEl){ portfolioEl.textContent=benchmarkPct(realReturn); portfolioEl.className=benchmarkValueClass(realReturn); }
   if(targetEl){ targetEl.textContent=benchmarkPct(targetReturn); targetEl.className=benchmarkValueClass(targetReturn); }
-  if(diffEl){ diffEl.textContent=benchmarkPct(diff); diffEl.className=benchmarkValueClass(diff); }
+  // v175.51 · la protagonista son los EUROS, que es lo que responde la
+  // pregunta; los puntos bajan a su nota. Antes los euros vivían en la nota de
+  // 12 px y el porcentaje ocupaba la cifra. Mismos dos números, cambiados de
+  // sitio: el conjunto de cifras de la pantalla no se mueve.
+  if(diffEl){ diffEl.textContent=fmtMoney(valueDiff,2,true); diffEl.className=benchmarkValueClass(diff); }
 
   const portfolioNote=document.getElementById('benchmarkPortfolioNote');
   const targetNote=document.getElementById('benchmarkOscarNote');
@@ -4006,7 +4028,14 @@ function renderBenchmarkData(data, flows, currentValue, simulation, benchmarkSer
   if(targetNote) targetNote.textContent = `${fmtMoney(simulation.finalValue)} simulados · mismos ${flows.length} movimientos`;
 
   const diffCard=document.querySelector('#benchmarkDiffReturn')?.closest('.benchmarkMetric')?.querySelector('em');
-  if(diffCard) diffCard.textContent = `${fmtMoney(valueDiff,2,true)} frente a ${cfg.targetLabel}`;
+  // v175.51 · la nota lleva los PUNTOS, que es la unidad correcta de una
+  // diferencia entre dos porcentajes, y nombra la referencia. Los euros suben
+  // a la cifra protagonista.
+  // Con signo: la nota tiene que decir por sí sola de qué lado está la
+  // diferencia. En valor absoluto se perdía el «−» y con él la dirección.
+  if(diffCard) diffCard.textContent = Number.isFinite(Number(diff))
+    ? `${Number(diff)>0?'+':''}${fmtNumber(Number(diff),2)} puntos frente a ${cfg.targetLabel}`
+    : `frente a ${cfg.targetLabel}`;
 
   renderBenchmarkSummary(currentValue, simulation.finalValue, netInvested, realReturn, targetReturn, diff, valueDiff, flows.length, cfg, monthlyHistory);
   renderBenchmarkChart(currentValue, simulation.finalValue, benchmarkSeries, flows, cfg, monthlyHistory, netInvested);
@@ -10060,6 +10089,23 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
 }#benchmark .benchmarkState em{
   min-height:0!important;
   margin-top:7px!important;
+/* v175.51 · JERARQUÍA. La protagonista a 42 y los dos orígenes a 30: razón
+   exactamente 1,40, el mínimo que exige verify_hierarchy, igual que el
+   Dashboard. No hay margen: cualquier retoque rompe el criterio.
+   Y cabe, medido: la tarjeta tiene 279 px útiles y el importe más largo que
+   puede aparecer —+17.218,66 €— ocupa 217 px a 42 px de cuerpo. A 60 pediría
+   301 y desbordaría, que es lo que le pasa a .carteraMetric. */
+}#benchmark .benchmarkGrid{
+  grid-template-columns:minmax(0,1.12fr) minmax(0,1fr)!important;
+}#benchmark .benchmarkApoyos{
+  display:grid!important;
+  grid-template-rows:1fr 1fr!important;
+  gap:14px!important;
+  min-width:0!important;
+}#benchmark .benchmarkApoyos .benchmarkMetric{
+  min-height:0!important;
+}#benchmark .benchmarkApoyos .benchmarkMetric em{
+  min-height:0!important;
 }#benchmark .benchmarkCompare{
   margin:12px 18px 4px!important;
   padding:14px 16px!important;
@@ -11378,7 +11424,7 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   #dashboard .capitalCard > strong,
   #xirr .xirrAssetCard .xirrValue,
   #xirr.active .kpiStripContext .kpi > strong,
-  #benchmark .benchmarkMetric > strong,
+  #benchmark .benchmarkMetric:not(.benchmarkMetricProta) > strong,
   #asesoria .advisorMetric > strong{
     font-size:30px!important;
     font-weight:400!important;
@@ -11398,6 +11444,11 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
      PENDIENTE DE DECISIÓN DE ÓSCAR. */
 
   /* ── tipografía · cifra hero 42 / 380 / −1,6 ──────────────────────────── */
+  /* v175.51 · la tarjeta de diferencia del Benchmark entra aquí, en la escala
+     canónica y no en una regla suelta: el tamaño lo fija el PAPEL. Puesta en
+     otro bloque perdía por posición contra la regla de 30 de aquí abajo, que
+     es más tardía. Mismo reparto que el Dashboard desde v175.48. */
+  #benchmark .benchmarkMetricProta > strong,
   #dashboard .heroTopMetric > strong,
   #dashboard .heroTopMetric.primary > strong{
     font-size:42px!important;
