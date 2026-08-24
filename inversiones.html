@@ -11821,6 +11821,59 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   #dashboard #dashCtxBody .capitalCard,
   #dashboard #dashCtxBody .heroTopMetric{order:0!important;}
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   v175.53 · SANGRADO UNIFICADO · 41 px para bloques de tarjetas
+
+   Óscar, 24/08/2026: «la tarjeta de la diferencia toca el borde del panel».
+   Medido en las siete páginas, convivían CUATRO criterios —1 · 18 · 21 y
+   41 px— y sólo el Dashboard usaba 41. El criterio es 41 porque es «el
+   único de los tres que se diseñó a propósito: salió del ciclo de
+   jerarquía que aprobé».
+
+   Y distingue dos componentes, que no es una excepción olvidada:
+     · BLOQUE DE TARJETAS  → 41 px. Su ancho lo reparte la rejilla, así que
+       darle aire no le impide caber.
+     · CONTENEDOR DE TABLA → 21 px. Su ancho lo fija el contenido; estrecharlo
+       no le da aire, le quita columnas. La tabla de Movimientos YA se sale
+       177 px de su panel (pendiente propio en la cola).
+
+   POR QUÉ AQUÍ Y NO EN CADA REGLA: los paneles llevan `padding:0` y cada
+   bloque pone su propio margen o relleno —17, 18, 20 o 1 px, repartidos por
+   varios bloques de estilo y casi todos con !important—. Una regla al final
+   gana por cascada y deja el criterio en UN sitio, que es lo que permite
+   que verify_type lo vigile. No se añade ningún bloque nuevo: el techo
+   sigue en 29.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media(min-width:761px){
+  #cartera .carteraProTabs,
+  #cartera .carteraFocusPanel,
+  #cartera .carteraDiagnosis,
+  #xirr .xirrAssetGrid,
+  #benchmark .benchmarkGrid,
+  #movimientos .movementsToolbar,
+  #auditoria .auditWebPages,
+  #auditoria .dataStatusGrid{
+    margin-left:41px!important;
+    margin-right:41px!important;
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+  /* Las tablas no son tarjetas: se quedan en su 21. */
+  #historial .historyAssetBlock .annualTableWrap,
+  #cartera .assetTableWrap{
+    margin-left:21px!important;
+    margin-right:21px!important;
+  }
+  /* El resumen del año reparte su panel en dos columnas y sus cuatro tarjetas
+     viven en la derecha, a 39 px del borde. Se lleva a 41 por el mismo lado
+     que se mide; la columna izquierda acompaña para no dejar el panel
+     descuadrado. */
+  #historial .yearSummary{
+    padding-left:41px!important;
+    padding-right:41px!important;
+  }
+}
 </style>
 </body>
 </html>
