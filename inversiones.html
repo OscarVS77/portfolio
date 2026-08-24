@@ -2192,7 +2192,12 @@ html{
         </div>
         <div class="benchmarkPanelStable" id="benchmarkPanelStable">
         <div class="benchmarkChartReal" id="benchmarkChart"><div class="chartEmpty">Pulsa “Cargar benchmark” para simular tus mismos movimientos contra tu reparto objetivo.</div></div>
-        <div class="benchmarkLegend"><span><span class="legendDot bGreen"></span>Tu cartera · sin el Plan</span><span><span class="legendDot bGold"></span>Tu reparto objetivo simulado</span></div>
+        <!-- v175.52 · estado inicial de la leyenda, con la forma y el color de las
+             series de la vista por defecto: punto blanco hueso para tu cartera y
+             línea gris DISCONTINUA para el reparto objetivo, que es una referencia
+             sobre la que no has invertido dinero (R-F2 · R-F3). Lo reescribe
+             applyBenchmarkView y, al dibujar, renderBenchmarkChart. -->
+        <div class="benchmarkLegend"><span><span class="legendMark legendMarkDot" style="background:var(--accent)"></span>Tu cartera · sin el Plan</span><span><span class="legendMark legendMarkLine" style="border-top:2px dashed var(--capital-line)"></span>Tu reparto objetivo simulado</span></div>
         <div class="benchmarkSummary" id="benchmarkSummary"><span>Lectura del resultado</span><strong>Pendiente de cargar</strong><p>Cuando cargues el benchmark, aquí verás una explicación simple del resultado: si tu reparto real va por delante o por detrás de tu reparto objetivo.</p></div>
         </div>
         <div class="benchmarkError" id="benchmarkError"></div>
@@ -3646,6 +3651,44 @@ function updateBenchmarkWeightsTable(weights=null){
   if(!list.length) return;
   body.innerHTML=list.map(x=>`<tr><td>${x.name}</td><td ${x.key==='small'?'title="Símbolo Edge: IUSN.XETRA"':''}>${x.proxy}</td><td>${benchmarkPct(x.weight*100).replace('+','')}</td></tr>`).join('');
 }
+// ── v175.52 · LA LEYENDA SALE DE LA MISMA CONFIGURACIÓN QUE PINTA LA SERIE ──
+//
+// Antes eran dos clases fijas para las siete vistas: `.bGreen` (que es `--em`,
+// Emerging Markets) y `.bGold` (que es `--gold`, Oro). Colores de ACTIVO puestos
+// a series que no son ese activo — justo lo que v175.43 quitó de las gráficas y
+// dejó en la leyenda. Medido con scripts/verify_legend.py: las 14 entradas de
+// las siete vistas incumplían, 12 por color y 8 por forma.
+//
+// Y la forma importa más que el color: que la referencia sea DISCONTINUA es lo
+// que distingue una línea sobre la que no se ha invertido dinero (R-F2 · R-F3),
+// y ninguna leyenda lo decía.
+//
+// El patrón está copiado del Dashboard, que ya lo hacía bien desde el sistema de
+// evolución: un punto es redondo con fondo, y una línea es un elemento de altura
+// cero con `border-top`, cuyo patrón vive en `border-top-style` (.evoDotReal y
+// .evoDotMuted). No se inventa nada.
+//
+// El color va EN LÍNEA desde el token de la vista, nunca en una clase: meterlo
+// en una clase sería volver al defecto que esto arregla.
+function benchmarkLegendMark(token, forma){
+  const color=`var(${token})`;
+  if(forma==='punto') return `<span class="legendMark legendMarkDot" style="background:${color}"></span>`;
+  const patron = (forma==='discontinua') ? 'dashed' : 'solid';
+  return `<span class="legendMark legendMarkLine" style="border-top:2px ${patron} ${color}"></span>`;
+}
+// `formaReal` la decide quien dibuja: hoy es un punto porque hacen falta 3
+// cierres reales para trazar la línea mensual, y hay 2.
+function benchmarkLegendHTML(cfg, formaReal){
+  const S = cfg && cfg.serie;
+  if(!S) return '';
+  if(S.a && S.b){
+    return `<span>${benchmarkLegendMark(S.a,'solida')}MSCI World / URTH</span>`
+         + `<span>${benchmarkLegendMark(S.b,'solida')}S&amp;P 500 / SPY</span>`;
+  }
+  const formaComp = (S.trazoComp==='ref') ? 'discontinua' : 'solida';
+  return `<span>${benchmarkLegendMark(S.real, formaReal)}${cfg.realLabel}: punto actual o línea mensual real si hay 3 cierres</span>`
+       + `<span>${benchmarkLegendMark(S.comp, formaComp)}${cfg.targetSmall} (evolución simulada)</span>`;
+}
 function applyBenchmarkView(view){
   benchmarkActiveView=view || 'global';
   const cfg=BENCHMARK_VIEW_CONFIG[benchmarkActiveView] || BENCHMARK_VIEW_CONFIG.global;
@@ -3680,10 +3723,10 @@ function applyBenchmarkView(view){
   if(rotReal) rotReal.textContent=cfg.realLabel;
   if(rotRef) rotRef.textContent=cfg.targetLabel;
   const legend=document.querySelector('#benchmark .benchmarkLegend');
-  if(legend){
-    if(benchmarkActiveView==='msci_sp500') legend.innerHTML='<span><span class="legendDot bBlue"></span>MSCI World / URTH</span><span><span class="legendDot bGold"></span>S&amp;P 500 / SPY</span>';
-    else legend.innerHTML=`<span><span class="legendDot bGreen"></span>${cfg.realLabel}: punto actual o línea mensual real si hay 3 cierres</span><span><span class="legendDot bGold"></span>${cfg.targetSmall} (evolución simulada)</span>`;
-  }
+  // v175.52 · sin datos todavía no hay línea real dibujada: la forma inicial de
+  // «tu cartera» es el punto. Al dibujar, renderBenchmarkChart la reescribe con
+  // la forma que de verdad haya salido.
+  if(legend) legend.innerHTML=benchmarkLegendHTML(cfg, 'punto');
   const chart=document.getElementById('benchmarkChart');
   if(chart) chart.innerHTML=`<div class="chartEmpty">${cfg.empty}</div>`;
   const summary=document.getElementById('benchmarkSummary');
@@ -7097,6 +7140,13 @@ function renderBenchmarkChart(currentValue, benchmarkFinalValue, benchmarkSeries
     const y=toY(v);
     return `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${w-padR}" y2="${y.toFixed(1)}" stroke="var(--wht-a13)"/><text x="${padL}" y="${(y-5).toFixed(1)}" fill="var(--js-axis-text)" font-size="10">${benchmarkPct(v-100)}</text>`;
   }).join('');
+  // v175.52 · QUIEN DIBUJA DECLARA LA FORMA. La leyenda de «tu cartera» depende
+  // de si esta pintada trazó línea o solo el punto, y eso se sabe aquí, no en
+  // applyBenchmarkView. Sin esto, la leyenda diría «punto» con la línea puesta.
+  const leyenda=document.querySelector('#benchmark .benchmarkLegend');
+  if(leyenda && typeof benchmarkLegendHTML==='function'){
+    leyenda.innerHTML=benchmarkLegendHTML(cfg, useMonthlyHistory ? 'solida' : 'punto');
+  }
   const benchArea=__benchAreaPath(benchmarkSeries,xForSeries(benchmarkSeries),toY,benchmarkSeries.length,h,padB,normOf);
   const realArea=useMonthlyHistory?__benchAreaPath(realHistory,xForSeries(realHistory),toY,realHistory.length,h,padB,normOf):'';
   const realLineSvg = useMonthlyHistory
@@ -7138,6 +7188,12 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   }
   const colA = `var(${S2.a})`;
   const colB = `var(${S2.b})`;
+  // v175.52 · las dos series de esta vista son líneas sólidas, y su leyenda lo
+  // dice desde aquí, que es donde se dibuja.
+  const leyenda2=document.querySelector('#benchmark .benchmarkLegend');
+  if(leyenda2 && typeof benchmarkLegendHTML==='function'){
+    leyenda2.innerHTML=benchmarkLegendHTML(cfg, 'solida');
+  }
   const a=seriesA || [], b=seriesB || [];
   if(!a.length || !b.length){ box.innerHTML='<div class="chartEmpty">No hay datos suficientes para dibujar la comparación.</div>'; return; }
   // v175.17: alimentación de la gráfica móvil (ver renderBenchmarkChart).
@@ -10106,6 +10162,23 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   min-height:0!important;
 }#benchmark .benchmarkApoyos .benchmarkMetric em{
   min-height:0!important;
+/* v175.52 · marcadores de leyenda con FORMA, copiando el patrón que el
+   Dashboard ya usa en .evoDotReal y .evoDotMuted: el punto es redondo y con
+   fondo; la línea es un elemento de altura cero cuyo color y patrón viven en
+   `border-top`. El COLOR no está aquí: lo pone en línea la configuración de la
+   vista, que es la única que sabe de qué serie se trata. */
+}#benchmark .benchmarkLegend .legendMark{
+  display:inline-block!important;
+  flex:0 0 auto!important;
+  box-sizing:border-box!important;
+}#benchmark .benchmarkLegend .legendMarkDot{
+  width:9px!important;
+  height:9px!important;
+  border-radius:50%!important;
+}#benchmark .benchmarkLegend .legendMarkLine{
+  width:16px!important;
+  height:0!important;
+  border-radius:0!important;
 }#benchmark .benchmarkCompare{
   margin:12px 18px 4px!important;
   padding:14px 16px!important;
