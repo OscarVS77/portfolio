@@ -2161,6 +2161,11 @@ html{
         <div class="benchmarkCompare" id="benchmarkCompare">
           <p><b>Qué estás comparando</b><span id="benchmarkCompareA"></span></p>
           <p><b>Qué significa la diferencia</b><span id="benchmarkCompareB"></span></p>
+          <!-- v175.55 · la línea de mayor desvío. La rellena applyBenchmarkView
+               desde benchmarkDesvioLinea(), que lo lee TODO del Excel. Nace
+               oculta: sin dato no se pinta, y una línea vacía es peor que
+               ninguna línea. -->
+          <p class="benchmarkDesvio" id="benchmarkDesvio" hidden><span class="desvioMk" aria-hidden="true"></span><span id="benchmarkDesvioTexto"></span></p>
         </div>
         <div class="benchmarkApiActions">
           <button class="btn primary" id="benchmarkLoadBtn" type="button">Cargar benchmark</button>
@@ -2557,6 +2562,104 @@ function getBenchmarkRvWeights(){
 // Los siete textos los aprobó Óscar el 23/08/2026; están en
 // docs/textos_benchmark_v175_50.md con la celda del Excel o la función del
 // código de la que sale cada afirmación. NO se reescriben sin su visto bueno.
+// v175.55 · LA LÍNEA DE MAYOR DESVÍO · pieza de composición del pendiente #1.
+//
+// Sustituye a la tabla de composición que las dos vistas de reparto PROMETÍAN
+// y que no existía: se decidió no hacerla porque duplicaba Cartera actual
+// columna por columna, y sus dos frases se corrigieron en esta misma versión.
+//
+// TODO SALE DEL EXCEL, incluido el criterio:
+//   · activo, peso real, objetivo y desvío → CARTERA ACTUAL col. A, I, J, K.
+//     I = G/(G10−G9): el denominador ya excluye el Plan de Pensiones, que es
+//     exactamente el universo de esta vista. No hay que reescalar nada.
+//   · el veredicto entrecomillado → OBJETIVOS Y PROYECCIÓN, Bloque C, col. G.
+//
+// EL UMBRAL NO ESTÁ AQUÍ, Y ES DELIBERADO. La columna G lleva el criterio
+// DENTRO de su fórmula —IF(ABS(E)<=0.02,"OK: …")—, así que esta función no
+// sabe ni tiene que saber que son dos puntos: lee el texto ya resuelto. Si
+// Óscar lo sube a tres, la web le sigue sin tocar una línea. Escribir aquí
+// `Math.abs(d) > 2` sería un criterio financiero fijado en el código, que es
+// justo lo que prohíbe la Regla 3. `verify_desvio.py` lo comprueba.
+function benchmarkDesvioLinea(){
+  if(typeof sheetRows !== 'function') return null;
+  const num = (x)=> typeof x === 'number' && isFinite(x);
+
+  // Los activos. Se descartan «Plan de Pensiones» y «TOTAL» porque sus celdas
+  // I/J/K no son numéricas —traen 'Separado' y '-'—, NO por su nombre: así una
+  // fila nueva no se cuela por llamarse de otra forma.
+  const activos = [];
+  (sheetRows('CARTERA ACTUAL') || []).forEach(r=>{
+    if(!Array.isArray(r) || r.length < 11) return;
+    const nombre = r[0];
+    if(typeof nombre !== 'string' || !nombre.trim()) return;
+    if(!num(r[8]) || !num(r[9]) || !num(r[10])) return;
+    activos.push({ activo:nombre.trim(), real:r[8], objetivo:r[9], desvio:r[10] });
+  });
+  if(!activos.length) return null;
+
+  // Bloque C, identificado POR SU ESTRUCTURA y no por el nombre: «Oro» y
+  // «Bitcoin» son TAMBIÉN filas del Bloque A y del Bloque B, y buscarlas por
+  // nombre devuelve siete filas en vez de tres. La firma del Bloque C es traer
+  // % operativo, objetivo y desviación numéricos Y un veredicto de texto en G.
+  const CLASES = ['Renta variable','Oro','Bitcoin'];
+  const veredictos = [];
+  (sheetRows('OBJETIVOS Y PROYECCIÓN') || []).forEach(r=>{
+    if(!Array.isArray(r) || r.length < 7) return;
+    const clase = (typeof r[0] === 'string') ? r[0].trim() : '';
+    if(CLASES.indexOf(clase) === -1) return;
+    if(!num(r[2]) || !num(r[3]) || !num(r[4])) return;
+    if(typeof r[6] !== 'string' || !r[6].trim()) return;
+    veredictos.push({ clase, texto:r[6].trim() });
+  });
+  if(veredictos.length !== CLASES.length) return null;
+
+  // Sin desvío relevante: lo dice el libro, no lo decide esta función.
+  if(veredictos.every(v=> v.texto.indexOf('OK:') === 0)){
+    return { tipo:'ok',
+      texto:'Hoy no te has desviado de tu reparto: las tres clases '
+          + '—renta variable, oro y bitcoin— están dentro del rango que fija tu Excel.' };
+  }
+
+  let mayor = activos[0];
+  activos.forEach(a=>{ if(Math.abs(a.desvio) > Math.abs(mayor.desvio)) mayor = a; });
+
+  // El nombre corto y la clase salen de los ayudantes que YA existen, no de un
+  // diccionario nuevo: shortAssetName da «Oro» y «Bitcoin», y carteraKeyFromName
+  // es el mismo mapeo que usa Cartera actual.
+  const clave = (typeof carteraKeyFromName === 'function')
+    ? carteraKeyFromName(mayor.activo) : '';
+  const clase = clave === 'btc' ? 'Bitcoin' : (clave === 'gold' ? 'Oro' : 'Renta variable');
+  const ver = (veredictos.filter(v=> v.clase === clase)[0] || {}).texto || '';
+  const nombre = (typeof shortAssetName === 'function')
+    ? shortAssetName(mayor.activo) : mayor.activo;
+  // fmtPct YA multiplica por 100 y pone el símbolo: pasarle x*100 daría 1.454 %.
+  const p1 = (x)=> fmtPct(x, 1);
+  // La dirección SE ESCRIBE. Deducirla de «14,5 frente a 7,1» es trabajo que no
+  // tiene por qué hacer quien lee.
+  const dir = mayor.desvio > 0 ? 'por encima' : 'por debajo';
+  const pp = fmtNumber(Math.abs(mayor.desvio) * 100, 1);
+  return { tipo:'desvio',
+    texto:'Tu mayor desvío hoy: ' + nombre + ', un ' + p1(mayor.real)
+        + ' de tu cartera sin el Plan frente a un objetivo del ' + p1(mayor.objetivo)
+        + ' — ' + pp + ' puntos ' + dir + '.',
+    cita: ver ? ('Tu Excel dice: «' + ver + '»') : '' };
+}
+
+// Pinta la línea, o la retira. Sin dato NO se pinta: ni con guiones, ni con la
+// caja vacía. Un componente a medias es un componente roto.
+function renderBenchmarkDesvio(cfg){
+  const box = document.getElementById('benchmarkDesvio');
+  const txt = document.getElementById('benchmarkDesvioTexto');
+  if(!box || !txt) return;
+  let dato = null;
+  try { dato = (cfg && cfg.desvio) ? benchmarkDesvioLinea() : null; }
+  catch(e){ dato = null; }
+  if(!dato){ box.hidden = true; txt.textContent=''; box.classList.remove('esOk'); return; }
+  box.hidden = false;
+  box.classList.toggle('esOk', dato.tipo === 'ok');
+  txt.textContent = dato.texto + (dato.cita ? ' ' + dato.cita : '');
+}
+
 const BENCHMARK_VIEW_CONFIG = {
   global: {
     serie:{ real:'--accent', comp:'--capital-line', trazoComp:'ref' },
@@ -2564,8 +2667,10 @@ const BENCHMARK_VIEW_CONFIG = {
     pregunta:'¿Me está costando dinero desviarme de mi reparto objetivo?',
     caja:[
       'Tus cinco activos, sin el Plan de Pensiones, contra la misma cartera si cada euro hubiera entrado repartido según tus pesos objetivo del Excel. Mismo dinero, mismos movimientos y mismas fechas: lo único que cambia es el reparto.',
-      'Lo que vale hoy tu reparto real frente al objetivo. No es todo mérito ni culpa del reparto: la referencia se simula con ETFs que publican precio diario, y tus fondos no lo publican, así que parte de la diferencia es del instrumento. La tabla de composición te dice cuánto te has desviado de verdad.'
+      'Lo que vale hoy tu reparto real frente al objetivo. No es todo mérito ni culpa del reparto: la referencia se simula con ETFs que publican precio diario, y tus fondos no lo publican, así que parte de la diferencia es del instrumento. La línea de abajo te dice de cuánto es tu mayor desvío.'
     ],
+    // v175.55 · esta vista, y SOLO esta, lleva la línea de mayor desvío.
+    desvio:true,
     realLabel:'Tu cartera · sin el Plan',
     targetLabel:'Tu reparto objetivo',
     // targetSmall alimenta la leyenda, que ya añade «(evolución simulada)»:
@@ -2629,8 +2734,25 @@ const BENCHMARK_VIEW_CONFIG = {
     pregunta:'Dentro de la renta variable, ¿mi reparto va mejor o peor que el objetivo?',
     caja:[
       'Tus tres fondos indexados —MSCI World, Emerging Markets y Small Cap— contra el mismo dinero repartido entre esos tres en su proporción objetivo, reescalada al 100 % entre ellos. El oro, el bitcoin y el Plan de Pensiones quedan fuera de esta vista.',
-      'Cuánto separa a tu reparto real del objetivo dentro de la renta variable. Mira primero la composición: si tus pesos están pegados al objetivo, la diferencia no puede venir del reparto, y entonces viene del instrumento simulado y del momento de cada aportación.'
+      'Cuánto separa a tu reparto real del objetivo dentro de la renta variable. Si tus tres pesos están pegados al objetivo, la diferencia no puede venir del reparto, y entonces viene del instrumento simulado y del momento de cada aportación.'
     ],
+    // v175.55 · ESTA VISTA NO LLEVA LÍNEA DE DESVÍO, Y NO ES UN OLVIDO.
+    //
+    // El Excel NO define umbral para el reparto DENTRO de la renta variable. El
+    // veredicto de Bloque C para esa clase (col. G, fila «Renta variable») juzga
+    // la RV CONTRA EL RESTO DE LA CARTERA —hoy «VIGILAR: RV algo baja»—, que es
+    // otra cosa: usarlo aquí sería decir una cosa por otra. Y sin umbral del
+    // libro, la única salida es escribir uno en el código: Regla 3.
+    //
+    // Medido el 25/08/2026, además, hoy sería ruido: el mayor desvío dentro de
+    // la RV es de 0,62 pp (MSCI World, 80,62 % frente a 79,99 %). Titular una
+    // línea con eso es fabricar una alarma donde no la hay.
+    //
+    // EL CAMINO SI ALGÚN DÍA SE QUIERE: añadir PRIMERO al Excel un Bloque C
+    // para los tres fondos, con sus pesos reescalados al 100 % entre ellos y su
+    // columna de veredicto. En cuanto esas celdas existan, la línea sale con
+    // este mismo código poniendo `desvio:true`. Decisión de Óscar, 25/08/2026.
+    desvio:false,
     realLabel:'Tus tres fondos',
     targetLabel:'Reparto objetivo de RV',
     targetSmall:'Reparto objetivo de RV',
@@ -3713,6 +3835,7 @@ function applyBenchmarkView(view){
   const cajaB=document.getElementById('benchmarkCompareB');
   if(cajaA) cajaA.textContent=(cfg.caja && cfg.caja[0]) || '';
   if(cajaB) cajaB.textContent=(cfg.caja && cfg.caja[1]) || '';
+  renderBenchmarkDesvio(cfg);   // v175.55 · la línea de mayor desvío
   // v175.51 · POR ID, NO POR POSICIÓN. Antes eran `span`[0] y `span`[1] del
   // conjunto de tarjetas: al poner la protagonista primera, el índice 0 pasaba
   // a ser la tarjeta de diferencia y los dos rótulos se escribían en el sitio
@@ -8334,6 +8457,14 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
       var hint=document.getElementById('benchmarkPanelSubtitle');
       var cajaA=document.getElementById('benchmarkCompareA');
       var cajaB=document.getElementById('benchmarkCompareB');
+      // v175.55 · la línea de mayor desvío. Entra en el móvil porque la frase
+      // corregida de cajaB LA PROMETE —«la línea de abajo te dice de cuánto es
+      // tu mayor desvío»—: copiar la caja sin la línea dejaría al móvil
+      // mintiendo. Es una lectura más de un DOM que ya se está leyendo, la
+      // misma justificación con la que entró la caja en v175.50.
+      var desvioEl=document.getElementById('benchmarkDesvio');
+      var desvioTxt=(desvioEl && !desvioEl.hidden)
+        ? (document.getElementById('benchmarkDesvioTexto')||{}).textContent||'' : '';
       var metrics=[].slice.call(document.querySelectorAll('#benchmark .benchmarkMetric'));
       var summary=document.getElementById('benchmarkSummary');
       var error=document.getElementById('benchmarkError');
@@ -8359,10 +8490,13 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
         // v175.50 · la caja «qué estás comparando», en texto plano. Es la única
         // ambición móvil de esta versión y entra porque son dos lecturas más de
         // un DOM que ya se estaba leyendo (criterio de prioridad de AGENTS.md).
-        ((cajaA&&cajaA.textContent.trim())||(cajaB&&cajaB.textContent.trim())
+        ((cajaA&&cajaA.textContent.trim())||(cajaB&&cajaB.textContent.trim())||desvioTxt.trim()
           ? '<div class="mobileBenchCompare">'+
             (cajaA&&cajaA.textContent.trim()?'<p><b>Qué estás comparando</b>'+escHtml(cajaA.textContent.trim())+'</p>':'')+
             (cajaB&&cajaB.textContent.trim()?'<p><b>Qué significa la diferencia</b>'+escHtml(cajaB.textContent.trim())+'</p>':'')+
+            (desvioTxt.trim()?'<p class="mobileBenchDesvio'
+              +(desvioEl&&desvioEl.classList.contains('esOk')?' esOk':'')
+              +'">'+escHtml(desvioTxt.trim())+'</p>':'')+
             '</div>'
           : '')+
         '<div class="mobileBenchMetrics">'+metrics.map(function(mt){
@@ -11929,6 +12063,39 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
     padding:15px 0!important;
     border-bottom:1px solid var(--bone-a08)!important;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   v175.55 · LA LÍNEA DE MAYOR DESVÍO
+
+   Vive dentro de la caja «qué estás comparando», separada por un filete
+   porque no es un párrafo más: es el dato, y los dos de arriba son la
+   explicación. El disco de color repite el estado que ya dice el texto —la
+   regla de forma del aviso: el estado NUNCA se distingue solo por color—.
+   Va en el ÚLTIMO bloque de estilo, que es el que gana por cascada; el
+   techo sigue en 29 y no sube. ═══════════════════════════════════════ */
+.benchmarkCompare .benchmarkDesvio{
+  display:flex;
+  gap:11px;
+  align-items:flex-start;
+  margin:14px 0 0;
+  padding-top:13px;
+  border-top:1px solid var(--line);
+}
+.benchmarkCompare .benchmarkDesvio[hidden]{display:none;}
+.benchmarkCompare .benchmarkDesvio .desvioMk{
+  flex:0 0 auto;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  margin-top:6px;
+  background:var(--warn);
+}
+.benchmarkCompare .benchmarkDesvio.esOk .desvioMk{background:var(--green);}
+#mobileBench .mobileBenchDesvio{
+  margin:11px 0 0;
+  padding-top:10px;
+  border-top:1px solid var(--line);
 }
 </style>
 </body>
