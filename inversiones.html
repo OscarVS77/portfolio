@@ -9319,8 +9319,22 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
 #movimientos .tableWrap{
   overflow-x:auto!important;
 }@media(min-width:761px){#movementsTable{
-  table-layout:fixed!important;
-  min-width:1120px!important;
+  /* v175.57 · SE QUITA EL min-width:1120px, QUE ERA LA CAUSA.
+     Medido el 25/08/2026 con el libro real: las siete columnas piden 925 px
+     con su aire y su encabezado incluidos, y en el panel caben 928. El
+     min-width forzaba la tabla a 1.125 y la sacaba 197 px por la derecha, con
+     dos efectos peores que el desbordamiento: la columna NOTA quedaba FUERA
+     del panel —había que desplazarse para saber que existía— y una celda de
+     Tipo ya salía recortada.
+     `auto` en vez de `fixed`: con anchos fijos en porcentaje el reparto es
+     estable, pero si un dato crece SE RECORTA en silencio, que es lo que hacía
+     hoy. Con `auto`, si algún día no cupiera vuelve el desplazamiento
+     horizontal del contenedor —que sigue ahí— en lugar de esconder texto.
+     Óscar, 25/08/2026: «un dato cortado sin avisar es peor que tener que
+     arrastrar». */
+  table-layout:auto!important;
+  min-width:0!important;
+  width:100%!important;
 }}#movementsTable th, #movementsTable td{
   vertical-align:middle!important;
   box-sizing:border-box!important;
@@ -9442,7 +9456,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   font-size:12px!important;
   line-height:1.35!important;
 }.alertsCard .alertStatus{min-width:0!important;overflow-wrap:break-word!important;}/* Tablas grandes: el scroll vive dentro de la tabla, no en toda la página */
-.tableWrap{max-width:calc(100% - 40px)!important;overflow-x:auto!important;}#movimientos .tableWrap{max-width:calc(100% - 40px)!important;overflow-x:auto!important;}@media(min-width:761px){#movementsTable{min-width:1120px!important;}}
+.tableWrap{max-width:calc(100% - 40px)!important;overflow-x:auto!important;}#movimientos .tableWrap{max-width:calc(100% - 40px)!important;overflow-x:auto!important;}@media(min-width:761px){#movementsTable{min-width:0!important;width:100%!important;table-layout:auto!important;}}/* v175.57 · la MISMA regla estaba escrita dos veces; las dos se corrigen. Dejar una sola habría bastado por cascada, pero la superviviente seguiría diciendo 1120 y engañaría a quien la leyera. */
 /* Breakpoints limpios */
 @media (max-width:1420px){.capitalGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;}#dashboard > .grid.two.pageBlock:not(.dashboardOps){grid-template-columns:1fr!important;}
 }
