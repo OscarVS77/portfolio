@@ -11874,6 +11874,62 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
     padding-right:41px!important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   v175.54 · RANGO PLANO EN EL DASHBOARD MÓVIL · las cuatro cifras iguales
+
+   SOLO MÓVIL. El escritorio no se toca: sigue con una protagonista a 42 y
+   tres de apoyo a 30. Por eso todo esto vive dentro de max-width:760px.
+
+   Óscar, 24/08/2026:
+     «Son cuatro cosas importantes y las quiero en el mismo rango de
+     importancia. En el móvil las veo todas de un vistazo sin desplazarme,
+     así que la jerarquía aporta menos que la uniformidad.»
+
+   ES UNA EXCEPCIÓN DELIBERADA al criterio de jerarquía, no un descuido ni
+   un incumplimiento tolerado: la jerarquía existe para guiar el ojo cuando
+   NO se ve todo a la vez, y aquí se ve todo a la vez. Queda medida por
+   verify_hierarchy.py → UNIFORMES, que exige esta escala exacta y falla
+   tanto si se dispersan como si derivan juntas a otro tamaño.
+
+   POR QUÉ 34/410/−1 Y NO OTRO. Es el tratamiento que YA usaba «Valor de
+   mercado real» en esta misma pantalla, así que no inventa un escalón:
+   quita uno. El 17/620/−0,2 lo usaban estas tres tarjetas y NADA MÁS en
+   todo el móvil —barrido de las 6 páginas con el Excel cargado—, de modo
+   que la escala móvil baja de 9 tratamientos de cifra a 8. Y se sube a las
+   tres en vez de bajar a las cuatro para no degradar el titular.
+   Medido: la cifra más ancha ocupa 180 px de 330 (54 %), cero desbordes, y
+   las cuatro terminan en 490 px de 844 — se siguen viendo sin desplazarse.
+
+   EL FILETE Y LA SEPARACIÓN son consecuencia de la igualdad, no extras. La
+   protagonista no llevaba línea inferior ni aire vertical porque no formaba
+   parte de la lista; con las cuatro al mismo rango, sin ellos el grupo se
+   lee «1+3» y las dos primeras cifras se funden. Con ellos las cuatro
+   tarjetas miden exactamente 92 px. ══════════════════════════════════════ */
+@media (max-width:760px){
+  #dashboard #heroMetricValue strong,
+  #dashboard #dashApoyo .capitalCard > strong{
+    font-size:34px!important;
+    font-weight:410!important;
+    letter-spacing:-1px!important;
+    line-height:1.08!important;
+  }
+  #dashboard #heroMetricValue label,
+  #dashboard #dashApoyo .capitalCard > label{
+    font-size:12.5px!important;
+    font-weight:600!important;
+    letter-spacing:0!important;
+    line-height:1.3!important;
+    margin:0 0 6px!important;   /* la protagonista ya lo tenía; las tres, 0 */
+  }
+  /* La protagonista entra en la lista: mismo aire y mismo filete que las
+     otras tres. v170 le ponía padding:0 y sin borde a propósito, cuando
+     estaba un nivel por encima. */
+  #dashboard .heroTopMetric.primary{
+    padding:15px 0!important;
+    border-bottom:1px solid var(--bone-a08)!important;
+  }
+}
 </style>
 </body>
 </html>
