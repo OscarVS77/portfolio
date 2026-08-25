@@ -12097,6 +12097,109 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   padding-top:10px;
   border-top:1px solid var(--line);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   v175.56 · LAS DOS TIRAS DE TARJETAS QUE DESBORDABAN
+
+   Eran las dos PENDIENTES que `verify_type` declaraba en cada pasada. El
+   defecto era visible y medido a 1280 de ancho:
+
+     · Historial · «Capital aportado» pedía 131 px de 87 útiles y salía
+       CORTADO en pantalla: se leía «CAPITAL APORT». «Rentabilidad», igual.
+       Y «8.408,05 €» se salía 2 px.
+     · Cartera actual · «16.502,34 €» y «+1.214,94 €» pedían 105 px de 94:
+       invadían su propio aire y quedaban pegadas al borde.
+
+   NO HACE FALTA NI UNA COLUMNA MENOS NI UN TAMAÑO NUEVO: el sitio ya
+   estaba, sin usar. La rejilla de Cartera iba fijada a 120px×4 dentro de
+   una pista de 540, y su panel dejaba 74 px muertos en el hueco; la tira
+   de Historial ocupaba 520 px de una celda de 560. Con las columnas
+   fluidas y la tira llenando su celda, la caja útil pasa de 94 a 108 y de
+   87 a 97, y no desborda nada.
+
+   POR QUÉ NO SE SUBEN A LA ESCALA DE 30 px, que sería lo canónico para una
+   tarjeta de dato: **chocarían con la cifra protagonista de su página**.
+   Medido con el verificador sobre esa variante: Cartera razón 1,27 e
+   Historial 1,30, las dos por debajo del 1,4 que exige el criterio de
+   jerarquía. Es el mismo defecto que originó el ciclo —«demasiadas cifras
+   con el mismo peso visual y me lío»— por el otro lado. Para subirlas
+   habría que subir antes las dos protagonistas, y eso es otra versión.
+   La declaración de `verify_type` recoge ahora ESTA razón, no la vieja.
+
+   LÍNEA BASE COMÚN · Óscar, 25/08/2026: «las cuatro cifras tienen que
+   estar al mismo nivel, se lean sus rótulos en una línea o en dos». Un
+   rótulo de dos líneas empujaba su cifra hacia abajo y la desalineaba de
+   las otras tres. Se reserva el alto de DOS líneas de rótulo en todas las
+   tarjetas de las dos tiras, aunque alguna use una sola: él lo autorizó
+   expresamente —«prefiero un poco más de alto y que se lea alineado»—.
+   Se comprueba midiendo la posición vertical de cada cifra, no a ojo.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (min-width:761px){
+  /* el panel dejaba 74 px muertos entre la tarjeta izquierda y la tira */
+  #cartera .carteraFocusPanel{
+    grid-template-columns:272px minmax(0,1fr);
+    gap:20px;
+  }
+  #cartera .carteraFocusMetrics{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+  /* La tira lateral no llenaba su celda: 520 de 560, porque llevaba
+     `margin:0 20px`. Se quita el margen, NO se fuerza `width:100%` — eso la
+     sacaba de la celda (560 + 40 de margen) y la dejaba a 22 px del borde del
+     panel, incumpliendo los 41 de v175.53. Lo cazó `verify_type` en la
+     primera pasada; sin él habría entregado una regresión de aire por
+     arreglar un desbordamiento. Sin margen, el borde derecho cae justo a 41. */
+  #historial .yearSummarySide{
+    margin-left:0;
+    margin-right:0;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+  /* Rótulo: dos líneas reservadas SIEMPRE, para que la cifra arranque a la
+     misma altura en toda la fila. 1,25 de interlínea × 2 = 2,5em exactos. */
+  #cartera .carteraMetric > span,
+  #historial .yearSummarySide div > span{
+    display:block;
+    white-space:normal;
+    line-height:1.25;
+    min-height:2.5em;
+  }
+
+  /* ── EL TÍTULO DEL PANEL SE METÍA DEBAJO DE SU INSIGNIA ─────────────────
+     Encontrado por Óscar el 25/08/2026 en una captura. NO lo trajo esta
+     versión: medido en el archivo anterior, exactamente los mismos números.
+     Y no era «están pegados», era SOLAPE: en Bitcoin, «Revisar» se imprimía
+     ENCIMA del precio en directo y no se leía ninguno de los dos.
+
+     Afectaba a 4 de las 7 pestañas —Todos 5,3 px · Bitcoin 42,5 · Emerging
+     Markets 13,4 · Plan Pensiones 18,4—.
+
+     La causa no es un margen que falte: `.carteraFocusTop` es flex con
+     `gap:18px`, y dos elementos flexibles no pueden solaparse. Lo que pasaba
+     es que el DIV interior del nombre conservaba `min-width:auto` —el valor
+     por defecto de un elemento flexible, que le impide encogerse por debajo
+     de su contenido—, así que se salía 61 px de su padre arrastrando al `h3`,
+     que va en `nowrap`. El padre `.carteraFocusName` YA estaba a 0; el que
+     faltaba era el hijo. Por eso un arreglo sobre el padre no movía ni un
+     decimal — comprobado antes de dar con el bueno.
+
+     Con esto las siete pestañas quedan al hueco de 18 px del contenedor.
+     Sólo Plan Pensiones crece 4 px de alto, porque su título parte en dos. */
+     PERO SOLO CON `min-width:0` NO BASTA, Y EL PRIMER INTENTO SALIÓ PEOR: el
+     `h3` ya venía con `nowrap`, `overflow:hidden` y `text-overflow:ellipsis`
+     —o sea, estaba diseñado para recortar—, y nunca recortaba porque no podía
+     encogerse. Al dejarle encogerse, el solape desaparecía y en su lugar la
+     pestaña de Bitcoin pasaba a decir «Bitcoin …»: **se comía el precio en
+     directo**. Cambiar un solape por información perdida no es arreglarlo.
+     Visto en la captura, no en los números — que daban 0 de 7 y parecían
+     buenos. Por eso el título PARTE EN DOS LÍNEAS en vez de recortarse. */
+  #cartera .carteraFocusName > div{min-width:0;}
+  #cartera .carteraFocusName h3{
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+  }
+  #cartera .carteraFocusStatus{flex:0 0 auto;}
+}
 </style>
 </body>
 </html>
