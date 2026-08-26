@@ -11038,11 +11038,41 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   #xirr.active .kpiStripContext .kpi{ padding:17px 20px!important; }
 
   /* ── geometría · píldora: radio 8, alto 34 ────────────────────────────── */
-   #cartera .carteraProTabs button,
+  /* v175.65 · DEFECTO #10 · «2025Cerrado». La píldora del año SE SACA de esta
+     lista, y la razón es que NO ES UNA PÍLDORA.
+
+     Esta regla llegó en v175.45 con la escala tipográfica y aplicaba
+     `display:inline-flex; align-items:center` a cuatro componentes. En tres son
+     chips de una línea y es lo correcto. El cuarto —`#historial .yearPills
+     button`— es una TARJETA APILADA: su marcado es `<strong>2025</strong>` sobre
+     `<span>Cerrado</span>`, los dos con `display:block`, el `span` con
+     `margin-top`, el botón con `text-align:left` y una cifra de 20 px sobre una
+     etiqueta de 12. Meterlo en un flex de eje horizontal puso los dos textos en
+     FILA, y con `gap:normal` —que es 0— el resultado se lee «2025Cerrado».
+
+     Medido: hueco horizontal 0 px, vertical -13,02. Sacarlo de la lista devuelve
+     el apilado con sus 4 px de separación y la píldora pasa de 96,5×38,5 a
+     76×52.
+
+     NO se arregla añadiendo `gap:6px`: eso deja los dos textos en fila, que no es
+     lo que el componente es.
+
+     Y NO SE SACA DE LA REGLA ENTERA, que fue el primer intento: la firma lo cazó
+     —`borderRadius: 8px → 6px` en las 7 páginas— porque al salirse perdía también
+     el radio y caía al 6 de la base, incumpliendo el criterio «píldora radio 8».
+     La regla MEZCLABA dos criterios distintos: la geometría compartida (radio y
+     alto mínimo, que valen para los cuatro) y el EJE de un chip de una línea (que
+     sólo vale para tres). El defecto es la mezcla, así que se separan. */
+  #cartera .carteraProTabs button,
   #movimientos .filterPill, #historial .yearPills button,
   #benchmark .benchmarkTabs button{
     border-radius:8px!important;
     min-height:34px!important;
+  }
+  /* el EJE, sólo para los chips de una línea. La píldora del año no está. */
+  #cartera .carteraProTabs button,
+  #movimientos .filterPill,
+  #benchmark .benchmarkTabs button{
     display:inline-flex!important;
     align-items:center!important;
   }
