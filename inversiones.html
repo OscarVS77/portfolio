@@ -779,8 +779,7 @@
 }
 
 /* v17: Dashboard lower area refined */
-@media (min-width: 1100px){
-}.alertsCard .alert{
+.alertsCard .alert{
   grid-template-columns:150px 1fr!important;
   min-height:44px!important;
   gap:12px!important;
@@ -789,8 +788,7 @@
 }.alertsCard .alertStatus{
   font-size:12.5px!important;
 }
-@media (max-width: 1150px){
-}/* v18: Auditoría visual global de alineación y lectura */
+/* v18: Auditoría visual global de alineación y lectura */
 :root{
   --page-gap:14px;
 }.cardHeader{
@@ -811,8 +809,7 @@
   font-variant-numeric:tabular-nums!important;
 }
 /* Dashboard: alertas más contenidas y conciliación con espacio real */
-@media (min-width: 1180px){
-}.alertsCard .cardHeader p{
+.alertsCard .cardHeader p{
   max-width:460px!important;
 }.alertsCard .alerts{
   padding:6px 16px 16px!important;
@@ -1764,8 +1761,7 @@ html{
 
 <style>
 /* V98 · Mobile fix: Distribución operativa con scroll lateral real */
-@media (max-width:760px){
-}
+
 
 /* v127 · Topbar anclado en desktop (mobile sin cambios) */
 @media(min-width:761px){.topbar{
@@ -6136,7 +6132,7 @@ updateDashboard = function(){
 
   const oldRenderScope = window.renderDashboardScope;
   window.renderDashboardScope = function(scope){
-    if(!window.importedWorkbook && typeof importedWorkbook !== 'undefined' && !importedWorkbook) return;
+    if(!importedWorkbook) return;   // v175.63 · las otras dos cláusulas eran constantes: ver el cierre del punto 6
     if(typeof parseCartera !== 'function' || typeof getDashboardRows !== 'function'){
       if(oldRenderScope) return oldRenderScope(scope);
       return;
@@ -6336,8 +6332,7 @@ updateDashboard = function(){
 
 <style>/* v29 · Distribución de cartera: lista limpia con barras, sin tarjetas cortadas */
 
-@media(max-width:780px){
-}
+
 
 </style>
 <script>
@@ -6360,8 +6355,7 @@ updateDashboard = function(){
   border:1px solid var(--bone-a11);
   background:var(--bone-a01);
 }.statusPill.ok{color:var(--green);border-color:var(--tint-ok-20);background:var(--tint-ok-06);}.statusPill.warn{color:var(--warn);border-color:var(--tint-warn-10);background:var(--tint-warn-05);}.statusPill.neutral{color:var(--muted);}
-@media(max-width:900px){
-}
+
 
 </style>
 <script>
@@ -6376,8 +6370,7 @@ updateDashboard = function(){
 
 <style>/* v33 · Dashboard pulido: distribución operativa + alertas, sin conciliación */
 #dashboard .alertsCard{height:100%!important;padding:22px 26px!important;}#dashboard .alertsCard .alerts{margin-top:14px!important;}#dashboard .alertsCard .alert{grid-template-columns:minmax(120px,.85fr) minmax(0,1.15fr)!important;padding:12px 0!important;}
-@media(max-width:1180px){
-}
+
 
 </style>
 
@@ -8834,8 +8827,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
 
 <style>
 /* V24: Ajuste final Dashboard · alertas limpias y sin solapes */
-@media (min-width: 1180px){
-}.alertsCard .alerts{
+.alertsCard .alerts{
   padding:8px 18px 18px!important;
   margin-left:var(--grid-x-card)!important;
   margin-right:var(--grid-x-card)!important;
@@ -8881,8 +8873,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
 </style>
 <style>
 /* V25 · Corrección real de Dashboard: alertas + conciliación sin cortes */
-@media (min-width:1180px){
-}.alertsCard .alerts{
+.alertsCard .alerts{
   padding:8px var(--grid-x-card) 18px!important;
   margin:0!important;
 }.alertsCard .alert{
@@ -8901,8 +8892,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   overflow-wrap:normal!important;
   word-break:normal!important;
 }
-@media (max-width:1320px){
-}
+
 @media (max-width:700px){.alertsCard .alert{grid-template-columns:1fr!important;gap:4px!important;}
 }/* v13 · Criterio definitivo de tablas: textos a la izquierda, números a la derecha, sin columnas centradas */
 #movimientos .tableWrap{
@@ -9030,8 +9020,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   gap:var(--contentGap)!important;
 }.capitalCard{min-width:0!important;}.capitalCard strong, .heroMetric strong, .kpi strong{white-space:nowrap!important;}
 /* Alertas + conciliación: dos columnas fluidas, sin anchos fijos que rompan la página */
-@media (min-width:1180px){
-}.alertsCard .alerts{padding:8px 18px 18px!important;}.alertsCard .alert{
+.alertsCard .alerts{padding:8px 18px 18px!important;}.alertsCard .alert{
   grid-template-columns:150px minmax(0,1fr)!important;
   gap:16px!important;
   padding:9px 0!important;
@@ -9045,8 +9034,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
 /* Breakpoints limpios */
 @media (max-width:1420px){.capitalGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;}#dashboard > .grid.two.pageBlock:not(.dashboardOps){grid-template-columns:1fr!important;}
 }
-@media (max-width:1180px){
-}
+
 @media (max-width:1150px){:root{--appPad:12px!important;--appGap:0px!important;--topGap:16px!important;}.app{width:100%!important;padding:12px!important;}.sidebar{position:relative!important;top:auto!important;left:auto!important;width:auto!important;height:auto!important;margin-bottom:16px!important;}.main{margin-left:0!important;width:100%!important;}.topbar{top:12px!important;margin-bottom:16px!important;}
 }
 @media (max-width:780px){.capitalGrid{grid-template-columns:1fr!important;}.alertsCard .alert{grid-template-columns:1fr!important;gap:4px!important;}
@@ -9141,10 +9129,8 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   font-size:12px!important;
   margin-top:5px!important;
 }
-@media(max-width:1320px){
-}
-@media(max-width:780px){
-}/* Dashboard v28: jerarquía revisada */
+
+/* Dashboard v28: jerarquía revisada */
 #dashboard .dashboardHeroOnly{grid-template-columns:1fr!important;}#dashboard .capitalGrid{margin-top:18px!important;margin-bottom:18px!important;}
 
 </style>
@@ -9192,8 +9178,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   font-weight:420!important;
 }/* 3 · Dashboard: Distribución y Alertas al mismo nivel */
 
-@media(min-width:1180px){
-} #dashboard .alertsCard{
+ #dashboard .alertsCard{
   margin-top:0!important;
   align-self:stretch!important;
   height:100%!important;
@@ -9592,9 +9577,8 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   display:table-row-group!important;
 }#benchmark .grid.two article.card:first-child .tableWrap{
   min-height:250px!important;
-}/* --- FIX CRÍTICO: tabla de Distribución operativa volvía vacía ---
-   Una regla tardía forzaba .legend a grid de 5 columnas y colapsaba la tabla. */
-/* la tabla no usa .legendRow; si alguna capa lo inyecta, que no estorbe */
+}
+
 /* placeholder cuando aún no hay Excel: el JS deja el tbody sin filas */
 /* Pastillas de estado coherentes */
 .statusPill{
@@ -9609,8 +9593,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
 }#dashboard .heroMetric strong{ font-size:21px!important; }
 
 /* --- Dos columnas Distribución / Alertas: equilibrio real --- */
-@media(min-width:1180px){
-}/* --- Cartera: elimina la barra de filtro huérfana vacía sobre la tabla --- */
+/* --- Cartera: elimina la barra de filtro huérfana vacía sobre la tabla --- */
 #cartera .movementsToolbar:empty, #cartera .searchBox:placeholder-shown:only-child{ display:none!important; }#cartera .carteraProTabs:empty{ display:none!important; }/* .carteraDiagnosis se rellena por JS; vacío en demo deja una caja con borde */
 #cartera .carteraDiagnosis:empty{ display:none!important; }/* --- Benchmark: caja de gráfica vacía deja de ser un hueco gigante --- */
 #benchmark .chart, #benchmark [class*="chart"]:empty{ min-height:200px!important; max-height:260px!important; }/* --- Cabeceras de tarjeta: tamaño y aire uniformes --- */
@@ -9644,10 +9627,8 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
 ::-webkit-scrollbar{ width:10px;height:10px; }::-webkit-scrollbar-thumb{ background:var(--line-strong);border-radius:4px;border:2px solid var(--bg); }::-webkit-scrollbar-track{ background:transparent; }
 </style>
 <style>
-/* V100 · FIX REAL MOBILE: Distribución operativa con scroll lateral
-   El scroll queda en .legend, no en un contenedor interno anidado. */
-@media (max-width:760px){
-}#dashboard .capitalCard.capitalCardKey{
+
+#dashboard .capitalCard.capitalCardKey{
   border:1.5px solid var(--gold)!important;
   border-color:var(--gold)!important;
   box-shadow:0 0 0 1px var(--tint-gold-04),0 14px 34px var(--blk-a08)!important;
