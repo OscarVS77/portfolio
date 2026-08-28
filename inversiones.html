@@ -421,7 +421,9 @@
   border:1px solid var(--line);
   border-radius:6px;
   background:var(--wht-a10);
-  white-space:nowrap;
+  /* v175.66 · era `nowrap`, y con un texto que cambia en ejecución eso
+     convertía el chip en una barra que empujaba al título fuera de la barra. */
+  white-space:normal;
 }.pageTitle{
   min-width:0;
 }.pageTitle h1{
@@ -758,12 +760,34 @@
   box-shadow:0 10px 28px var(--blk-a05), inset 0 1px 0 var(--wht-a06)!important;
 }.pageTitle h1{font-size:19px!important;font-weight:570!important;letter-spacing:-.55px!important;line-height:1.05!important}.pageTitle p{font-size:10.8px!important;margin-top:3px!important;color:var(--tone-05)!important}.actions{gap:6px!important}.btn, label.btn, .importStatus{
   height:30px!important;
-  min-width:98px!important;
+  /* v175.66 · el suelo de 98 px se va: era lo que ahogaba la columna del
+     título de la barra. Medido en las 7 páginas, sólo hay 2 botones visibles
+     fuera de .topbar y a ninguno le cambia el ancho; en móvil la barra está
+     oculta, 0 botones visibles. */
+  min-width:auto!important;
   padding:0 11px!important;
   font-size:10.8px!important;
   font-weight:570!important;
   border-radius:4px!important;
-}.importStatus{min-width:166px!important;color:var(--tone-09)!important}.pageBlock{margin-top:18px!important}.grid, .capitalGrid, .historyClean{gap:18px!important}.card, .kpi, .capitalCard{
+}.importStatus{
+  /* v175.66 · el chip DEJA DE SER un rótulo de ancho fijo que no se parte.
+     Su texto cambia en ejecución —«01_Portfolio_Oscar.xlsx importado»,
+     «Backup exportado · …», «EXCEL RECHAZADO · …»— y siendo nowrap se llevaba
+     hasta 957 px de los 944 de la barra: la columna del título llegaba a 0.
+     Ahora se envuelve dentro de un tope de 210 px y conserva su texto entero. */
+  min-width:0!important;
+  max-width:210px!important;
+  height:auto!important;
+  min-height:30px!important;
+  /* SIN `line-height` a propósito. La primera versión ponía 1.25 y la firma lo
+     cazó en el MÓVIL: 14 diferencias, `lineHeight normal → 16.25px` en
+     #importStatus y su viñeta, en las 7 páginas. Ahí la barra está oculta, así
+     que no se veía nada — y el móvil exige 0 diferencias igual. No hacía falta:
+     el alto lo da el min-height y el relleno. */
+  padding:6px 11px!important;
+  text-align:right!important;
+  color:var(--tone-09)!important;
+}.pageBlock{margin-top:18px!important}.grid, .capitalGrid, .historyClean{gap:18px!important}.card, .kpi, .capitalCard{
   border-radius:6px!important;
   border-color:var(--wht-a14)!important;
   background:linear-gradient(180deg,var(--veil-08),var(--veil-22))!important;
@@ -1798,11 +1822,11 @@ html{
         <p id="subtitle">Resumen principal desde la hoja RESUMEN del Excel.</p>
       </div>
       <div class="actions">
-        <label class="btn primary" for="excelFile">Importar Excel</label>
+        <label class="btn primary" for="excelFile">Importar</label>
         <input class="fileInput" id="excelFile" type="file" accept=".xlsx,.xls">
-        <button class="btn" id="backupBtn" type="button">Exportar backup</button>
-        <button class="btn cloudBtn" id="cloudSaveBtn" type="button" disabled>Guardar nube</button>
-        <button class="btn cloudBtn" id="cloudLoadBtn" type="button" disabled>Cargar nube</button>
+        <button class="btn" id="backupBtn" type="button">Backup</button>
+        <button class="btn cloudBtn" id="cloudSaveBtn" type="button" disabled>Guardar</button>
+        <button class="btn cloudBtn" id="cloudLoadBtn" type="button" disabled>Cargar</button>
         <button class="btn cloudBtn" id="cloudLoginBtn" type="button">Cloud</button>
         <span class="importStatus" id="importStatus"><span class="bullet bOff"></span>Sin Excel conectado</span>
       </div>
