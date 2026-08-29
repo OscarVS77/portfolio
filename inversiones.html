@@ -1388,7 +1388,7 @@ html{
   min-width:118px!important;
   font-size:10.7px!important;
 }#benchmark .benchmarkGrid{
-  margin-top:18px!important;
+  margin-top:14px!important;
 }#benchmark .benchmarkMetric{
   min-height:86px!important;
   padding:14px!important;
@@ -1402,8 +1402,8 @@ html{
 }#benchmark .benchmarkChartReal svg{
   height:270px!important;
 }#benchmark .benchmarkSummary{
-  margin:10px 18px 18px!important;
-  padding:15px 16px!important;
+  margin:14px 20px 20px!important;
+  padding:15px 18px!important;
   border-radius:6px!important;
 }#benchmark .benchmarkSummary span{
   font-size:10px!important;
@@ -2053,32 +2053,15 @@ html{
     </section>
 
     <section class="section" id="benchmark">
-      <section class="benchmarkHero card pageBlock">
-        <div>
-          <span class="eyebrow">Benchmark</span>
-          <!-- v175.50 · fuera el <h2> «Tu cartera real vs Cartera objetivo» y su
-               párrafo: nombraban UNA vista y se quedaban fijos en las siete. Lo
-               que se compara lo dice el título del panel, que sí es dinámico. -->
-        </div>
-        <!-- v175.50 · el encabezado pasa a barra. Al retirar el titular fijo, la
-             columna izquierda se quedaba vacía y el panel medía 190 px de casi
-             nada. Los tres indicadores van en fila y la nota, que puede ser
-             larga («URTH valorado el … (mercado cerrado)»), en su propia línea.
-             Los dos últimos vienen de la tarjeta «Criterio técnico» retirada:
-             NO se borran, son el observable del invariante de v175.33 —los
-             indicadores secundarios no pueden quedar en verde bajo un estado de
-             error— y test_functional los lee en seis sitios, tres en rutas de
-             error. -->
-        <div class="benchmarkState">
-          <div class="benchmarkStateRow">
-            <div><span>Estado API</span><strong id="benchmarkApiStatus">Sin datos</strong></div>
-            <div><span>Edge Function</span><strong id="benchmarkEdgeCheck" class="neutral">Pendiente</strong></div>
-            <div><span>API externa</span><strong id="benchmarkProviderCheck" class="neutral">No conectada</strong></div>
-          </div>
-          <em id="benchmarkApiNote">Carga el Excel antes de solicitar la comparativa.</em>
-        </div>
-      </section>
-
+      <!-- v175.67 · punto 8 · EL HERO SE RETIRA. Desde v175.50 no tenía contenido
+           propio —su h2 y su párrafo se fueron por falsos— y era un panel entero
+           sosteniendo tres chips; la identidad «Benchmark» la da la barra de
+           página. La franja de estado se MUEVE entera al panel principal, con
+           sus ids intactos: sus tres indicadores y la nota son el observable del
+           invariante de v175.33 —no pueden quedar en verde bajo un estado de
+           error— y test_functional los lee en seis sitios, tres en rutas de
+           error. Los dos botones de carga entran en su fila: estado de los datos
+           y acciones sobre los datos, en una sola franja. -->
       <section class="card pageBlock">
         <div class="cardHeader">
           <div>
@@ -2087,6 +2070,18 @@ html{
                  applyBenchmarkView; esto es solo el estado inicial. -->
             <p id="benchmarkPanelSubtitle">¿Me está costando dinero desviarme de mi reparto objetivo?</p>
           </div>
+        </div>
+        <div class="benchmarkState">
+          <div class="benchmarkStateRow">
+            <div><span>Estado API</span><strong id="benchmarkApiStatus">Sin datos</strong></div>
+            <div><span>Edge Function</span><strong id="benchmarkEdgeCheck" class="neutral">Pendiente</strong></div>
+            <div><span>API externa</span><strong id="benchmarkProviderCheck" class="neutral">No conectada</strong></div>
+            <div class="benchmarkStateActs">
+              <button class="btn primary" id="benchmarkLoadBtn" type="button">Cargar benchmark</button>
+              <button class="btn" id="benchmarkReloadBtn" type="button">Actualizar</button>
+            </div>
+          </div>
+          <em id="benchmarkApiNote">Carga el Excel antes de solicitar la comparativa.</em>
         </div>
         <div class="benchmarkNav" id="benchmarkTabs">
           <div class="benchmarkNavBar">
@@ -2105,28 +2100,13 @@ html{
                siete vistas era falsa. La pregunta de la vista la escribe
                applyBenchmarkView en #benchmarkPanelSubtitle. -->
         </div>
-        <!-- v175.50 · «Qué estás comparando». Siempre visible, no detrás de un
-             disco: en el Dashboard la ayuda responde «qué es este número» y hay
-             nueve; aquí hay una por pantalla y es el encabezado de la lectura.
-             Los dos textos los rellena applyBenchmarkView desde la vista. -->
-        <div class="benchmarkCompare" id="benchmarkCompare">
-          <p><b>Qué estás comparando</b><span id="benchmarkCompareA"></span></p>
-          <p><b>Qué significa la diferencia</b><span id="benchmarkCompareB"></span></p>
-          <!-- v175.55 · la línea de mayor desvío. La rellena applyBenchmarkView
-               desde benchmarkDesvioLinea(), que lo lee TODO del Excel. Nace
-               oculta: sin dato no se pinta, y una línea vacía es peor que
-               ninguna línea. -->
-          <p class="benchmarkDesvio" id="benchmarkDesvio" hidden><span class="desvioMk" aria-hidden="true"></span><span id="benchmarkDesvioTexto"></span></p>
-        </div>
-        <div class="benchmarkApiActions">
-          <button class="btn primary" id="benchmarkLoadBtn" type="button">Cargar benchmark</button>
-          <button class="btn" id="benchmarkReloadBtn" type="button">Actualizar</button>
-        </div>
         <!-- v175.51 · LA PROTAGONISTA ES LA DIFERENCIA, Y VA PRIMERA. Es la
              respuesta a la pregunta de la vista; los dos porcentajes son de
              dónde sale. Hasta v175.50 era al revés: los orígenes a 30 px y la
              respuesta —los euros— en una nota de 12. Las tres cifras al mismo
-             tamaño eran los 7 incumplimientos que declaraba verify_hierarchy. -->
+             tamaño eran los 7 incumplimientos que declaraba verify_hierarchy.
+             v175.67 · y sube ANTES del texto explicativo: las cifras son lo que
+             se viene a ver (defecto 3 del punto 8). -->
         <div class="benchmarkGrid pageBlock">
           <article class="benchmarkMetric benchmarkMetricProta card">
             <span>Diferencia</span>
@@ -2145,6 +2125,19 @@ html{
             <em id="benchmarkOscarNote">Mismos movimientos simulados</em>
           </article>
           </div>
+        </div>
+        <!-- v175.50 · «Qué estás comparando». Siempre visible, no detrás de un
+             disco: en el Dashboard la ayuda responde «qué es este número» y hay
+             nueve; aquí hay una por pantalla y es el encabezado de la lectura.
+             Los dos textos los rellena applyBenchmarkView desde la vista. -->
+        <div class="benchmarkCompare" id="benchmarkCompare">
+          <p><b>Qué estás comparando</b><span id="benchmarkCompareA"></span></p>
+          <p><b>Qué significa la diferencia</b><span id="benchmarkCompareB"></span></p>
+          <!-- v175.55 · la línea de mayor desvío. La rellena applyBenchmarkView
+               desde benchmarkDesvioLinea(), que lo lee TODO del Excel. Nace
+               oculta: sin dato no se pinta, y una línea vacía es peor que
+               ninguna línea. -->
+          <p class="benchmarkDesvio" id="benchmarkDesvio" hidden><span class="desvioMk" aria-hidden="true"></span><span id="benchmarkDesvioTexto"></span></p>
         </div>
         <div class="benchmarkPanelStable" id="benchmarkPanelStable">
         <div class="benchmarkChartReal" id="benchmarkChart"><div class="chartEmpty">Pulsa “Cargar benchmark” para simular tus mismos movimientos contra tu reparto objetivo.</div></div>
@@ -9427,7 +9420,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
 }.benchmarkGrid{
   display:grid!important;
   grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  gap:14px!important;
+  gap:18px!important; /* v175.67 · el canalón es la sangría única del canon */
 }.benchmarkMetric{
   min-height:96px!important;
   padding:16px!important;
@@ -9455,7 +9448,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   padding:0 12px 5px!important;
   text-align:right!important;
   white-space:nowrap!important;
-}.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}.benchmarkTable td{
+}.benchmarkTable th:first-child{text-align:left!important;width:34%!important;padding-left:18px!important}.benchmarkTable th:last-child{padding-right:18px!important}.benchmarkTable td{
   height:42px!important;
   background:var(--blk-a10)!important;
   border-top:1px solid var(--line2)!important;
@@ -9489,7 +9482,7 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
 }.benchmarkNote strong{color:var(--text)!important}
 @media(max-width:1150px){.benchmarkHero{grid-template-columns:1fr!important}.benchmarkState{text-align:left!important}.benchmarkGrid{grid-template-columns:1fr!important}
 }/* V54 · Benchmark con resumen explicativo */
-.benchmarkState strong.green{color:var(--green)!important}.benchmarkState strong.red{color:var(--red)!important}.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}.benchmarkApiActions .btn{min-width:128px!important}.benchmarkChartReal{margin:16px 18px 18px!important;min-height:280px!important;border-radius:6px!important;border:1px solid var(--line2)!important;background:var(--blk-a11)!important;position:relative!important;overflow:hidden!important}.benchmarkChartReal svg{display:block;width:100%;height:280px}.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:0 18px 18px!important;color:var(--text2)!important;font-size:11.5px!important}.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}.benchmarkError{display:none;margin:0 18px 18px!important;padding:12px 13px!important;border:1px solid var(--tint-bad-08)!important;border-radius:6px!important;background:var(--tint-bad-01)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}.benchmarkError.active{display:block!important}/* V66 · Estado de datos operativo */
+.benchmarkState strong.green{color:var(--green)!important}.benchmarkState strong.red{color:var(--red)!important}.benchmarkApiActions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;padding:16px 18px 0!important}.benchmarkApiActions .btn{min-width:128px!important}.benchmarkChartReal{margin:14px 20px 0!important;min-height:280px!important;border-radius:6px!important;border:1px solid var(--line2)!important;background:var(--blk-a11)!important;position:relative!important;overflow:hidden!important}.benchmarkChartReal svg{display:block;width:100%;height:280px}.benchmarkLegend{display:flex!important;gap:14px!important;flex-wrap:wrap!important;margin:10px 20px 0!important;color:var(--text2)!important;font-size:11.5px!important}.benchmarkLegend span{display:inline-flex!important;align-items:center!important;gap:7px!important}.benchmarkError{display:none;margin:0 20px 20px!important;padding:12px 13px!important;border:1px solid var(--tint-bad-08)!important;border-radius:6px!important;background:var(--tint-bad-01)!important;color:var(--red)!important;font-size:11.5px!important;line-height:1.35!important}.benchmarkError.active{display:block!important}/* V66 · Estado de datos operativo */
 .dataStatusGrid{
   display:grid!important;
   /* v175.64 · DEFECTO #12, la CAUSA RAÍZ. Aquí había `repeat(4,minmax(0,1fr))`:
@@ -9688,7 +9681,9 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
 </style>
 <style>/* v139 · Navegación Benchmark en dos barras (grupo + vista). Inyectado al final para ganar a capas previas de .benchmarkTabs. */
 #benchmark .benchmarkNav{
-  padding:14px 18px 0!important;
+  /* v175.67 · nivel BLOQUE (41): el de los toolbars y bloques de tarjetas de
+     las hermanas. Las dos barras arrancan en el mismo borde, sin escalón. */
+  padding:14px 41px 0!important;
   display:flex!important;
   flex-direction:column!important;
   gap:9px!important;
@@ -9703,15 +9698,21 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   flex-wrap:wrap!important;
   padding:0!important;
   margin:0!important;
-}#benchmark .benchmarkGroupTabs button{
-  height:32px!important;
+}/* v175.67 · punto 8 · los botones de grupo ADOPTAN LA PÍLDORA CANÓNICA,
+   literal de las vistas de esta misma página y de los filtros de Movimientos:
+   radio 8 · alto 34 · pad 0 11 · 12/590 · superficie --panel3. Estaban a
+   radio 4 / alto 32 / --wht-a10 y no los vigilaba nadie; desde esta versión
+   están en el inventario de verify_surfaces. */
+#benchmark .benchmarkGroupTabs button{
+  height:34px!important;
+  min-height:34px!important;
   border:1px solid var(--line)!important;
-  border-radius:4px!important;
-  background:var(--wht-a10)!important;
+  border-radius:8px!important;
+  background:var(--panel3)!important;
   color:var(--text2)!important;
-  padding:0 14px!important;
-  font-size:11px!important;
-  font-weight:640!important;
+  padding:0 11px!important;
+  font-size:12px!important;
+  font-weight:590!important;
   cursor:pointer!important;
 }#benchmark .benchmarkGroupTabs button.active{
   background:var(--hue-gold-01)!important;
@@ -9738,7 +9739,8 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   padding:13px 20px!important;
 }#benchmark .benchmarkState{
   text-align:left!important;
-  padding:11px 14px!important;
+  padding:11px 18px!important;
+  margin:12px 20px 0!important;
 }#benchmark .benchmarkStateRow{
   display:flex!important;
   gap:22px!important;
@@ -9746,6 +9748,15 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   align-items:baseline!important;
 }#benchmark .benchmarkStateRow > div{
   min-width:0!important;
+}/* v175.67 · los dos botones de carga viven en la fila de estado: estado de
+   los datos y acciones sobre los datos, una sola franja. Los botones son el
+   .btn global sin retoques — al salir de .benchmarkApiActions les aplica el
+   canon del topbar: radio 4, alto 30, pad 0 11. */
+#benchmark .benchmarkStateActs{
+  margin-left:auto!important;
+  display:flex!important;
+  gap:8px!important;
+  align-self:center!important;
 }#benchmark .benchmarkStateRow strong{
   font-size:15px!important;
   font-weight:600!important;
@@ -9754,18 +9765,19 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
 }#benchmark .benchmarkState em{
   min-height:0!important;
   margin-top:7px!important;
-/* v175.51 · JERARQUÍA. La protagonista a 42 y los dos orígenes a 30: razón
-   exactamente 1,40, el mínimo que exige verify_hierarchy, igual que el
-   Dashboard. No hay margen: cualquier retoque rompe el criterio.
-   Y cabe, medido: la tarjeta tiene 279 px útiles y el importe más largo que
-   puede aparecer —+17.218,66 €— ocupa 217 px a 42 px de cuerpo. A 60 pediría
-   301 y desbordaría, que es lo que le pasa a .carteraMetric. */
+/* v175.51 puso la protagonista a 42 porque a 60 la tarjeta de ENTONCES (279 px
+   útiles, rejilla de tres columnas) desbordaba con el importe más largo.
+   v175.67 · punto 8: la sube a 60/360/−2,8 —el tratamiento de protagonista del
+   canon, el del XIRR— porque la tarjeta de HOY es de dos columnas: 427,8 px
+   útiles, y +17.218,66 € a 60 px pide 332,9 — cabe con 95 de holgura, medido en
+   Chromium y WebKit al implementar (idénticos al decimal). La razón con los
+   apoyos pasa de 1,40 a 2,00, por encima del mínimo de verify_hierarchy. */
 }#benchmark .benchmarkGrid{
   grid-template-columns:minmax(0,1.12fr) minmax(0,1fr)!important;
 }#benchmark .benchmarkApoyos{
   display:grid!important;
   grid-template-rows:1fr 1fr!important;
-  gap:14px!important;
+  gap:18px!important; /* v175.67 · el canalón es la sangría única del canon */
   min-width:0!important;
 }#benchmark .benchmarkApoyos .benchmarkMetric{
   min-height:0!important;
@@ -9789,8 +9801,9 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   height:0!important;
   border-radius:0!important;
 }#benchmark .benchmarkCompare{
-  margin:12px 18px 4px!important;
-  padding:14px 16px!important;
+  /* v175.67 · nivel HUNDIDA (21) y sangría interna 18, como toda superficie */
+  margin:12px 20px 0!important;
+  padding:14px 18px!important;
   background:var(--bg)!important;
   border:1px solid var(--line)!important;
   border-radius:12px!important;
@@ -9843,14 +9856,16 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
   min-height:36px!important;
 }#benchmark .benchmarkGroupHint{
   min-height:16px!important;
-}/* v140: la cabecera ESTADO API cambia de altura al pasar de "Sin cargar" a
-   "Cargando · Consultando Edge Function..." (1→2 líneas). Y las notas <em> de las
-   cápsulas pasan de 1 a 2 líneas con datos reales. Ambas están fuera del panel
-   estable y provocaban el salto. Se fijan sus alturas. */
+}/* v140 fijaba aquí 118/30 px para que la cabecera de estado no saltara al
+   pasar la nota de 1 a 2 líneas. v175.67 · punto 8: la reserva se retira. Era
+   para la columna estrecha del hero (~240 px), donde la nota envolvía casi
+   siempre; en la franja a ancho de panel la nota dispone de ~900 px de línea y
+   los textos de carga y de éxito caben en una. Un rechazo extremo envuelve, y
+   ese crecimiento es flujo normal, no un salto que haya que fijar. */
 #benchmark .benchmarkState{
-  min-height:118px!important;
+  min-height:0!important;
 }#benchmark .benchmarkState em{
-  min-height:30px!important;
+  min-height:0!important;
   display:block!important;
 }#benchmark .benchmarkGrid .benchmarkMetric{
   min-height:104px!important;
@@ -11042,7 +11057,8 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   }
   /* el panel delega su aire en .cardHeader (18px 20px 0): +1 del borde = 19.
      Subirlo aquí es lo correcto; poner padding al panel metería doble aire. */
-  .card.pageBlock > .cardHeader, #dashboard .card > .cardHeader{
+  .card.pageBlock > .cardHeader, #dashboard .card > .cardHeader,
+  #benchmark .card > .cardHeader{
     padding:21px 22px 0!important;
   }
 
@@ -11089,14 +11105,16 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
      sólo vale para tres). El defecto es la mezcla, así que se separan. */
   #cartera .carteraProTabs button,
   #movimientos .filterPill, #historial .yearPills button,
-  #benchmark .benchmarkTabs button{
+  #benchmark .benchmarkTabs button,
+  #benchmark .benchmarkGroupTabs button{
     border-radius:8px!important;
     min-height:34px!important;
   }
   /* el EJE, sólo para los chips de una línea. La píldora del año no está. */
   #cartera .carteraProTabs button,
   #movimientos .filterPill,
-  #benchmark .benchmarkTabs button{
+  #benchmark .benchmarkTabs button,
+  #benchmark .benchmarkGroupTabs button{
     display:inline-flex!important;
     align-items:center!important;
   }
@@ -11148,8 +11166,9 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   /* v175.51 · la tarjeta de diferencia del Benchmark entra aquí, en la escala
      canónica y no en una regla suelta: el tamaño lo fija el PAPEL. Puesta en
      otro bloque perdía por posición contra la regla de 30 de aquí abajo, que
-     es más tardía. Mismo reparto que el Dashboard desde v175.48. */
-  #benchmark .benchmarkMetricProta > strong,
+     es más tardía. Mismo reparto que el Dashboard desde v175.48.
+     v175.67 · punto 8: la diferencia SUBE al tratamiento de protagonista (60),
+     la regla de aquí abajo — la razón medida está junto a la regla del grid. */
   #dashboard .heroTopMetric > strong,
   #dashboard .heroTopMetric.primary > strong{
     font-size:42px!important;
@@ -11158,7 +11177,8 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   }
 
   /* ── tipografía · cifra protagonista 60 / 360 / −2,8 ──────────────────── */
-  #xirr.active .kpiHero strong{
+  #xirr.active .kpiHero strong,
+  #benchmark .benchmarkMetricProta > strong{
     font-size:60px!important;
     font-weight:360!important;
     letter-spacing:-2.8px!important;
