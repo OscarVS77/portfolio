@@ -11093,6 +11093,18 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
      BLOQUE que lo pisaba (v175.53, más abajo en este mismo bloque): la
      corrección tiene que ir DETRÁS de esa lista en la cascada, no aquí. */
   #cartera .carteraTableTitle{ margin-left:22px!important; }
+  /* v175.70 · #17 · Auditoría, lote 3 del repaso.
+     1) Un solo canon de título: la regla canónica de arriba no cubre
+        `#auditoria .card` sin `.pageBlock`, y «Funciones de la web» y
+        «Alcance actual» caían al --pad-card 20 de la hoja 27 (18px 20px).
+        Medido lo que mueve: título/subtítulo +2 dcha +3 abajo, sus filas
+        +3 abajo, la tarjeta +3 de alto. Nada más.
+     2) C2: las 7 filas de «Páginas conectadas» pintan (borde + fondo,
+        línea ~9323) con aire lateral 13; al 19 canónico de tarjeta
+        (18 + 1 de borde). El aire vertical queda declarado en el registro:
+        viene del centrado en min-height:42. */
+  #auditoria .card > .cardHeader{ padding:21px 22px 0!important; }
+  #auditoria .auditWebPages > div{ padding:10px 18px!important; }
 
   /* ── geometría · tarjeta de dato: radio 12, aire 18 ───────────────────── */
   #dashboard .heroTopMetric, #dashboard .capitalCard, #cartera .carteraMetric,
