@@ -11061,6 +11061,30 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   #benchmark .card > .cardHeader{
     padding:21px 22px 0!important;
   }
+  /* v175.68 · defecto #15 · las tres cabeceras del Dashboard en una vertical.
+     Las cápsulas hermanas suman 26 px de padding propio (.evolutionCard línea
+     1240, #dashboard .alertsCard línea 6389) a los 22 de la regla de arriba:
+     texto a 49 px del borde. .card.hero no lleva padding de cápsula, así que
+     su cabecera absorbe la suma entera: 22+26 = 48, +1 de borde = 49.
+     Sólo la cabecera: el cuerpo del hero conserva su aire en .heroBody. */
+  #dashboard .card.hero > .cardHeader{
+    padding:21px 48px 0!important;
+  }
+  /* v175.68 · #15 AMPLIADO · toda línea de texto de primer nivel de las tres
+     cápsulas del Dashboard arranca a 48 px del contenido (+1 de borde = 49, la
+     vertical de los títulos). Quedan fuera las tarjetas KPI con borde propio.
+     Cada cifra es 48 menos lo que ya aporta la cadena de contenedores:
+       dashDataAge y ctxToggle viven en .heroBody (margen 20 + padding 20 = 40);
+       .alerts vive en la cápsula de 26 (26+22 = 48);
+       .evoHeadline/.evoLegend viven en .chartHost (26+20+2 = 48);
+       .chartRange es absoluto respecto a .chartHost (26+22 = 48).
+     No se toca .heroBody ni .chartHost: moverían las tarjetas KPI y el SVG. */
+  #dashboard .hero .dashDataAge{ margin-left:8px!important; }
+  #dashboard .ctxFold .ctxToggle{ padding-left:8px!important; }
+  #dashboard .alertsCard .alerts{ padding-left:22px!important; }
+  #dashboard .evolutionCard .evoHeadline,
+  #dashboard .evolutionCard .evoLegend{ margin-left:2px!important; }
+  #dashboard .evolutionCard .chartRange{ left:22px!important; }
 
   /* ── geometría · tarjeta de dato: radio 12, aire 18 ───────────────────── */
   #dashboard .heroTopMetric, #dashboard .capitalCard, #cartera .carteraMetric,
