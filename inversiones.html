@@ -11560,6 +11560,15 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
     padding-left:21px!important;
     padding-right:21px!important;
   }
+  /* v175.71 · #18 · SEGUNDO miembro pintado de la misma lista (la familia
+     queda confirmada con dos sedes): la botonera de Movimientos pinta
+     (fondo + borde, base en línea ~1247 con padding:12px) y el lateral a 0
+     de la lista dejaba las píldoras a 1 px del borde. Al canon de tarjeta:
+     18 + 1 de borde = 19 en las cuatro direcciones. Las píldoras no se
+     tocan: solo respira su cápsula. */
+  #movimientos .movementsToolbar{
+    padding:18px!important;
+  }
   /* Las tablas no son tarjetas: se quedan en su 21. */
   #historial .historyAssetBlock .annualTableWrap,
   #cartera .assetTableWrap{
