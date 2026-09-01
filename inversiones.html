@@ -4155,12 +4155,24 @@ function renderBenchmarkSummary(currentValue, targetValue, netInvested, realRetu
   const direction = diff > 0 ? 'a favor' : diff < 0 ? 'por debajo' : 'sin diferencia relevante';
   const absDiff = Math.abs(Number(valueDiff || 0));
   const absPct = Math.abs(Number(diff || 0));
-  const historyCount = Array.isArray(monthlyHistory) ? monthlyHistory.length : 0;
-  const historySource = canonicalHistoryIsAvailable() ? 'NÚCLEO VALORACIONES' : 'HISTÓRICO MENSUAL X ACTIVO';
-  const caution = historyCount >= 3
-    ? `La línea verde usa ${historyCount} cierres mensuales reales de ${historySource}; la línea amarilla es la Cartera objetivo simulada con los mismos movimientos.`
-    : `Histórico todavía insuficiente: hay ${historyCount} cierre${historyCount===1?'':'s'} mensual${historyCount===1?'':'es'} real${historyCount===1?'':'es'} útil${historyCount===1?'':'es'} para esta vista. Hasta tener 3 cierres, se muestra tu valor real actual como punto final y no se inventa una línea histórica.`;
-  box.innerHTML = `<span>Lectura del resultado</span><strong>${title}</strong><p>Con los mismos movimientos reales, ${cfg.realLabel.toLowerCase()} vale ${fmtMoney(currentValue)} frente a ${fmtMoney(targetValue)} de ${cfg.targetLabel}. La diferencia actual es de ${fmtMoney(absDiff)} ${direction}, equivalente a ${fmtNumber(absPct,2)} puntos. La rentabilidad real es ${benchmarkPct(realReturn)} y ${cfg.targetLabel} habría hecho ${benchmarkPct(targetReturn)}. ${caution}</p>`;
+  // v175.73 · RETIRADA la prosa que nombraba «la línea verde» y «la línea
+  // amarilla», y con ella `historyCount` y `historySource`, que sólo se usaban
+  // ahí. `canonicalHistoryIsAvailable()` NO se toca: tiene tres llamadas vivas.
+  //
+  // ESTE PÁRRAFO NO LLEGA A PANTALLA, demostrado antes de retirar nada. El
+  // envoltorio de más abajo llama a esta función y acto seguido sobrescribe el
+  // innerHTML con el suyo. Medido en Chromium y WebKit, con el libro cargado y
+  // las siete vistas pintadas: enganchando el accesor `innerHTML` de
+  // Element.prototype, el orden de escrituras es `·AB·AB·AB·AB·AB·AB··` —seis
+  // pares, siempre A y luego B en la MISMA tarea— y de 685 y 299 fotogramas
+  // muestreados con requestAnimationFrame, CERO contienen la A. Un solo sitio
+  // de llamada, que resuelve al envoltorio, y ninguna propiedad de `window`
+  // sostiene la original: sólo el `const oldSummary` de su cierre.
+  //
+  // Se conserva el resto del párrafo —dead code sin nombre de color— porque
+  // retirarlo es otra operación: esta versión limpia prosa de color, no prosa
+  // muerta en general.
+  box.innerHTML = `<span>Lectura del resultado</span><strong>${title}</strong><p>Con los mismos movimientos reales, ${cfg.realLabel.toLowerCase()} vale ${fmtMoney(currentValue)} frente a ${fmtMoney(targetValue)} de ${cfg.targetLabel}. La diferencia actual es de ${fmtMoney(absDiff)} ${direction}, equivalente a ${fmtNumber(absPct,2)} puntos. La rentabilidad real es ${benchmarkPct(realReturn)} y ${cfg.targetLabel} habría hecho ${benchmarkPct(targetReturn)}.</p>`;
 }
 function formatBenchmarkMonth(date){
   const d=new Date(date+'T00:00:00Z');
@@ -7029,11 +7041,33 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
       const absPct=Math.abs(Number(diff||0));
       const direction=diff>0?'a favor de tu cartera real':diff<0?'a favor de la referencia':'sin diferencia relevante';
       const title=diff>0?`${cfg.realLabel} va por delante de ${cfg.targetLabel}.`:diff<0?`${cfg.realLabel} va por detrás de ${cfg.targetLabel}.`:`${cfg.realLabel} está prácticamente alineada con ${cfg.targetLabel}.`;
+      // v175.73 · LA PROSA DE INTERFAZ NO NOMBRA EL COLOR DE LO QUE LA WEB PINTA.
+      // Decía «La línea verde usa N cierres… La línea amarilla muestra la
+      // referencia simulada», y eran los colores del diseño CLARO anterior.
+      // Medido en las seis vistas que comparten esta plantilla, dos motores:
+      // tu serie es --accent (#e7ecf3, blanco hueso) en las seis, y la
+      // referencia es gris azulado DISCONTINUO en global y rv, azul en vs_msci,
+      // rosa en vs_sp500, naranja en btc y amarillo oro en gold. «Verde» era
+      // falso en las seis; «amarilla», en cinco —en gold acertaba por
+      // casualidad—.
+      //
+      // Y NO SE NOMBRA LA FORMA, que fue la primera idea: en vs_msci, vs_sp500,
+      // btc y gold LAS DOS SERIES SON CONTINUAS, así que «continua/discontinua»
+      // habría sido falso en cuatro de seis. Se cambiaba un texto falso por otro.
+      //
+      // Va por CONCEPTO, con los rótulos de la vista, que la frase anterior ya
+      // usa. Y los rótulos van de OBJETO, no de sujeto: `realLabel` es a veces
+      // plural («Tus tres fondos») y un verbo concordando con él rompería la
+      // frase en renta variable.
       const historyText=historyCount>=3
-        ? `La línea verde usa ${historyCount} cierres mensuales reales del Excel. La línea amarilla muestra la referencia simulada con los mismos movimientos.`
+        ? `Los ${historyCount} cierres mensuales reales del Excel dibujan la línea de ${cfg.realLabel}; la de ${cfg.targetLabel} es una referencia simulada con los mismos movimientos.`
         : `Histórico real todavía insuficiente: hay ${historyCount} cierre${historyCount===1?'':'s'} mensual${historyCount===1?'':'es'} útil${historyCount===1?'':'es'}. Por eso no se inventa una línea histórica de tu cartera; solo se marca el valor real actual.`;
       box.className=`benchmarkSummary ${cls}`;
-      box.innerHTML=`<span>Lectura del resultado</span><strong>${title}</strong><p>Con los mismos movimientos reales, ${cfg.realLabel.toLowerCase()} vale ${fmtMoney(currentValue)} y ${cfg.targetLabel} valdría ${fmtMoney(targetValue)}. La diferencia actual es de ${fmtMoney(absDiff)} ${direction}, equivalente a ${fmtNumber(absPct,2)} puntos. ${historyText}</p>`;
+      // v175.73 · sin `.toLowerCase()`: destrozaba el rótulo declarado y se leía
+      // «tu etc de oro» y «tu cartera · con el plan». Defecto propio, con su
+      // ficha en el registro; apareció al abrir esta plantilla y no es una
+      // propina del cambio de prosa. Lo demás de este párrafo no se toca.
+      box.innerHTML=`<span>Lectura del resultado</span><strong>${title}</strong><p>Con los mismos movimientos reales, ${cfg.realLabel} vale ${fmtMoney(currentValue)} y ${cfg.targetLabel} valdría ${fmtMoney(targetValue)}. La diferencia actual es de ${fmtMoney(absDiff)} ${direction}, equivalente a ${fmtNumber(absPct,2)} puntos. ${historyText}</p>`;
       return result;
     };
   }
