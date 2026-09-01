@@ -308,6 +308,8 @@
   --js-area-ok-02:rgba(74,222,154,.12);  /* área verde · dashboard y cartera real */
   --js-area-gold-00:rgba(242,199,91,0);  /* parada transparente del área oro */
   --js-area-gold-01:rgba(242,199,91,.12);  /* área oro · serie objetivo del Benchmark */
+  --js-area-bone-00:rgba(231,236,243,0);  /* parada transparente del área hueso */
+  --js-area-bone-01:rgba(231,236,243,.12);  /* área hueso · evolución del XIRR · v175.75. Sigue el patrón de la familia: el color de la serie a .12 y su parada a 0. Es --accent (#e7ecf3), el mismo token que identifica «tu cartera» en el Benchmark. NO se reutilizan los --bone-a*: son blanco puro a .07, ni el color ni el alfa */
   --js-bench-fill-00:rgba(111,157,255,0);  /* parada transparente de benchAGrad */
   --js-bench-fill:rgba(111,157,255,.12);  /* relleno benchAGrad · azul PROPIO, NO es --blue (#6e93e8): incoherencia registrada, decisión del retema */
   --js-axis-text:#a8b2c0;  /* texto del eje · Benchmark escritorio */
@@ -1957,6 +1959,19 @@ html{
             <tbody><tr><td colspan="6">Sin datos · importa o carga el Excel para ver los cierres reales.</td></tr></tbody>
           </table>
         </div>
+        <!-- v175.75 · EL CONTENEDOR DE LA GRÁFICA DEL XIRR · defecto #24.
+             `renderXirrChart()` llamaba a `#xirrChart` desde el primer commit del
+             repositorio (12/07/2026) y ese contenedor NO EXISTÍA: 0 apariciones en
+             todo el historial. La función retornaba en su primera línea, así que
+             una función de dibujo de ~85 líneas no se ejecutó nunca — y ese cero
+             fue además la causa de dos explicaciones falsas sobre los ids `grad_*`.
+             Va DENTRO de esta tarjeta porque es de aquí de donde parte la llamada:
+             `updateHistoricoMensual()` llena la tabla de arriba y a continuación la
+             invoca. Usa `.chartHost`, la clase de la gráfica de evolución del
+             Dashboard: 270 px, cabe sin tocar CSS y no entra en las diez
+             declaraciones `!important` de `.chart`, que se queda sin dueño y pasa a
+             material de purga en su propio lote. SIN MARCO, como la del Dashboard. -->
+        <div class="chartHost" id="xirrChart"><div class="chartEmpty">Sin cierres XIRR suficientes para dibujar la evolución.</div></div>
       </div>
     </section>
 
@@ -5983,7 +5998,50 @@ function renderLineChart(el, points, opts={}){
 function renderXirrChart(){
   const el=document.getElementById('xirrChart');
   const pts=getRealClosures().filter(x=>Number.isFinite(Number(x.xirr)));
-  renderLineChart(el, pts, {title:'Evolución XIRR', valueKey:'xirr', formatter:fmtPct, empty:'Sin cierres XIRR suficientes para dibujar la evolución.'});
+  // v175.75 · LOS COLORES DE LA SERIE VIVEN AQUÍ, en la configuración de la
+  // vista, no en la función de dibujo. `--accent` es el mismo token que
+  // identifica «tu cartera» en las seis vistas del Benchmark: esta serie es la
+  // rentabilidad de esa misma cartera en el tiempo, así que mismo sujeto y
+  // mismo color en toda la web. `--green` queda descartado por significado: es
+  // el token de estado de ganancia y esta serie sube y baja.
+  // `puntosFactor` 100 porque el XIRR llega en tanto por uno (0,0218) y la
+  // burbuja habla en puntos porcentuales.
+  renderLineChart(el, pts, {title:'Evolución XIRR', valueKey:'xirr',
+    formatter:fmtPct, color:'var(--accent)',
+    area1:'var(--js-area-bone-01)', area0:'var(--js-area-bone-00)',
+    puntosFactor:100,
+    empty:'Sin cierres XIRR suficientes para dibujar la evolución.'});
+  observarTamanoXirrChart(el);
+}
+
+// v175.75 · REDIBUJA AL CAMBIAR DE TAMAÑO · lo que hace que «no se deforma a
+// ninguna anchura» sea una garantía y no una casualidad de la anchura en que se
+// pintó.
+//
+// El viewBox se toma del tamaño real del contenedor, así que la escala es 1 y
+// nada se deforma… mientras ese tamaño no cambie. Cambia en tres casos reales:
+// al redimensionar la ventana, al girar el móvil, y —el más frecuente— cuando la
+// gráfica se dibuja con la página XIRR oculta y `clientWidth` vale 0.
+//
+// Sin observador, el `xMidYMid meet` del SVG ya degrada de forma SEGURA —deja
+// franja, no deforma—, así que esto mejora la precisión pero no sostiene la
+// garantía por sí solo. Son dos capas y se explican aparte a propósito.
+let xirrChartRO = null;
+function observarTamanoXirrChart(el){
+  if(!el || typeof ResizeObserver !== 'function') return;
+  if(xirrChartRO) return;                 // uno solo, no uno por pintada
+  let ultimo = el.clientWidth + 'x' + el.clientHeight;
+  xirrChartRO = new ResizeObserver(()=>{
+    const ahora = el.clientWidth + 'x' + el.clientHeight;
+    // GUARDA CONTRA EL BUCLE: sólo se redibuja si la caja cambió de verdad.
+    // Dibujar no cambia el tamaño del contenedor —el alto lo fija el CSS de
+    // `.chartHost`—, pero un observador que redibujara en cada notificación
+    // sería un bucle esperando una regla nueva.
+    if(ahora === ultimo) return;
+    ultimo = ahora;
+    if(el.clientWidth > 80) renderXirrChart();
+  });
+  xirrChartRO.observe(el);
 }
 
 function renderDashboardScope(scope){
@@ -6199,7 +6257,56 @@ updateDashboard = function(){
     const min=Math.min(...values), max=Math.max(...values);
     const span=max-min || Math.max(Math.abs(max),1);
     const yMin=min-span*.20, yMax=max+span*.18;
-    const W=920,H=300,L=62,R=34,T=28,B=62;
+    // v175.75 · SE DIBUJA EN PÍXELES REALES · el texto no puede deformarse.
+    //
+    // EL DEFECTO. El viewBox era fijo —920 × 300— con
+    // `preserveAspectRatio="none"`, que estira el SVG de forma NO UNIFORME hasta
+    // llenar el contenedor y arrastra la tipografía con él. Medido en los dos
+    // motores, con el mismo resultado al decimal:
+    //
+    //   escritorio · caja 938 × 270 → escala 1,0196 en X y 0,900 en Y
+    //                → DEFORMACIÓN 1,133: el texto sale 13 % más ancho que alto
+    //   móvil ...... caja 314 × 210 → escala 0,3413 en X y 0,700 en Y
+    //                → DEFORMACIÓN 0,488: comprimido a MENOS DE LA MITAD, y
+    //                  «Primer cierre» pasaba de 65,4 unidades a 22,3 px
+    //
+    // Afectaba a los rótulos de eje (Dic 25 · Jul 26 · Ago 26) y a las dos
+    // líneas de cada burbuja. NO a la insignia «3 cierres reales», que vive
+    // fuera del SVG.
+    //
+    // EL ARREGLO. El viewBox pasa a ser el TAMAÑO REAL del contenedor, así que
+    // la escala es exactamente 1 en los dos ejes y no hay nada que deformar. Y
+    // las constantes de geometría pasan a ser píxeles de verdad, que es lo que
+    // siempre debieron ser. En móvil, además de no deformarse, el texto recupera
+    // su cuerpo nominal en vez de encogerse a un tercio.
+    //
+    // `xMidYMid meet` en vez de `none`: si el contenedor cambia de tamaño entre
+    // dos dibujados, el SVG se escala UNIFORME —deja franja, no deforma—. El
+    // observador de abajo lo redibuja, pero la degradación segura no depende de
+    // que ese observador exista.
+    //
+    // NO TOCA EL DASHBOARD: `renderLineChart` tiene UNA sola llamada, la de
+    // `renderXirrChart`; la gráfica de evolución la dibuja `renderEvolutionLine`,
+    // otra función. Medido antes de tocar nada.
+    // LA CAJA DE CONTENIDO, no `clientWidth` a secas: `clientWidth` INCLUYE el
+    // relleno, y `.chartHost` lleva 20 px por lado (17 en móvil). Usarlo dejaba
+    // el viewBox 40 px más ancho que el sitio real del SVG, así que `meet`
+    // escalaba a 0,959 y el texto salía al 95,9 % de su cuerpo — uniforme, sí,
+    // pero más pequeño de lo diseñado. Restando el relleno la escala es 1,000
+    // exacta y cada glifo se dibuja en su tamaño.
+    const csHost = getComputedStyle(el);
+    const relleno = (parseFloat(csHost.paddingLeft) || 0)
+                  + (parseFloat(csHost.paddingRight) || 0);
+    const rellenoV = (parseFloat(csHost.paddingTop) || 0)
+                   + (parseFloat(csHost.paddingBottom) || 0);
+    const cajaW = Math.round((el.clientWidth || 0) - relleno);
+    const cajaH = Math.round((el.clientHeight || 0) - rellenoV);
+    // Si el contenedor está oculto al dibujar, `clientWidth` es 0. Se cae a las
+    // medidas de siempre y el observador redibuja en cuanto se vea: mejor una
+    // primera pintada aproximada que ninguna.
+    const W = cajaW > 80 ? cajaW : 920;
+    const H = cajaH > 80 ? cajaH : 270;
+    const L=62,R=34,T=28,B=62;
     const plotW=W-L-R, plotH=H-T-B;
     const xy=cleanPoints.map((p,i)=>{
       const x=L+(plotW*i/(cleanPoints.length-1));
@@ -6209,7 +6316,22 @@ updateDashboard = function(){
     const d=xy.map((p,i)=>`${i?'L':'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
     const area=`${d} L ${xy[xy.length-1].x.toFixed(1)} ${H-B} L ${xy[0].x.toFixed(1)} ${H-B} Z`;
     const id='grad_'+(el.id||'chart')+'_'+Math.floor(Math.random()*9999);
-    const lineColor=opts.color || 'var(--green)';
+    // v175.75 · EL COLOR SALE DE AQUÍ · FALLO CERRADO.
+    // Antes era `opts.color || 'var(--green)'`, y eso ponía el color de la
+    // serie DENTRO de la función de dibujo, contra el criterio escrito: «el
+    // color de una serie es el color de lo que representa, y vive en la
+    // configuración de la vista, nunca fijo en la función de dibujo». Y el
+    // token por defecto era el de ESTADO DE GANANCIA, que afirmaba «ganancia»
+    // de forma permanente en una serie que sube y baja.
+    // Sin color declarado NO SE DIBUJA, igual que `renderBenchmarkChart`: un
+    // respaldo haría que una gráfica futura saliera con aspecto correcto y en
+    // silencio, que es el defecto que esto elimina.
+    if(!opts.color || !opts.area0 || !opts.area1){
+      console.error('renderLineChart: la vista no declara sus colores de serie', el.id);
+      el.innerHTML='<div class="chartEmpty">Esta gráfica no declara sus colores de serie.</div>';
+      return;
+    }
+    const lineColor=opts.color;
     const tickVals=[yMin+(yMax-yMin)*.25,yMin+(yMax-yMin)*.5,yMin+(yMax-yMin)*.75];
     const grid=tickVals.map(v=>{
       const y=T+(yMax-v)/(yMax-yMin)*plotH;
@@ -6227,12 +6349,26 @@ updateDashboard = function(){
       const sign = v > 0 ? '+' : '';
       return sign + v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + '%';
     };
+    // v175.75 · EL CAMBIO VA EN PUNTOS, no en porcentaje de porcentaje.
+    // Antes mostraba `(v - anterior) / anterior * 100`, que es la VARIACIÓN
+    // RELATIVA DE UNA TASA: de 2,18 % a 9,15 % daba «+319,04 %», aritméticamente
+    // correcto y financieramente engañoso —invita a leerlo como rentabilidad—.
+    // La unidad correcta de la diferencia entre dos porcentajes es el PUNTO, y
+    // es la que el Benchmark ya usa para lo mismo («−3,33 puntos»).
+    const puntosFormatter=(v)=>{
+      if(!Number.isFinite(v)) return 'Primer cierre';
+      const sign=v>0?'+':'';
+      return sign + v.toLocaleString('es-ES',{minimumFractionDigits:2,
+        maximumFractionDigits:2}) + ' puntos';
+    };
     const pointsMarkup=xy.map((pt,i)=>{
       const prev=i>0 ? xy[i-1].v : null;
-      const pct=(prev && Number.isFinite(prev) && prev!==0) ? ((pt.v-prev)/prev*100) : NaN;
-      const pctText=pctFormatter(pct);
-      const pctCls=Number.isFinite(pct) ? (pct>=0 ? 'chartTipPositive' : 'chartTipNegative') : 'chartTipNeutral';
-      const tipW=116, tipH=40;
+      // en puntos: la diferencia de las dos tasas, en la misma escala en que se
+      // muestran. `pt.v` viene ya en la unidad del formateador de la vista.
+      const dif=(i>0 && Number.isFinite(prev)) ? (pt.v-prev)*(opts.puntosFactor||1) : NaN;
+      const pctText=puntosFormatter(dif);
+      const pctCls=Number.isFinite(dif) ? (dif>=0 ? 'chartTipPositive' : 'chartTipNegative') : 'chartTipNeutral';
+      const tipW=140, tipH=40;
       let tx=pt.x-tipW/2;
       if(tx < L) tx=L;
       if(tx+tipW > W-R) tx=W-R-tipW;
@@ -6248,8 +6384,8 @@ updateDashboard = function(){
     }).join('');
     el.innerHTML=`
       <span class="chartBadge">${xy.length} cierres reales</span>
-      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${escHtml(opts.title||'Evolución')}">
-        <defs><linearGradient id="${id}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--js-area-ok-01)"/><stop offset="1" stop-color="var(--js-area-ok-00)"/></linearGradient></defs>
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${escHtml(opts.title||'Evolución')}">
+        <defs><linearGradient id="${id}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${opts.area1}"/><stop offset="1" stop-color="${opts.area0}"/></linearGradient></defs>
         ${grid}
         <path d="${area}" fill="url(#${id})"/>
         <path d="${d}" fill="none" stroke="${lineColor}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
