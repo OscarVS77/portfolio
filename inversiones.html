@@ -1950,13 +1950,30 @@ html{
         <div class="cardHeader">
           <div>
             <h3>Cierres reales disponibles</h3>
-            <p>Solo se muestran meses con valor real de cierre de cartera. No es la tabla de aportaciones mensuales.</p>
+            <p>Los meses con valor real de cierre de cartera: su fecha y su valor. El XIRR de cada uno está en la gráfica de abajo. No es la tabla de aportaciones mensuales.</p>
           </div>
         </div>
+        <!-- v175.76 · DOS COLUMNAS, NO SEIS · ficha #31.
+             La tabla tenía seis columnas y cuatro se probaron redundantes o
+             tautológicas frente a la gráfica que vive en esta misma tarjeta:
+             `Mes` es el rótulo del eje X, `XIRR global` es la serie que dibuja,
+             y `Estado` («OK») y `Comentario` («Cierre real disponible») son
+             literales fijos en la plantilla de fila — no salen del Excel, así
+             que valen lo mismo en las tres filas y no pueden decir nada. Las
+             dos que quedan son las únicas EXCLUSIVAS de la tabla: la fecha
+             exacta del cierre, que el eje abrevia a «Ago 26», y el valor de
+             cartera, que la gráfica no dibuja.
+             Y la asimetría con el móvil es deliberada, no un descuido: ahí la
+             fila SÍ conserva «Agosto 2026». En escritorio el mes sobra porque
+             hay cabecera de columna y la fecha completa al lado; en la lista
+             móvil no hay cabecera, y sin el mes la fila arrancaría con una
+             fecha suelta sin encuadre. La simetría que importa es que cada
+             superficie sea legible en sus propios términos, no que las dos
+             tengan las mismas columnas. -->
         <div class="tableWrap">
           <table class="table compactTable">
-            <thead><tr><th>Fecha cierre</th><th>Mes</th><th>Valor cartera total</th><th>XIRR global</th><th>Estado</th><th>Comentario</th></tr></thead>
-            <tbody><tr><td colspan="6">Sin datos · importa o carga el Excel para ver los cierres reales.</td></tr></tbody>
+            <thead><tr><th>Fecha cierre</th><th>Valor cartera total</th></tr></thead>
+            <tbody><tr><td colspan="2">Sin datos · importa o carga el Excel para ver los cierres reales.</td></tr></tbody>
           </table>
         </div>
         <!-- v175.75 · EL CONTENEDOR DE LA GRÁFICA DEL XIRR · defecto #24.
@@ -4995,7 +5012,10 @@ function updateHistoricoMensual(){
   const tbody = [...document.querySelectorAll('#xirr table tbody')].find(t=>t.closest('.card')?.textContent.includes('Cierres reales disponibles'));
   if(!tbody) return;
   const real=getRealClosures();
-  tbody.innerHTML = real.map(x=>`<tr><td>${fmtDate(x.fecha)}</td><td>${x.mes} ${x.anio}</td><td>${fmtMoney(x.valor)}</td><td class="${clsByValue(x.xirr)}">${fmtPct(x.xirr)}</td><td>OK</td><td>Cierre real disponible</td></tr>`).join('');
+  // v175.76 · ficha #31: dos columnas. El mes y el XIRR los dibuja la gráfica de
+  // esta misma tarjeta; «OK» y «Cierre real disponible» eran literales fijos de
+  // esta plantilla, no datos del Excel. Ver el comentario del <thead>.
+  tbody.innerHTML = real.map(x=>`<tr><td>${fmtDate(x.fecha)}</td><td>${fmtMoney(x.valor)}</td></tr>`).join('');
   renderXirrChart();
 }
 function updateMovimientosFromXirr(rows){
@@ -7849,13 +7869,21 @@ function renderTwoLineBenchmarkChart(seriesA, seriesB, labelA, labelB, cfg){
     // (recuento de las filas publicadas, no un cálculo financiero).
     host.innerHTML='<div class="mobileClosuresCount">'+rows.length+' cierre'+(rows.length===1?'':'s')+
       ' real'+(rows.length===1?'':'es')+' confirmado'+(rows.length===1?'':'s')+'</div>'+
+    // v175.76 · ficha #31: la fila suelta el XIRR y el «Cierre real», igual que
+    // la tabla de escritorio. El XIRR lo dibuja la gráfica de la tarjeta y
+    // «Cierre real» era un literal fijo — idéntico en las tres filas, porque
+    // esta lista solo pinta cierres reales: lo dice ya su propio título.
+    // EL MES SE QUEDA, y la asimetría con escritorio es deliberada: allí hay
+    // cabecera de columna que encuadra la fecha, aquí no. Sin el mes la fila
+    // arrancaría con una fecha suelta. Ver el comentario del <thead> de la
+    // tabla, donde está escrito el criterio completo.
+    // Las dos reglas CSS que se quedan sin emisor —.mclXirr y .mclState— NO se
+    // retiran aquí: van al lote de purga con las de .chart.
     rows.map(function(x){
       return '<div class="mobileClosureRow">'+
         '<div class="mclMain"><strong>'+escHtml(x.mes+' '+x.anio)+'</strong>'+
         '<span class="mclDate">'+escHtml(fmtDate(x.fecha))+'</span></div>'+
-        '<div class="mclSide"><strong>'+escHtml(fmtMoney(x.valor))+'</strong>'+
-        '<span class="mclXirr '+clsByValue(x.xirr)+'">XIRR '+escHtml(fmtPct(x.xirr))+'</span></div>'+
-        '<span class="mclState">Cierre real</span>'+
+        '<div class="mclSide"><strong>'+escHtml(fmtMoney(x.valor))+'</strong></div>'+
       '</div>';
     }).join('');
   }
@@ -10749,9 +10777,13 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
     padding:10px 0 4px;font-size:11.5px;font-weight:650;
     letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
   }
+  /* v175.76 · ficha #31: una sola banda. La segunda —'state side'— existía para
+     el «Cierre real» que la fila ya no emite; dejarla habría plantado una pista
+     vacía con su row-gap en las tres filas. El row-gap se queda escrito y queda
+     inerte al haber una sola banda: va al lote de purga con .mclXirr y .mclState. */
   .mobileClosureRow{
     display:grid;grid-template-columns:minmax(0,1fr) auto;
-    grid-template-areas:'main side' 'state side';
+    grid-template-areas:'main side';
     row-gap:4px;align-items:center;
     padding:13px 0;min-height:56px;
     border-bottom:1px solid var(--bone-a08);
