@@ -52,7 +52,6 @@
   --selection-soft:rgba(231,236,243,.12);
   --shadow:0 26px 80px rgba(0,0,0,.55);
   --soft:0 16px 44px rgba(0,0,0,.38);
-  --radius:6px;
 
 
   /* ---- C2 (v175.38) · Literales CSS tokenizados. Cada token conserva el VALOR
@@ -328,12 +327,10 @@
 }*{box-sizing:border-box}html, body{
   margin:0;
   background:var(--bg);
-  color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;
   letter-spacing:-.01em;
 }.app{
   max-width:1680px;
-  min-height:100vh;
   margin:0 auto;
   padding:12px;
   display:grid;
@@ -509,7 +506,6 @@
    Pulido visual previo a Excel
    ============================== */
 :root{
-  --radius:6px;
 }html, body{background:var(--bg);color:var(--text);font-feature-settings:"tnum" 1,"ss01" 1;text-rendering:geometricPrecision}.app{max-width:1740px;padding:14px;gap:14px;grid-template-columns:250px 1fr}.sidebar{
   background:linear-gradient(180deg,var(--veil-25),var(--veil-27));
   border-color:var(--wht-a23);
@@ -655,16 +651,14 @@
   white-space:nowrap;
 }/* v12 · Menú fijo + Historial simplificado */
 .sidebar{position:sticky!important;top:14px!important;z-index:40!important;height:calc(100vh - 28px)!important}.topbar{position:sticky!important;top:14px!important;z-index:35!important;backdrop-filter:blur(26px)}.main{min-width:0;overflow:visible}.historyClean{display:grid;gap:18px}.historyTop{padding:22px 24px;display:flex;align-items:flex-end;justify-content:space-between;gap:28px;overflow:visible}.historyTop h2{margin:0;font-size:32px;font-weight:620;letter-spacing:-1px;line-height:1.05}.historyTop p{margin:8px 0 0;color:var(--muted);font-size:14px}.yearPills{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}.yearPills button{border:1px solid var(--line);background:var(--ink-11);color:var(--text);border-radius:6px;min-width:112px;padding:12px 14px;text-align:left;cursor:pointer}.yearPills button strong{display:block;font-size:20px;font-weight:520;letter-spacing:-.4px;line-height:1}.yearPills button span{display:block;margin-top:7px;color:var(--muted);font-size:12px;font-weight:680}.yearPills button.active{border-color:var(--tint-ok-25);background:linear-gradient(180deg,var(--tint-ok-12),var(--veil-04))}.yearPills button.disabled{opacity:.45;cursor:default}.yearSummary{padding:26px;display:grid;grid-template-columns:minmax(0,1fr) minmax(420px,.85fr);gap:24px;align-items:end;overflow:visible}.yearSummaryMain h2{margin:0;font-size:58px;font-weight:470;letter-spacing:-2.3px;line-height:.98}.yearSummaryMain p{margin:10px 0 0;color:var(--muted);font-size:14px}.yearSummarySide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.yearSummarySide div{background:var(--ink-04);border:1px solid var(--line2);border-radius:6px;padding:16px;min-height:86px;display:flex;flex-direction:column;justify-content:center}.yearSummarySide span{color:var(--muted);font-size:12px;font-weight:720;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}.yearSummarySide strong{font-size:26px;font-weight:500;letter-spacing:-.7px;margin-top:9px;white-space:nowrap}.historyAssetBlock{overflow:hidden;margin-top:18px!important}.diagnosisClean{padding:20px 22px;margin-top:18px!important}.diagnosisClean strong{display:block;color:var(--text);font-size:18px;font-weight:660;letter-spacing:-.3px}.diagnosisClean p{margin:8px 0 0;color:var(--muted)}
-@media(max-width:1150px){.topbar{top:10px!important}.sidebar{position:relative!important;height:auto!important;top:auto!important}.historyTop, .yearSummary{grid-template-columns:1fr;display:grid}.yearPills{justify-content:flex-start}.yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1150px){.topbar{top:10px!important}.sidebar{position:relative!important;height:auto!important;}.historyTop, .yearSummary{grid-template-columns:1fr;display:grid}.yearPills{justify-content:flex-start}.yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:680px){.yearSummarySide{grid-template-columns:1fr}.yearSummaryMain h2{font-size:44px}.historyTop{padding:20px}.yearSummary{padding:20px}.actions{}}/* V13 · Compact Apple/Getquin polish */
 :root{
-  --radius:6px;
 }html, body{font-size:14px}.app{max-width:1620px!important;padding:12px!important;gap:12px!important;grid-template-columns:220px 1fr!important}.sidebar{top:12px!important;height:calc(100vh - 24px)!important;border-radius:6px!important;padding:12px!important}.brand{padding:8px 8px 14px!important;margin-bottom:10px!important}.brandName{font-size:21px!important;font-weight:650!important;letter-spacing:-.65px!important}.brandDate{font-size:11px!important;margin-top:6px!important}.nav{gap:2px!important}.nav button{padding:9px 10px!important;border-radius:6px!important;font-size:13px!important}.sideFoot{left:12px!important;right:12px!important;bottom:12px!important;border-radius:6px!important;padding:11px!important;font-size:11px!important}.sideFoot strong{font-size:18px!important}.topbar{top:12px!important;min-height:72px!important;border-radius:6px!important;padding:12px 18px!important;margin-bottom:12px!important}.pageTitle h1{font-size:25px!important;font-weight:680!important;letter-spacing:-.8px!important}.pageTitle p{font-size:12px!important;margin-top:5px!important}.actions{gap:8px!important}.btn, label.btn, .importStatus{height:36px!important;min-width:118px!important;padding:0 13px!important;border-radius:4px!important;font-size:12px!important}.importStatus{min-width:190px!important}.pageBlock{margin-top:12px!important}.grid{gap:12px!important}.two{grid-template-columns:minmax(0,1.35fr) minmax(330px,.65fr)!important}.card, .kpi{border-radius:6px!important;box-shadow:0 10px 30px var(--blk-a06)!important}.cardHeader{padding:16px 18px 0!important}.cardHeader h2, .cardHeader h3{font-size:19px!important;font-weight:650!important;letter-spacing:-.55px!important}.cardHeader p{font-size:12px!important;margin-top:6px!important}.hero{min-height:360px!important}.heroBody{padding:14px 18px 18px!important}.bigValue strong{font-size:46px!important;font-weight:420!important;letter-spacing:-2.1px!important}.bigValue span{font-size:23px!important}.gain{font-size:13px!important;margin-top:6px!important}.chart{height:200px!important;margin-top:14px!important}.kpi{min-height:82px!important;padding:13px 14px!important}.kpi label{font-size:11px!important;margin-bottom:9px!important;text-transform:uppercase;letter-spacing:.045em}.kpi strong{font-size:22px!important;font-weight:430!important;letter-spacing:-.65px!important}.kpi small{font-size:11px!important;margin-top:6px!important}.tableWrap{margin:10px 18px 18px!important;border-radius:6px!important}.tableWrap .table th{font-size:11px!important;padding:10px 12px!important;letter-spacing:.055em}.tableWrap .table td{font-size:12px!important;padding:10px 12px!important}.pill{padding:5px 9px!important;font-size:12px!important}.alerts{padding:8px 18px 18px!important}.alert{grid-template-columns:150px 1fr!important;min-height:46px!important;gap:12px!important}.alertName{font-size:13px!important}.alertStatus{font-size:13px!important}.sourceBox{margin:10px 18px 18px!important;border-radius:6px!important;padding:13px!important;font-size:12px!important}/* Historial más fino */
 .historyTop{padding:18px 22px!important;gap:18px!important}.historyTop h3, .historyTop h2{font-size:22px!important}.yearPills{gap:8px!important}.yearPills button{min-width:92px!important;padding:10px 12px!important;border-radius:6px!important}.yearPills button strong{font-size:17px!important}.yearPills button span{font-size:10px!important;margin-top:5px!important}.yearSummary{padding:20px 22px!important;grid-template-columns:minmax(0,1fr) minmax(360px,.75fr)!important;gap:18px!important}.yearSummaryMain h2{font-size:46px!important;font-weight:410!important;letter-spacing:-2px!important}.yearSummaryMain p{font-size:12px!important;margin-top:8px!important}.yearSummarySide{gap:10px!important}.yearSummarySide div{border-radius:6px!important;padding:13px!important;min-height:70px!important}.yearSummarySide span{font-size:10px!important;letter-spacing:.055em!important}.yearSummarySide strong{font-size:21px!important;font-weight:430!important;margin-top:7px!important}/* Auditoría más fina */
 @media(max-width:1150px){.app{grid-template-columns:1fr!important}.two, .yearSummary{grid-template-columns:1fr!important}.sidebar{position:relative!important;height:auto!important}.topbar{top:10px!important}.yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-@media(max-width:680px){.app{padding:8px!important}.pageTitle h1{font-size:23px!important}.bigValue strong{font-size:38px!important}.yearSummarySide{grid-template-columns:1fr!important}.topbar{position:sticky!important;top:8px!important}.actions{}.btn, label.btn, .importStatus{flex:1 1 140px!important}.yearSummaryMain h2{font-size:38px!important}}/* V14 · Minimal premium scale: menos invasivo, más aire */
+@media(max-width:680px){.app{padding:8px!important}.pageTitle h1{font-size:23px!important}.bigValue strong{font-size:38px!important}.yearSummarySide{grid-template-columns:1fr!important}.topbar{position:sticky!important;}.actions{}.btn, label.btn, .importStatus{flex:1 1 140px!important}.yearSummaryMain h2{font-size:38px!important}}/* V14 · Minimal premium scale: menos invasivo, más aire */
 :root{
-  --radius:6px;
 }html, body{
   font-size:13px!important;
   letter-spacing:-.012em!important;
@@ -722,12 +716,11 @@
 .tableWrap .table th, .assetTable th, .cleanTable th{font-size:10.5px!important}.tableWrap .table td, .assetTable td, .cleanTable td{font-size:12.5px!important}.assetTable td{padding:11px 13px!important}.assetTable th{height:42px!important;padding:0 13px!important}.assetTableWrap{border-radius:6px!important;margin:12px 18px 18px!important}.assetMeta{font-size:10.5px!important}/* XIRR por activo más fino */
 .xirrAssetGrid{gap:10px!important;padding:15px 18px 18px!important}.xirrAssetCard{border-radius:6px!important;padding:13px!important;min-height:98px!important;background:var(--ink-03)!important}.xirrAssetName{font-size:12.5px!important;font-weight:620!important}.xirrValue{font-size:22px!important;font-weight:380!important;letter-spacing:-.7px!important}.xirrSub{font-size:10.5px!important;margin-top:9px!important}/* Historial: más aire, menos impacto */
 .historyTop{padding:17px 20px!important;gap:16px!important}.historyTop h2{font-size:20px!important;font-weight:600!important;letter-spacing:-.55px!important}.historyTop p{font-size:11.5px!important;margin-top:5px!important}.yearPills button{min-width:84px!important;padding:9px 11px!important;border-radius:6px!important;background:var(--blk-a12)!important}.yearPills button strong{font-size:15px!important;font-weight:470!important}.yearPills button span{font-size:9.5px!important;margin-top:4px!important}.yearSummary{padding:19px 22px!important;gap:18px!important}.yearSummaryMain h2{font-size:38px!important;font-weight:380!important;letter-spacing:-1.55px!important}.yearSummaryMain p{font-size:11.5px!important;margin-top:7px!important}.yearSummarySide{gap:9px!important}.yearSummarySide div{min-height:62px!important;padding:12px!important;border-radius:6px!important;background:var(--ink-03)!important}.yearSummarySide span{font-size:9.5px!important}.yearSummarySide strong{font-size:18px!important;font-weight:400!important;margin-top:6px!important}.historyAssetBlock{margin-top:16px!important}.diagnosisClean{padding:15px 18px!important;margin-top:16px!important}.diagnosisClean strong{font-size:14.5px!important;font-weight:600!important}.diagnosisClean p{font-size:11.5px!important}/* Auditoría minimal */.sheetChecks{padding:10px 18px 14px!important;gap:7px!important}.sheetChecks div{min-height:42px!important;border-radius:6px!important;padding:10px 12px!important}.sheetChecks strong, .sheetChecks span{font-size:11.5px!important}
-@media(max-width:1150px){.app{grid-template-columns:1fr!important;padding:10px!important}.sidebar{position:relative!important;height:auto!important;top:auto!important}.topbar{top:10px!important}
+@media(max-width:1150px){.app{grid-template-columns:1fr!important;padding:10px!important}.sidebar{position:relative!important;height:auto!important;}.topbar{top:10px!important}
 }
 @media(max-width:680px){.pageTitle h1{font-size:20px!important}.bigValue strong{font-size:34px!important}.yearSummaryMain h2{font-size:34px!important}
 }/* Auditoría: estado limpio sin etiqueta *//* V16 · Diseño final: minimal, fino y no invasivo */
 :root{
-  --radius:6px;
 }html, body{
   font-size:12.5px!important;
   letter-spacing:-.01em!important;
@@ -798,7 +791,7 @@
 .xirrAssetGrid{gap:9px!important;padding:14px 17px 17px!important}.xirrAssetCard{border-radius:6px!important;padding:12px!important;min-height:86px!important;background:var(--blk-a12)!important}.xirrAssetName{font-size:11.5px!important;font-weight:560!important}.xirrValue{font-size:19px!important;font-weight:350!important;letter-spacing:-.58px!important}.xirrSub{font-size:9.8px!important;margin-top:7px!important;color:var(--tone-02)!important}/* Historial final: simple, limpio, menos burbujas */
 .historyTop{padding:15px 18px!important;gap:14px!important}.historyTop h2{font-size:17px!important;font-weight:560!important;letter-spacing:-.45px!important}.historyTop p{font-size:10.8px!important;margin-top:4px!important;color:var(--tone-05)!important}.yearPills{gap:7px!important}.yearPills button{min-width:76px!important;padding:8px 10px!important;border-radius:6px!important;background:var(--blk-a09)!important}.yearPills button strong{font-size:13.5px!important;font-weight:400!important}.yearPills button span{font-size:9px!important;margin-top:4px!important;color:var(--tone-03)!important}.yearSummary{padding:17px 19px!important;gap:18px!important;grid-template-columns:minmax(0,1fr) minmax(330px,.7fr)!important}.yearSummaryMain h2{font-size:32px!important;font-weight:340!important;letter-spacing:-1.25px!important;line-height:1!important}.yearSummaryMain p{font-size:10.8px!important;margin-top:6px!important;color:var(--tone-05)!important}.yearSummarySide{gap:8px!important}.yearSummarySide div{min-height:55px!important;padding:10px!important;border-radius:6px!important;background:var(--blk-a10)!important}.yearSummarySide span{font-size:8.8px!important;letter-spacing:.05em!important;color:var(--tone-03)!important}.yearSummarySide strong{font-size:15.5px!important;font-weight:350!important;margin-top:5px!important}.historyAssetBlock{margin-top:18px!important}.diagnosisClean{padding:13px 16px!important;margin-top:16px!important}.diagnosisClean strong{font-size:13px!important;font-weight:560!important}.diagnosisClean p{font-size:10.8px!important;margin-top:5px!important}/* Auditoría final */.sheetChecks{padding:9px 17px 13px!important;gap:6px!important}.sheetChecks div{min-height:38px!important;border-radius:6px!important;padding:9px 11px!important;background:var(--blk-a10)!important}.sheetChecks strong, .sheetChecks span{font-size:10.8px!important}
 /* En pantallas medias, mantener limpieza sin romper columnas */
-@media(max-width:1150px){.app{grid-template-columns:1fr!important;padding:10px!important}.sidebar{position:relative!important;height:auto!important;top:auto!important}.topbar{top:10px!important}.two, .yearSummary{grid-template-columns:1fr!important}.yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+@media(max-width:1150px){.app{grid-template-columns:1fr!important;padding:10px!important}.sidebar{position:relative!important;height:auto!important;}.topbar{top:10px!important}.two, .yearSummary{grid-template-columns:1fr!important}.yearSummarySide{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
 @media(max-width:680px){.app{padding:8px!important}.pageTitle h1{font-size:18px!important}.topbar{top:8px!important;align-items:flex-start!important;flex-direction:column!important}.actions{width:100%!important;flex-wrap:wrap!important}.btn, label.btn, .importStatus{flex:1 1 130px!important;min-width:0!important}.bigValue strong{font-size:30px!important}.bigValue span{font-size:15px!important}.capitalGrid, .yearSummarySide, .heroMetrics{grid-template-columns:1fr!important}.yearSummaryMain h2{font-size:29px!important}.alert{grid-template-columns:1fr!important;gap:4px!important;padding:8px 0!important}
 }
@@ -1098,8 +1091,6 @@ html{
 }.sidebar{
   position:fixed!important;
   top:var(--appPad)!important;
-  left:var(--leftRail)!important;
-  width:var(--sideW)!important;
   height:calc(100vh - (var(--appPad) * 2))!important;
   z-index:50;
   transform:none!important;
@@ -1121,13 +1112,9 @@ html{
     padding:10px;
   }.sidebar{
     position:relative!important;
-    top:auto!important;
-    left:auto!important;
-    width:auto!important;
     height:auto!important;
     margin-bottom:14px;
   }.main{
-    margin-left:0!important;
   }.topbar{
     position:sticky;
     top:10px;
@@ -1138,7 +1125,6 @@ html{
   --appPad:22px!important;
   --sideW:220px!important;
   --appGap:30px!important;
-  --topGap:24px!important;
   --leftRail:calc((100vw - min(100vw, var(--appMax))) / 2 + var(--appPad))!important;
 }.app{
   width:min(100vw, var(--appMax))!important;
@@ -1148,18 +1134,15 @@ html{
   display:block!important;
 }.main{
   margin-left:calc(var(--sideW) + var(--appGap))!important;
-  width:calc(100% - var(--sideW) - var(--appGap))!important;
   min-width:0!important;
 }.topbar{
   position:sticky!important;
   top:var(--appPad)!important;
   z-index:45!important;
-  margin:0 0 var(--topGap) 0!important;
-  width:100%!important;
 }.grid, .grid.two.pageBlock{
   gap:18px!important;
 }
-@media(max-width:1150px){:root{--appPad:12px!important;--topGap:16px!important;}.app{width:100%!important;padding:12px!important;}.sidebar{position:relative!important;top:auto!important;left:auto!important;width:auto!important;height:auto!important;margin-bottom:16px!important;}.main{margin-left:0!important;width:100%!important;}.topbar{top:12px!important;margin-bottom:16px!important;}
+@media(max-width:1150px){:root{}.app{padding:12px!important;}.sidebar{position:relative!important;height:auto!important;margin-bottom:16px!important;}.main{}.topbar{top:12px!important;}
 }/* v12 · Movimientos: tabla con alineación editorial real.
    v175.10: ancho fijo limitado a escritorio; la presentación móvil de
    Movimientos será una lista propia (v175.15), nunca esta tabla comprimida. */
@@ -1403,16 +1386,8 @@ html{
   }body:before{
     opacity:.55!important;
   }.app{
-    width:100%!important;
-    max-width:none!important;
     padding:10px!important;
-    display:block!important;
   }.sidebar{
-    position:relative!important;
-    top:auto!important;
-    left:auto!important;
-    width:100%!important;
-    height:auto!important;
     margin:0 0 10px!important;
     padding:16px!important;
     border-radius:6px!important;
@@ -1431,14 +1406,8 @@ html{
   }.sideFoot.sideUpdate .brandDate{
     font-size:11.5px!important;
   }.main{
-    margin-left:0!important;
-    width:100%!important;
   }.topbar{
-    position:relative!important;
-    top:auto!important;
     z-index:1!important;
-    display:block!important;
-    min-height:0!important;
     margin:0 0 10px!important;
     padding:16px!important;
     border-radius:6px!important;
@@ -1650,7 +1619,6 @@ html{
     height:auto!important;
     overflow:visible!important;
   }.topbar, .sidebar{
-    position:relative!important;
   }.cloudOverlay.active{
     overflow-y:auto!important;
     -webkit-overflow-scrolling:touch!important;
