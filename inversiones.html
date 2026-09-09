@@ -10,6 +10,21 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Portfolio Oscar">
 <meta name="theme-color" content="#040609">
+<script>
+/* v175.85 · ficha #44 · LA PRIMERA PINTADA NO AFIRMA LO QUE NO SABE.
+   Síncrono y en la cabecera A PROPÓSITO: decide antes de que el cuerpo pinte.
+   Hasta hoy el arranque tenía DOS estados —«sin datos» y «con datos»— y pintaba
+   el primero sin haber mirado si había libro guardado; medido en la ficha #44,
+   esa afirmación falsa dura 1.073 ms en frío.
+   NO cuesta nada: la lectura entera de 1,2 MB de `localStorage` está medida en
+   0 ms, y aquí sólo se mira si la clave existe.
+   La clave es la misma que usa `loadWorkbookCache` —`CACHE_KEY`, más abajo—: si
+   una cambia, la otra tiene que cambiar con ella. */
+try{
+  if(localStorage.getItem('portfolioOscar:lastWorkbook:v1') !== null)
+    document.documentElement.setAttribute('data-arranque','recuperando');
+}catch(e){}
+</script>
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -1683,7 +1698,7 @@ html{
   <aside class="sidebar">
     <div class="brand"><div class="brandName">Portfolio Oscar</div></div>
     <div class="nav" id="nav" role="navigation" aria-label="Páginas del portfolio"><button class="active" aria-current="page" data-page="dashboard"><span>Dashboard</span><span class="navStatus off"></span></button><button data-page="cartera"><span>Cartera actual</span><span class="navStatus off"></span></button><button data-page="xirr"><span>XIRR</span><span class="navStatus off"></span></button><button data-page="benchmark"><span>Benchmark</span><span class="navStatus off"></span></button><button data-page="movimientos"><span>Movimientos</span><span class="navStatus off"></span></button><button data-page="historial"><span>Historial</span><span class="navStatus off"></span></button><button data-page="auditoria"><span>Auditoría</span><span class="navStatus off"></span></button></div>
-    <div class="sideFoot sideUpdate"><span class="brandDate">Última actualización · sin datos</span></div>
+    <div class="sideFoot sideUpdate"><span class="brandDate"><span class="edoRec">Recuperando datos…</span><span class="edoVac">Última actualización · sin datos</span></span></div>
   </aside>
 
   <main class="main">
@@ -1699,7 +1714,7 @@ html{
         <button class="btn cloudBtn" id="cloudSaveBtn" type="button" disabled>Guardar</button>
         <button class="btn cloudBtn" id="cloudLoadBtn" type="button" disabled>Cargar</button>
         <button class="btn cloudBtn" id="cloudLoginBtn" type="button">Cloud</button>
-        <span class="importStatus" id="importStatus"><span class="bullet bOff"></span>Sin Excel conectado</span>
+        <span class="importStatus" id="importStatus"><span class="bullet bOff"></span><span class="edoRec">Recuperando datos…</span><span class="edoVac">Sin Excel conectado</span></span>
       </div>
     </div>
 
@@ -1710,7 +1725,7 @@ html{
           <div class="heroBody">
             <div style="color:var(--muted);font-size:14px;margin-bottom:8px">Valor de mercado real</div>
             <div class="bigValue"><div><span class="dot"></span><strong>--</strong><span></span></div><div class="gain">Valor total actual de la cartera</div></div>
-            <div class="dashDataAge" data-data-status="dash-age">Importa el Excel para ver la fecha de los datos.</div>
+            <div class="dashDataAge" data-data-status="dash-age"><span class="edoRec">Recuperando datos…</span><span class="edoVac">Importa el Excel para ver la fecha de los datos.</span></div>
             <div class="heroMetrics">
               <div class="heroMetric"><label>Ganancia sobre coste</label><strong>--</strong><small>Resultado que aparece al sumar los activos según plataforma.</small></div>
               <div class="heroMetric"><label>Rentabilidad sobre coste</label><strong>--</strong><small>Rentabilidad simple mostrada por los activos/plataformas.</small></div>
@@ -1740,7 +1755,7 @@ html{
       <article class="card alertsCard">
         <div class="cardHeader"><div><h3>Requiere tu atención</h3><p>Solo lo que necesita una decisión. Sale de la hoja RESUMEN del Excel.</p></div></div>
         <div class="alerts">
-          <div class="alert"><div class="alertName">Estado financiero</div><div class="alertStatus"><span class="bullet bOff"></span>Sin datos · importa o carga el Excel.</div></div>
+          <div class="alert"><div class="alertName">Estado financiero</div><div class="alertStatus"><span class="bullet bOff"></span><span class="edoRec">Recuperando datos…</span><span class="edoVac">Sin datos · importa o carga el Excel.</span></div></div>
         </div>
       </article>
 
@@ -1749,7 +1764,7 @@ html{
           <div class="cardHeader evolutionHeader">
             <div><h3>Evolución de la cartera</h3><p>Cierres y valoraciones comparados con el capital aportado neto.</p></div>
           </div>
-          <div class="chartHost" id="dashboardEvolutionChart"><div class="chartEmpty">Importa el Excel para ver la evolución real de la cartera.</div></div>
+          <div class="chartHost" id="dashboardEvolutionChart"><div class="chartEmpty"><span class="edoRec">Recuperando datos…</span><span class="edoVac">Importa el Excel para ver la evolución real de la cartera.</span></div></div>
         </article>
       </section>
 
@@ -2185,7 +2200,7 @@ html{
 </div>
 
 <script defer src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous"></script>
-<script>window.addEventListener('DOMContentLoaded', function(){ if(typeof loadWorkbookCache==='function') loadWorkbookCache(); });</script>
+<script>window.addEventListener('DOMContentLoaded', function(){ if(typeof loadWorkbookCache==='function') loadWorkbookCache(); else document.documentElement.removeAttribute('data-arranque'); });</script>
 <script>
 const pages=[
   ["dashboard","Dashboard","Resumen principal desde la hoja RESUMEN del Excel.","off"],
@@ -5068,6 +5083,13 @@ function updateAuditoria(){
   }else if(rejected){
     set('[data-web-audit="global-status"]', 'Revisar', 'red');
     set('[data-web-audit="global-note"]', `Excel rechazado · ${rejectedCount} incidencia(s)`);
+  }else if(recuperandoLibro()){
+    /* ficha #50 · «Sin datos» también es una afirmación, y en el arranque con
+       libro guardado es falsa: el marcado llega diciendo «Comprobando», que sí
+       es cierto, y esta rama lo sustituía por «Sin datos» a los 324 ms, antes de
+       que `XLSX.read` empezara. Aquí sostiene el mismo estado que los otros. */
+    set('[data-web-audit="global-status"]', 'Recuperando', 'neutral');
+    set('[data-web-audit="global-note"]', 'Recuperando datos…');
   }else if(!hasWorkbook){
     set('[data-web-audit="global-status"]', 'Sin datos', 'neutral');
     set('[data-web-audit="global-note"]', 'Importa o carga el Excel para comprobar la app');
@@ -5081,8 +5103,9 @@ function updateAuditoria(){
   // La tarjeta Excel describe el libro ACTIVO; el rechazo de un candidato solo
   // la ocupa cuando no hay ningún libro activo que describir.
   const rejectedNoData = rejected && !hasWorkbook;
-  set('[data-web-audit="excel-status"]', rejectedNoData ? 'Rechazado' : !hasWorkbook ? 'Sin datos' : ok ? 'Conectado' : missing.length ? 'Error' : 'Revisar', rejectedNoData ? 'red' : !hasWorkbook ? 'neutral' : ok ? 'green' : 'red');
-  set('[data-web-audit="excel-note"]', rejectedNoData ? `${rejectedCount} incidencia(s) · la web sigue sin datos` : !hasWorkbook ? 'Excel no conectado' : `${fileName} · ${ok ? 'auditoría interna OK' : `${failedControls.length || missing.length} control(es) requieren revisión`}`);
+  const recuperandoExcel = recuperandoLibro();   // ficha #50, misma razón
+  set('[data-web-audit="excel-status"]', recuperandoExcel ? 'Recuperando' : rejectedNoData ? 'Rechazado' : !hasWorkbook ? 'Sin datos' : ok ? 'Conectado' : missing.length ? 'Error' : 'Revisar', recuperandoExcel ? 'neutral' : rejectedNoData ? 'red' : !hasWorkbook ? 'neutral' : ok ? 'green' : 'red');
+  set('[data-web-audit="excel-note"]', recuperandoExcel ? 'Recuperando datos…' : rejectedNoData ? `${rejectedCount} incidencia(s) · la web sigue sin datos` : !hasWorkbook ? 'Excel no conectado' : `${fileName} · ${ok ? 'auditoría interna OK' : `${failedControls.length || missing.length} control(es) requieren revisión`}`);
   set('[data-web-audit="cache-status"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : 'neutral');
   set('[data-web-audit="cache-note"]', hasCache ? 'Último Excel guardado en este navegador' : 'Se activará al importar Excel');
   set('[data-web-audit="backup-status"]', hasWorkbook || hasCache ? 'Disponible' : 'Sin datos', hasWorkbook || hasCache ? 'green' : 'neutral');
@@ -5115,6 +5138,18 @@ function setDataStatus(selector, value, cls){
   el.textContent=value;
   if(cls!==undefined) el.className=cls || '';
 }
+/* v175.85 · ficha #50 · UNA SOLA SEDE PARA «EL LIBRO TODAVÍA NO ESTÁ LEÍDO».
+   `data-arranque="recuperando"` lo pone el guion de la cabecera cuando hay libro
+   guardado, y `loadWorkbookCache().fin()` lo quita por TODOS los caminos,
+   incluidos los de fallo. Con `importedWorkbook` sin poner, esas dos condiciones
+   juntas son exactamente «hay algo que recuperar y aún no se ha conseguido».
+   Se mira `importedWorkbook` y NO sólo el atributo porque `applyWorkbookAfterRead`
+   llama a `updateDataStatus()` ANTES de que `fin()` retire el atributo: mirando
+   sólo el atributo, la escritura buena se saltaría a sí misma. */
+function recuperandoLibro(){
+  return !importedWorkbook &&
+         document.documentElement.getAttribute('data-arranque') === 'recuperando';
+}
 function updateDataStatus(){
   try{
     const cacheMeta=JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
@@ -5124,15 +5159,31 @@ function updateDataStatus(){
     const cloudSaved=localStorage.getItem('portfolioOscar:lastCloudSync:v1') || '';
     const cloudUploaded=localStorage.getItem('portfolioOscar:lastCloudUpload:v1') || '';
     const cloudDownloaded=localStorage.getItem('portfolioOscar:lastCloudDownload:v1') || '';
-    const hasExcel=!!fileName;
-    const realImportDate = manualImport || cloudUploaded || '';
+    /* ficha #50 · NADIE AFIRMA UNA FECHA NI UN ESTADO DE DATOS ANTES DE QUE EL
+       LIBRO ESTÉ LEÍDO. Estas cuatro tarjetas y la antigüedad del Dashboard se
+       escribían en el `DOMContentLoaded` de más abajo —medido: a los 324 ms,
+       SIETE ms ANTES de que `XLSX.read` ni siquiera empezara— con la fecha del
+       meta guardado, que es la ÚLTIMA CONOCIDA y no la del libro que se está
+       rehidratando. Que suelan coincidir no las hace la misma: construido el
+       caso, con `lastManualImport:v1` en 2020-01-15 y el meta del libro en
+       2026-09-09, la web pintaba «Importado 15/1/2020».
+       Se condiciona a `importedWorkbook`, o sea a que el libro esté leído, y no
+       al atributo: así el estado final tras un fallo —CDN caído— tampoco afirma
+       un Excel que no ha llegado a cargarse. */
+    const libroLeido = !!importedWorkbook;
+    const recuperando = recuperandoLibro();
+    const REC = 'Recuperando datos…';
+    const hasExcel = libroLeido && !!fileName;
+    const realImportDate = libroLeido ? (manualImport || cloudUploaded || '') : '';
     const valuationDate=importedWorkbook ? fmtDate(cell(sheetRows('XIRR GLOBAL'),4,1)) : '';
-    setDataStatus('file', hasExcel ? fileName : 'Sin Excel', hasExcel ? 'green' : 'neutral');
-    setDataStatus('file-note', hasExcel ? 'Excel como fuente única' : 'Importa o carga desde nube');
-    setDataStatus('local', realImportDate ? formatDataStatusDate(realImportDate) : 'Pendiente', realImportDate ? 'green' : 'neutral');
+    setDataStatus('file', recuperando ? REC : (hasExcel ? fileName : 'Sin Excel'), recuperando ? 'neutral' : (hasExcel ? 'green' : 'neutral'));
+    setDataStatus('file-note', recuperando ? REC : (hasExcel ? 'Excel como fuente única' : 'Importa o carga desde nube'));
+    setDataStatus('local', recuperando ? REC : (realImportDate ? formatDataStatusDate(realImportDate) : 'Pendiente'), recuperando ? 'neutral' : (realImportDate ? 'green' : 'neutral'));
     const dashAgeEl=document.querySelector('[data-data-status="dash-age"]');
     if(dashAgeEl){
-      if(realImportDate){
+      if(recuperando){
+        dashAgeEl.textContent = REC;
+      }else if(realImportDate){
         const origen = manualImport ? 'Importado' : 'Cargado desde nube';
         dashAgeEl.textContent = `${valuationDate ? `Valoración ${valuationDate} · ` : ''}${origen} ${formatDataStatusDate(realImportDate)}`;
       }else if(hasExcel){
@@ -5141,9 +5192,11 @@ function updateDataStatus(){
         dashAgeEl.textContent = 'Importa el Excel para ver la fecha de los datos.';
       }
     }
-    if(manualImport){
+    if(recuperando){
+      setDataStatus('local-note', REC);
+    }else if(manualImport && libroLeido){
       setDataStatus('local-note', 'Última importación manual del Excel');
-    }else if(cloudUploaded){
+    }else if(cloudUploaded && libroLeido){
       setDataStatus('local-note', 'Última subida del Excel a la nube');
     }else{
       setDataStatus('local-note', 'Se activa al importar Excel');
@@ -5236,17 +5289,44 @@ function applyWorkbookAfterRead(fileName, fromCache=false, candidate=importedWor
   return true;
 }
 function loadWorkbookCache(){
+  // v175.85 · ficha #44 · RECUPERANDO TERMINA SIEMPRE EN UN ESTADO DICHO.
+  // El guion de la cabecera pone `data-arranque="recuperando"` cuando hay libro
+  // guardado; quitarlo es lo que devuelve la pantalla a un estado afirmado, y
+  // tiene que pasar por TODOS los caminos, incluidos los de fallo.
+  const fin = (msg) => {
+    document.documentElement.removeAttribute('data-arranque');
+    if(msg){ try{ setStatus(false, msg); }catch(_){} }
+    // ficha #50 · Y SE REESCRIBE EL ESTADO DE DATOS. Sin esto, los seis sitios
+    // que sostienen «Recuperando datos…» se quedarían colgados en él por los
+    // caminos donde nadie más vuelve a llamar —el CDN caído es el real, medido—:
+    // el atributo se iría y el texto no, que es el mismo fallo al revés.
+    try{ updateDataStatus?.(); updateAuditoria?.(); }catch(_){}
+  };
   try{
-    if(typeof XLSX==='undefined') return;
     const stored = localStorage.getItem(CACHE_KEY);
-    if(!stored) return;
+    // Sin libro guardado no hay nada que recuperar: el estado de siempre, y el
+    // atributo ni siquiera debería estar puesto. Se quita por si acaso.
+    if(!stored){ fin(); return; }
+    if(typeof XLSX==='undefined'){
+      // ficha #46 · LA GUARDA QUE CALLABA, CERRADA. Era
+      // `if(typeof XLSX==='undefined') return;` a secas, y en primera posición:
+      // si `cdn.sheetjs.com` no llegaba, la web se quedaba sin datos y sin
+      // decirlo — y desde la v175.85, con «Recuperando datos…» colgado para
+      // siempre. Ahora termina en un estado dicho.
+      fin('SIN LIBRERÍA · no ha llegado SheetJS (cdn.sheetjs.com). Los datos guardados siguen ahí: recarga la página');
+      return;
+    }
     const meta = JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
     const buffer = base64ToArrayBuffer(stored);
     const candidate = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
     if(!applyWorkbookAfterRead(meta.fileName || 'último Excel', true, candidate)) clearWorkbookCache();
+    // En el camino bueno `applyWorkbookAfterRead` ya ha escrito su propio
+    // estado, así que aquí sólo se retira el de recuperación.
+    fin();
   }catch(err){
     console.warn('No se han podido recuperar los datos guardados:', err);
     clearWorkbookCache();
+    fin('NO SE HAN PODIDO RECUPERAR LOS DATOS GUARDADOS · vuelve a importar el Excel');
   }
 }
 
@@ -11857,6 +11937,27 @@ i.mevCap{background:none;border-top:2px dashed var(--capital-line);height:0;widt
   }
   #cartera .carteraFocusStatus{flex:0 0 auto;}
 }
+
+/* ── v175.85 · ficha #44 · EL TERCER ESTADO DEL ARRANQUE ──────────────────
+   Sin el atributo `data-arranque` —el caso de quien NO tiene libro guardado—
+   el marcado se comporta EXACTAMENTE como antes: se ve el texto de siempre y
+   «Recuperando datos…» no existe. Ese caso no cambia, y por eso la regla por
+   defecto oculta lo nuevo, no lo viejo. */
+/* ESPECIFICIDAD Y CAJA, las dos medidas y las dos necesarias.
+   · `.edoRec` a secas (0,1,0) PIERDE contra `.sideFoot span` (0,1,1), que
+     existe y pone `display:block`: medido, el texto de recuperación se veía en
+     el estado por defecto y la barra lateral crecía 15,5 px. Colgar la regla de
+     `html` sube a (0,2,1) y gana sin necesidad de `!important`.
+   · `display:contents` y no `inline`: el elemento no debe crear caja ninguna, o
+     —y esta frase no nombra la etiqueta a propósito: `validate.py` cuenta el
+     balance de etiquetas sobre el archivo ENTERO, comentarios de CSS incluidos,
+     así que escribirla aquí desbalanceaba el recuento. Ficha #50—
+     cambia el corte de línea del texto que envuelve. Con `contents` el estado
+     por defecto es idéntico píxel a píxel al de antes del cambio. */
+html:not([data-arranque]) .edoRec{display:none;}
+html:not([data-arranque]) .edoVac{display:contents;}
+html[data-arranque="recuperando"] .edoRec{display:contents;}
+html[data-arranque="recuperando"] .edoVac{display:none;}
 </style>
 </body>
 </html>
