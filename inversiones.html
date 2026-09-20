@@ -5191,16 +5191,43 @@ function getAssetXirrMap(){
   }catch(e){}
   return map;
 }
+/* v175.88 · ficha #65 · UNA correspondencia estado → clase, para la insignia Y
+   para la cifra de desviación. El estado lo da el libro: RESUMEN, filas 20–24,
+   columna 6. Hasta la v175.87 la cifra se coloreaba por el SIGNO con clsByValue
+   y en los cinco activos decía lo contrario que la insignia de al lado —medido
+   el 17/09/2026: Bitcoin +6,80 pp en verde con el libro en REVISAR; Oro −0,92 pp
+   en rojo con el libro en OK—. Desde aquí las dos salen de esta tabla. Si el
+   libro no da estado para una fila —TOTAL, el subtotal de renta variable—, la
+   cifra queda neutra: no se inventa un color por el signo. clsByValue sigue
+   siendo el criterio para G/P y rentabilidad, donde el signo sí es el dato. */
+const CARTERA_ESTADO_LIBRO = {
+  revisar:{label:'Revisar', cls:'bad',  txt:'red'},
+  vigilar:{label:'Vigilar', cls:'warn', txt:'yellow'},
+  ok:     {label:'OK',      cls:'ok',   txt:'green'}
+};
+function carteraEstadoLibro(row){
+  if(!row) return '';
+  const key=carteraKeyFromName(row.activo);
+  const rowByKey={btc:20,gold:21,msci:22,emerging:23,small:24};
+  if(!(key in rowByKey)) return '';
+  return normalizeText(cell(sheetRows('RESUMEN'),rowByKey[key],6));
+}
+function carteraEstadoClave(state){
+  if(state.includes('revisar')) return 'revisar';
+  if(state.includes('vigilar')) return 'vigilar';
+  if(state.includes('ok')) return 'ok';
+  return '';
+}
 function carteraStatusFor(row){
   if(!row) return {label:'OK', cls:'ok'};
   const key=carteraKeyFromName(row.activo);
   if(key==='pension') return {label:'Separado', cls:'ok'};
-  const resumen=sheetRows('RESUMEN');
-  const rowByKey={btc:20,gold:21,msci:22,emerging:23,small:24};
-  const state=normalizeText(cell(resumen,rowByKey[key],6));
-  if(state.includes('revisar')) return {label:'Revisar', cls:'bad'};
-  if(state.includes('vigilar')) return {label:'Vigilar', cls:'warn'};
-  return {label:'OK', cls:'ok'};
+  const e=CARTERA_ESTADO_LIBRO[carteraEstadoClave(carteraEstadoLibro(row))] || CARTERA_ESTADO_LIBRO.ok;
+  return {label:e.label, cls:e.cls};
+}
+function desvClsLibro(row){
+  const e=CARTERA_ESTADO_LIBRO[carteraEstadoClave(carteraEstadoLibro(row))];
+  return e ? e.txt : '';
 }
 function carteraDiagnosisText(row, xirrRow){
   if(!row){
@@ -5307,7 +5334,7 @@ function renderCarteraFocus(cartera){
   const pesoTxt = row ? fmtWeight(target.peso) : '100,00%';
   const objetivoTxt = row ? fmtWeight(target.objetivo) : '100,00%';
   const desvTxt = row ? (Number.isFinite(Number(target.desv))?fmtPct(target.desv,2,true):(target.desv||'-')) : '0,00%';
-  const desvCls = row ? clsByValue(target.desv) : '';
+  const desvCls = row ? desvClsLibro(row) : '';   // v175.88 · el libro, no el signo
   panel.innerHTML=`<article class="carteraFocusHero">
     <div class="carteraFocusTop"><div class="carteraFocusName"><span class="bullet ${assetClass(target.activo || '')}"></span><div><h3>${escHtml(title)}${row && carteraKeyFromName(row.activo)==='btc' ? ` <span class="carteraBtcLiveBadge"><span class="btcLivePulse warn"></span><span data-btc-live-price>${window.__btcLiveEurFormatted || '--'}</span></span>` : ''}</h3><p>${escHtml(meta)}</p></div></div><span class="carteraFocusStatus ${status.cls}">${status.label}</span></div>
     <div class="carteraFocusMain"><span>${mainLabel}</span><strong>${mainValue}</strong><small>${note}</small></div>
@@ -5382,7 +5409,7 @@ function updateCartera(){
       : x.subtotal ? 'Los tres fondos · MyInvestor'
       : `${shortAssetName(x.activo)} · ${x.plataforma}`;
     const fmtWeight = v => Number.isFinite(Number(v)) ? fmtPct(v) : (v || '-');
-    return `<tr class="${total?'totalRow':''}${x.subtotal?'subtotalRow':''}"><td><div class="assetName"><span class="bullet ${assetClass(x.activo)}"></span><div><span class="assetNameText">${escHtml(name)}</span><span class="assetMeta">${escHtml(meta)}</span></div></div></td><td>${fmtMoney(x.valor)}</td><td>${fmtMoney(x.invertido)}</td><td class="${clsByValue(x.pl)}">${fmtMoney(x.pl)}</td><td class="${clsByValue(x.rent)}">${fmtPct(x.rent)}</td><td>${fmtWeight(x.peso)}</td><td>${fmtWeight(x.objetivo)}</td><td class="${clsByValue(x.desv)}">${Number.isFinite(Number(x.desv))?fmtPct(x.desv):x.desv}</td></tr>`;
+    return `<tr class="${total?'totalRow':''}${x.subtotal?'subtotalRow':''}"><td><div class="assetName"><span class="bullet ${assetClass(x.activo)}"></span><div><span class="assetNameText">${escHtml(name)}</span><span class="assetMeta">${escHtml(meta)}</span></div></div></td><td>${fmtMoney(x.valor)}</td><td>${fmtMoney(x.invertido)}</td><td class="${clsByValue(x.pl)}">${fmtMoney(x.pl)}</td><td class="${clsByValue(x.rent)}">${fmtPct(x.rent)}</td><td>${fmtWeight(x.peso)}</td><td>${fmtWeight(x.objetivo)}</td><td class="${desvClsLibro(x)}">${Number.isFinite(Number(x.desv))?fmtPct(x.desv):x.desv}</td></tr>`;
   }).join('');
 }
 
