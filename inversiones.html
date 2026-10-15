@@ -4808,6 +4808,10 @@ const WORKBOOK_CONTRACT = Object.freeze({
   operationalRegisterHeaders:['Periodo nominal','Fecha efectiva','Estado','Evidencia / nota','BTC Bitcoin','iShares Physical Gold ETC','MSCI World','Emerging Markets','Small Cap','Plan Pensiones','Valor total','Terminales','Control entrada','Cierre anual'],
   objectiveAssets:['MSCI World','Emerging Markets','Small Cap','Oro','Bitcoin','Plan Pensiones'],
   auditHeaders:['Área','Control','Ubicación / fuente','Resultado','Estado','Lectura / acción si falla'],
+  // v175.92 · ficha #67 · los 45 controles de AUDITORÍA por su identidad (columna B).
+  // Estructura del contrato, como las cabeceras: ni una cifra. Renombrar uno en el
+  // Excel exige versión de la web; añadir uno, no.
+  auditControls:["Total valor actual interno","Pesos reales operativos","Pesos objetivo operativos","Valor actual vs cartera","Terminales negativos","Estados por activo","Nº terminales actuales","KPIs enlazados","Portfolio inversión","Patrimonio neto","Pesos objetivo","Base de proyección","Controles internos","Errores de fórmula","Frescura de fuentes","Tabla anual extendida","Leyenda explicativa","Tabla duplicada eliminada","Columna rentabilidad plataforma","XIRR GLOBAL!C219","XIRR GLOBAL!E/F210:E/F218","RESUMEN!C30:D35","PATRIMONIO!C10/F15/F24:F25","OBJETIVOS Y PROYECCIÓN!D9:D10","XIRR GLOBAL!D7:D14 / J8:J14","XIRR GLOBAL!L10:U21 / L7:V7","XIRR GLOBAL!L6:V9","XIRR GLOBAL!W2:Z11","AUDITORÍA!A20:F23","Datos de mercado externos","Base neta coherente","Estado del dato informado","Fecha real de valoración","Cierres reales no futuros","Reconstruidos no son cierres OK","Sin referencias obsoletas","G/P igual a valor menos neto","Rentabilidad simple sobre neto","Valoración vigente por activo","Sin meses ausentes","Evidencia rellenada","Cierres con importes completos","Seis activos por cierre","Tanda de aportación completa","Flujos vs coste de plataforma"],
   annualAssets:['Oro','Bitcoin','Plan Pensiones','MSCI World','Emerging Markets','Small Cap'],
   amountTolerance:0.02,
   rateTolerance:0.000001,
@@ -4822,6 +4826,10 @@ function latestYearSheet(){
 }
 let importedWorkbook = null;
 let importedData = null;
+// v175.92 · ficha #67 · LOS BYTES del libro en pantalla, tal como llegaron. Backup y
+// subida salen de aquí: no de la copia guardada —que puede ser de otra pestaña o de
+// un guardado que falló— ni de `XLSX.write`, que pierde tablas y formatos.
+let importedBuffer = null;
 let lastWorkbookValidationIssues = [];
 // v175.8: incidencias del último INTENTO de importación rechazado. Separado de
 // la validación del libro activo: revalidar el Excel vigente no debe borrar
@@ -5405,9 +5413,12 @@ function renderCarteraFocus(cartera){
   const mainLabel=row ? 'Valor actual del activo' : 'Valor actual total';
   const note=row ? 'Lectura individual de posición, rentabilidad, peso y XIRR.' : 'Lectura agregada de la cartera completa.';
   const fmtWeight=v=>Number.isFinite(Number(v)) ? fmtPct(v) : (v || '-');
-  const pesoTxt = row ? fmtWeight(target.peso) : '100,00%';
-  const objetivoTxt = row ? fmtWeight(target.objetivo) : '100,00%';
-  const desvTxt = row ? (Number.isFinite(Number(target.desv))?fmtPct(target.desv,2,true):(target.desv||'-')) : '0,00%';
+  // v175.92 · ficha #67 · la fila TOTAL también se lee del libro (I10, J10), y una
+  // desviación vacía se pinta vacía, no como 0: Number('') === 0.
+  const pesoTxt = fmtWeight(target.peso);
+  const objetivoTxt = fmtWeight(target.objetivo);
+  const desvVacia = target.desv === '' || target.desv == null;
+  const desvTxt = desvVacia ? '-' : (Number.isFinite(Number(target.desv))?fmtPct(target.desv,2,true):target.desv);
   const desvCls = row ? desvClsLibro(row) : '';   // v175.88 · el libro, no el signo
   panel.innerHTML=`<article class="carteraFocusHero">
     <div class="carteraFocusTop"><div class="carteraFocusName"><span class="bullet ${assetClass(target.activo || '')}"></span><div><h3>${escHtml(title)}${row && carteraKeyFromName(row.activo)==='btc' ? ` <span class="carteraBtcLiveBadge"><span class="btcLivePulse warn"></span><span data-btc-live-price>${window.__btcLiveEurFormatted || '--'}</span></span>` : ''}</h3><p>${escHtml(meta)}</p></div></div><span class="carteraFocusStatus ${status.cls}">${status.label}</span></div>
@@ -5731,7 +5742,7 @@ function updateHistorial(){
 function updateAuditoria(){
   const hasWorkbook = !!importedWorkbook;
   const missing = hasWorkbook ? validateWorkbook(importedWorkbook) : [];
-  const cacheMeta = JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
+  const cacheMeta = leeMetaLibro();
   const hasCache = !!localStorage.getItem(CACHE_KEY);
   const fileName = importedData?.fileName || cacheMeta.fileName || 'Excel no importado';
   const auditRows=hasWorkbook ? sheetRows('AUDITORÍA') : [];
@@ -5750,13 +5761,14 @@ function updateAuditoria(){
   // sin Excel es neutral, un rechazo se ve (aunque siga activo el Excel
   // anterior), y con Excel manda su auditoría.
   const rejectedCount = lastRejectedImport?.issues?.length || 0;
+  const incidenciasTxt = `${rejectedCount} ${rejectedCount===1 ? 'incidencia' : 'incidencias'}`;   // v175.92 · ficha #67
   const rejected = rejectedCount > 0;
   if(rejected && hasWorkbook){
     set('[data-web-audit="global-status"]', 'Revisar', 'red');
-    set('[data-web-audit="global-note"]', `Último intento rechazado · ${rejectedCount} incidencia(s) · se mantiene el Excel anterior`);
+    set('[data-web-audit="global-note"]', `Último intento rechazado · ${incidenciasTxt} · se mantiene el Excel anterior`);
   }else if(rejected){
     set('[data-web-audit="global-status"]', 'Revisar', 'red');
-    set('[data-web-audit="global-note"]', `Excel rechazado · ${rejectedCount} incidencia(s)`);
+    set('[data-web-audit="global-note"]', `Excel rechazado · ${incidenciasTxt}`);
   }else if(recuperandoLibro()){
     /* ficha #50 · «Sin datos» también es una afirmación, y en el arranque con
        libro guardado es falsa: el marcado llega diciendo «Comprobando», que sí
@@ -5779,7 +5791,7 @@ function updateAuditoria(){
   const rejectedNoData = rejected && !hasWorkbook;
   const recuperandoExcel = recuperandoLibro();   // ficha #50, misma razón
   set('[data-web-audit="excel-status"]', recuperandoExcel ? 'Recuperando' : rejectedNoData ? 'Rechazado' : !hasWorkbook ? 'Sin datos' : ok ? 'Conectado' : missing.length ? 'Error' : 'Revisar', recuperandoExcel ? 'neutral' : rejectedNoData ? 'red' : !hasWorkbook ? 'neutral' : ok ? 'green' : 'red');
-  set('[data-web-audit="excel-note"]', recuperandoExcel ? 'Recuperando datos…' : rejectedNoData ? `${rejectedCount} incidencia(s) · la web sigue sin datos` : !hasWorkbook ? 'Excel no conectado' : `${fileName} · ${ok ? 'auditoría interna OK' : `${failedControls.length || missing.length} control(es) requieren revisión`}`);
+  set('[data-web-audit="excel-note"]', recuperandoExcel ? 'Recuperando datos…' : rejectedNoData ? `${incidenciasTxt} · la web sigue sin datos` : !hasWorkbook ? 'Excel no conectado' : `${fileName} · ${ok ? 'auditoría interna OK' : `${failedControls.length || missing.length} control(es) requieren revisión`}`);
   set('[data-web-audit="cache-status"]', hasCache ? 'Activo' : 'Pendiente', hasCache ? 'green' : 'neutral');
   set('[data-web-audit="cache-note"]', hasCache ? 'Último Excel guardado en este navegador' : 'Se activará al importar Excel');
   set('[data-web-audit="backup-status"]', hasWorkbook || hasCache ? 'Disponible' : 'Sin datos', hasWorkbook || hasCache ? 'green' : 'neutral');
@@ -5826,10 +5838,12 @@ function recuperandoLibro(){
 }
 function updateDataStatus(){
   try{
-    const cacheMeta=JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
+    const cacheMeta=leeMetaLibro();
     const fileName=importedData?.fileName || cacheMeta.fileName || '';
     const localSaved=cacheMeta.savedAt || '';
-    const manualImport=localStorage.getItem(LAST_MANUAL_IMPORT_KEY) || cacheMeta.importedAt || '';
+    // v175.92 · ficha #67 · LA FECHA ES LA DEL LIBRO EN PANTALLA —cuándo y por dónde
+    // llegó, guardado junto a sus bytes—, no una clave suelta que dejó otro libro.
+    const manualImport=importedData?.fecha || '';
     const cloudSaved=localStorage.getItem('portfolioOscar:lastCloudSync:v1') || '';
     const cloudUploaded=localStorage.getItem('portfolioOscar:lastCloudUpload:v1') || '';
     const cloudDownloaded=localStorage.getItem('portfolioOscar:lastCloudDownload:v1') || '';
@@ -5848,7 +5862,7 @@ function updateDataStatus(){
     const recuperando = recuperandoLibro();
     const REC = 'Recuperando datos…';
     const hasExcel = libroLeido && !!fileName;
-    const realImportDate = libroLeido ? (manualImport || cloudUploaded || '') : '';
+    const realImportDate = libroLeido ? manualImport : '';
     const valuationDate=importedWorkbook ? fmtDate(cell(sheetRows('XIRR GLOBAL'),4,1)) : '';
     setDataStatus('file', recuperando ? REC : (hasExcel ? fileName : 'Sin Excel'), recuperando ? 'neutral' : (hasExcel ? 'green' : 'neutral'));
     setDataStatus('file-note', recuperando ? REC : (hasExcel ? 'Excel como fuente única' : 'Importa o carga desde nube'));
@@ -5858,7 +5872,7 @@ function updateDataStatus(){
       if(recuperando){
         dashAgeEl.textContent = REC;
       }else if(realImportDate){
-        const origen = manualImport ? 'Importado' : 'Cargado desde nube';
+        const origen = importedData?.tipo || 'Importado';
         dashAgeEl.textContent = `${valuationDate ? `Valoración ${valuationDate} · ` : ''}${origen} ${formatDataStatusDate(realImportDate)}`;
       }else if(hasExcel){
         dashAgeEl.textContent = `${valuationDate ? `Valoración ${valuationDate} · ` : ''}Excel recuperado`;
@@ -5869,7 +5883,7 @@ function updateDataStatus(){
     if(recuperando){
       setDataStatus('local-note', REC);
     }else if(manualImport && libroLeido){
-      setDataStatus('local-note', 'Última importación manual del Excel');
+      setDataStatus('local-note', importedData?.tipo==='Cargado desde nube' ? 'Excel cargado desde la nube' : importedData?.tipo==='Guardado en este navegador' ? 'Excel guardado en este navegador' : 'Última importación manual del Excel');
     }else if(cloudUploaded && libroLeido){
       setDataStatus('local-note', 'Última subida del Excel a la nube');
     }else{
@@ -5911,13 +5925,25 @@ function base64ToArrayBuffer(base64){
   for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
   return bytes.buffer;
 }
+/* v175.92 · ficha #67 · UNA SOLA SEDE PARA LEER LOS METADATOS DEL LIBRO GUARDADO.
+   Unos metadatos ilegibles («{», `null`) no son motivo para borrar nada ni para
+   abortar un guardado: se leen como «sin metadatos». Eran cinco `JSON.parse` a
+   pelo, y dos de ellos borraban el libro guardado al abrir la web. */
+function leeMetaLibro(){
+  try{
+    const m = JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
+    return (m && typeof m === 'object' && !Array.isArray(m)) ? m : {};
+  }catch(_){ return {}; }
+}
+// v175.92 · ficha #67 · por qué falló el último guardado, para decirlo sólo si se sabe.
+let motivoGuardadoFallido = '';
 function saveWorkbookCache(buffer, fileName, options={}){
   try{
     const nowIso = new Date().toISOString();
-    const previousMeta = JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
+    const previousMeta = leeMetaLibro();
     const importedAt = options.manualImport ? nowIso : (previousMeta.importedAt || localStorage.getItem(LAST_MANUAL_IMPORT_KEY) || '');
     localStorage.setItem(CACHE_KEY, arrayBufferToBase64(buffer));
-    localStorage.setItem(CACHE_META_KEY, JSON.stringify({fileName, savedAt:nowIso, importedAt}));
+    localStorage.setItem(CACHE_META_KEY, JSON.stringify({fileName, savedAt:nowIso, importedAt, tipo:importedData?.tipo || '', fecha:importedData?.fecha || nowIso}));
     if(options.manualImport){
       localStorage.setItem(LAST_MANUAL_IMPORT_KEY, nowIso);
     }
@@ -5925,13 +5951,10 @@ function saveWorkbookCache(buffer, fileName, options={}){
     return true;
   }catch(err){
     console.warn('No se han podido guardar los datos localmente:', err);
-    try{ setStatus?.(true, 'Excel cargado · copia local no guardada (memoria del navegador llena)'); }catch(_){}
+    motivoGuardadoFallido = err?.name === 'QuotaExceededError' ? 'memoria llena' : 'el navegador no lo permite';
+    try{ setStatus?.(true, `Excel importado, pero no se ha podido guardar en este navegador (${motivoGuardadoFallido}) · si recargas no lo verás: vuelve a importarlo`); }catch(_){}
     return false;
   }
-}
-function clearWorkbookCache(){
-  localStorage.removeItem(CACHE_KEY);
-  localStorage.removeItem(CACHE_META_KEY);
 }
 
 
@@ -5940,12 +5963,23 @@ document.addEventListener('DOMContentLoaded',()=>{
   updateDataStatus?.();
 });
 
-function applyWorkbookAfterRead(fileName, fromCache=false, candidate=importedWorkbook){
+function applyWorkbookAfterRead(fileName, fromCache=false, candidate=importedWorkbook, llegada={}){
   const issues=validateWorkbook(candidate);
   if(issues.length){
-    const visible=issues.slice(0,3).join(' · ');
-    const extra=issues.length>3 ? ` · y ${issues.length-3} incidencia(s) más` : '';
-    setStatus(false, `EXCEL RECHAZADO · ${visible}${extra}`);
+    // v175.92 · ficha #67 · el rechazo por los controles de AUDITORÍA, en llano y sin el
+    // código interno, y diciendo lo que es cierto ahora: el rechazo no toca
+    // `importedWorkbook`, así que si hay uno es el Excel anterior, que sigue en pantalla.
+    const CODIGO_CONTROLES='AUDITORIA_IDENTIDAD: ';
+    if(issues.length===1 && issues[0].startsWith(CODIGO_CONTROLES)){
+      const frase=issues[0].slice(CODIGO_CONTROLES.length);
+      const ahora=importedWorkbook ? 'Sigues viendo el Excel anterior.' : 'No hay ningún Excel cargado.';
+      const guardada=llegada.trasRechazo ? ' El Excel guardado sigue en este navegador: expórtalo con Backup o importa otro.' : '';
+      setStatus(false, `Excel rechazado: ${frase.charAt(0).toLowerCase()}${frase.slice(1)}. ${ahora}${guardada}`);
+    }else{
+      const visible=issues.slice(0,3).map(issue=>issue.startsWith(CODIGO_CONTROLES) ? issue.slice(CODIGO_CONTROLES.length) : issue).join(' · ');
+      const extra=issues.length>3 ? ` · y ${issues.length-3} incidencia(s) más` : '';
+      setStatus(false, `EXCEL RECHAZADO · ${visible}${extra}${llegada.trasRechazo || ''}`);
+    }
     setNavStatus('auditoria','bad');
     // v175.8: registrar el intento rechazado y reflejarlo en Auditoría (solo
     // presentación; la decisión de aceptar o rechazar no cambia). El Excel
@@ -5956,7 +5990,18 @@ function applyWorkbookAfterRead(fileName, fromCache=false, candidate=importedWor
   }
   importedWorkbook = candidate;
   importedData = {fileName:fileName || 'Excel importado'};
+  importedBuffer = llegada.buffer || null;
+  importedData.tipo = llegada.tipo || ''; importedData.fecha = llegada.fecha || '';
   lastRejectedImport = null; // v175.8: una importación válida limpia el rechazo anterior
+  // v175.92 · ficha #67 · EL BENCHMARK ES DEL LIBRO QUE LO PIDIÓ. Al aceptar un libro se
+  // descarta toda respuesta en vuelo del anterior —la guarda de vigencia compara el
+  // número de petición— y la vista vuelve a «sin cargar», con la clase del estado
+  // inicial.
+  benchmarkRequestSeq++;
+  benchmarkCache = null;
+  window.__benchmarkMobileFeed = null;
+  applyBenchmarkView(benchmarkActiveView);
+  benchmarkSetStatus('Sin cargar', '', 'Pulsa «Cargar benchmark» para comparar el Excel que estás viendo.');
   updateDashboard(); updateCartera(); updateXirr(); updateHistorial(); updateAuditoria(); updateDataStatus?.();
   setStatus(true, fromCache ? `${fileName || 'Excel'} recuperado` : `${fileName || 'Excel'} importado`);
   setNavStatus('dashboard','ok'); setNavStatus('cartera','ok'); setNavStatus('xirr','ok'); setNavStatus('movimientos','ok'); setNavStatus('historial','ok');
@@ -5990,32 +6035,34 @@ function loadWorkbookCache(){
       fin('SIN LIBRERÍA · no ha llegado SheetJS (cdn.sheetjs.com). Los datos guardados siguen ahí: recarga la página');
       return;
     }
-    const meta = JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
+    const meta = leeMetaLibro();
     const buffer = base64ToArrayBuffer(stored);
     const candidate = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
-    if(!applyWorkbookAfterRead(meta.fileName || 'último Excel', true, candidate)) clearWorkbookCache();
+    // v175.92 · ficha #67 · RECHAZADA O NO, LA COPIA GUARDADA SE CONSERVA: borrarla era
+    // perder el Excel de este navegador por un cambio de la propia web.
+    applyWorkbookAfterRead(meta.fileName || 'último Excel', true, candidate,
+      {buffer, tipo:meta.tipo || 'Guardado en este navegador', fecha:meta.fecha || meta.savedAt || '', trasRechazo:' · el Excel guardado sigue en este navegador: expórtalo con Backup o importa otro'});
     // En el camino bueno `applyWorkbookAfterRead` ya ha escrito su propio
     // estado, así que aquí sólo se retira el de recuperación.
     fin();
   }catch(err){
     console.warn('No se han podido recuperar los datos guardados:', err);
-    clearWorkbookCache();
-    fin('NO SE HAN PODIDO RECUPERAR LOS DATOS GUARDADOS · vuelve a importar el Excel');
+    fin('NO SE HA PODIDO ABRIR EL EXCEL GUARDADO · sigue guardado en este navegador: expórtalo con Backup o vuelve a importar el Excel');
   }
 }
 
 function getCurrentWorkbookBufferForBackup(){
+  // v175.92 · ficha #67 · con libro en pantalla, SUS bytes y nunca otros.
+  if(importedWorkbook) return importedBuffer;
+  // Sin libro en pantalla, la copia guardada: el rescate de una copia que la web
+  // no ha podido abrir. Sólo para el backup: la subida exige libro en pantalla.
   const stored = localStorage.getItem(CACHE_KEY);
-  if(stored) return base64ToArrayBuffer(stored);
-  if(importedWorkbook && typeof XLSX !== 'undefined'){
-    return XLSX.write(importedWorkbook, {bookType:'xlsx', type:'array'});
-  }
-  return null;
+  return stored ? base64ToArrayBuffer(stored) : null;
 }
 
 function exportWorkbookBackup(){
   try{
-    const meta = JSON.parse(localStorage.getItem(CACHE_META_KEY) || '{}');
+    const meta = leeMetaLibro();
     const buffer = getCurrentWorkbookBufferForBackup();
     if(!buffer){
       alert('Primero importa el Excel. Después podrás exportar una copia de backup.');
@@ -6024,7 +6071,7 @@ function exportWorkbookBackup(){
     }
     const blob = new Blob([buffer], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
     const stamp = new Date().toISOString().slice(0,10);
-    const baseName = (meta.fileName || importedData?.fileName || '01_Portfolio_Oscar.xlsx').replace(/\.xlsx?$/i,'');
+    const baseName = (importedData?.fileName || meta.fileName || '01_Portfolio_Oscar.xlsx').replace(/\.xlsx?$/i,'');
     const fileName = `${baseName}_backup_${stamp}.xlsx`;
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -6473,20 +6520,27 @@ function validateWorkbookDetailed(wb){
   }
 
   if(!exactRow(auditoria,4,WORKBOOK_CONTRACT.auditHeaders) || contractText(at(auditoria,2,4))!=='estado global') add('AUDITORIA_ESTRUCTURA','AUDITORÍA no conserva su estado maestro y cabeceras');
-  let auditChecks=0;
   let auditFailed=false;
+  const auditByName=new Map();   // v175.92 · ficha #67 · cada control por su identidad
   const benignAuditStates=new Set(['ok','correcto','info','0']);
   for(let row=5;row<=auditoria.length;row++){
     const control=String(at(auditoria,row,2)||'').trim();
     const state=contractText(at(auditoria,row,5));
     if(!control && !state) continue;
     if(state==='estado') continue;
-    auditChecks++;
     if(!control || !benignAuditStates.has(state)) auditFailed=true;
+    auditByName.set(contractText(control), (auditByName.get(contractText(control))||0)+1);
   }
+  const auditFaltan=WORKBOOK_CONTRACT.auditControls.filter(name=>!auditByName.get(contractText(name)));
+  const auditRepetidos=WORKBOOK_CONTRACT.auditControls.filter(name=>(auditByName.get(contractText(name))||0)>1);
+  const auditLista=(lista)=>lista.slice(0,3).map(name=>`«${name}»`).join(', ')+(lista.length>3?` y ${lista.length-3} más`:'');
+  const auditFaltanTxt = auditFaltan.length===1 ? `A la hoja AUDITORÍA le falta el control ${auditLista(auditFaltan)}`
+    : auditFaltan.length>1 ? `A la hoja AUDITORÍA le faltan ${auditFaltan.length} controles: ${auditLista(auditFaltan)}` : '';
+  const auditRepetidosTxt = auditRepetidos.length ? `${auditFaltanTxt ? 'y tiene' : 'La hoja AUDITORÍA tiene'} repetido ${auditRepetidos.length===1?'el control':'los controles'} ${auditLista(auditRepetidos)}` : '';
+  if(auditFaltan.length || auditRepetidos.length) add('AUDITORIA_IDENTIDAD', [auditFaltanTxt, auditRepetidosTxt].filter(Boolean).join(', '));
   const auditDay=contractDateDay(at(auditoria,2,2));
   const summaryDay=contractDateDay(at(resumen,2,2));
-  if(contractText(at(auditoria,2,5))!=='ok' || auditChecks<38 || auditFailed || contractText(at(resumen,2,6))!==contractText(at(auditoria,2,5)) || auditDay===null || summaryDay!==auditDay || auditDay<valuationDay) add('AUDITORIA_CONTROLES','La auditoría maestra no está en OK, está incompleta o no coincide con la fecha de actualización');
+  if(contractText(at(auditoria,2,5))!=='ok' || auditFailed || contractText(at(resumen,2,6))!==contractText(at(auditoria,2,5)) || auditDay===null || summaryDay!==auditDay || auditDay<valuationDay) add('AUDITORIA_CONTROLES','La auditoría maestra no está en OK, está incompleta o no coincide con la fecha de actualización');
 
   for(const yearName of yearSheets){
     const annual=rowsOf(yearName);
@@ -6509,7 +6563,7 @@ async function handleExcelImport(file){
     if(typeof XLSX==='undefined') throw new Error('No se ha cargado la librería XLSX. Revisa la conexión a internet o incrusta SheetJS en local.');
     const buffer=await file.arrayBuffer();
     const candidate = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
-    const ok = applyWorkbookAfterRead(file.name, false, candidate);
+    const ok = applyWorkbookAfterRead(file.name, false, candidate, {buffer, tipo:'Importado', fecha:new Date().toISOString()});
     if(ok) saveWorkbookCache(buffer, file.name, {manualImport:true});
   }catch(err){ console.error(err); setStatus(false, `ERROR · ${err.message}`); setNavStatus('auditoria','bad'); }
 }
@@ -10442,7 +10496,7 @@ function cloudRequireReady(){
 async function cloudSaveWorkbook(){
   if(!cloudRequireReady()) return;
   try{
-    const buffer = typeof getCurrentWorkbookBufferForBackup === 'function' ? getCurrentWorkbookBufferForBackup() : null;
+    const buffer = importedWorkbook ? importedBuffer : null;   // v175.92 · ficha #67 · sólo sube el libro en pantalla
     if(!buffer){
       alert('Primero importa el Excel. Después podrás guardarlo en la nube.');
       return;
@@ -10478,18 +10532,19 @@ async function cloudLoadWorkbook(){
     if(!resp.ok) throw new Error('Descarga nube HTTP ' + resp.status);
     const buffer = await resp.arrayBuffer();
     const candidate = XLSX.read(buffer, {type:'array', cellDates:false, cellFormula:true, cellStyles:false});
-    const accepted = applyWorkbookAfterRead?.(PORTFOLIO_SUPABASE_CONFIG.fileName, true, candidate);
+    const accepted = applyWorkbookAfterRead?.(PORTFOLIO_SUPABASE_CONFIG.fileName, true, candidate, {buffer, tipo:'Cargado desde nube', fecha:new Date().toISOString()});
     if(!accepted){
       cloudSetLine('Excel de nube rechazado por el contrato de datos.', 'bad');
       updateCloudAudit('error');
       return;
     }
-    saveWorkbookCache?.(buffer, PORTFOLIO_SUPABASE_CONFIG.fileName);
+    const guardada = saveWorkbookCache?.(buffer, PORTFOLIO_SUPABASE_CONFIG.fileName);
     const nowIso = new Date().toISOString();
     localStorage.setItem('portfolioOscar:lastCloudSync:v1', nowIso);
     localStorage.setItem('portfolioOscar:lastCloudDownload:v1', nowIso);
     updateDataStatus?.();
-    setStatus?.(true, 'Excel cargado desde nube');
+    // v175.92 · ficha #67 · el éxito no tapa el aviso de copia no guardada
+    setStatus?.(true, guardada ? 'Excel cargado desde nube' : `Excel cargado desde nube, pero no se ha podido guardar en este navegador (${motivoGuardadoFallido}) · si recargas no lo verás: vuelve a cargarlo`);
     cloudSetLine('Excel recuperado desde Supabase Storage.', 'ok');
     updateCloudAudit('ok');
   }catch(err){
